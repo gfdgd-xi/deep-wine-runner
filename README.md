@@ -41,8 +41,7 @@ chmod 777 main.py
 #### 使用说明
 
 （均在软件的“小提示”里有说明）
-1.  使用终端运行该程序，可以看到 deepin-wine（deepin-wine5） 的提示和报错
-2.  暂不支持 deepin-wine（deepin-wine5） 容器路径含有空格，如有请在空格前加“\”进行转义
+1.  使用终端运行该程序，可以看到 deepin-wine（deepin-wine5）以及程序本身的提示和报错
 
 
 #### 特技
