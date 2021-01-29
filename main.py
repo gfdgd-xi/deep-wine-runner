@@ -30,7 +30,7 @@ def about_this_program():
 
 # 显示“提示”窗口
 def helps():
-    tkinter.messagebox.showinfo(title="提示", message="提示：\n1、使用终端运行该程序，可以看到 deepin-wine 的提示和报错\n2、暂不支持 deepin-wine 容器路径含有空格，如有请在空格前加“\\”进行转义")
+    tkinter.messagebox.showinfo(title="提示", message="提示：\n1、使用终端运行该程序，可以看到 deepin-wine（deepin-wine5） 的提示和报错\n2、暂不支持 deepin-wine（deepin-wine5） 容器路径含有空格，如有请在空格前加“\\”进行转义")
 
 window = tk.Tk()
 window.title("deepin-wine 运行器")
