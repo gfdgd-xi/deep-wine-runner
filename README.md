@@ -8,7 +8,7 @@ WINEPREFIX=容器路径 deepin-wine 可执行文件路径
 ```
 让你的 deepin-wine 打包轻松一点
 是使用 Python3 的 tkinter 构建的
-
+（自己美术功底太差，图标只能在网络上找了）
 （测试平台：deepin 20.1 1030）
 
 #### 软件架构
