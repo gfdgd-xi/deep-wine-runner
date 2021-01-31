@@ -76,7 +76,7 @@ def runexebutton_threading():
 
 # 显示“关于这个程序”窗口
 def about_this_program():
-    tkinter.messagebox.showinfo(title="关于这个程序",message="一个基于 Python3 的 tkinter 制作的 deepin-wine（deepin-wine5） 运行器\n版本：1.1\n适用平台：Linux\ntkinter 版本：" + str(tk.TkVersion))
+    tkinter.messagebox.showinfo(title="关于这个程序",message="一个基于 Python3 的 tkinter 制作的 deepin-wine（deepin-wine5） 运行器\n版本：1.1.1\n适用平台：Linux\ntkinter 版本：" + str(tk.TkVersion))
 
 # 显示“提示”窗口
 def helps():
