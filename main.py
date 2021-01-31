@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #########################################################################
 # 作者：gfdgd xi
-# 版本：1.1
+# 版本：1.1.1
 # 感谢：感谢 deepin-wine 团队，提供了 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 的 tkinter 构建
 #########################################################################
@@ -12,6 +12,7 @@ import tkinter as tk
 import tkinter.filedialog
 import tkinter.messagebox
 import os
+import threading
 
 ###################
 # 程序所需事件
@@ -60,9 +61,13 @@ def liulanexebutton():
     if path != "":
         e2_text.set(path)
 
-# 运行可执行文件的事件
-# （第三个按钮的事件）
+# 
 def runexebutton():
+    run = threading.Thread(target = runexebutton_threading)
+    run.start()
+
+# 运行可执行文件的线程
+def runexebutton_threading():
     if e1_text.get() == "" or e2_text.get() == "": # 判断文本框是否有内容
         tkinter.messagebox.showinfo(title="提示",message="没有填写需要使用的 deepin-wine 容器或需要运行的 exe 应用")
     else: # 如果都有
@@ -71,7 +76,7 @@ def runexebutton():
 
 # 显示“关于这个程序”窗口
 def about_this_program():
-    tkinter.messagebox.showinfo(title="关于这个程序",message="一个基于 Python3 的 tkinter 制作的 deepin-wine（deepin-wine5） 运行器\n版本：1.1\n适用平台：Linux")
+    tkinter.messagebox.showinfo(title="关于这个程序",message="一个基于 Python3 的 tkinter 制作的 deepin-wine（deepin-wine5） 运行器\n版本：1.1\n适用平台：Linux\ntkinter 版本：" + str(tk.TkVersion))
 
 # 显示“提示”窗口
 def helps():
