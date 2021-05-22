@@ -1,19 +1,23 @@
 #!/usr/bin/env python3
-#########################################################################
+# 使用系统默认的 python3 运行
+###########################################################################################
 # 作者：gfdgd xi
-# 版本：1.2.0
-# 感谢：感谢 deepin-wine 团队，提供了 deepin-wine 给大家使用，让我能做这个程序
+# 版本：1.3.0
+# 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 的 tkinter 构建
-#########################################################################
+###########################################################################################
 #################
 # 引入所需的库
 #################
 import tkinter as tk
+import tkinter.ttk as ttk
 import tkinter.filedialog
 import tkinter.messagebox
 import os
 import threading
 import webbrowser
+
+wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable（需运行使用 deepin-wine5 stable 打包的应用后才能使用）": "~/.deepinwine/deepin-wine5-stable/bin/wine", "deepin-wine6 stable 32 位（需运行使用 deepin-wine6 stable 打包的应用后才能使用）": "~/.deepinwine/deepin-wine6-stable/bin/wine", "deepin-wine6 stable 64 位（需运行使用 deepin-wine6 stable 打包的应用后才能使用）": "~/.deepinwine/deepin-wine6-stable/bin/wine64"}
 
 ###################
 # 程序所需事件
@@ -56,13 +60,13 @@ def get_home():
 
 # 第一个浏览按钮事件
 def liulanbutton():
-    path = tkinter.filedialog.askdirectory(title="选择 deepin-wine 容器", initialdir="~/.deepinwine/")
+    path = tkinter.filedialog.askdirectory(title="选择 wine 容器", initialdir="~/.deepinwine/")
     if path != "":
         e1_text.set(path)
 
 # 第二个浏览按钮事件
 def liulanexebutton():
-    path = tkinter.filedialog.askopenfilename(title="选择 exe 可执行文件", filetypes=[("exe 可执行文件", "*.exe"), ("所有文件", "*.*")], initialdir="~/")
+    path = tkinter.filedialog.askopenfilename(title="选择 exe 可执行文件", filetypes=[("exe 可执行文件", "*.exe"), ("EXE 可执行文件", "*.EXE"), ("所有文件", "*.*")], initialdir="~/")
     if path != "":
         e2_text.set(path)
 
@@ -84,24 +88,24 @@ def DisableButton(things):
 def runexebutton_threading():
     DisableButton(True)
     if e1_text.get() == "" or e2_text.get() == "":  # 判断文本框是否有内容
-        tkinter.messagebox.showinfo(title="提示", message="没有填写需要使用的 deepin-wine 容器或需要运行的 exe 应用")
+        tkinter.messagebox.showinfo(title="提示", message="没有填写需要使用的 wine 容器或需要运行的 exe 应用")
     else:  # 如果都有
-        os.system("WINEPREFIX='" + e1_text.get() + "' " + o1_text.get() + " '" + e2_text.get() + "'")  # 运行
+        os.system("WINEPREFIX='" + e1_text.get() + "' " + wine[o1_text.get()] + " '" + e2_text.get() + "'")  # 运行
     DisableButton(False)
 
 # 显示“关于这个程序”窗口
 def about_this_program():
-    tkinter.messagebox.showinfo(title="关于这个程序", message="一个基于 Python3 的 tkinter 制作的 deepin-wine（deepin-wine5） 运行器\n版本：1.2.0\n适用平台：Linux\ntkinter 版本：" + str(tk.TkVersion) + "\n程序官网：https://gitee.com/gfdgd-xi/deep-wine-runner")
+    tkinter.messagebox.showinfo(title="关于这个程序", message="一个基于 Python3 的 tkinter 制作的 wine 运行器\n版本：1.3.0\n适用平台：Linux\ntkinter 版本：" + str(tk.TkVersion) + "\n程序官网：https://gitee.com/gfdgd-xi/deep-wine-runner")
 
 # 显示“提示”窗口
 def helps():
-    tkinter.messagebox.showinfo(title="提示", message="提示：\n1、使用终端运行该程序，可以看到 deepin-wine（deepin-wine5） 以及程序本身的提示和报错")
+    tkinter.messagebox.showinfo(title="提示", message="提示：\n1、使用终端运行该程序，可以看到 wine 以及程序本身的提示和报错\n2、wine 32 位和 64 位的容器互不兼容")
 
 # 生成 shell 文件在桌面
 # （第四个按钮的事件）
 def make_desktop_on_desktop():
     if e3_text.get() == "" or e2_text.get() == "" or e1_text.get() == "":  # 判断文本框是否有内容
-        tkinter.messagebox.showinfo(title="提示", message="没有填写需要使用的 deepin-wine 容器或需要运行的 exe 应用或保存的文件名")
+        tkinter.messagebox.showinfo(title="提示", message="没有填写需要使用的 wine 容器或需要运行的 exe 应用或保存的文件名")
     else:  # 如果都有
         if os.path.exists(get_desktop_path() + "/" + e3_text.get() + ".sh"): # 判断目录是否有该文件，如果有
             choose = tkinter.messagebox.askokcancel(title="提示", message="文件已经存在，是否覆盖？")  # 询问用户是否覆盖
@@ -110,7 +114,7 @@ def make_desktop_on_desktop():
             else:  # 如不覆盖
                 return  # 结束
         os.mknod(get_desktop_path() + "/" + e3_text.get() + ".sh")  # 创建文本文档
-        write_txt(get_desktop_path() + "/" + e3_text.get() + ".sh", "#!/bin/bash\n" + "WINEPREFIX='" + e1_text.get() + "' " + o1_text.get() + " '" + e2_text.get() + "'") # 写入文本文档
+        write_txt(get_desktop_path() + "/" + e3_text.get() + ".sh", "#!/bin/bash\n" + "WINEPREFIX='" + e1_text.get() + "' " + wine[o1_text.get()] + " '" + e2_text.get() + "'") # 写入文本文档
         os.system("chmod 777 '" + get_desktop_path() + "/" + e3_text.get() + ".sh" + "'")  # 赋予可执行权限
         tkinter.messagebox.showinfo(title="提示", message="生成完成！")  # 显示完成对话框
 
@@ -118,7 +122,7 @@ def make_desktop_on_desktop():
 # 窗口创建
 ###########################
 window = tk.Tk()  # 创建窗口
-window.title("deepin-wine 运行器")  # 设置标题
+window.title("wine 运行器")  # 设置标题
 # 设置变量以修改和获取值项
 e1_text = tk.StringVar()
 e2_text = tk.StringVar()
@@ -126,18 +130,18 @@ o1_text = tk.StringVar()
 e3_text = tk.StringVar()
 o1_text.set("deepin-wine")
 # 创建控件
-button1 = tk.Button(window, text="浏览", command=liulanbutton)  # 创建按钮控件
-button2 = tk.Button(window, text="浏览", command=liulanexebutton)  # 创建按钮控件
-button3 = tk.Button(window, text="启动", command=runexebutton)  # 创建按钮控件
-button5 = tk.Button(window, text="创建用于运行的 shell 文件到桌面", command=make_desktop_on_desktop)  # 创建按钮控件
-label1 = tk.Label(window, text="选择你想要使用的 deepin-wine 容器：")  # 创建标签控件
-label2 = tk.Label(window, text="选择要启动的 Windows 应用")  # 创建标签控件
-label3 = tk.Label(window, text="选择要使用的 deepin-wine 版本")  # 创建标签控件
-label4 = tk.Label(window, text="设置文件名，以便把上方填写的信息写入到 shell 文件里")  # 创建标签控件
-e1 = tk.Entry(window, textvariable=e1_text, width=50)  # 创建文本框控件
-e2 = tk.Entry(window, textvariable=e2_text, width=50)  # 创建文本框控件
-e3 = tk.Entry(window, textvariable=e3_text, width=50)  # 创建文本框控件
-o1 = tk.OptionMenu(window, o1_text, "deepin-wine", "deepin-wine5")  # 创建选择框控件
+button1 = ttk.Button(window, text="浏览", command=liulanbutton)  # 创建按钮控件
+button2 = ttk.Button(window, text="浏览", command=liulanexebutton)  # 创建按钮控件
+button3 = ttk.Button(window, text="启动", command=runexebutton)  # 创建按钮控件
+button5 = ttk.Button(window, text="创建用于运行的 shell 文件到桌面", command=make_desktop_on_desktop)  # 创建按钮控件
+label1 = ttk.Label(window, text="选择你想要使用的 wine 容器：")  # 创建标签控件
+label2 = ttk.Label(window, text="选择要启动的 Windows 应用")  # 创建标签控件
+label3 = ttk.Label(window, text="选择要使用的 wine 版本")  # 创建标签控件
+label4 = ttk.Label(window, text="设置文件名，以便把上方填写的信息写入到 shell 文件里")  # 创建标签控件
+e1 = ttk.Entry(window, textvariable=e1_text, width=50)  # 创建文本框控件
+e2 = ttk.Entry(window, textvariable=e2_text, width=50)  # 创建文本框控件
+e3 = ttk.Entry(window, textvariable=e3_text, width=50)  # 创建文本框控件
+o1 = ttk.OptionMenu(window, o1_text, "deepin-wine", "deepin-wine","deepin-wine5", "wine", "wine64", "deepin-wine5 stable（需运行使用 deepin-wine5 stable 打包的应用后才能使用）", "deepin-wine6 stable 32 位（需运行使用 deepin-wine6 stable 打包的应用后才能使用）", "deepin-wine6 stable 64 位（需运行使用 deepin-wine6 stable 打包的应用后才能使用）")  # 创建选择框控件
 menu = tk.Menu(window)  # 设置菜单栏
 programmenu = tk.Menu(menu, tearoff=0)  # 设置“程序”菜单栏
 menu.add_cascade(label="程序", menu=programmenu)
