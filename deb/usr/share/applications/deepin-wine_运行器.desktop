@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=deepin-wine 运行器
+Version=1.1.1
+Exec=/usr/bin/deepin-wine-runner
+Icon=/usr/share/icons/hicolor/256x256/apps/spark-deepin-wine-runner.png
+Type=Application
+Terminal=false
+StartupNotify=true
+Encoding=UTF-8
+Categories=System;Wine;
