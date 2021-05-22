@@ -1,0 +1,10 @@
+Package: spark-deepin-wine-runner
+Version: 1.3.0
+Installed-Size: 40
+Maintainer: gfdgd xi <3025613752@qq.com>
+Homepage: https://gitee.com/gfdgd-xi/deep-wine-runner
+Architecture: all
+Priority: optional
+Depends: python3, python3-tk
+Description: gfdgd xi make's deepin-wine runner
+
