@@ -182,8 +182,8 @@ if not os.path.exists(get_home() + "/.config/deepin-wine-runner/WineBotton.json"
 ###########################
 # 如果要添加其他 wine，请在字典添加其名称和执行路径
 # 在数组添加其名称
-wineName = ["deepin-wine", "deepin-wine","deepin-wine5", "wine", "wine64", "deepin-wine5 stable（需运行使用 deepin-wine5 stable 打包的应用后才能使用）", "deepin-wine6 stable 32 位（需运行使用 deepin-wine6 stable 打包的应用后才能使用）", "deepin-wine6 stable 64 位（需运行使用 deepin-wine6 stable 打包的应用后才能使用）"]
-wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable（需运行使用 deepin-wine5 stable 打包的应用后才能使用）": "~/.deepinwine/deepin-wine5-stable/bin/wine", "deepin-wine6 stable 32 位（需运行使用 deepin-wine6 stable 打包的应用后才能使用）": "~/.deepinwine/deepin-wine6-stable/bin/wine", "deepin-wine6 stable 64 位（需运行使用 deepin-wine6 stable 打包的应用后才能使用）": "~/.deepinwine/deepin-wine6-stable/bin/wine64"}
+wineName = ["deepin-wine", "deepin-wine","deepin-wine5", "wine", "wine64", "deepin-wine5 stable", "deepin-wine6 stable 32 位", "deepin-wine6 stable 64 位"]
+wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable 32 位": "deepin-wine6-stable", "deepin-wine6 stable 64 位": "deepin-wine6-stable-amd64"}
 shellHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json")).values())
 findExeHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json")).values())
 wineBottonHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json")).values())
@@ -204,12 +204,7 @@ tkinter 版本：{}
 tips = '''提示：
 1、使用终端运行该程序，可以看到 wine 以及程序本身的提示和报错
 2、wine 32 位和 64 位的容器互不兼容'''
-updateThingsString = '''1、添加了历史记录，使用更加方便
-2、增加“更新内容”项
-3、支持浏览窗口的默认路径为上次访问的路径
-4、支持清空历史记录
-5、代码结构优化
-6、修改了控件大小'''
+updateThingsString = '''1、修改了 wine 选项的说明和 wine 的启动方式'''
 title = "wine 运行器 {}".format(version)
 updateTime = "2021年05月23日"
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
