@@ -206,7 +206,7 @@ tips = '''提示：
 2、wine 32 位和 64 位的容器互不兼容'''
 updateThingsString = '''1、修改了 wine 选项的说明和 wine 的启动方式'''
 title = "wine 运行器 {}".format(version)
-updateTime = "2021年05月23日"
+updateTime = "2021年07月24日"
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 
 
