@@ -198,7 +198,7 @@ if not os.path.exists(get_home() + "/.config/deepin-wine-runner/WineBotton.json"
 # 设置变量
 ###########################
 # 如果要添加其他 wine，请在字典添加其名称和执行路径
-wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable": "deepin-wine6-stable"}
+wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable": "deepin-wine6-stable", "spark-wine7-devel": "spark-wine7-devel"}
 shellHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json")).values())
 findExeHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json")).values())
 wineBottonHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json")).values())
@@ -209,7 +209,7 @@ wineBottonHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-r
 ###########################
 iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
 programUrl = "https://gitee.com/gfdgd-xi/deep-wine-runner"
-version = "1.4.0"
+version = "1.4.1"
 goodRunSystem = "Linux"
 about = '''一个基于 Python3 的 tkinter 制作的 wine 运行器
 版本：{}

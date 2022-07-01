@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi
-# 版本：1.4.0
-# 更新时间：2021年07月27日
+# 版本：1.4.1
+# 更新时间：2022年06月22日
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 的 tkinter 构建
 ###########################################################################################
@@ -34,15 +34,15 @@ if not choose == "N":
 print("请问是否要安装 deepin-wine5（需要添加星火应用商店的源）？[Y/N]", end=' ')
 choose = input().upper()
 if not choose == "N":
-    if os.path.exists("/etc/apt/sources.list.d/sparkstore-temp.list"):
-        os.system("sudo rm -v /etc/apt/sources.list.d/sparkstore-temp.list")
+    if os.path.exists("/etc/apt/sources.list.d/sparkstore.list"):
+        os.system("sudo apt install deepin-wine5 -y")
     if not os.path.exists("/etc/apt/sources.list.d/sparkstore.list"):
-        os.system("sudo touch /etc/apt/sources.list.d/sparkstore-temp.list")
-        os.system("echo 'deb [by-hash=force] https://d.store.deepinos.org.cn / ' | sudo tee '/etc/apt/sources.list.d/sparkstore-temp.list'")
+        os.system("sudo touch /etc/apt/sources.list.d/sparkstore.list")
+        os.system("echo 'deb [by-hash=force] https://d.store.deepinos.org.cn/ /' | sudo tee '/etc/apt/sources.list.d/sparkstore.list'")
+
         os.system("sudo apt update")
     os.system("sudo apt install deepin-wine5 -y")
-    if os.path.exists("/etc/apt/sources.list.d/sparkstore-temp.list"):
-        os.system("sudo rm -v /etc/apt/sources.list.d/sparkstore-temp.list")
+    if os.path.exists("/etc/apt/sources.list.d/sparkstore.list"):
         os.system("sudo apt update")
 print("请问是否要安装 deepin-wine5-stable？[Y/N]", end=' ')
 choose = input().upper()
@@ -52,4 +52,8 @@ print("请问是否要安装 deepin-wine6-stable？[Y/N]", end=' ')
 choose = input().upper()
 if not choose == "N":
     os.system("sudo apt install deepin-wine6-stable -y")
+print("请问是否要安装 spark-wine7-devel？[Y/N]", end=' ')
+choose = input().upper()
+if not choose == "N":
+    os.system("sudo apt install spark-wine7-devel -y")
 print("全部完成！")
