@@ -1,9 +1,9 @@
 Package: spark-deepin-wine-runner
-Version: 1.4.0
+Version: 1.4.1
 Maintainer: gfdgd xi <3025613752@qq.com>
 Homepage: https://gitee.com/gfdgd-xi/deep-wine-runner
 Architecture: all
 Priority: optional
-Depends: python3, python3-tk, python3-pip
+Depends: python3, python3-tk, python3-pip, python3-pil, python3-pil.imagetk
 Description: gfdgd xi make's wine runner
 
