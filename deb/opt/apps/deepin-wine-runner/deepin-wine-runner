@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi
-# 版本：1.4.0
-# 更新时间：2021年07月27日
+# 版本：1.5.0
+# 更新时间：2022年07月03日
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 的 tkinter 构建
 ###########################################################################################
@@ -18,6 +18,7 @@ import shutil
 import threading
 import ttkthemes
 import webbrowser
+import subprocess
 import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.filedialog
@@ -94,14 +95,29 @@ def DisableButton(things):
     e1.configure(state=a[things])
     e2.configure(state=a[things])
     o1.configure(state=a[things])
+    uninstallProgram.configure(state=a[things])
 
 # 运行可执行文件的线程
 def runexebutton_threading():
     DisableButton(True)
     if e1.get() == "" or e2.get() == "":  # 判断文本框是否有内容
         tkinter.messagebox.showinfo(title="提示", message="没有填写需要使用的 wine 容器或需要运行的 exe 应用")
+        DisableButton(False)
+        return
     else:  # 如果都有
-        os.system("WINEPREFIX='" + e1.get() + "' " + wine[o1_text.get()] + " '" + e2.get() + "'")  # 运行
+       #text = subprocess.getoutput("WINEPREFIX='" + e1.get() + "' " + wine[o1_text.get()] + " '" + e2.get() + "'")  # 运行
+        res = subprocess.Popen(["WINEPREFIX='" + e1.get() + "' " + wine[o1_text.get()] + " '" + e2.get() + "'"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        # 清空文本框内容
+        returnText.config(state=tk.NORMAL)
+        returnText.delete(1.0, "end")
+        returnText.config(state=tk.DISABLED)
+        # 实时读取程序返回
+        while res.poll() is None:
+            returnText.config(state=tk.NORMAL)
+            text = res.stdout.readline().decode("utf8")
+            returnText.insert("end", text)
+            print(text)
+            returnText.config(state=tk.DISABLED)
     findExeHistory.append(e1.get())  # 将记录写进数组
     wineBottonHistory.append(e2.get())  # 将记录写进数组
     write_txt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json", str(json.dumps(ListToDictionary(findExeHistory))))  # 将历史记录的数组转换为字典并写入
@@ -139,21 +155,48 @@ def helps():
 def UpdateThings():
     tkinter.messagebox.showinfo(title="更新内容", message=updateThings)
 
-# 生成 shell 文件在桌面
+# 生成 desktop 文件在启动器
+def make_desktop_on_launcher():
+    if combobox1.get() == "" or e2.get() == "" or e1.get() == "":  # 判断文本框是否有内容
+        tkinter.messagebox.showinfo(title="提示", message="没有填写需要使用的 wine 容器或需要运行的 exe 应用或保存的文件名")
+    else:  # 如果都有
+        if os.path.exists(get_home() + "/.local/share/applications/" + combobox1.get() + ".desktop"): # 判断目录是否有该文件，如果有
+            choose = tkinter.messagebox.askokcancel(title="提示", message="文件已经存在，是否覆盖？")  # 询问用户是否覆盖
+            if choose:   # 如要覆盖
+                os.remove(get_home() + "/.local/share/applications/" + combobox1.get() + ".desktop")  # 删除该文件
+            else:  # 如不覆盖
+                return  # 结束
+        #os.mknod(get_home() + "/.local/share/applications/" + combobox1.get() + ".desktop")
+        write_txt(get_home() + "/.local/share/applications/" + combobox1.get() + ".desktop", f'''[Desktop Entry]
+Name={combobox1.get()}
+Exec=env WINEPREFIX='{e1.get()}' {wine[o1_text.get()]} '{e2.get()}'
+Icon={iconPath}
+Type=Application
+StartupNotify=true''') # 写入文本文档
+        shellHistory.append(combobox1.get())  # 将记录写进数组
+        write_txt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json", str(json.dumps(ListToDictionary(shellHistory))))  # 将历史记录的数组转换为字典并写入
+        combobox1['value'] = shellHistory
+        tkinter.messagebox.showinfo(title="提示", message="生成完成！")  # 显示完成对话框
+
+# 生成 desktop 文件在桌面
 # （第四个按钮的事件）
 def make_desktop_on_desktop():
     if combobox1.get() == "" or e2.get() == "" or e1.get() == "":  # 判断文本框是否有内容
         tkinter.messagebox.showinfo(title="提示", message="没有填写需要使用的 wine 容器或需要运行的 exe 应用或保存的文件名")
     else:  # 如果都有
-        if os.path.exists(get_desktop_path() + "/" + combobox1.get() + ".sh"): # 判断目录是否有该文件，如果有
+        if os.path.exists(get_desktop_path() + "/" + combobox1.get() + ".desktop"): # 判断目录是否有该文件，如果有
             choose = tkinter.messagebox.askokcancel(title="提示", message="文件已经存在，是否覆盖？")  # 询问用户是否覆盖
             if choose:   # 如要覆盖
-                os.remove(get_desktop_path() + "/" + combobox1.get() + ".sh")  # 删除该文件
+                os.remove(get_desktop_path() + "/" + combobox1.get() + ".desktop")  # 删除该文件
             else:  # 如不覆盖
                 return  # 结束
-        os.mknod(get_desktop_path() + "/" + combobox1.get() + ".sh")  # 创建文本文档
-        write_txt(get_desktop_path() + "/" + combobox1.get() + ".sh", "#!/bin/bash\n" + "WINEPREFIX='" + e1.get() + "' " + wine[o1_text.get()] + " '" + e2.get() + "'") # 写入文本文档
-        os.system("chmod 777 '" + get_desktop_path() + "/" + combobox1.get() + ".sh" + "'")  # 赋予可执行权限
+        os.mknod(get_desktop_path() + "/" + combobox1.get() + ".desktop")
+        write_txt(get_desktop_path() + "/" + combobox1.get() + ".desktop", f'''[Desktop Entry]
+Name={combobox1.get()}
+Exec=env WINEPREFIX='{e1.get()}' {wine[o1_text.get()]} '{e2.get()}'
+Icon={iconPath}
+Type=Application
+StartupNotify=true''') # 写入文本文档
         shellHistory.append(combobox1.get())  # 将记录写进数组
         write_txt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json", str(json.dumps(ListToDictionary(shellHistory))))  # 将历史记录的数组转换为字典并写入
         combobox1['value'] = shellHistory
@@ -176,6 +219,49 @@ def ReStartProgram():
     python = sys.executable
     os.execl(python, python, * sys.argv)
 
+def KillProgram():
+    os.system(f"killall {wine[o1_text.get()]} -9")
+    os.system("killall winedbg -9")
+
+def InstallWine():
+    threading.Thread(target=os.system, args=[f"deepin-terminal -e \"{programPath}/AllInstall.py\""]).start()
+
+def OpenWineBotton():
+    if e1.get() == "":
+        tkinter.messagebox.showinfo(title="提示", message="您未选择需要打开的 Wine 容器")
+        return
+    os.system("xdg-open \"" + e1.get().replace("\"", "\\\"") + "\"")
+
+def OpenWineFontPath():
+    if e1.get() == "":
+        tkinter.messagebox.showinfo(title="提示", message="您未选择需要打开的 Wine 容器")
+        return
+    tkinter.messagebox.showinfo(title="提示", message="如果安装字体？只需要把字体文件复制到此字体目录\n按下“OK”按钮可以打开字体目录")
+    os.system("xdg-open \"" + e1.get().replace("\"", "\\\"") + "/drive_c/windows/Fonts\"")
+
+def UninstallProgram():
+    threading.Thread(target=UninstallProgram_threading).start()
+
+def UninstallProgram_threading():
+    DisableButton(True)
+    if e1.get() == "":  # 判断文本框是否有内容
+        tkinter.messagebox.showinfo(title="提示", message="没有填写需要使用的 wine 容器")
+        DisableButton(False)
+    else:  # 如果都有
+       #text = subprocess.getoutput("WINEPREFIX='" + e1.get() + "' " + wine[o1_text.get()] + " '" + e2.get() + "'")  # 运行
+        res = subprocess.Popen(["WINEPREFIX='" + e1.get() + "' " + wine[o1_text.get()] + " '" + programPath + "/geek.exe'"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        # 清空文本框内容
+        returnText.config(state=tk.NORMAL)
+        returnText.delete(1.0, "end")
+        returnText.config(state=tk.DISABLED)
+        # 实时读取程序返回
+        while res.poll() is None:
+            returnText.config(state=tk.NORMAL)
+            text = res.stdout.readline().decode("utf8")
+            returnText.insert("end", text)
+            print(text)
+            returnText.config(state=tk.DISABLED)
+    DisableButton(False)
 
 
 ###########################
@@ -198,7 +284,7 @@ if not os.path.exists(get_home() + "/.config/deepin-wine-runner/WineBotton.json"
 # 设置变量
 ###########################
 # 如果要添加其他 wine，请在字典添加其名称和执行路径
-wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable": "deepin-wine6-stable"}
+wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable": "deepin-wine6-stable", "spark-wine7-devel": "spark-wine7-devel"}
 shellHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json")).values())
 findExeHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json")).values())
 wineBottonHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json")).values())
@@ -209,8 +295,9 @@ wineBottonHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-r
 ###########################
 iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
 programUrl = "https://gitee.com/gfdgd-xi/deep-wine-runner"
-version = "1.4.0"
+version = "1.5.0"
 goodRunSystem = "Linux"
+programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 about = '''一个基于 Python3 的 tkinter 制作的 wine 运行器
 版本：{}
 适用平台：{}
@@ -221,17 +308,16 @@ tips = '''提示：
 1、使用终端运行该程序，可以看到 wine 以及程序本身的提示和报错;
 2、wine 32 位和 64 位的容器互不兼容;
 3、部分 wine 系统没有预装，本程序没有设置任何 wine 的依赖项，如果需要使用请自行安装'''
-updateThingsString = '''*1、修改了 wine 选项的说明和 wine 的启动方式;
-*2、设置了窗口主题;
-*3、修改了打包以及 .desktop 文件
-4、删除了以前的残略调试代码;
-5、优化了 wine 列表的显示流程;
-6、更新了“关于”窗口
-7、更新了提示内容
-8、在 gitee/github 仓库上添加了 wine 安装脚本
+updateThingsString = '''*1、支持显示 wine 程序运行时的返回内容
+*2、优化打包方式，减少从 pip 安装的库，并将 pip 源设为阿里源提升下载速度
+*3、新增 spark-wine7-devel
+*4、支持从程序启动用于安装 wine 的程序（在菜单栏的“程序”）
+5、优化 wine 安装脚本，在安装星火应用商店的 wine 时支持检测是否有 ss-apt-fast，如果有就调用替代 apt 提升安装速度
+6、支持关闭指定 wine 的进程，以及访问对应 wine 容器的目录和字体目录
+7、从生成shell脚本改为升级到desktop文件
 '''
 title = "wine 运行器 {}".format(version)
-updateTime = "2021年07月27日"
+updateTime = "2022年07月03日"
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 
 
@@ -246,21 +332,31 @@ o1_text = tk.StringVar()
 combobox1 = tk.StringVar()
 o1_text.set("deepin-wine")
 # 创建控件
+controlFrame = ttk.Frame(window)
+sendFrame = ttk.Frame(window)
 button1 = ttk.Button(window, text="浏览", command=liulanbutton)  # 创建按钮控件
 button2 = ttk.Button(window, text="浏览", command=liulanexebutton)  # 创建按钮控件
-button3 = ttk.Button(window, text="启动", command=runexebutton)  # 创建按钮控件
-button5 = ttk.Button(window, text="创建用于运行的 shell 文件到桌面", command=make_desktop_on_desktop)  # 创建按钮控件
+button3 = ttk.Button(controlFrame, text="启动", command=runexebutton)  # 创建按钮控件
+killProgram = ttk.Button(controlFrame, text="停止", command=KillProgram)
+openWineBotton = ttk.Button(controlFrame, text="打开 Wine 容器所在目录", command=OpenWineBotton)
+installWineFont = ttk.Button(controlFrame, text="安装字体", command=OpenWineFontPath)
+uninstallProgram = ttk.Button(controlFrame, text="卸载程序", command=UninstallProgram)
+button5 = ttk.Button(sendFrame, text="创建用于运行的 desktop 文件到桌面", command=make_desktop_on_desktop)  # 创建按钮控件
+saveDesktopFileOnLauncher = ttk.Button(sendFrame, text="创建用于运行的 desktop 文件到启动器", command=make_desktop_on_launcher)  # 创建按钮控件
 label1 = ttk.Label(window, text="选择你想要使用的 wine 容器：")  # 创建标签控件
 label2 = ttk.Label(window, text="选择要启动的 Windows 应用")  # 创建标签控件
 label3 = ttk.Label(window, text="选择要使用的 wine 版本")  # 创建标签控件
-label4 = ttk.Label(window, text="设置文件名，以便把上方填写的信息写入到 shell 文件里")  # 创建标签控件
+label4 = ttk.Label(window, text="设置标题，以便把上方填写的信息写入到desktop文件里")  # 创建标签控件
 e1 = ttk.Combobox(window, width=100)  # 创建文本框控件
 e2 = ttk.Combobox(window, width=100)  # 创建文本框控件
 combobox1 = ttk.Combobox(window, width=100)
-o1 = ttk.OptionMenu(window, o1_text, *list(wine))  # 创建选择框控件
+o1 = ttk.OptionMenu(window, o1_text, "deepin-wine", *list(wine))  # 创建选择框控件
+returnText = tk.Text(window)
 menu = tk.Menu(window, background="white")  # 设置菜单栏
 programmenu = tk.Menu(menu, tearoff=0, background="white")  # 设置“程序”菜单栏
 menu.add_cascade(label="程序", menu=programmenu)
+programmenu.add_command(label="安装 wine", command=InstallWine)
+programmenu.add_separator()  # 设置分界线
 programmenu.add_command(label="清空软件历史记录", command=CleanProgramHistory)
 programmenu.add_separator()  # 设置分界线
 programmenu.add_command(label="退出程序", command=window.quit)  # 设置“退出程序”项
@@ -283,6 +379,8 @@ help.configure(activebackground="white")
 e1['value'] = findExeHistory
 e2['value'] = wineBottonHistory
 combobox1['value'] = shellHistory
+returnText.insert("end", "此可以查看到 Wine 应用安装时的程序返回值")
+returnText.config(state=tk.DISABLED)
 # 添加控件
 win.config(menu=menu)  # 显示菜单栏
 label1.grid(row=0, column=0)
@@ -295,9 +393,17 @@ e2.grid(row=1, column=1)
 combobox1.grid(row=4, column=1)
 button1.grid(row=0, column=2)
 button2.grid(row=1, column=2)
-button3.grid(row=3, column=0, columnspan=3)
-button5.grid(row=5, column=0, columnspan=3)
+controlFrame.grid(row=3, column=0, columnspan=3)
+button3.grid(row=0, column=0)
+killProgram.grid(row=0, column=1)
+openWineBotton.grid(row=0, column=2)
+installWineFont.grid(row=0, column=3)
+uninstallProgram.grid(row=0, column=4)
+sendFrame.grid(row=5, column=0, columnspan=3)
+button5.grid(row=0, column=0)
+saveDesktopFileOnLauncher.grid(row=0, column=1)
 o1.grid(row=2, column=1)
+returnText.grid(row=6, column=0, columnspan=3)
 # 启动窗口
 window.pack()
 win.mainloop()
