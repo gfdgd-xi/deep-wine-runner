@@ -1,34 +1,53 @@
-# wine 运行器 1.5.0
+# wine 运行器 1.5.1
 
 ## 介绍
 一个图形化了以下命令的程序  
-```
-WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
+```bash
+env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 ```
 让你可以简易方便的使用 wine  
 是使用 Python3 的 tkinter 构建的    
 （自己美术功底太差，图标只能在网络上找了）    
-（测试平台：deepin 20.6 1030；UOS 家庭版 21；Ubuntu 22.04）    
-![image.png](https://storage.deepin.org/thread/202207031902414162_image.png)
+（测试平台：deepin 20.6；UOS 家庭版 21；Ubuntu 22.04）    
+![image.png](https://storage.deepin.org/thread/202207042234078682_image.png)
 
 
 ## 软件架构
-i386 和 amd64，deepin-wine、deepin-wine5、wine、wine64、deepin-wine5-stable、deepin-wine6-stable、spark-wine7-devel 运行在哪就运行在哪  
+i386 和 amd64，deepin-wine、deepin-wine5、wine、wine64、deepin-wine5-stable、deepin-wine6-stable、spark-wine7-devel、ukylin-wine 运行在哪就运行在哪  
 
 
 ## 使用说明
 
 （均在软件的“小提示”里有说明）
-1. 使用终端运行该程序，可以看到 wine 以及程序本身的提示和报错;
-2. wine 32 位和 64 位的容器互不兼容;
-3. 部分 wine 系统没有预装，本程序没有设置任何 wine 的依赖项，如果需要使用请自行安装
+1、使用终端运行该程序，可以看到 wine 以及程序本身的提示和报错;  
+2、wine 32 位和 64 位的容器互不兼容;  
+3、所有的 wine 和 winetricks 均需要自行安装（可以从 菜单栏=>程序 里面进行安装）  
+4、本程序支持带参数运行 wine 程序（之前版本也可以），只需要按以下格式即可：  
+```bash
+exe路径\' 参数 \'  
+```
+即可（单引号需要输入）  
+5、wine 容器如果没有指定，则会默认为 ~/.wine  
 
 ## 更新日志
+### 1.5.1
+**※1、支持打开 spark-wine7-devel 的专门缩放设置（如未安装则此按钮禁用）**  
+**※2、支持提取选择的 exe 文件的图标**  
+**※3、支持向指定的 wine 容器安装 mono、gecko、.net framework（此功能在菜单栏“Wine”中，卸载只需要使用程序的卸载按钮打开 Geek Uninstaller 即可）**  
+**※4、支持指定特定的 wine 容器调用 winetricks**  
+**※5、在没有指定 wine 容器的情况下，将自动设置为 ~/.wine**  
+6、新增 ukylin-wine  
+7、将默认选择的 wine 改为 deepin-wine6 stable  
+8、支持打开指定容器的 winecfg、winver、regedit、taskmgr  
+9、双击使用 wine 运行器打开 exe（不知道能不能生效） 
+![image.png](https://storage.deepin.org/thread/202207042234078682_image.png)
+
+
 ### 1.5.0
-*1、支持显示 wine 程序运行时的返回内容  
-*2、优化打包方式，减少从 pip 安装的库，并将 pip 源设为阿里源提升下载速度  
-*3、新增 spark-wine7-devel  
-*4、支持从程序启动用于安装 wine 的程序（在菜单栏的“程序”）  
+**※1、支持显示 wine 程序运行时的返回内容**  
+**※2、优化打包方式，减少从 pip 安装的库，并将 pip 源设为阿里源提升下载速度**  
+**※3、新增 spark-wine7-devel**  
+**※4、支持从程序启动用于安装 wine 的程序（在菜单栏的“程序”）**  
 5、优化 wine 安装脚本，在安装星火应用商店的 wine 时支持检测是否有 ss-apt-fast，如果有就调用替代 apt 提升安装速度  
 6、支持关闭指定 wine 的进程，以及访问对应 wine 容器的目录和字体目录  
 7、从生成shell脚本改为升级到desktop文件  
@@ -36,9 +55,9 @@ i386 和 amd64，deepin-wine、deepin-wine5、wine、wine64、deepin-wine5-stabl
 
 
 ### 1.4.0
-*1、修改了 wine 选项的说明和 wine 的启动方式;  
-*2、设置了窗口主题;  
-*3、修改了打包以及 .desktop 文件  
+**※1、修改了 wine 选项的说明和 wine 的启动方式;**  
+**※2、设置了窗口主题;**  
+**※3、修改了打包以及 .desktop 文件**  
 4、删除了以前的残略调试代码;  
 5、优化了 wine 列表的显示流程;  
 6、更新了“关于”窗口  
@@ -84,4 +103,9 @@ i386 和 amd64，deepin-wine、deepin-wine5、wine、wine64、deepin-wine5-stabl
 ### 1.0
 1. 实现内容
 
-## ©2020-Now
+## 更多
++ https://gitee.com/gfdgd-xi/deep-wine-runner
++ https://github.com/gfdgd-xi/deep-wine-runner
++ https://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner
+
+# ©2020-Now

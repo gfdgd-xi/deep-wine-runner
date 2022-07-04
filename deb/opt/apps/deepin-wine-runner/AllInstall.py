@@ -2,7 +2,7 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi
-# 版本：1.5.0
+# 版本：1.5.1
 # 更新时间：2022年07月03日
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 的 tkinter 构建
@@ -31,9 +31,6 @@ def InstallSparkWine(wine):
 ###################
 # 程序功能
 ###################
-#print("请按回车：")
-#input()
-#os.system("clear")
 print("请保证你能有 root 权限以便安装")
 print("如果有请按回车，否则按 [Ctrl+C] 退出", end=' ')
 input()
@@ -70,4 +67,8 @@ if not choose == "N":
     if not os.path.exists("/etc/apt/sources.list.d/sparkstore.list"):
         AddSparkStoreSource()
     InstallSparkWine("spark-wine7-devel")
+print("请问是否要安装 ukylin-wine（需要添加 ukylin 源，但因为可能会导致系统问题，将不会自动添加）？[Y/N]", end=" ")
+choose = input().upper()
+if not choose == "N":
+    os.system("sudo apt install ukylin-wine -y")
 print("全部完成！")
