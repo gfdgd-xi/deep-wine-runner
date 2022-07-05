@@ -4,6 +4,16 @@ Maintainer: gfdgd xi <3025613752@qq.com>, 为什么您不喜欢熊出没和阿�
 Homepage: https://gitee.com/gfdgd-xi/deep-wine-runner
 Architecture: all
 Priority: optional
-Depends: python3, python3-tk, python3-pip, python3-pil, python3-pil.imagetk, python3-pyquery, deepin-terminal, aria2
-Description: gfdgd xi make's wine runner
-
+Depends: python3, python3-tk, python3-pip, python3-pil, python3-pil.imagetk, python3-pyquery, deepin-terminal, aria2, curl
+Description: gfdgd xi 制作的 wine 运行器
+ 更新内容：
+ ※1、支持打开 spark-wine7-devel 的专门缩放设置（如未安装则此按钮禁用）
+ ※2、支持提取选择的 exe 文件的图标
+ ※3、支持向指定的 wine 容器安装 mono、gecko、.net framework（此功能在菜单栏“Wine”中，卸载只需要使用程序的卸载按钮打开 Geek Uninstaller 即可）
+ ※4、支持指定特定的 wine 容器调用 winetricks
+ ※5、在没有指定 wine 容器的情况下，将自动设置为 ~/.wine
+ 6、新增 ukylin-wine
+ 7、将默认选择的 wine 改为 deepin-wine6 stable
+ 8、支持打开指定容器的 winecfg、winver、regedit、taskmgr
+ 9、双击使用 wine 运行器打开 exe（不知道能不能生效）
+ 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢

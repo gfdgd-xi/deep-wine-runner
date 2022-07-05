@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
-# 版本：1.5.1
-# 更新时间：2022年07月03日
+# 版本：1.5.2
+# 更新时间：2022年07月05日
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 的 tkinter 构建
 ###########################################################################################
@@ -338,6 +338,9 @@ def InstallNetFramework():
     os.system(f"deepin-terminal -C \"'{programPath}/InstallNetFramework.py' '{wineBottonPath}' {wine[o1_text.get()]}\" --keep-open")
     DisableButton(False)
 
+def BuildExeDeb():
+    pass
+
 ###########################
 # 加载配置
 ###########################
@@ -367,11 +370,12 @@ wineBottonHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-r
 ###########################
 # 程序信息
 ###########################
-iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
-programUrl = "https://gitee.com/gfdgd-xi/deep-wine-runner\nhttps://github.com/gfdgd-xi/deep-wine-runner\nhttps://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner"
-version = "1.5.1"
-goodRunSystem = "Linux"
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
+iconPath = "{}/icon.png".format(programPath)
+programUrl = "https://gitee.com/gfdgd-xi/deep-wine-runner\nhttps://github.com/gfdgd-xi/deep-wine-runner\nhttps://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner"
+information = json.loads(readtxt(f"{programPath}/information.json"))
+version = information["Version"]
+goodRunSystem = "Linux"
 about = '''一个基于 Python3 的 tkinter 制作的 wine 运行器
 版本：{}
 适用平台：{}
@@ -446,6 +450,8 @@ programmenu.add_separator()  # 设置分界线
 programmenu.add_command(label="退出程序", command=window.quit)  # 设置“退出程序”项
 wineOption = tk.Menu(menu, tearoff=0, background="white")  # 设置“Wine”菜单栏
 menu.add_cascade(label="Wine", menu=wineOption)
+wineOption.add_command(label="打包 wine 应用", command=BuildExeDeb)
+wineOption.add_separator()
 wineOption.add_command(label="在指定wine、指定容器安装 .net framework", command=lambda: threading.Thread(target=InstallNetFramework).start())
 wineOption.add_command(label="在指定wine、指定容器安装 gecko", command=lambda: threading.Thread(target=InstallMonoGecko, args=["gecko"]).start())
 wineOption.add_command(label="在指定wine、指定容器安装 mono", command=lambda: threading.Thread(target=InstallMonoGecko, args=["mono"]).start())
@@ -462,16 +468,16 @@ help.add_command(label="关于这个程序", command=about_this_program)  # 设�
 # 设置窗口
 win.iconphoto(False, tk.PhotoImage(file=iconPath))
 themes = ttkthemes.ThemedStyle(win)
-themes.set_theme("adapta")
+themes.set_theme("breeze")
 win.config(bg="white")
 # 设置控件
 if len(sys.argv) > 1 and sys.argv[1]:
     e1.set(f"{get_home()}/.wine")
     e2.set(sys.argv[1])
-menu.configure(activebackground="white")
-programmenu.configure(activebackground="white")
-wineOption.configure(activebackground="white")
-help.configure(activebackground="white")
+menu.configure(activebackground="dodgerblue")
+programmenu.configure(activebackground="dodgerblue")
+wineOption.configure(activebackground="dodgerblue")
+help.configure(activebackground="dodgerblue")
 e1['value'] = findExeHistory
 e2['value'] = wineBottonHistory
 combobox1['value'] = shellHistory
