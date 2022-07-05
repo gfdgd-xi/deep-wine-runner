@@ -11,4 +11,4 @@ Comment=Wine Runner
 Comment[zh]=wine 运行器
 Terminal=false
 StartupNotify=true
-MimeType=application/vnd.microsoft.portable-executable;application/x-dosexec;application/x-msi;application-x-executable;application/application-x-ms-dos-executable;application/application-x-msdownload
+MimeType=application/vnd.microsoft.portable-executable;application/x-dosexec;application/x-msi;application-x-executable;application/application-x-ms-dos-executable;application/application-x-msdownload;application/octet-stream
