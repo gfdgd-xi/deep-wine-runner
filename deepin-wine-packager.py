@@ -417,6 +417,7 @@ def readtxt(path):
 # 如果要添加其他 wine，请在字典添加其名称和执行路径
 wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable": "deepin-wine6-stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine"}
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
+iconPath = "{}/icon.png".format(programPath)
 information = json.loads(readtxt(f"{programPath}/information.json"))
 version = information["Version"]
 tips = """提示：
@@ -431,14 +432,9 @@ tips = """提示：
 # 窗口创建
 ###############
 window = tk.Tk()
-# 设置窗口
-style = ttkthemes.ThemedStyle(window)
-style.set_theme("breeze")
-window.title(f"wine 应用打包器 {version}")
 # 设置变量以修改和获取值项
 wineVersion = tk.StringVar()
 wineVersion.set("deepin-wine6 stable")
-# 
 e1_text = tk.StringVar()
 e2_text = tk.StringVar()
 e3_text = tk.StringVar()
@@ -455,6 +451,7 @@ label13_text = tk.StringVar()
 option1_text = tk.StringVar()
 option1_text.set("Network")
 label13_text.set("当前 deb 打包情况：暂未打包")
+# 创建控件
 label1 = ttk.Label(window, text="要打包的 deb 包的包名（※必填）")
 label2 = ttk.Label(window, text="要打包的 deb 包的版本号（※必填）")
 label3 = ttk.Label(window, text="要打包的 deb 包的说明（※必填）")
@@ -500,11 +497,16 @@ programmenu.add_command(label="退出程序", command=window.quit)  # 设置“�
 help = tk.Menu(menu, tearoff=0) # 设置“帮助”菜单栏
 menu.add_cascade(label="帮助", menu=help)
 help.add_command(label="小提示", command=helps)  # 设置“小提示”项
+# 设置窗口
+style = ttkthemes.ThemedStyle(window)
+style.set_theme("breeze")
+window.title(f"wine 应用打包器 {version}")
+window.iconphoto(False, tk.PhotoImage(file=iconPath))
+# 控件配置
 try:
-    #e6_text.set(sys.argv[1])
-    #wineVersion.set(sys.argv[2])
-    #print(os.path.splitext(sys.argv[1]))
-    pass
+    e6_text.set(sys.argv[1])
+    e5_text.set(pathlib.PurePath(sys.argv[1]).name)
+    wineVersion.set(sys.argv[2])
 except:
     pass
 # 添加控件

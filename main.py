@@ -240,7 +240,7 @@ def KillProgram():
     os.system("killall winedbg -9")
 
 def InstallWine():
-    threading.Thread(target=os.system, args=[f"deepin-terminal -e \"{programPath}/AllInstall.py\""]).start()
+    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e \"{programPath}/AllInstall.py\""]).start()
 
 def OpenWineBotton():
     if e1.get() == "":
@@ -326,7 +326,7 @@ def InstallMonoGecko(program):
         wineBottonPath = get_home() + "/.wine"
     else:
         wineBottonPath = e1.get()
-    os.system(f"deepin-terminal -C \"'{programPath}/InstallMono.py' '{wineBottonPath}' {wine[o1_text.get()]} {program}\" --keep-open")
+    os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"'{programPath}/InstallMono.py' '{wineBottonPath}' {wine[o1_text.get()]} {program}\" --keep-open")
     DisableButton(False)
 
 def InstallNetFramework():
@@ -335,11 +335,24 @@ def InstallNetFramework():
         wineBottonPath = get_home() + "/.wine"
     else:
         wineBottonPath = e1.get()
-    os.system(f"deepin-terminal -C \"'{programPath}/InstallNetFramework.py' '{wineBottonPath}' {wine[o1_text.get()]}\" --keep-open")
+    os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"'{programPath}/InstallNetFramework.py' '{wineBottonPath}' {wine[o1_text.get()]}\" --keep-open")
+    DisableButton(False)
+
+def InstallVisualStudioCPlusPlus():
+    DisableButton(True)
+    if e1.get() == "":
+        wineBottonPath = get_home() + "/.wine"
+    else:
+        wineBottonPath = e1.get()
+    os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"'{programPath}/InstallVisualCPlusPlus.py' '{wineBottonPath}' {wine[o1_text.get()]}\" --keep-open")
     DisableButton(False)
 
 def BuildExeDeb():
-    pass
+    if e1.get() == "":
+        wineBottonPath = get_home() + "/.wine"
+    else:
+        wineBottonPath = e1.get()
+    threading.Thread(target=os.system, args=[f"python3 '{programPath}/deepin-wine-packager.py' '{wineBottonPath}' '{wine[o1_text.get()]}'"]).start()
 
 ###########################
 # 加载配置
@@ -401,7 +414,7 @@ updateThingsString = '''※1、支持打开 spark-wine7-devel 的专门缩放设
 9、双击使用 wine 运行器打开 exe（不知道能不能生效）
 '''
 title = "wine 运行器 {}".format(version)
-updateTime = "2022年07月04日"
+updateTime = "2022年07月05日"
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 
 
@@ -453,6 +466,7 @@ menu.add_cascade(label="Wine", menu=wineOption)
 wineOption.add_command(label="打包 wine 应用", command=BuildExeDeb)
 wineOption.add_separator()
 wineOption.add_command(label="在指定wine、指定容器安装 .net framework", command=lambda: threading.Thread(target=InstallNetFramework).start())
+wineOption.add_command(label="在指定wine、指定容器安装 Visual Studio C++", command=lambda: threading.Thread(target=InstallVisualStudioCPlusPlus).start())
 wineOption.add_command(label="在指定wine、指定容器安装 gecko", command=lambda: threading.Thread(target=InstallMonoGecko, args=["gecko"]).start())
 wineOption.add_command(label="在指定wine、指定容器安装 mono", command=lambda: threading.Thread(target=InstallMonoGecko, args=["mono"]).start())
 wineOption.add_command(label="打开指定wine、指定容器的注册表", command=lambda: threading.Thread(target=RunWineProgram, args=["regedit"]).start())
