@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
-# 版本：1.5.1
-# 更新时间：2022年07月03日
+# 版本：1.5.2
+# 更新时间：2022年07月06日
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 的 tkinter 构建
 ###########################################################################################
@@ -16,6 +16,7 @@ import time
 import json
 import shutil
 import threading
+import traceback
 import ttkthemes
 import webbrowser
 import subprocess
@@ -240,7 +241,7 @@ def KillProgram():
     os.system("killall winedbg -9")
 
 def InstallWine():
-    threading.Thread(target=os.system, args=[f"deepin-terminal -e \"{programPath}/AllInstall.py\""]).start()
+    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e \"{programPath}/AllInstall.py\""]).start()
 
 def OpenWineBotton():
     if e1.get() == "":
@@ -266,7 +267,7 @@ def UninstallProgram_threading():
 def ConfigWineBotton():
     threading.Thread(target=RunWineProgram, args=["winecfg"]).start()
 
-def RunWineProgram(wineProgram, history = False):
+def RunWineProgram(wineProgram, history = False, Disbled = True):
     DisableButton(True)
     if e1.get() == "":
         wineBottonPath = get_home() + "/.wine"
@@ -295,7 +296,8 @@ def RunWineProgram(wineProgram, history = False):
         write_txt(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json", str(json.dumps(ListToDictionary(wineBottonHistory))))  # 将历史记录的数组转换为字典并写入
         e1['value'] = findExeHistory
         e2['value'] = wineBottonHistory
-    DisableButton(False)
+    if Disbled:
+        DisableButton(False)
 
 def RunWinetricks():
     DisableButton(True)
@@ -326,7 +328,7 @@ def InstallMonoGecko(program):
         wineBottonPath = get_home() + "/.wine"
     else:
         wineBottonPath = e1.get()
-    os.system(f"deepin-terminal -C \"'{programPath}/InstallMono.py' '{wineBottonPath}' {wine[o1_text.get()]} {program}\" --keep-open")
+    os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"'{programPath}/InstallMono.py' '{wineBottonPath}' {wine[o1_text.get()]} {program}\" --keep-open")
     DisableButton(False)
 
 def InstallNetFramework():
@@ -335,8 +337,189 @@ def InstallNetFramework():
         wineBottonPath = get_home() + "/.wine"
     else:
         wineBottonPath = e1.get()
-    os.system(f"deepin-terminal -C \"'{programPath}/InstallNetFramework.py' '{wineBottonPath}' {wine[o1_text.get()]}\" --keep-open")
+    os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"'{programPath}/InstallNetFramework.py' '{wineBottonPath}' {wine[o1_text.get()]}\" --keep-open")
     DisableButton(False)
+
+def InstallVisualStudioCPlusPlus():
+    DisableButton(True)
+    if e1.get() == "":
+        wineBottonPath = get_home() + "/.wine"
+    else:
+        wineBottonPath = e1.get()
+    os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"'{programPath}/InstallVisualCPlusPlus.py' '{wineBottonPath}' {wine[o1_text.get()]}\" --keep-open")
+    DisableButton(False)
+
+def BuildExeDeb():
+    if e1.get() == "":
+        wineBottonPath = get_home() + "/.wine"
+    else:
+        wineBottonPath = e1.get()
+    threading.Thread(target=os.system, args=[f"python3 '{programPath}/deepin-wine-packager.py' '{wineBottonPath}' '{wine[o1_text.get()]}'"]).start()
+
+class GetDllFromWindowsISO:
+    wineBottonPath = get_home() + "/.wine"
+    isoPath = None#ttk.Entry()
+    dllList = None
+    message = None
+    dllFound = None
+    dllControl = None
+    foundButton = None
+    saveDll = None
+    setWineBotton = None
+    browser = None
+    mount = False
+    mountButton = None
+    def ShowWindow():
+        DisableButton(True)
+        GetDllFromWindowsISO.message = tk.Toplevel()
+        if not e1.get() == "":
+            GetDllFromWindowsISO.wineBottonPath = e1.get()
+        ttk.Label(GetDllFromWindowsISO.message, text=f"""提示：
+    目前本提取功能只支持 Windows XP 以及 Windows Server 2003 等老系统的官方安装镜像，只支持读取 i386 安装方法的安装镜像，不支持读取 wim、ghost 安装方式
+    以及不要拷贝/替换太多的 dll，否则可能会导致 wine 容器异常
+    最后，拷贝/替换 dll 后，建议点击下面“设置 wine 容器”按钮==》函数库 进行设置
+当前选择的 Wine 容器：{GetDllFromWindowsISO.wineBottonPath}""").grid(row=0, column=0, columnspan=3, sticky=tk.W)
+        ttk.Label(GetDllFromWindowsISO.message, text="ISO镜像：").grid(row=1, column=0, sticky=tk.W)
+        GetDllFromWindowsISO.isoPath = ttk.Combobox(GetDllFromWindowsISO.message, width=100)
+        GetDllFromWindowsISO.browser = ttk.Button(GetDllFromWindowsISO.message, text="浏览……", command=GetDllFromWindowsISO.Browser)
+        isoControl = ttk.Frame(GetDllFromWindowsISO.message)
+        GetDllFromWindowsISO.mountButton = ttk.Button(isoControl, text="读取/挂载ISO镜像", command=GetDllFromWindowsISO.MountDisk)
+        ttk.Button(isoControl, text="关闭/卸载ISO镜像", command=GetDllFromWindowsISO.UmountDisk).grid(row=0, column=1)
+        ttk.Label(GetDllFromWindowsISO.message, text="查找DLL\n（为空则代表不查找，\n将显示全部内容）：").grid(row=3, column=0)
+        GetDllFromWindowsISO.dllFound = ttk.Combobox(GetDllFromWindowsISO.message, width=100)
+        GetDllFromWindowsISO.foundButton = ttk.Button(GetDllFromWindowsISO.message, text="查找", command=GetDllFromWindowsISO.Found)
+        GetDllFromWindowsISO.dllList = tk.Listbox(GetDllFromWindowsISO.message, width=100)
+        GetDllFromWindowsISO.dllControl = ttk.Frame(GetDllFromWindowsISO.message)
+        GetDllFromWindowsISO.saveDll = ttk.Button(GetDllFromWindowsISO.dllControl, text="保存到 wine 容器中", command=GetDllFromWindowsISO.CopyDll)
+        GetDllFromWindowsISO.setWineBotton = ttk.Button(GetDllFromWindowsISO.dllControl, text="设置 wine 容器", command=lambda: threading.Thread(target=RunWineProgram, args=["winecfg", False, False]).start())
+        # 设置控件
+        GetDllFromWindowsISO.DisbledDown(True)
+        GetDllFromWindowsISO.isoPath['value'] = isoPath
+        GetDllFromWindowsISO.dllFound['value'] = isoPathFound  
+        # 显示控件
+        GetDllFromWindowsISO.isoPath.grid(row=1, column=1)
+        GetDllFromWindowsISO.browser.grid(row=1, column=2)
+        GetDllFromWindowsISO.mountButton.grid(row=0, column=0)
+        isoControl.grid(row=2, column=0, columnspan=3)
+        GetDllFromWindowsISO.dllFound.grid(row=3, column=1)
+        GetDllFromWindowsISO.foundButton.grid(row=3, column=2)
+        GetDllFromWindowsISO.dllList.grid(row=4, column=0, columnspan=3)
+        GetDllFromWindowsISO.dllControl.grid(row=5, column=0, columnspan=3)
+        GetDllFromWindowsISO.saveDll.grid(row=0, column=0)
+        GetDllFromWindowsISO.setWineBotton.grid(row=0, column=1)
+        GetDllFromWindowsISO.message.protocol('WM_DELETE_WINDOW', GetDllFromWindowsISO.ExitWindow)
+        GetDllFromWindowsISO.message.mainloop()
+
+    def DisbledUp(state):
+        nd = [tk.NORMAL, tk.DISABLED]
+        GetDllFromWindowsISO.isoPath.configure(state=nd[int(state)])
+        GetDllFromWindowsISO.browser.configure(state=nd[int(state)])
+        GetDllFromWindowsISO.mountButton.configure(state=nd[int(state)])
+
+
+    def DisbledDown(state):
+        nd = [tk.NORMAL, tk.DISABLED]
+        GetDllFromWindowsISO.dllList.configure(state=nd[int(state)])
+        GetDllFromWindowsISO.dllFound.configure(state=nd[int(state)])
+        #GetDllFromWindowsISO.dllControl.configure(state=nd[int(state)])
+        GetDllFromWindowsISO.saveDll.configure(state=nd[int(state)])
+        GetDllFromWindowsISO.setWineBotton.configure(state=nd[int(state)])
+        GetDllFromWindowsISO.foundButton.configure(state=nd[int(state)])
+
+    def Browser():
+        path = tkinter.filedialog.askopenfilename(title="选择 ISO 镜像文件", 
+            filetypes=[("ISO 镜像文件", "*.iso"), ("ISO 镜像文件", "*.ISO"), ("所有文件", "*.*")], 
+            initialdir=json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindISO.json"))["path"])
+        if path == None or path == "":
+            return
+        GetDllFromWindowsISO.isoPath.set(path)
+        write_txt(get_home() + "/.config/deepin-wine-runner/FindISO.json", json.dumps({"path": os.path.dirname(path)}))  # 写入配置文件
+
+    def Found():
+        found = GetDllFromWindowsISO.dllFound.get()
+        GetDllFromWindowsISO.dllList.configure(state=tk.NORMAL)
+        GetDllFromWindowsISO.dllList.delete(0, tk.END)
+        try:
+            if found == "":
+                for i in os.listdir("/tmp/wine-runner-getdll/i386"):
+                    if i[-3:] == "dl_":
+                        GetDllFromWindowsISO.dllList.insert("end", i[:-1] + "l")    
+                return
+            for i in os.listdir("/tmp/wine-runner-getdll/i386"):
+                if found in i[:-1] + "l":
+                    GetDllFromWindowsISO.dllList.insert("end", i[:-1] + "l")  
+            isoPathFound.append(found)  # 将记录写进数组
+            write_txt(get_home() + "/.config/deepin-wine-runner/ISOPathFound.json", str(json.dumps(ListToDictionary(isoPathFound))))  # 将历史记录的数组转换为字典并写入
+            GetDllFromWindowsISO.dllFound['value'] = isoPathFound  
+        except:
+            traceback.print_exc()
+            tkinter.messagebox.showerror(title="错误", message=traceback.format_exc())
+
+
+    def ExitWindow():
+        if GetDllFromWindowsISO.mount:
+            tkinter.messagebox.showinfo(title="提示", message="请关闭/卸载镜像后再关闭本窗口")
+            return
+        DisableButton(False)
+        GetDllFromWindowsISO.message.destroy()
+
+    def MountDisk():
+        if not os.path.exists(GetDllFromWindowsISO.isoPath.get()):
+            tkinter.messagebox.showerror(title="错误", message="您选择的 ISO 镜像文件不存在")
+            return
+        if os.path.exists("/tmp/wine-runner-getdll"):
+            try:
+                os.rmdir("/tmp/wine-runner-getdll")
+            except:
+                # 如果无法删除可能是挂载了文件
+                os.system("pkexec umount /tmp/wine-runner-getdll")
+                try:
+                    os.rmdir("/tmp/wine-runner-getdll")
+                except:
+                    traceback.print_exc()
+                    tkinter.messagebox.showerror(title="错误", message=traceback.format_exc())
+                    return
+        os.makedirs("/tmp/wine-runner-getdll")
+        GetDllFromWindowsISO.dllList.configure(state=tk.NORMAL)
+        os.system(f"pkexec mount '{GetDllFromWindowsISO.isoPath.get()}' /tmp/wine-runner-getdll")
+        GetDllFromWindowsISO.dllList.delete(0, tk.END)
+        try:
+            for i in os.listdir("/tmp/wine-runner-getdll/i386"):
+                if i[-3:] == "dl_":
+                    GetDllFromWindowsISO.dllList.insert("end", i[:-1] + "l")     
+        except:
+            traceback.print_exc()
+            tkinter.messagebox.showerror(title="错误", message=f"镜像内容读取/挂载失败，报错如下：\n{traceback.format_exc()}")
+            return
+        GetDllFromWindowsISO.DisbledDown(False)  
+        GetDllFromWindowsISO.DisbledUp(True)
+        GetDllFromWindowsISO.mount = True
+        isoPath.append(GetDllFromWindowsISO.isoPath.get())  # 将记录写进数组
+        write_txt(get_home() + "/.config/deepin-wine-runner/ISOPath.json", str(json.dumps(ListToDictionary(isoPath))))  # 将历史记录的数组转换为字典并写入
+        GetDllFromWindowsISO.isoPath['value'] = isoPath
+
+    def UmountDisk():
+        os.system("pkexec umount /tmp/wine-runner-getdll")
+        GetDllFromWindowsISO.dllList.configure(state=tk.NORMAL)
+        try:
+            shutil.rmtree("/tmp/wine-runner-getdll")
+        except:
+            traceback.print_exc()
+            tkinter.messagebox.showerror(title="错误", message=f"关闭/卸载镜像失败，报错如下：\n{traceback.format_exc()}")
+            return
+        GetDllFromWindowsISO.DisbledDown(True)
+        GetDllFromWindowsISO.DisbledUp(False)
+        GetDllFromWindowsISO.mount = False
+
+    def CopyDll():
+        for i in GetDllFromWindowsISO.dllList.curselection():
+            choose = GetDllFromWindowsISO.dllList.get(i)
+            if os.path.exists(f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}"):
+                if not tkinter.messagebox.askyesno(title="提示", message=f"DLL {choose} 已经存在，是否覆盖？"):
+                    continue
+            print(i)
+            shutil.copy(f"/tmp/wine-runner-getdll/i386/{choose[:-1]}_", f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}")
+            
 
 ###########################
 # 加载配置
@@ -349,8 +532,14 @@ if not os.path.exists(get_home() + "/.config/deepin-wine-runner/FindExeHistory.j
     write_txt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json", json.dumps({}))  # 创建配置文件
 if not os.path.exists(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json"):  # 如果没有配置文件
     write_txt(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json", json.dumps({}))  # 创建配置文件
+if not os.path.exists(get_home() + "/.config/deepin-wine-runner/ISOPath.json"):  # 如果没有配置文件
+    write_txt(get_home() + "/.config/deepin-wine-runner/ISOPath.json", json.dumps({}))  # 写入（创建）一个配置文件
+if not os.path.exists(get_home() + "/.config/deepin-wine-runner/ISOPathFound.json"):  # 如果没有配置文件
+    write_txt(get_home() + "/.config/deepin-wine-runner/ISOPathFound.json", json.dumps({}))  # 写入（创建）一个配置文件
 if not os.path.exists(get_home() + "/.config/deepin-wine-runner/FindExe.json"):  # 如果没有配置文件
     write_txt(get_home() + "/.config/deepin-wine-runner/FindExe.json", json.dumps({"path": "~"}))  # 写入（创建）一个配置文件
+if not os.path.exists(get_home() + "/.config/deepin-wine-runner/FindISO.json"):  # 如果没有配置文件
+    write_txt(get_home() + "/.config/deepin-wine-runner/FindISO.json", json.dumps({"path": "~"}))  # 写入（创建）一个配置文件
 if not os.path.exists(get_home() + "/.config/deepin-wine-runner/WineBotton.json"):  # 如果没有配置文件
     write_txt(get_home() + "/.config/deepin-wine-runner/WineBotton.json", json.dumps({"path": "~/.deepinwine"}))  # 写入（创建）一个配置文件
 
@@ -362,16 +551,18 @@ wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "w
 shellHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json")).values())
 findExeHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json")).values())
 wineBottonHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json")).values())
-
+isoPath = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ISOPath.json")).values())
+isoPathFound = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ISOPathFound.json")).values())
 
 ###########################
 # 程序信息
 ###########################
-iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
-programUrl = "https://gitee.com/gfdgd-xi/deep-wine-runner\nhttps://github.com/gfdgd-xi/deep-wine-runner\nhttps://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner"
-version = "1.5.1"
-goodRunSystem = "Linux"
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
+iconPath = "{}/icon.png".format(programPath)
+programUrl = "https://gitee.com/gfdgd-xi/deep-wine-runner\nhttps://github.com/gfdgd-xi/deep-wine-runner\nhttps://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner"
+information = json.loads(readtxt(f"{programPath}/information.json"))
+version = information["Version"]
+goodRunSystem = "Linux"
 about = '''一个基于 Python3 的 tkinter 制作的 wine 运行器
 版本：{}
 适用平台：{}
@@ -386,18 +577,14 @@ tips = '''提示：
 exe路径\' 参数 \'
 即可（单引号需要输入）
 5、wine 容器如果没有指定，则会默认为 ~/.wine'''
-updateThingsString = '''※1、支持打开 spark-wine7-devel 的专门缩放设置（如未安装则此按钮禁用）
-※2、支持提取选择的 exe 文件的图标
-※3、支持向指定的 wine 容器安装 mono、gecko、.net framework（此功能在菜单栏“Wine”中，卸载只需要使用程序的卸载按钮打开 Geek Uninstaller 即可）
-※4、支持指定特定的 wine 容器调用 winetricks
-※5、在没有指定 wine 容器的情况下，将自动设置为 ~/.wine
-6、新增 ukylin-wine
-7、将默认选择的 wine 改为 deepin-wine6 stable
-8、支持打开指定容器的 winecfg、winver、regedit、taskmgr
-9、双击使用 wine 运行器打开 exe（不知道能不能生效）
+updateThingsString = '''※1、添加并翻新了 deepin-wine5 打包器，改为 wine 打包器，支持常见 wine 的打包
+※2、新增 Visual Studio C++ 的安装程序
+※3、新增从系统安装镜像提取 DLL 到 wine 容器的功能（当前只支持 Windows XP 和 Windows Server 2003 的官方安装镜像）
+4、修复了安装星火应用商店的 wine 运行器右键打开方式没有 wine 运行器选项的问题
+5、新增脚本，优化 deepin terminal 调用本程序脚本显示不佳的问题
 '''
 title = "wine 运行器 {}".format(version)
-updateTime = "2022年07月04日"
+updateTime = "2022年07月06日"
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 
 
@@ -446,7 +633,12 @@ programmenu.add_separator()  # 设置分界线
 programmenu.add_command(label="退出程序", command=window.quit)  # 设置“退出程序”项
 wineOption = tk.Menu(menu, tearoff=0, background="white")  # 设置“Wine”菜单栏
 menu.add_cascade(label="Wine", menu=wineOption)
+wineOption.add_command(label="打包 wine 应用", command=BuildExeDeb)
+wineOption.add_separator()
+wineOption.add_command(label="从镜像获取DLL（只支持Windows XP、Windows Server 2003官方安装镜像）", command=GetDllFromWindowsISO.ShowWindow)
+wineOption.add_separator()
 wineOption.add_command(label="在指定wine、指定容器安装 .net framework", command=lambda: threading.Thread(target=InstallNetFramework).start())
+wineOption.add_command(label="在指定wine、指定容器安装 Visual Studio C++", command=lambda: threading.Thread(target=InstallVisualStudioCPlusPlus).start())
 wineOption.add_command(label="在指定wine、指定容器安装 gecko", command=lambda: threading.Thread(target=InstallMonoGecko, args=["gecko"]).start())
 wineOption.add_command(label="在指定wine、指定容器安装 mono", command=lambda: threading.Thread(target=InstallMonoGecko, args=["mono"]).start())
 wineOption.add_command(label="打开指定wine、指定容器的注册表", command=lambda: threading.Thread(target=RunWineProgram, args=["regedit"]).start())
@@ -462,16 +654,16 @@ help.add_command(label="关于这个程序", command=about_this_program)  # 设�
 # 设置窗口
 win.iconphoto(False, tk.PhotoImage(file=iconPath))
 themes = ttkthemes.ThemedStyle(win)
-themes.set_theme("adapta")
+themes.set_theme("breeze")
 win.config(bg="white")
 # 设置控件
 if len(sys.argv) > 1 and sys.argv[1]:
     e1.set(f"{get_home()}/.wine")
     e2.set(sys.argv[1])
-menu.configure(activebackground="white")
-programmenu.configure(activebackground="white")
-wineOption.configure(activebackground="white")
-help.configure(activebackground="white")
+menu.configure(activebackground="dodgerblue")
+programmenu.configure(activebackground="dodgerblue")
+wineOption.configure(activebackground="dodgerblue")
+help.configure(activebackground="dodgerblue")
 e1['value'] = findExeHistory
 e2['value'] = wineBottonHistory
 combobox1['value'] = shellHistory

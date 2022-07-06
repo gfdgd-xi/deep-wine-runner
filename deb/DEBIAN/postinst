@@ -1,4 +1,4 @@
 # !/bin/sh
 python3 -m pip install --upgrade ttkthemes -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
 # 向服务器返回安装数加1（不显示内容且忽略错误）
-curl http://120.25.153.144/spark-deepin-wine-runner/Install.php?Version=1.5.1 -s > /dev/null | true
+curl http://120.25.153.144/spark-deepin-wine-runner/Install.php?Version=1.5.2 -s > /dev/null | true
