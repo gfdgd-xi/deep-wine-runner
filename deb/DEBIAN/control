@@ -1,5 +1,5 @@
 Package: spark-deepin-wine-runner
-Version: 1.5.1
+Version: 1.5.2
 Maintainer: gfdgd xi <3025613752@qq.com>, 为什么您不喜欢熊出没和阿布呢
 Homepage: https://gitee.com/gfdgd-xi/deep-wine-runner
 Architecture: all
@@ -7,13 +7,9 @@ Priority: optional
 Depends: python3, python3-tk, python3-pip, python3-pil, python3-pil.imagetk, python3-pyquery, deepin-terminal, aria2, curl
 Description: gfdgd xi 制作的 wine 运行器
  更新内容：
- ※1、支持打开 spark-wine7-devel 的专门缩放设置（如未安装则此按钮禁用）
- ※2、支持提取选择的 exe 文件的图标
- ※3、支持向指定的 wine 容器安装 mono、gecko、.net framework（此功能在菜单栏“Wine”中，卸载只需要使用程序的卸载按钮打开 Geek Uninstaller 即可）
- ※4、支持指定特定的 wine 容器调用 winetricks
- ※5、在没有指定 wine 容器的情况下，将自动设置为 ~/.wine
- 6、新增 ukylin-wine
- 7、将默认选择的 wine 改为 deepin-wine6 stable
- 8、支持打开指定容器的 winecfg、winver、regedit、taskmgr
- 9、双击使用 wine 运行器打开 exe（不知道能不能生效）
+ ※1、添加并翻新了 deepin-wine5 打包器，改为 wine 打包器，支持常见 wine 的打包
+ ※2、新增 Visual Studio C++ 的安装程序
+ ※3、新增从系统安装镜像提取 DLL 到 wine 容器的功能（当前只支持 Windows XP 和 Windows Server 2003 的官方安装镜像）
+ 4、修复了安装星火应用商店的 wine 运行器右键打开方式没有 wine 运行器选项的问题
+ 5、新增脚本，优化 deepin terminal 调用本程序脚本显示不佳的问题
  作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
