@@ -10,7 +10,29 @@ env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 （自己美术功底太差，图标只能在网络上找了）    
 （测试平台：deepin 20.6；UOS 家庭版 21；Ubuntu 22.04）    
 ![image.png](https://storage.deepin.org/thread/202207061004446872_image.png)
+而打包器可以方便的把您的 wine 容器打包成 deb 包供他人使用，程序创建的 deb 构建临时文件夹目录树如下：  
+```bash
+/XXX
+├── DEBIAN
+│   └── control
+└── opt
+└── apps
+    └── XXX
+        ├── entries
+        │   ├── applications
+        │   │   └── XXX.desktop
+        │   └── icons
+        │       └── hicolor
+        │           └── scalable
+        │               └── apps
+        │                   └── XXX.png（XXX.svg）
+        ├── files
+        │   ├── files.7z
+        │   └── run.sh
+        └── info
 
+11 directories, 6 files
+```
 
 ## 软件架构
 i386 和 amd64，deepin-wine、deepin-wine5、wine、wine64、deepin-wine5-stable、deepin-wine6-stable、spark-wine7-devel、ukylin-wine 运行在哪就运行在哪  
