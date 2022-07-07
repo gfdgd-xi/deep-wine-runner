@@ -2,15 +2,17 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
-# 版本：1.5.2
-# 更新时间：2022年07月06日
+# 版本：1.5.3
+# 更新时间：2022年07月07日
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 的 tkinter 构建
 ###########################################################################################
 #################
 # 引入所需的库
 #################
+from asyncore import read
 import os
+from sqlite3 import TimeFromTicks
 import sys
 import time
 import json
@@ -101,19 +103,34 @@ def DisableButton(things):
     getProgramIcon.configure(state=a[things])
     uninstallProgram.configure(state=a[things])
 
+def CheckProgramIsInstall(program):
+    return not bool(os.system(f"which '{program}'"))
+
 # 运行可执行文件的线程
 def runexebutton_threading():
     DisableButton(True)
+    if not CheckProgramIsInstall(wine[o1_text.get()]):
+        if not tkinter.messagebox.askyesno(title="提示", message="检查到您未安装这个 wine，是否继续使用这个 wine 运行？"):
+            DisableButton(False)
+            return
     if e2.get() == "":  # 判断文本框是否有内容
         tkinter.messagebox.showinfo(title="提示", message="没有填写需要使用的 exe 应用")
         DisableButton(False)
         return
     else:  # 如果都有
         if e1.get() == "":
-            wineBottonPath = get_home() + "/.wine"
+            wineBottonPath = setting["DefultBotton"]
         else:
             wineBottonPath = e1.get()
-        res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + wine[o1_text.get()] + " '" + e2.get() + "'"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        option = ""
+        if setting["Architecture"] != "Auto":
+            option += f"WINEARCH={setting['Architecture']} "
+        if not setting["Debug"]:
+            option += "WINEDEBUG=-all "
+        if setting["TerminalOpen"]:
+            res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1_text.get()] + " '" + e2.get() + "' " + setting["WineOption"] + "\" --keep-open"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        else:
+            res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1_text.get()] + " '" + e2.get() + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         # 清空文本框内容
         returnText.config(state=tk.NORMAL)
         returnText.delete(1.0, "end")
@@ -169,6 +186,10 @@ def UpdateThings():
 def make_desktop_on_launcher():
     if combobox1.get() == "" or e2.get() == "":  # 判断文本框是否有内容
         tkinter.messagebox.showinfo(title="提示", message="没有填写需要使用 exe 应用或保存的文件名")
+    if not CheckProgramIsInstall(wine[o1_text.get()]):
+        if not tkinter.messagebox.askyesno(title="提示", message="检查到您未安装这个 wine，是否继续使用这个 wine 写入？"):
+            DisableButton(False)
+            return
     else:  # 如果都有
         if os.path.exists(get_home() + "/.local/share/applications/" + combobox1.get() + ".desktop"): # 判断目录是否有该文件，如果有
             choose = tkinter.messagebox.askokcancel(title="提示", message="文件已经存在，是否覆盖？")  # 询问用户是否覆盖
@@ -177,12 +198,17 @@ def make_desktop_on_launcher():
             else:  # 如不覆盖
                 return  # 结束
         if e1.get() == "":
-            wineBottonPath = get_home() + "/.wine"
+            wineBottonPath = setting["DefultBotton"]
         else:
             wineBottonPath = e1.get()
+        option = ""
+        if setting["Architecture"] != "Auto":
+            option += f"WINEARCH={setting['Architecture']} "
+        if not setting["Debug"]:
+            option += "WINEDEBUG=-all "
         write_txt(get_home() + "/.local/share/applications/" + combobox1.get() + ".desktop", f'''[Desktop Entry]
 Name={combobox1.get()}
-Exec=env WINEPREFIX='{wineBottonPath}' {wine[o1_text.get()]} '{e2.get()}'
+Exec=env WINEPREFIX='{wineBottonPath}' {option} {wine[o1_text.get()]} '{e2.get()}' {setting["WineOption"]}
 Icon={iconPath}
 Type=Application
 StartupNotify=true''') # 写入文本文档
@@ -196,6 +222,10 @@ StartupNotify=true''') # 写入文本文档
 def make_desktop_on_desktop():
     if combobox1.get() == "" or e2.get() == "":  # 判断文本框是否有内容
         tkinter.messagebox.showinfo(title="提示", message="没有填写需要使用的 exe 应用或保存的文件名")
+    if not CheckProgramIsInstall(wine[o1_text.get()]):
+        if not tkinter.messagebox.askyesno(title="提示", message="检查到您未安装这个 wine，是否继续使用这个 wine 写入？"):
+            DisableButton(False)
+            return
     else:  # 如果都有
         if os.path.exists(get_desktop_path() + "/" + combobox1.get() + ".desktop"): # 判断目录是否有该文件，如果有
             choose = tkinter.messagebox.askokcancel(title="提示", message="文件已经存在，是否覆盖？")  # 询问用户是否覆盖
@@ -204,13 +234,18 @@ def make_desktop_on_desktop():
             else:  # 如不覆盖
                 return  # 结束
         if e1.get() == "":
-            wineBottonPath = get_home() + "/.wine"
+            wineBottonPath = setting["DefultBotton"]
         else:
             wineBottonPath = e1.get()
         os.mknod(get_desktop_path() + "/" + combobox1.get() + ".desktop")
+        option = ""
+        if setting["Architecture"] != "Auto":
+            option += f"WINEARCH={setting['Architecture']} "
+        if not setting["Debug"]:
+            option += "WINEDEBUG=-all "
         write_txt(get_desktop_path() + "/" + combobox1.get() + ".desktop", f'''[Desktop Entry]
 Name={combobox1.get()}
-Exec=env WINEPREFIX='{wineBottonPath}' {wine[o1_text.get()]} '{e2.get()}'
+Exec=env WINEPREFIX='{wineBottonPath}' {option} {wine[o1_text.get()]} '{e2.get()}' {setting["WineOption"]}
 Icon={iconPath}
 Type=Application
 StartupNotify=true''') # 写入文本文档
@@ -245,14 +280,14 @@ def InstallWine():
 
 def OpenWineBotton():
     if e1.get() == "":
-        wineBottonPath = get_home() + "/.wine"
+        wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.get()
     os.system("xdg-open \"" + wineBottonPath.replace("\'", "\\\'") + "\"")
 
 def OpenWineFontPath():
     if e1.get() == "":
-        wineBottonPath = get_home() + "/.wine"
+        wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.get()
     tkinter.messagebox.showinfo(title="提示", message="如果安装字体？只需要把字体文件复制到此字体目录\n按下“OK”按钮可以打开字体目录")
@@ -269,12 +304,23 @@ def ConfigWineBotton():
 
 def RunWineProgram(wineProgram, history = False, Disbled = True):
     DisableButton(True)
+    if not CheckProgramIsInstall(wine[o1_text.get()]):
+        if not tkinter.messagebox.askyesno(title="提示", message="检查到您未安装这个 wine，是否继续使用这个 wine 运行？"):
+            DisableButton(False)
+            return
     if e1.get() == "":
-        wineBottonPath = get_home() + "/.wine"
+        wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.get()
-    print("WINEPREFIX='" + wineBottonPath + "' " + wine[o1_text.get()] + " '" + wineProgram + "'")
-    res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + wine[o1_text.get()] + " '" + wineProgram + "'"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    option = ""
+    if setting["Architecture"] != "Auto":
+        option += f"WINEARCH={setting['Architecture']} "
+    if not setting["Debug"]:
+        option += "WINEDEBUG=-all "
+    if setting["TerminalOpen"]:
+        res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1_text.get()] + " '" + wineProgram + "' " + setting["WineOption"] + "\" --keep-open"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    else:
+        res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1_text.get()] + " '" + wineProgram + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     # 清空文本框内容
     returnText.config(state=tk.NORMAL)
     returnText.delete(1.0, "end")
@@ -301,11 +347,22 @@ def RunWineProgram(wineProgram, history = False, Disbled = True):
 
 def RunWinetricks():
     DisableButton(True)
-    wineBottonPath = get_home() + "/.wine"
+    if not CheckProgramIsInstall(wine[o1_text.get()]):
+        if not tkinter.messagebox.askyesno(title="提示", message="检查到您未安装这个 wine，是否继续使用这个 wine 运行？"):
+            DisableButton(False)
+            return
+    wineBottonPath = setting["DefultBotton"]
     if not e1.get() == "":
         wineBottonPath = e1.get()
-    print("WINEPREFIX='" + wineBottonPath + "' winetricks")
-    res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' winetricks"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    option = ""
+    if setting["Architecture"] != "Auto":
+        option += f"WINEARCH={setting['Architecture']} "
+    if not setting["Debug"]:
+        option += "WINEDEBUG=-all "
+    if setting["TerminalOpen"]:
+        res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='" + option + wineBottonPath + "' winetricks\""], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    else:    
+        res = subprocess.Popen(["WINEPREFIX='" + option + wineBottonPath + "' winetricks"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     # 清空文本框内容
     returnText.config(state=tk.NORMAL)
     returnText.delete(1.0, "end")
@@ -325,7 +382,7 @@ def RunWinetricks():
 def InstallMonoGecko(program):
     DisableButton(True)
     if e1.get() == "":
-        wineBottonPath = get_home() + "/.wine"
+        wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.get()
     os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"'{programPath}/InstallMono.py' '{wineBottonPath}' {wine[o1_text.get()]} {program}\" --keep-open")
@@ -334,7 +391,7 @@ def InstallMonoGecko(program):
 def InstallNetFramework():
     DisableButton(True)
     if e1.get() == "":
-        wineBottonPath = get_home() + "/.wine"
+        wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.get()
     os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"'{programPath}/InstallNetFramework.py' '{wineBottonPath}' {wine[o1_text.get()]}\" --keep-open")
@@ -343,7 +400,7 @@ def InstallNetFramework():
 def InstallVisualStudioCPlusPlus():
     DisableButton(True)
     if e1.get() == "":
-        wineBottonPath = get_home() + "/.wine"
+        wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.get()
     os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"'{programPath}/InstallVisualCPlusPlus.py' '{wineBottonPath}' {wine[o1_text.get()]}\" --keep-open")
@@ -351,10 +408,29 @@ def InstallVisualStudioCPlusPlus():
 
 def BuildExeDeb():
     if e1.get() == "":
-        wineBottonPath = get_home() + "/.wine"
+        wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.get()
     threading.Thread(target=os.system, args=[f"python3 '{programPath}/deepin-wine-packager.py' '{wineBottonPath}' '{wine[o1_text.get()]}'"]).start()
+
+def SetDeepinFileDialogDeepin():
+    code = os.system(f"pkexec \"{programPath}/deepin-wine-venturi-setter.py\" deepin")
+    if code != 0:
+        if code == 1:
+            tkinter.messagebox.showerror(title="错误", message="无法更新配置：配置不准重复配置")
+            return
+        tkinter.messagebox.showerror(title="错误", message="配置失败")
+
+def SetDeepinFileDialogDefult():
+    code = os.system(f"pkexec \"{programPath}/deepin-wine-venturi-setter.py\" defult")
+    if code != 0:
+        if code == 1:
+            tkinter.messagebox.showerror(title="错误", message="无法更新配置：配置不准重复配置")
+            return
+        tkinter.messagebox.showerror(title="错误", message="配置失败")
+
+def SetDeepinFileDialogRecovery():
+    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C 'pkexec \"{programPath}/deepin-wine-venturi-setter.py\" recovery' --keep-open"]).start()
 
 class GetDllFromWindowsISO:
     wineBottonPath = get_home() + "/.wine"
@@ -407,7 +483,10 @@ class GetDllFromWindowsISO:
         GetDllFromWindowsISO.dllControl.grid(row=5, column=0, columnspan=3)
         GetDllFromWindowsISO.saveDll.grid(row=0, column=0)
         GetDllFromWindowsISO.setWineBotton.grid(row=0, column=1)
+        # 设置
         GetDllFromWindowsISO.message.protocol('WM_DELETE_WINDOW', GetDllFromWindowsISO.ExitWindow)
+        GetDllFromWindowsISO.message.title("从 ISO 提取 DLL")
+        # 显示
         GetDllFromWindowsISO.message.mainloop()
 
     def DisbledUp(state):
@@ -518,12 +597,84 @@ class GetDllFromWindowsISO:
                 if not tkinter.messagebox.askyesno(title="提示", message=f"DLL {choose} 已经存在，是否覆盖？"):
                     continue
             print(i)
-            shutil.copy(f"/tmp/wine-runner-getdll/i386/{choose[:-1]}_", f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}")
+            try:
+                shutil.copy(f"/tmp/wine-runner-getdll/i386/{choose[:-1]}_", f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}")
+                tkinter.messagebox.showinfo(title="提示", message="提取成功！")
+            except:
+                traceback.print_exc()
+                tkinter.messagebox.showerror(title="错误", message=traceback.format_exc())
             
+class ProgramSetting():
+    wineBottonA = None
+    wineDebug = None
+    defultWine = None
+    defultBotton = None
+    terminalOpen = None
+    wineOption = None
+    def ShowWindow():
+        message = tk.Toplevel()
+        ProgramSetting.wineBottonA = tk.StringVar()
+        ProgramSetting.wineDebug = tk.IntVar()
+        ProgramSetting.wineDebug.set(int(setting["Debug"]))
+        ProgramSetting.defultWine = tk.StringVar()
+        ttk.Label(message, text="选择 Wine 容器版本：").grid(row=0, column=0, sticky=tk.W)
+        ttk.OptionMenu(message, ProgramSetting.wineBottonA, setting["Architecture"], "Auto", "win32", "win64").grid(row=0, column=1)
+        ttk.Label(message, text="wine DEBUG 信息输出：").grid(row=1, column=0, sticky=tk.W)
+        ttk.Checkbutton(message, text="开启 DEBUG 输出", variable=ProgramSetting.wineDebug).grid(row=1, column=1)
+        ttk.Label(message, text="默认 Wine：").grid(row=2, column=0, sticky=tk.W)
+        ttk.OptionMenu(message, ProgramSetting.defultWine, setting["DefultWine"], *list(wine)).grid(row=2, column=1)  # 创建选择框控件
+        ttk.Label(message, text="默认 Wine 容器：").grid(row=3, column=0, sticky=tk.W)
+        ProgramSetting.defultBotton = tk.StringVar()
+        ProgramSetting.defultBotton.set(setting["DefultBotton"])
+        ttk.Entry(message, width=30, text=setting["DefultBotton"], textvariable=ProgramSetting.defultBotton).grid(row=3, column=1)
+        ttk.Button(message, text="浏览", command=ProgramSetting.Browser).grid(row=3, column=2)
+        ProgramSetting.terminalOpen = tk.IntVar()
+        ProgramSetting.terminalOpen.set(setting["TerminalOpen"])
+        ttk.Label(message, text="使用终端打开：").grid(row=4, column=0)
+        ttk.Checkbutton(message, text="使用终端打开（deepin 终端）", variable=ProgramSetting.terminalOpen).grid(row=4, column=1, columnspan=2)
+        ttk.Label(message, text="自定义 wine 参数：").grid(row=5, column=0)
+        ProgramSetting.wineOption = tk.StringVar()
+        ProgramSetting.wineOption.set(setting["WineOption"])
+        ttk.Entry(message, width=40, textvariable=ProgramSetting.wineOption).grid(row=5, column=1, columnspan=2)
+        ttk.Button(message, text="保存", command=ProgramSetting.Save).grid(row=6, column=0, columnspan=3, sticky=tk.E)
+        # 设置
+        message.title(f"设置 wine 运行器 {version}")
+        # 显示
+        message.mainloop()
+
+    def Browser():
+        path = tkinter.filedialog.askdirectory(title="选择 Wine 容器", initialdir=json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineBotton.json"))["path"])
+        if path == "" or path == None or path == "()" or path == ():
+            return
+        ProgramSetting.defultBotton.set(path)
+
+    def Save():
+        # 写入容器位数设置
+        setting["Architecture"] = ProgramSetting.wineBottonA.get()
+        setting["Debug"] = bool(ProgramSetting.wineDebug.get())
+        setting["DefultWine"] = ProgramSetting.defultWine.get()
+        setting["DefultBotton"] = ProgramSetting.defultBotton.get()
+        setting["TerminalOpen"] = bool(ProgramSetting.terminalOpen.get())
+        setting["WineOption"] = ProgramSetting.wineOption.get()
+        try:
+            write_txt(get_home() + "/.config/deepin-wine-runner/WineSetting.json", json.dumps(setting))
+        except:
+            traceback.print_exc()
+            tkinter.messagebox.showerror(title="错误", message=traceback.format_exc())
+            return
+        tkinter.messagebox.showinfo(title="提示", message="保存完毕！")
 
 ###########################
 # 加载配置
 ###########################
+defultProgramList = {
+    "Architecture": "Auto",
+    "Debug": True,
+    "DefultWine": "deepin-wine6 stable",
+    "DefultBotton" : get_home() + "/.wine",
+    "TerminalOpen": False,
+    "WineOption": ""
+}
 if not os.path.exists(get_home() + "/.config/deepin-wine-runner"):  # 如果没有配置文件夹
     os.mkdir(get_home() + "/.config/deepin-wine-runner")  # 创建配置文件夹
 if not os.path.exists(get_home() + "/.config/deepin-wine-runner/ShellHistory.json"):  # 如果没有配置文件
@@ -542,17 +693,33 @@ if not os.path.exists(get_home() + "/.config/deepin-wine-runner/FindISO.json"): 
     write_txt(get_home() + "/.config/deepin-wine-runner/FindISO.json", json.dumps({"path": "~"}))  # 写入（创建）一个配置文件
 if not os.path.exists(get_home() + "/.config/deepin-wine-runner/WineBotton.json"):  # 如果没有配置文件
     write_txt(get_home() + "/.config/deepin-wine-runner/WineBotton.json", json.dumps({"path": "~/.deepinwine"}))  # 写入（创建）一个配置文件
+if not os.path.exists(get_home() + "/.config/deepin-wine-runner/WineSetting.json"):  # 如果没有配置文件
+    write_txt(get_home() + "/.config/deepin-wine-runner/WineSetting.json", json.dumps(defultProgramList))  # 写入（创建）一个配置文件
 
 ###########################
 # 设置变量
 ###########################
 # 如果要添加其他 wine，请在字典添加其名称和执行路径
-wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable": "deepin-wine6-stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine"}
-shellHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json")).values())
-findExeHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json")).values())
-wineBottonHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json")).values())
-isoPath = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ISOPath.json")).values())
-isoPathFound = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ISOPathFound.json")).values())
+try:
+    wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable": "deepin-wine6-stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine"}
+    shellHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json")).values())
+    findExeHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json")).values())
+    wineBottonHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json")).values())
+    isoPath = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ISOPath.json")).values())
+    isoPathFound = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ISOPathFound.json")).values())
+    setting = json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineSetting.json"))
+    change = False
+    for i in ["Architecture", "Debug", "DefultWine", "DefultBotton", "TerminalOpen", "WineOption"]:
+        if not i in setting:
+            change = True
+            setting[i] = defultProgramList[i]
+    if change:
+        write_txt(get_home() + "/.config/deepin-wine-runner/WineSetting.json", json.dumps(setting))
+except:
+    root = tk.Tk()
+    root.withdraw()
+    tkinter.messagebox.showerror(title="错误", message="无法读取配置，无法继续")
+    sys.exit(1)
 
 ###########################
 # 程序信息
@@ -584,7 +751,7 @@ updateThingsString = '''※1、添加并翻新了 deepin-wine5 打包器，改�
 5、新增脚本，优化 deepin terminal 调用本程序脚本显示不佳的问题
 '''
 title = "wine 运行器 {}".format(version)
-updateTime = "2022年07月06日"
+updateTime = "2022年07月07日"
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 
 
@@ -621,13 +788,14 @@ label4 = ttk.Label(window, text="设置标题，以便把上方填写的信息�
 e1 = ttk.Combobox(window, width=100)  # 创建文本框控件
 e2 = ttk.Combobox(window, width=100)  # 创建文本框控件
 combobox1 = ttk.Combobox(window, width=100)
-o1 = ttk.OptionMenu(window, o1_text, "deepin-wine6 stable", *list(wine))  # 创建选择框控件
+o1 = ttk.OptionMenu(window, o1_text, setting["DefultWine"], *list(wine))  # 创建选择框控件
 returnText = tk.Text(window)
 menu = tk.Menu(window, background="white")  # 设置菜单栏
 programmenu = tk.Menu(menu, tearoff=0, background="white")  # 设置“程序”菜单栏
 menu.add_cascade(label="程序", menu=programmenu)
 programmenu.add_command(label="安装 wine", command=InstallWine)
 programmenu.add_separator()  # 设置分界线
+programmenu.add_command(label="设置程序", command=ProgramSetting.ShowWindow)
 programmenu.add_command(label="清空软件历史记录", command=CleanProgramHistory)
 programmenu.add_separator()  # 设置分界线
 programmenu.add_command(label="退出程序", command=window.quit)  # 设置“退出程序”项
@@ -641,9 +809,16 @@ wineOption.add_command(label="在指定wine、指定容器安装 .net framework"
 wineOption.add_command(label="在指定wine、指定容器安装 Visual Studio C++", command=lambda: threading.Thread(target=InstallVisualStudioCPlusPlus).start())
 wineOption.add_command(label="在指定wine、指定容器安装 gecko", command=lambda: threading.Thread(target=InstallMonoGecko, args=["gecko"]).start())
 wineOption.add_command(label="在指定wine、指定容器安装 mono", command=lambda: threading.Thread(target=InstallMonoGecko, args=["mono"]).start())
+wineOption.add_separator()
+wineOption.add_command(label="打开指定wine、指定容器的控制面板", command=lambda: threading.Thread(target=RunWineProgram, args=["control"]).start())
+wineOption.add_command(label="打开指定wine、指定容器的浏览器", command=lambda: threading.Thread(target=RunWineProgram, args=["iexplore' 'https://www.deepin.org"]).start())
 wineOption.add_command(label="打开指定wine、指定容器的注册表", command=lambda: threading.Thread(target=RunWineProgram, args=["regedit"]).start())
 wineOption.add_command(label="打开指定wine、指定容器的任务管理器", command=lambda: threading.Thread(target=RunWineProgram, args=["taskmgr"]).start())
 wineOption.add_command(label="打开指定wine、指定容器的关于 wine", command=lambda: threading.Thread(target=RunWineProgram, args=["winver"]).start())
+wineOption.add_separator()
+wineOption.add_command(label="设置 run_v3.sh 的文管为 Deepin 默认文管", command=SetDeepinFileDialogDeepin)
+wineOption.add_command(label="设置 run_v3.sh 的文管为 Wine 默认文管", command=SetDeepinFileDialogDefult)
+wineOption.add_command(label="重新安装 deepin-wine-helper", command=SetDeepinFileDialogRecovery)
 help = tk.Menu(menu, tearoff=0, background="white")  # 设置“帮助”菜单栏
 menu.add_cascade(label="帮助", menu=help)
 help.add_command(label="程序官网", command=OpenProgramURL)  # 设置“程序官网”项
@@ -651,14 +826,18 @@ help.add_separator()
 help.add_command(label="小提示", command=helps)  # 设置“小提示”项
 help.add_command(label="更新内容", command=UpdateThings)  # 设置“更新内容”项
 help.add_command(label="关于这个程序", command=about_this_program)  # 设置“关于这个程序”项
+help.add_separator()
+moreProgram = tk.Menu(menu, tearoff=0, background="white")  
+help.add_cascade(label="更多生态适配应用", menu=moreProgram)
+moreProgram.add_command(label="UEngine 运行器", command=lambda: webbrowser.open_new_tab("https://gitee.com/gfdgd-xi/uengine-runner"))
 # 设置窗口
 win.iconphoto(False, tk.PhotoImage(file=iconPath))
 themes = ttkthemes.ThemedStyle(win)
 themes.set_theme("breeze")
 win.config(bg="white")
 # 设置控件
+e1.set(setting["DefultBotton"])
 if len(sys.argv) > 1 and sys.argv[1]:
-    e1.set(f"{get_home()}/.wine")
     e2.set(sys.argv[1])
 menu.configure(activebackground="dodgerblue")
 programmenu.configure(activebackground="dodgerblue")
