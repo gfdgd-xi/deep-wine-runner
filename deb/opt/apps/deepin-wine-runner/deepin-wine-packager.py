@@ -8,6 +8,7 @@
 #################
 # 引入所需的库
 #################
+from cProfile import run
 import os
 import sys
 import json
@@ -76,6 +77,9 @@ def disabled_or_NORMAL_all(choose):
     button4.config(state=a)
     button5.config(state=a)
     option1.config(state=a)
+    chooseWineHelper.config(state=a)
+    chooseWineVersion.config(state=a)
+    
 
 def make_deb():
     clean_textbox1_things()
@@ -84,6 +88,9 @@ def make_deb():
         messagebox.showinfo(title="提示", message="必填信息没有填写完整，无法继续构建 deb 包")
         disabled_or_NORMAL_all(True)
         label13_text_change("必填信息没有填写完整，无法继续构建 deb 包")
+        return
+    if not messagebox.askyesno(title="提示", message="打包将会改动现在选择的容器，是否继续？"):
+        disabled_or_NORMAL_all(True)
         return
     thread = threading.Thread(target=make_deb_threading)
     thread.start()
@@ -165,6 +172,15 @@ def make_deb_threading():
         os.mknod("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.get(), e1_text.get()))
         os.mknod("{}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.get()))
         os.mknod("{}/opt/apps/{}/info".format(debPackagePath, e1_text.get()))
+        ###############
+        # 设置容器
+        ###############
+        label13_text_change("正在设置 wine 容器")
+        os.chdir(b)
+        run_command("sed -i \"s#$USER#@current_user@#\" ./*.reg")
+        os.chdir(f"{b}/drive_c/users")
+        run_command(f"mv -v '{os.getlogin()}' @current_user@")
+        os.chdir(programPath)
         ###############
         # 压缩容器
         ###############
@@ -335,6 +351,7 @@ fi
         run_command("chmod -Rv 644 {}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.get()))
         run_command("chmod -Rv 644 {}/opt/apps/{}/info".format(debPackagePath, e1_text.get()))
         run_command("chmod -Rv 755 {}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.get()))
+        run_command("chmod -Rv 755 {}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.get(), e1_text.get()))
         ################
         # 构建 deb 包
         ################
@@ -345,9 +362,10 @@ fi
         ################
         label13_text_change("完成构建！")
         disabled_or_NORMAL_all(True)
-    except Exception as e:
-        messagebox.showerror(title="错误", message="程序出现错误，错误信息：\n{}".format(traceback.format_exc()))
+        messagebox.showinfo(title="提示", message="打包完毕！")
+    except:
         traceback.print_exc()
+        messagebox.showerror(title="错误", message="程序出现错误，错误信息：\n{}".format(traceback.format_exc()))
         label13_text_change("deb 包构建出现错误：{}".format(repr(e)))
         chang_textbox1_things(traceback.format_exc())
         disabled_or_NORMAL_all(True)
@@ -411,11 +429,16 @@ def readtxt(path):
     f.close()  # 关闭文本对象
     return str  # 返回结果
 
+# 获取用户主目录
+def get_home():
+    return os.path.expanduser('~')
+
 ###############
 # 程序信息
 ###############
 # 如果要添加其他 wine，请在字典添加其名称和执行路径
 wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable": "deepin-wine6-stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine"}
+os.chdir("/")
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 iconPath = "{}/icon.png".format(programPath)
 information = json.loads(readtxt(f"{programPath}/information.json"))
@@ -431,7 +454,20 @@ tips = """提示：
 ###############
 # 窗口创建
 ###############
-window = tk.Tk()
+# 读取主题
+try:
+    theme = not ("dark" in readtxt(get_home() + "/.gtkrc-2.0") and "gtk-theme-name=" in readtxt(get_home() + "/.gtkrc-2.0"))
+except:
+    print("主题读取错误，默认使用浅色主题")
+    theme = True
+if theme:
+    window = tk.Tk()
+    themes = ttkthemes.ThemedStyle(window)
+    themes.set_theme("breeze")
+else:
+    import ttkbootstrap
+    style = ttkbootstrap.Style(theme="darkly")
+    window = style.master  # 创建窗口
 # 设置变量以修改和获取值项
 wineVersion = tk.StringVar()
 wineVersion.set("deepin-wine6 stable")
@@ -452,22 +488,22 @@ option1_text = tk.StringVar()
 option1_text.set("Network")
 label13_text.set("当前 deb 打包情况：暂未打包")
 # 创建控件
-label1 = ttk.Label(window, text="要打包的 deb 包的包名（※必填）")
-label2 = ttk.Label(window, text="要打包的 deb 包的版本号（※必填）")
-label3 = ttk.Label(window, text="要打包的 deb 包的说明（※必填）")
-label4 = ttk.Label(window, text="要打包的 deb 包的维护者（※必填）")
-label5 = ttk.Label(window, text="要解压的 wine 容器的容器名（※必填）")
-label6 = ttk.Label(window, text="要解压的 wine 容器（※必填）")
-label7 = ttk.Label(window, text="要解压的 wine 容器里需要运行的可执行文件路径（※必填）")
-label8 = ttk.Label(window, text="要显示的 .desktop 文件的名称（※必填）")
-label9 = ttk.Label(window, text="要显示的 .desktop 文件的图标（选填）")
-label10 = ttk.Label(window, text="要显示的 .desktop 文件的 MimeType 内容（选填）")
-label12 = ttk.Label(window, text="打包 deb 的保存路径（※必填）")
+label1 = ttk.Label(window, text="要打包的 deb 包的包名（※必填）：")
+label2 = ttk.Label(window, text="要打包的 deb 包的版本号（※必填）：")
+label3 = ttk.Label(window, text="要打包的 deb 包的说明（※必填）：")
+label4 = ttk.Label(window, text="要打包的 deb 包的维护者（※必填）：")
+label5 = ttk.Label(window, text="要解压的 wine 容器的容器名（※必填）：")
+label6 = ttk.Label(window, text="要解压的 wine 容器（※必填）：")
+label7 = ttk.Label(window, text="要解压的 wine 容器里需要运行的可执行文件路径（※必填）：")
+label8 = ttk.Label(window, text="要显示的 .desktop 文件的名称（※必填）：")
+label9 = ttk.Label(window, text="要显示的 .desktop 文件的图标（选填）：")
+label10 = ttk.Label(window, text="要显示的 .desktop 文件的 MimeType 内容（选填）：")
+label12 = ttk.Label(window, text="打包 deb 的保存路径（※必填）：")
 label13 = ttk.Label(window, textvariable=label13_text)
-label14 = ttk.Label(window, text="要显示的 .desktop 文件的分类（※必填）")
-label15 = ttk.Label(window,text="要解压的 wine 容器里需要运行的可执行文件的参数（选填）")
+label14 = ttk.Label(window, text="要显示的 .desktop 文件的分类（※必填）：")
+label15 = ttk.Label(window,text="要解压的 wine 容器里需要运行的可执行文件的参数（选填）：")
 wineFrame = ttk.Frame(window)
-chooseWineVersionTips = ttk.Label(window,text="选择打包的 wine 版本（必选）")
+chooseWineVersionTips = ttk.Label(window,text="选择打包的 wine 版本（※必选）：")
 chooseWineVersion = ttk.OptionMenu(wineFrame, wineVersion, "deepin-wine6 stable", *list(wine))  # 创建选择框控件
 chooseWineHelperValue = tk.IntVar()
 chooseWineHelper = ttk.Checkbutton(wineFrame, text="使用星火wine helper（如不勾选默认为deepin-wine-helper）", variable=chooseWineHelperValue)
@@ -498,8 +534,6 @@ help = tk.Menu(menu, tearoff=0) # 设置“帮助”菜单栏
 menu.add_cascade(label="帮助", menu=help)
 help.add_command(label="小提示", command=helps)  # 设置“小提示”项
 # 设置窗口
-style = ttkthemes.ThemedStyle(window)
-style.set_theme("breeze")
 window.title(f"wine 应用打包器 {version}")
 window.iconphoto(False, tk.PhotoImage(file=iconPath))
 # 控件配置

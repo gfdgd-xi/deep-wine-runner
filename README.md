@@ -1,4 +1,4 @@
-# wine 运行器 1.5.2
+# wine 运行器 1.5.3
 
 ## 介绍
 一个图形化了以下命令的程序  
@@ -9,7 +9,7 @@ env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 是使用 Python3 的 tkinter 构建的    
 （自己美术功底太差，图标只能在网络上找了）    
 （测试平台：deepin 20.6；UOS 家庭版 21；Ubuntu 22.04）    
-![image.png](https://storage.deepin.org/thread/202207061004446872_image.png)
+![Screenshot_20220707_215916.png](https://storage.deepin.org/thread/202207072207209350_Screenshot_20220707_215916.png)
 而打包器可以方便的把您的 wine 容器打包成 deb 包供他人使用，程序创建的 deb 构建临时文件夹目录树如下：  
 ```bash
 /XXX
@@ -60,6 +60,13 @@ exe路径\' 参数 \'
 5、.desktop 的图标只支持 PNG 格式和 SVG 格式，其他格式无法显示图标  
 
 ## 更新日志
+### 1.5.3
+**※1、新增专门的程序设置，支持设置 Wine 容器架构、DEBUG 信息是否输出、默认的 Wine、默认容器路径、是否使用终端打开和 Wine 参数**  
+**※2、修复了 wine 打包器的控件禁用不全和打包的 deb 用户残留的问题**  
+**※3、新增暗黑主题**  
+4、合并了 deepin wine 文管设置器  
+![Screenshot_20220707_215916.png](https://storage.deepin.org/thread/202207072207209350_Screenshot_20220707_215916.png)
+
 ### 1.5.2
 **※1、添加并翻新了 deepin-wine5 打包器，改为 wine 打包器，支持常见 wine 的打包**  
 **※2、新增 Visual Studio C++ 的安装程序**  
