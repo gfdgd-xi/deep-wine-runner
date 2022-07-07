@@ -11,6 +11,7 @@
 # 引入所需的库
 #################
 from asyncore import read
+from email import message
 import os
 from sqlite3 import TimeFromTicks
 import sys
@@ -432,6 +433,20 @@ def SetDeepinFileDialogDefult():
 def SetDeepinFileDialogRecovery():
     threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C 'pkexec \"{programPath}/deepin-wine-venturi-setter.py\" recovery' --keep-open"]).start()
 
+def DeleteWineBotton():
+    if not tkinter.messagebox.askokcancel(title="提示", message="你确定要删除容器吗？删除后将无法恢复！\n如果没有选择 wine 容器，将会自动删除默认的容器！"):
+        return
+    if e1.get() == "":
+        wineBottonPath = setting["DefultBotton"]
+    else:
+        wineBottonPath = e1.get()
+    try:
+        shutil.rmtree(wineBottonPath)
+        tkinter.messagebox.showinfo(title="提示", message="删除完毕！")
+    except:
+        traceback.print_exc()
+        tkinter.messagebox.showerror(title="错误", message=traceback.format_exc())
+
 class GetDllFromWindowsISO:
     wineBottonPath = get_home() + "/.wine"
     isoPath = None#ttk.Entry()
@@ -744,12 +759,10 @@ tips = '''提示：
 exe路径\' 参数 \'
 即可（单引号需要输入）
 5、wine 容器如果没有指定，则会默认为 ~/.wine'''
-updateThingsString = '''※1、添加并翻新了 deepin-wine5 打包器，改为 wine 打包器，支持常见 wine 的打包
-※2、新增 Visual Studio C++ 的安装程序
-※3、新增从系统安装镜像提取 DLL 到 wine 容器的功能（当前只支持 Windows XP 和 Windows Server 2003 的官方安装镜像）
-4、修复了安装星火应用商店的 wine 运行器右键打开方式没有 wine 运行器选项的问题
-5、新增脚本，优化 deepin terminal 调用本程序脚本显示不佳的问题
-'''
+updateThingsString = '''※1、新增专门的程序设置，支持设置 Wine 容器架构、DEBUG 信息是否输出、默认的 Wine、默认容器路径、是否使用终端打开和 Wine 参数
+※2、修复了 wine 打包器的控件禁用不全和打包的 deb 用户残留的问题
+※3、新增暗黑主题
+4、合并了 deepin wine 文管设置器'''
 title = "wine 运行器 {}".format(version)
 updateTime = "2022年07月07日"
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
@@ -758,9 +771,22 @@ updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updat
 ###########################
 # 窗口创建
 ###########################
-win = tk.Tk()  # 创建窗口
+# 读取主题
+try:
+    theme = not ("dark" in readtxt(get_home() + "/.gtkrc-2.0") and "gtk-theme-name=" in readtxt(get_home() + "/.gtkrc-2.0"))
+except:
+    print("主题读取错误，默认使用浅色主题")
+    theme = True
+if theme:
+    win = tk.Tk()
+    themes = ttkthemes.ThemedStyle(win)
+    themes.set_theme("breeze")
+else:
+    import ttkbootstrap
+    style = ttkbootstrap.Style(theme="darkly")
+    win = style.master  # 创建窗口
 win.title(title)  # 设置标题
-window = ttk.Frame()
+window = tk.Frame()
 # 设置变量以修改和获取值项
 o1_text = tk.StringVar()
 combobox1 = tk.StringVar()
@@ -783,13 +809,13 @@ button5 = ttk.Button(sendFrame, text="创建用于运行的 desktop 文件到桌
 saveDesktopFileOnLauncher = ttk.Button(sendFrame, text="创建用于运行的 desktop 文件到启动器", command=make_desktop_on_launcher)  # 创建按钮控件
 label1 = ttk.Label(window, text="选择你想要使用的 wine 容器：")  # 创建标签控件
 label2 = ttk.Label(window, text="选择要启动的 Windows 应用")  # 创建标签控件
-label3 = ttk.Label(window, text="选择要使用的 wine 版本")  # 创建标签控件
+label3 = ttk.Label(window, text="选择要使用的 wine 版本：")  # 创建标签控件
 label4 = ttk.Label(window, text="设置标题，以便把上方填写的信息写入到desktop文件里")  # 创建标签控件
 e1 = ttk.Combobox(window, width=100)  # 创建文本框控件
 e2 = ttk.Combobox(window, width=100)  # 创建文本框控件
 combobox1 = ttk.Combobox(window, width=100)
 o1 = ttk.OptionMenu(window, o1_text, setting["DefultWine"], *list(wine))  # 创建选择框控件
-returnText = tk.Text(window)
+returnText = tk.Text(window, width=150)
 menu = tk.Menu(window, background="white")  # 设置菜单栏
 programmenu = tk.Menu(menu, tearoff=0, background="white")  # 设置“程序”菜单栏
 menu.add_cascade(label="程序", menu=programmenu)
@@ -819,6 +845,8 @@ wineOption.add_separator()
 wineOption.add_command(label="设置 run_v3.sh 的文管为 Deepin 默认文管", command=SetDeepinFileDialogDeepin)
 wineOption.add_command(label="设置 run_v3.sh 的文管为 Wine 默认文管", command=SetDeepinFileDialogDefult)
 wineOption.add_command(label="重新安装 deepin-wine-helper", command=SetDeepinFileDialogRecovery)
+wineOption.add_separator()
+wineOption.add_command(label="删除选择的 wine 容器", command=DeleteWineBotton)
 help = tk.Menu(menu, tearoff=0, background="white")  # 设置“帮助”菜单栏
 menu.add_cascade(label="帮助", menu=help)
 help.add_command(label="程序官网", command=OpenProgramURL)  # 设置“程序官网”项
@@ -829,11 +857,9 @@ help.add_command(label="关于这个程序", command=about_this_program)  # 设�
 help.add_separator()
 moreProgram = tk.Menu(menu, tearoff=0, background="white")  
 help.add_cascade(label="更多生态适配应用", menu=moreProgram)
-moreProgram.add_command(label="UEngine 运行器", command=lambda: webbrowser.open_new_tab("https://gitee.com/gfdgd-xi/uengine-runner"))
+moreProgram.add_command(label="运行 Android 应用：UEngine 运行器", command=lambda: webbrowser.open_new_tab("https://gitee.com/gfdgd-xi/uengine-runner"))
 # 设置窗口
 win.iconphoto(False, tk.PhotoImage(file=iconPath))
-themes = ttkthemes.ThemedStyle(win)
-themes.set_theme("breeze")
 win.config(bg="white")
 # 设置控件
 e1.set(setting["DefultBotton"])
@@ -858,7 +884,6 @@ label3.grid(row=2, column=0)
 label4.grid(row=4, column=0)
 e1.grid(row=0, column=1)
 e2.grid(row=1, column=1)
-#combobox1.grid(row=4, column=1)
 combobox1.grid(row=4, column=1)
 button1.grid(row=0, column=2)
 button2.grid(row=1, column=2)
@@ -878,5 +903,5 @@ saveDesktopFileOnLauncher.grid(row=0, column=1)
 o1.grid(row=2, column=1)
 returnText.grid(row=6, column=0, columnspan=3)
 # 启动窗口
-window.pack()
+window.pack(fill=tk.BOTH, expand = True)
 win.mainloop()

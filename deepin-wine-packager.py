@@ -429,6 +429,10 @@ def readtxt(path):
     f.close()  # 关闭文本对象
     return str  # 返回结果
 
+# 获取用户主目录
+def get_home():
+    return os.path.expanduser('~')
+
 ###############
 # 程序信息
 ###############
@@ -450,7 +454,20 @@ tips = """提示：
 ###############
 # 窗口创建
 ###############
-window = tk.Tk()
+# 读取主题
+try:
+    theme = not ("dark" in readtxt(get_home() + "/.gtkrc-2.0") and "gtk-theme-name=" in readtxt(get_home() + "/.gtkrc-2.0"))
+except:
+    print("主题读取错误，默认使用浅色主题")
+    theme = True
+if theme:
+    window = tk.Tk()
+    themes = ttkthemes.ThemedStyle(window)
+    themes.set_theme("breeze")
+else:
+    import ttkbootstrap
+    style = ttkbootstrap.Style(theme="darkly")
+    window = style.master  # 创建窗口
 # 设置变量以修改和获取值项
 wineVersion = tk.StringVar()
 wineVersion.set("deepin-wine6 stable")
@@ -471,22 +488,22 @@ option1_text = tk.StringVar()
 option1_text.set("Network")
 label13_text.set("当前 deb 打包情况：暂未打包")
 # 创建控件
-label1 = ttk.Label(window, text="要打包的 deb 包的包名（※必填）")
-label2 = ttk.Label(window, text="要打包的 deb 包的版本号（※必填）")
-label3 = ttk.Label(window, text="要打包的 deb 包的说明（※必填）")
-label4 = ttk.Label(window, text="要打包的 deb 包的维护者（※必填）")
-label5 = ttk.Label(window, text="要解压的 wine 容器的容器名（※必填）")
-label6 = ttk.Label(window, text="要解压的 wine 容器（※必填）")
-label7 = ttk.Label(window, text="要解压的 wine 容器里需要运行的可执行文件路径（※必填）")
-label8 = ttk.Label(window, text="要显示的 .desktop 文件的名称（※必填）")
-label9 = ttk.Label(window, text="要显示的 .desktop 文件的图标（选填）")
-label10 = ttk.Label(window, text="要显示的 .desktop 文件的 MimeType 内容（选填）")
-label12 = ttk.Label(window, text="打包 deb 的保存路径（※必填）")
+label1 = ttk.Label(window, text="要打包的 deb 包的包名（※必填）：")
+label2 = ttk.Label(window, text="要打包的 deb 包的版本号（※必填）：")
+label3 = ttk.Label(window, text="要打包的 deb 包的说明（※必填）：")
+label4 = ttk.Label(window, text="要打包的 deb 包的维护者（※必填）：")
+label5 = ttk.Label(window, text="要解压的 wine 容器的容器名（※必填）：")
+label6 = ttk.Label(window, text="要解压的 wine 容器（※必填）：")
+label7 = ttk.Label(window, text="要解压的 wine 容器里需要运行的可执行文件路径（※必填）：")
+label8 = ttk.Label(window, text="要显示的 .desktop 文件的名称（※必填）：")
+label9 = ttk.Label(window, text="要显示的 .desktop 文件的图标（选填）：")
+label10 = ttk.Label(window, text="要显示的 .desktop 文件的 MimeType 内容（选填）：")
+label12 = ttk.Label(window, text="打包 deb 的保存路径（※必填）：")
 label13 = ttk.Label(window, textvariable=label13_text)
-label14 = ttk.Label(window, text="要显示的 .desktop 文件的分类（※必填）")
-label15 = ttk.Label(window,text="要解压的 wine 容器里需要运行的可执行文件的参数（选填）")
+label14 = ttk.Label(window, text="要显示的 .desktop 文件的分类（※必填）：")
+label15 = ttk.Label(window,text="要解压的 wine 容器里需要运行的可执行文件的参数（选填）：")
 wineFrame = ttk.Frame(window)
-chooseWineVersionTips = ttk.Label(window,text="选择打包的 wine 版本（必选）")
+chooseWineVersionTips = ttk.Label(window,text="选择打包的 wine 版本（※必选）：")
 chooseWineVersion = ttk.OptionMenu(wineFrame, wineVersion, "deepin-wine6 stable", *list(wine))  # 创建选择框控件
 chooseWineHelperValue = tk.IntVar()
 chooseWineHelper = ttk.Checkbutton(wineFrame, text="使用星火wine helper（如不勾选默认为deepin-wine-helper）", variable=chooseWineHelperValue)
@@ -517,8 +534,6 @@ help = tk.Menu(menu, tearoff=0) # 设置“帮助”菜单栏
 menu.add_cascade(label="帮助", menu=help)
 help.add_command(label="小提示", command=helps)  # 设置“小提示”项
 # 设置窗口
-style = ttkthemes.ThemedStyle(window)
-style.set_theme("breeze")
 window.title(f"wine 应用打包器 {version}")
 window.iconphoto(False, tk.PhotoImage(file=iconPath))
 # 控件配置
