@@ -8,6 +8,7 @@
 #################
 # 引入所需的库
 #################
+from cProfile import run
 import os
 import sys
 import json
@@ -76,6 +77,9 @@ def disabled_or_NORMAL_all(choose):
     button4.config(state=a)
     button5.config(state=a)
     option1.config(state=a)
+    chooseWineHelper.config(state=a)
+    chooseWineVersion.config(state=a)
+    
 
 def make_deb():
     clean_textbox1_things()
@@ -84,6 +88,9 @@ def make_deb():
         messagebox.showinfo(title="提示", message="必填信息没有填写完整，无法继续构建 deb 包")
         disabled_or_NORMAL_all(True)
         label13_text_change("必填信息没有填写完整，无法继续构建 deb 包")
+        return
+    if not messagebox.askyesno(title="提示", message="打包将会改动现在选择的容器，是否继续？"):
+        disabled_or_NORMAL_all(True)
         return
     thread = threading.Thread(target=make_deb_threading)
     thread.start()
@@ -165,6 +172,15 @@ def make_deb_threading():
         os.mknod("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.get(), e1_text.get()))
         os.mknod("{}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.get()))
         os.mknod("{}/opt/apps/{}/info".format(debPackagePath, e1_text.get()))
+        ###############
+        # 设置容器
+        ###############
+        label13_text_change("正在设置 wine 容器")
+        os.chdir(b)
+        run_command("sed -i \"s#$USER#@current_user@#\" ./*.reg")
+        os.chdir(f"{b}/drive_c/users")
+        run_command(f"mv -v '{os.getlogin()}' @current_user@")
+        os.chdir(programPath)
         ###############
         # 压缩容器
         ###############
@@ -335,6 +351,7 @@ fi
         run_command("chmod -Rv 644 {}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.get()))
         run_command("chmod -Rv 644 {}/opt/apps/{}/info".format(debPackagePath, e1_text.get()))
         run_command("chmod -Rv 755 {}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.get()))
+        run_command("chmod -Rv 755 {}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.get(), e1_text.get()))
         ################
         # 构建 deb 包
         ################
@@ -345,9 +362,10 @@ fi
         ################
         label13_text_change("完成构建！")
         disabled_or_NORMAL_all(True)
-    except Exception as e:
-        messagebox.showerror(title="错误", message="程序出现错误，错误信息：\n{}".format(traceback.format_exc()))
+        messagebox.showinfo(title="提示", message="打包完毕！")
+    except:
         traceback.print_exc()
+        messagebox.showerror(title="错误", message="程序出现错误，错误信息：\n{}".format(traceback.format_exc()))
         label13_text_change("deb 包构建出现错误：{}".format(repr(e)))
         chang_textbox1_things(traceback.format_exc())
         disabled_or_NORMAL_all(True)
@@ -416,6 +434,7 @@ def readtxt(path):
 ###############
 # 如果要添加其他 wine，请在字典添加其名称和执行路径
 wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable": "deepin-wine6-stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine"}
+os.chdir("/")
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 iconPath = "{}/icon.png".format(programPath)
 information = json.loads(readtxt(f"{programPath}/information.json"))
