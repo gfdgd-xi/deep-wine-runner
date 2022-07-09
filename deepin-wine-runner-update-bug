@@ -48,7 +48,7 @@ def OpenGithubIssues():
 
 def OpenGitlinkIssues():
     webbrowser.open_new_tab("https://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner/issues")
-    
+
 # 获取用户主目录
 def get_home()->"获取用户主目录":
     return os.path.expanduser('~')
@@ -100,7 +100,7 @@ otherUpload = ttk.Frame(win)
 tips = ttk.Label(otherUpload, text="如果无法正常反馈，可以用其他方式反馈：")
 giteeButton = ttk.Button(otherUpload, text="Gitee Issues", command=OpenGiteeIssues)
 githubButton = ttk.Button(otherUpload, text="Github Issues", command=OpenGithubIssues)
-gitlinkButton = ttk.Button(otherUpload, text="Github Issues", command=OpenGitlinkIssues)
+gitlinkButton = ttk.Button(otherUpload, text="Gitlink Issues", command=OpenGitlinkIssues)
 
 updateButton = ttk.Button(win, text="提交", command=UpdateButtonClick)
 
