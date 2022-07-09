@@ -463,6 +463,9 @@ def ThankWindow():
 def InstallWineFont():
     threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C 'echo 这些字体来自星火应用商店 && sudo ss-apt-fast install ms-core-fonts winfonts -y' --keep-open"]).start()
 
+def WineRunnerBugUpload():
+    threading.Thread(target=os.system, args=[programPath + "/deepin-wine-runner-update-bug"]).start()
+
 class UpdateWindow():
     data = {}
     def ShowWindow():
@@ -952,6 +955,7 @@ help.add_command(label="更新内容", command=UpdateThings)  # 设置“更新�
 help.add_command(label="谢明名单", command=ThankWindow)
 help.add_separator()
 help.add_command(label="更新这个程序", command=UpdateWindow.ShowWindow)
+help.add_command(label="反馈这个程序的建议和问题", command=WineRunnerBugUpload)
 help.add_command(label="关于这个程序", command=about_this_program)  # 设置“关于这个程序”项
 help.add_separator()
 moreProgram = tk.Menu(menu, tearoff=0, background="white")  
