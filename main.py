@@ -10,14 +10,13 @@
 #################
 # 引入所需的库
 #################
-from asyncore import read
-from email import message
 import os
-from sqlite3 import TimeFromTicks
 import sys
 import time
 import json
 import shutil
+import easygui
+import requests
 import threading
 import traceback
 import ttkthemes
@@ -100,9 +99,10 @@ def DisableButton(things):
     e1.configure(state=a[things])
     e2.configure(state=a[things])
     o1.configure(state=a[things])
-    winetricksOpen.configure(state=a[things])
+    #winetricksOpen.configure(state=a[things])
     getProgramIcon.configure(state=a[things])
     uninstallProgram.configure(state=a[things])
+    trasButton.configure(state=a[things])
 
 def CheckProgramIsInstall(program):
     return not bool(os.system(f"which '{program}'"))
@@ -361,9 +361,10 @@ def RunWinetricks():
     if not setting["Debug"]:
         option += "WINEDEBUG=-all "
     if setting["TerminalOpen"]:
-        res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='" + option + wineBottonPath + "' winetricks\""], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='{wineBottonPath}' {option} WINE=" + subprocess.getoutput(f"which {wine[o1_text.get()]}").replace(" ", "").replace("\n", "") + " winetricks --gui\" --keep-open"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     else:    
-        res = subprocess.Popen(["WINEPREFIX='" + option + wineBottonPath + "' winetricks"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        res = subprocess.Popen([f"WINEPREFIX='{wineBottonPath}' {option} WINE='" + subprocess.getoutput(f"which {wine[o1_text.get()]}").replace(" ", "").replace("\n", "") + "' winetricks --gui"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        #res = subprocess.Popen(["WINEPREFIX='" + option + wineBottonPath + "' winetricks"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     # 清空文本框内容
     returnText.config(state=tk.NORMAL)
     returnText.delete(1.0, "end")
@@ -407,6 +408,15 @@ def InstallVisualStudioCPlusPlus():
     os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"'{programPath}/InstallVisualCPlusPlus.py' '{wineBottonPath}' {wine[o1_text.get()]}\" --keep-open")
     DisableButton(False)
 
+def InstallMSXML():
+    DisableButton(True)
+    if e1.get() == "":
+        wineBottonPath = setting["DefultBotton"]
+    else:
+        wineBottonPath = e1.get()
+    os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"'{programPath}/InstallMsxml.py' '{wineBottonPath}' {wine[o1_text.get()]}\" --keep-open")
+    DisableButton(False)
+
 def BuildExeDeb():
     if e1.get() == "":
         wineBottonPath = setting["DefultBotton"]
@@ -446,6 +456,65 @@ def DeleteWineBotton():
     except:
         traceback.print_exc()
         tkinter.messagebox.showerror(title="错误", message=traceback.format_exc())
+
+def ThankWindow():
+    easygui.textbox(title="特别谢明", msg="感谢以下的大佬在 deepin 论坛、公众号等平台提供的 Wine 适配解决方案，现在将这些 Wine 适配方案加入此 Wine 运行器，对此有由衷的感谢！如果有侵犯到您的权利和意愿，请尽快与开发者联系删除在此程序内相关的内容：", text=thankText)
+
+def InstallWineFont():
+    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C 'echo 这些字体来自星火应用商店 && sudo ss-apt-fast install ms-core-fonts winfonts -y' --keep-open"]).start()
+
+class UpdateWindow():
+    data = {}
+    def ShowWindow():
+        update = tk.Toplevel()
+        update.title("检查更新")
+        update.resizable(0, 0)
+        update.iconphoto(False, tk.PhotoImage(file=iconPath))
+        versionLabel = ttk.Label(update, text="当前版本：{}\n最新版本：未知\n更新内容：".format(version))
+        updateText = tk.Text(update)
+        controlFrame = ttk.Frame(update)
+        ok = ttk.Button(controlFrame, text="更新（更新过程中会关闭所有Python应用，包括这个应用）", command=UpdateWindow.Update)
+        cancel = ttk.Button(controlFrame, text="取消", command=update.destroy)
+        try:
+            UpdateWindow.data = json.loads(requests.get("http://120.25.153.144/spark-deepin-wine-runner/update.json").text)
+            versionLabel = ttk.Label(update, text="当前版本：{}\n最新版本：{}\n更新内容：".format(version, UpdateWindow.data["Version"]))
+            if UpdateWindow.data["Version"] == version:
+                updateText.insert("0.0", "此为最新版本，无需更新")
+                ok.configure(state=tk.DISABLED)
+            else:
+                updateText.insert("0.0", UpdateWindow.data["New"].replace("\\n", "\n"))
+        except:
+            traceback.print_exc()
+            tkinter.messagebox.showerror(title="错误", message="无法连接服务器！")
+        updateText.configure(state=tk.DISABLED)
+        versionLabel.pack(anchor=tk.W)
+        updateText.pack()
+        controlFrame.pack(anchor=tk.E)
+        cancel.grid(row=0, column=0)
+        ok.grid(row=0, column=1)
+        update.mainloop()
+    def Update():
+        if not os.path.exists("/tmp/uengine-runner/update"):
+            os.makedirs("/tmp/spark-deepin-wine-runner/update")
+        try:            
+            write_txt("/tmp/spark-deepin-wine-runner/update.sh", f"""#!/bin/bash
+echo 删除多余的安装包
+rm -rfv /tmp/spark-deepin-wine-runner/update/*
+echo 关闭“UEngine 运行器”以及其它“Python 应用”
+killall python3
+echo 下载安装包
+wget -P /tmp/spark-deepin-wine-runner/update {UpdateWindow.data["Url"][0], iconPath}
+echo 安装安装包
+dpkg -i /tmp/spark-deepin-wine-runner/update/*.deb
+echo 修复依赖关系
+apt install -f -y
+notify-send -i "{iconPath}" "更新完毕！"
+zenity --info --text=\"更新完毕！\" --ellipsize
+""")
+        except:
+            traceback.print_exc()
+            easygui.textbox(title="错误", msg="更新出现错误，无法继续更新！", text=traceback.format_exc())
+        os.system(f"'{programPath}/launch.sh' deepin-terminal -e pkexec bash /tmp/spark-deepin-wine-runner/update.sh")
 
 class GetDllFromWindowsISO:
     wineBottonPath = get_home() + "/.wine"
@@ -766,6 +835,9 @@ updateThingsString = '''※1、新增专门的程序设置，支持设置 Wine �
 title = "wine 运行器 {}".format(version)
 updateTime = "2022年07月07日"
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
+thankText = ""
+for i in information["Thank"]:
+    thankText += f"{i}\n"
 
 
 ###########################
@@ -798,13 +870,14 @@ button1 = ttk.Button(window, text="浏览", command=liulanbutton)  # 创建按�
 button2 = ttk.Button(window, text="浏览", command=liulanexebutton)  # 创建按钮控件
 button3 = ttk.Button(controlFrame, text="启动", command=runexebutton)  # 创建按钮控件
 killProgram = ttk.Button(controlFrame, text="停止", command=KillProgram)
-openWineBotton = ttk.Button(controlFrame, text="打开Wine容器目录", command=OpenWineBotton)
-installWineFont = ttk.Button(controlFrame, text="安装字体", command=OpenWineFontPath)
+#openWineBotton = ttk.Button(controlFrame, text="打开Wine容器目录", command=OpenWineBotton)
+#installWineFont = ttk.Button(controlFrame, text="安装字体", command=OpenWineFontPath)
 uninstallProgram = ttk.Button(controlFrame, text="卸载程序", command=UninstallProgram)
 wineConfig = ttk.Button(controlFrame, text="配置wine容器", command=ConfigWineBotton)
 sparkWineSetting = ttk.Button(controlFrame, text="星火wine设置", command=lambda: threading.Thread(target=os.system, args=["/opt/durapps/spark-dwine-helper/spark-dwine-helper-settings/settings.sh"]).start())
 getProgramIcon = ttk.Button(controlFrame, text="获取选择的程序图标", command=lambda: threading.Thread(target=RunWineProgram, args=[f"{programPath}/Run.bat' '{programPath}/BeCyIconGrabber.exe' '{e2.get()}"]).start())
-winetricksOpen = ttk.Button(controlFrame, text="使用winetricks打开指定容器(只能使用wine和wine64)", command=lambda: threading.Thread(target=RunWinetricks).start())
+trasButton = ttk.Button(controlFrame, text="窗口透明度工具", command=lambda: threading.Thread(target=RunWineProgram, args=[programPath + "/窗体透明度设置工具.exe"]).start())
+#winetricksOpen = ttk.Button(controlFrame, text="使用winetricks打开指定容器(只能使用wine和wine64)", command=lambda: threading.Thread(target=RunWinetricks).start())
 button5 = ttk.Button(sendFrame, text="创建用于运行的 desktop 文件到桌面", command=make_desktop_on_desktop)  # 创建按钮控件
 saveDesktopFileOnLauncher = ttk.Button(sendFrame, text="创建用于运行的 desktop 文件到启动器", command=make_desktop_on_launcher)  # 创建按钮控件
 label1 = ttk.Label(window, text="选择你想要使用的 wine 容器：")  # 创建标签控件
@@ -827,12 +900,18 @@ programmenu.add_separator()  # 设置分界线
 programmenu.add_command(label="退出程序", command=window.quit)  # 设置“退出程序”项
 wineOption = tk.Menu(menu, tearoff=0, background="white")  # 设置“Wine”菜单栏
 menu.add_cascade(label="Wine", menu=wineOption)
+wineOption.add_command(label="打开 Wine 容器目录", command=OpenWineBotton)
+wineOption.add_command(label="安装常见字体", command=InstallWineFont)
+wineOption.add_command(label="安装自定义字体", command=OpenWineFontPath)
+wineOption.add_command(label="删除选择的 Wine 容器", command=DeleteWineBotton)
+wineOption.add_separator()
 wineOption.add_command(label="打包 wine 应用", command=BuildExeDeb)
 wineOption.add_separator()
 wineOption.add_command(label="从镜像获取DLL（只支持Windows XP、Windows Server 2003官方安装镜像）", command=GetDllFromWindowsISO.ShowWindow)
 wineOption.add_separator()
 wineOption.add_command(label="在指定wine、指定容器安装 .net framework", command=lambda: threading.Thread(target=InstallNetFramework).start())
 wineOption.add_command(label="在指定wine、指定容器安装 Visual Studio C++", command=lambda: threading.Thread(target=InstallVisualStudioCPlusPlus).start())
+wineOption.add_command(label="在指定wine、指定容器安装 MSXML", command=lambda: threading.Thread(target=InstallMSXML).start())
 wineOption.add_command(label="在指定wine、指定容器安装 gecko", command=lambda: threading.Thread(target=InstallMonoGecko, args=["gecko"]).start())
 wineOption.add_command(label="在指定wine、指定容器安装 mono", command=lambda: threading.Thread(target=InstallMonoGecko, args=["mono"]).start())
 wineOption.add_separator()
@@ -840,19 +919,39 @@ wineOption.add_command(label="打开指定wine、指定容器的控制面板", c
 wineOption.add_command(label="打开指定wine、指定容器的浏览器", command=lambda: threading.Thread(target=RunWineProgram, args=["iexplore' 'https://www.deepin.org"]).start())
 wineOption.add_command(label="打开指定wine、指定容器的注册表", command=lambda: threading.Thread(target=RunWineProgram, args=["regedit"]).start())
 wineOption.add_command(label="打开指定wine、指定容器的任务管理器", command=lambda: threading.Thread(target=RunWineProgram, args=["taskmgr"]).start())
+wineOption.add_command(label="打开指定wine、指定容器的资源管理器", command=lambda: threading.Thread(target=RunWineProgram, args=["explorer"]).start())
 wineOption.add_command(label="打开指定wine、指定容器的关于 wine", command=lambda: threading.Thread(target=RunWineProgram, args=["winver"]).start())
 wineOption.add_separator()
 wineOption.add_command(label="设置 run_v3.sh 的文管为 Deepin 默认文管", command=SetDeepinFileDialogDeepin)
 wineOption.add_command(label="设置 run_v3.sh 的文管为 Wine 默认文管", command=SetDeepinFileDialogDefult)
 wineOption.add_command(label="重新安装 deepin-wine-helper", command=SetDeepinFileDialogRecovery)
 wineOption.add_separator()
-wineOption.add_command(label="删除选择的 wine 容器", command=DeleteWineBotton)
+wineOption.add_command(label="使用winetricks打开指定容器(只能使用wine和wine64)", command=lambda: threading.Thread(target=RunWinetricks).start())
+wineOption.add_separator()
+opengl = tk.Menu()
+opengl.add_command(label="开启 opengl", command=lambda: threading.Thread(target=RunWineProgram, args=[f"regedit.exe' /s '{programPath}/EnabledOpengl.reg"]).start())
+opengl.add_command(label="禁用 opengl", command=lambda: threading.Thread(target=RunWineProgram, args=[f"regedit.exe' /s '{programPath}/DisabledOpengl.reg"]).start())
+wineOption.add_cascade(label="启用/禁用 opengl", menu=opengl)
+winbind = tk.Menu()
+winbind.add_command(label="安装 winbind", command=lambda: os.system(f"'{programPath}/launch.sh' deepin-terminal -C 'pkexec apt install winbind -y' --keep-open"))
+winbind.add_command(label="卸载 winbind", command=lambda: os.system(f"'{programPath}/launch.sh' deepin-terminal -C 'pkexec apt purge winbind -y' --keep-open"))
+wineOption.add_cascade(label="安装/卸载 winbind", menu=winbind)
+safeWebsize = tk.Menu(menu, tearoff=0, background="white")
+menu.add_cascade(label="云沙箱", menu=safeWebsize)
+safeWebsize.add_command(label="360 沙箱云", command=lambda: webbrowser.open_new_tab("https://ata.360.net/"))
+safeWebsize.add_command(label="微步云沙箱", command=lambda: webbrowser.open_new_tab("https://s.threatbook.cn/"))
+safeWebsize.add_command(label="VIRUSTOTAL", command=lambda: webbrowser.open_new_tab("https://www.virustotal.com/"))
+
 help = tk.Menu(menu, tearoff=0, background="white")  # 设置“帮助”菜单栏
+
 menu.add_cascade(label="帮助", menu=help)
 help.add_command(label="程序官网", command=OpenProgramURL)  # 设置“程序官网”项
 help.add_separator()
 help.add_command(label="小提示", command=helps)  # 设置“小提示”项
 help.add_command(label="更新内容", command=UpdateThings)  # 设置“更新内容”项
+help.add_command(label="谢明名单", command=ThankWindow)
+help.add_separator()
+help.add_command(label="更新这个程序", command=UpdateWindow.ShowWindow)
 help.add_command(label="关于这个程序", command=about_this_program)  # 设置“关于这个程序”项
 help.add_separator()
 moreProgram = tk.Menu(menu, tearoff=0, background="white")  
@@ -890,13 +989,14 @@ button2.grid(row=1, column=2)
 controlFrame.grid(row=3, column=0, columnspan=3)
 button3.grid(row=0, column=0)
 killProgram.grid(row=0, column=1)
-openWineBotton.grid(row=0, column=2)
-installWineFont.grid(row=0, column=3)
-uninstallProgram.grid(row=0, column=4)
-wineConfig.grid(row=0, column=5)
-sparkWineSetting.grid(row=0, column=6)
-getProgramIcon.grid(row=0, column=7)
-winetricksOpen.grid(row=0, column=8)
+#openWineBotton.grid(row=0, column=2)
+#installWineFont.grid(row=0, column=3)
+uninstallProgram.grid(row=0, column=2)
+wineConfig.grid(row=0, column=3)
+sparkWineSetting.grid(row=0, column=4)
+getProgramIcon.grid(row=0, column=5)
+#winetricksOpen.grid(row=0, column=8)
+trasButton.grid(row=0, column=6)
 sendFrame.grid(row=5, column=0, columnspan=3)
 button5.grid(row=0, column=0)
 saveDesktopFileOnLauncher.grid(row=0, column=1)
