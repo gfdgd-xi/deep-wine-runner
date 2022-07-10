@@ -1,4 +1,4 @@
-# wine 运行器 1.5.3
+# wine 运行器 1.6.0
 
 ## 介绍
 一个图形化了以下命令的程序  
@@ -9,7 +9,7 @@ env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 是使用 Python3 的 tkinter 构建的    
 （自己美术功底太差，图标只能在网络上找了）    
 （测试平台：deepin 20.6；UOS 家庭版 21；Ubuntu 22.04）    
-![Screenshot_20220707_215916.png](https://storage.deepin.org/thread/202207072207209350_Screenshot_20220707_215916.png)
+![image.png](https://storage.deepin.org/thread/202207101734379289_image.png)
 而打包器可以方便的把您的 wine 容器打包成 deb 包供他人使用，程序创建的 deb 构建临时文件夹目录树如下：  
 ```bash
 /XXX
@@ -60,14 +60,26 @@ exe路径\' 参数 \'
 5、.desktop 的图标只支持 PNG 格式和 SVG 格式，其他格式无法显示图标  
 
 ## 更新日志
-### 1.5.3
+### 1.6.0（2022年07月10日）
+**※1、新增程序感谢、谢明以及程序的建议和问题反馈和内置更新程序**  
+**※2、支持 winetricks 指定 Wine 打开**  
+**※3、新增窗口透明工具，感谢@a2035274 和 @虚幻的早晨 在论坛的讨论**  
+**※4、支持在指定容器、Wine 安装 MSXML**  
+**※5、支持启用/关闭 opengl（感谢@zhangs 在论坛发帖）以及支持安装/卸载 winbind**  
+**※6、添加云沙箱的网站链接快捷方式**  
+**※7、支持从星火应用商店源安装 Windows 常见字体**  
+8、优化窗口布局以及默认显示位置  
+9、支持打开指定容器、Wine 的资源管理器  
+![image.png](https://storage.deepin.org/thread/202207101734379289_image.png)
+
+### 1.5.3（2022年07月07日）
 **※1、新增专门的程序设置，支持设置 Wine 容器架构、DEBUG 信息是否输出、默认的 Wine、默认容器路径、是否使用终端打开和 Wine 参数**  
 **※2、修复了 wine 打包器的控件禁用不全和打包的 deb 用户残留的问题**  
 **※3、新增暗黑主题**  
 4、合并了 deepin wine 文管设置器  
 ![Screenshot_20220707_215916.png](https://storage.deepin.org/thread/202207072207209350_Screenshot_20220707_215916.png)
 
-### 1.5.2
+### 1.5.2（2022年07月06日）
 **※1、添加并翻新了 deepin-wine5 打包器，改为 wine 打包器，支持常见 wine 的打包**  
 **※2、新增 Visual Studio C++ 的安装程序**  
 **※3、新增从系统安装镜像提取 DLL 到 wine 容器的功能（当前只支持 Windows XP 和 Windows Server 2003 的官方安装镜像）**  
@@ -78,7 +90,7 @@ exe路径\' 参数 \'
 ![image.png](https://storage.deepin.org/thread/202207061005251446_image.png)
 
 
-### 1.5.1
+### 1.5.1（2022年07月04日）
 **※1、支持打开 spark-wine7-devel 的专门缩放设置（如未安装则此按钮禁用）**  
 **※2、支持提取选择的 exe 文件的图标**  
 **※3、支持向指定的 wine 容器安装 mono、gecko、.net framework（此功能在菜单栏“Wine”中，卸载只需要使用程序的卸载按钮打开 Geek Uninstaller 即可）**  
@@ -91,7 +103,7 @@ exe路径\' 参数 \'
 ![image.png](https://storage.deepin.org/thread/202207042234078682_image.png)
 
 
-### 1.5.0
+### 1.5.0（2022年07月03日）
 **※1、支持显示 wine 程序运行时的返回内容**  
 **※2、优化打包方式，减少从 pip 安装的库，并将 pip 源设为阿里源提升下载速度**  
 **※3、新增 spark-wine7-devel**  
@@ -102,7 +114,7 @@ exe路径\' 参数 \'
 ![image.png](https://storage.deepin.org/thread/202207031902414162_image.png)
 
 
-### 1.4.0
+### 1.4.0（2021年07月27日）
 **※1、修改了 wine 选项的说明和 wine 的启动方式;**  
 **※2、设置了窗口主题;**  
 **※3、修改了打包以及 .desktop 文件**  
@@ -113,7 +125,7 @@ exe路径\' 参数 \'
 8、在 gitee/github 仓库上添加了 wine 安装脚本  
 ![](https://images.gitee.com/uploads/images/2021/0727/151226_750579c2_7896131.png)  
 
-### 1.3.1
+### 1.3.1（2021年05月23日）
 1、添加了历史记录，使用更加方便  
 2、增加“更新内容”项  
 3、支持浏览窗口的默认路径为上次访问的路径  
@@ -126,13 +138,13 @@ exe路径\' 参数 \'
 ![run](https://images.gitee.com/uploads/images/2021/0523/155654_90ceb8ce_7896131.png "截图录屏_选择区域_20210523153947.png")
 ![run](https://images.gitee.com/uploads/images/2021/0523/155702_66841e22_7896131.png "截图录屏_选择区域_20210523154007.png")
 
-### 1.3.0 
+### 1.3.0（2021年05月22日） 
 1. 修改了窗口显示控件的库（从 tkinter 到 tkinter.ttk）
 2. 添加了更多 wine 可以选择（deepin-wine、deepin-wine5、wine、wine64、deepin-wine5-stable、deepin-wine6-stable）
 3. 修改了程序的提示信息
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0522/175640_a592db4d_7896131.png "截图录屏_tk_20210522170529.png")
 
-### 1.2.0 
+### 1.2.0（2021年03月14日） 
 1. 修改布局方式
 2. 轻度梳理代码布局
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0314/181320_cb4cbf72_7896131.png "屏幕截图.png")
@@ -140,15 +152,15 @@ exe路径\' 参数 \'
 ### 1.1.2 （未发布发行版）
 1. 进行了细节优化
 
-### 1.1.1
+### 1.1.1（2021年01月31日）
 1. 使用多线程，防止界面假死
 2. 添加软件图标
 ![](https://images.gitee.com/uploads/images/2021/0131/143557_40911a67_7896131.png)
 
-### 1.1
+### 1.1.0（2021年01月29日）
 1. 修改了代码的部分内容，使其支持容器路径可带空格无需“\”转义，以及支持手动保存运行脚本到桌面
 
-### 1.0
+### 1.0.0（2021年01月29日）
 1. 实现内容
 
 ## 更多

@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 #########################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布
-# 版本：1.5.2
+# 版本：1.5.3
 # 感谢：感谢 deepin-wine 团队，提供了 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 的 tkinter 构建
 #########################################################################
 #################
 # 引入所需的库
 #################
-from cProfile import run
 import os
 import sys
 import json
@@ -366,7 +365,7 @@ fi
     except:
         traceback.print_exc()
         messagebox.showerror(title="错误", message="程序出现错误，错误信息：\n{}".format(traceback.format_exc()))
-        label13_text_change("deb 包构建出现错误：{}".format(repr(e)))
+        label13_text_change("deb 包构建出现错误")
         chang_textbox1_things(traceback.format_exc())
         disabled_or_NORMAL_all(True)
 

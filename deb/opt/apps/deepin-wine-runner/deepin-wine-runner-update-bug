@@ -1,0 +1,133 @@
+#!/usr/bin/env python3
+import os
+import json
+import base64
+import requests
+import ttkthemes
+import traceback
+import webbrowser
+import tkinter as tk
+import tkinter.ttk as ttk
+import tkinter.messagebox as messagebox
+import urllib.parse as parse
+
+# 读取文本文档
+def readtxt(path: "路径")->"读取文本文档":
+    f = open(path, "r")  # 设置文件对象
+    str = f.read()  # 获取内容
+    f.close()  # 关闭文本对象
+    return str  # 返回结果
+
+def Update(name, stars, contact, things, version):
+    # post 内容
+    data = {
+        "Name": name,
+        "Starts": stars,
+        "Contact": contact,
+        "Things": things,
+        "Version": version
+    }
+    try:
+        messagebox.showinfo(message=requests.post(parse.unquote(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9idWcvdXBsb2FkLnBocA==").decode("utf-8")), data=data).text)
+    except:
+        traceback.print_exc()
+        messagebox.showerror(title="错误", message="服务器疑似出现错误，可以进行以下尝试：①多尝试几次；②使用其他反馈途径\n错误信息：{}".format(traceback.format_exc()))
+    
+def UpdateButtonClick():
+    #判断是否为空
+    if nameThings.get() == "" or starValue.get() == "" or contactThings.get() == "" or updateThings.get(1.0, "end").replace(" ", "").replace("\n", "") == "":
+        messagebox.showerror(title="错误", message="反馈信息未填写完整！")
+        return
+    Update(name=nameThings.get(), stars=starValue.get(), contact=contactThings.get(), things=updateThings.get(1.0, "end"), version=version)
+
+def OpenGiteeIssues():
+    webbrowser.open_new_tab("https://gitee.com/gfdgd-xi/deep-wine-runner/issues")
+
+def OpenGithubIssues():
+    webbrowser.open_new_tab("https://github.com/gfdgd-xi/deep-wine-runner/issues")
+
+def OpenGitlinkIssues():
+    webbrowser.open_new_tab("https://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner/issues")
+
+# 获取用户主目录
+def get_home()->"获取用户主目录":
+    return os.path.expanduser('~')
+
+###########################
+# 程序信息
+###########################
+iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
+programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
+information = json.loads(readtxt(programPath + "/information.json"))
+version = information["Version"]
+
+###########################
+# 窗口创建
+###########################
+# 读取主题
+try:
+    theme = not ("dark" in readtxt(get_home() + "/.gtkrc-2.0") and "gtk-theme-name=" in readtxt(get_home() + "/.gtkrc-2.0"))
+except:
+    print("主题读取错误，默认使用浅色主题")
+    theme = True
+if theme:
+    window = tk.Tk()
+    themes = ttkthemes.ThemedStyle(window)
+    themes.set_theme("breeze")
+else:
+    import ttkbootstrap
+    style = ttkbootstrap.Style(theme="darkly")
+    window = style.master  # 创建窗口
+win = ttk.Frame()
+
+starValue = tk.StringVar()
+starValue.set("5分")
+
+name = ttk.Label(win, text="你的昵称：")
+nameThings = ttk.Entry(win, width=25)
+
+contact = ttk.Label(win, text="联系方式（电子邮箱）：")
+contactThings = ttk.Entry(win, width=25)
+
+star = ttk.Label(win, text="评分：")
+starMenu = ttk.OptionMenu(win, starValue, "5分", "5分", "4分", "3分", "2分", "1分")
+
+updateThingsTips = ttk.Label(win, text="反馈内容（支持 Markdown 格式）：")
+updateThings = tk.Text(win, width=100)
+
+otherUpload = ttk.Frame(win)
+# 所属内容
+tips = ttk.Label(otherUpload, text="如果无法正常反馈，可以用其他方式反馈：")
+giteeButton = ttk.Button(otherUpload, text="Gitee Issues", command=OpenGiteeIssues)
+githubButton = ttk.Button(otherUpload, text="Github Issues", command=OpenGithubIssues)
+gitlinkButton = ttk.Button(otherUpload, text="Gitlink Issues", command=OpenGitlinkIssues)
+
+updateButton = ttk.Button(win, text="提交", command=UpdateButtonClick)
+
+# 设置窗口
+window.title("Wine 运行器 {} 问题/建议反馈".format(version))
+window.resizable(0, 0)
+window.iconphoto(False, tk.PhotoImage(file=iconPath))
+
+tips.grid(row=0, column=0)
+giteeButton.grid(row=0, column=1)
+githubButton.grid(row=0, column=2)
+gitlinkButton.grid(row=0, column=3)
+
+name.grid(row=0, column=0)
+nameThings.grid(row=0, column=1)
+
+contact.grid(row=0, column=2)
+contactThings.grid(row=0, column=3)
+
+star.grid(row=0, column=4)
+starMenu.grid(row=0, column=5)
+
+updateThingsTips.grid(row=1, column=0, columnspan=2)
+updateThings.grid(row=2, column=0, columnspan=6)
+
+otherUpload.grid(row=3, column=0, columnspan=4, sticky=tk.W)
+updateButton.grid(row=3, column=5)
+
+win.pack(expand="yes", fill="both")
+window.mainloop()

@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
-# 版本：1.5.3
-# 更新时间：2022年07月07日
+# 版本：1.6.0
+# 更新时间：2022年07月10日
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 的 tkinter 构建
 ###########################################################################################
@@ -417,6 +417,15 @@ def InstallMSXML():
     os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"'{programPath}/InstallMsxml.py' '{wineBottonPath}' {wine[o1_text.get()]}\" --keep-open")
     DisableButton(False)
 
+def InstallOther():
+    DisableButton(True)
+    if e1.get() == "":
+        wineBottonPath = setting["DefultBotton"]
+    else:
+        wineBottonPath = e1.get()
+    os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"'{programPath}/InstallOther.py' '{wineBottonPath}' {wine[o1_text.get()]}\" --keep-open")
+    DisableButton(False)
+
 def BuildExeDeb():
     if e1.get() == "":
         wineBottonPath = setting["DefultBotton"]
@@ -698,6 +707,7 @@ class ProgramSetting():
     defultBotton = None
     terminalOpen = None
     wineOption = None
+    wineBottonDifferent = None
     def ShowWindow():
         message = tk.Toplevel()
         ProgramSetting.wineBottonA = tk.StringVar()
@@ -722,6 +732,10 @@ class ProgramSetting():
         ttk.Label(message, text="自定义 wine 参数：").grid(row=5, column=0)
         ProgramSetting.wineOption = tk.StringVar()
         ProgramSetting.wineOption.set(setting["WineOption"])
+        #ttk.Label(message, text="容器创建规则：").grid(row=6, column=0)
+        #ProgramSetting.wineBottonDifferent = tk.IntVar()
+        #ProgramSetting.wineBottonDifferent.set(setting["WineBottonDifferent"])
+        ttk.Checkbutton(message, text="为每一个可执行文件创建单独的容器（如果勾选的话，上面默认 Wine 容器选项将会指定这些产生的 Wine 容器默认存放目录）", variable=ProgramSetting.wineBottonDifferent)
         ttk.Entry(message, width=40, textvariable=ProgramSetting.wineOption).grid(row=5, column=1, columnspan=2)
         ttk.Button(message, text="保存", command=ProgramSetting.Save).grid(row=6, column=0, columnspan=3, sticky=tk.E)
         # 设置
@@ -743,6 +757,7 @@ class ProgramSetting():
         setting["DefultBotton"] = ProgramSetting.defultBotton.get()
         setting["TerminalOpen"] = bool(ProgramSetting.terminalOpen.get())
         setting["WineOption"] = ProgramSetting.wineOption.get()
+        setting["WineBottonDifferent"] = bool(ProgramSetting.wineBottonDifferent.get())
         try:
             write_txt(get_home() + "/.config/deepin-wine-runner/WineSetting.json", json.dumps(setting))
         except:
@@ -760,7 +775,8 @@ defultProgramList = {
     "DefultWine": "deepin-wine6 stable",
     "DefultBotton" : get_home() + "/.wine",
     "TerminalOpen": False,
-    "WineOption": ""
+    "WineOption": "",
+    "WineBottonDifferent": False
 }
 if not os.path.exists(get_home() + "/.config/deepin-wine-runner"):  # 如果没有配置文件夹
     os.mkdir(get_home() + "/.config/deepin-wine-runner")  # 创建配置文件夹
@@ -796,7 +812,7 @@ try:
     isoPathFound = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ISOPathFound.json")).values())
     setting = json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineSetting.json"))
     change = False
-    for i in ["Architecture", "Debug", "DefultWine", "DefultBotton", "TerminalOpen", "WineOption"]:
+    for i in ["Architecture", "Debug", "DefultWine", "DefultBotton", "TerminalOpen", "WineOption", "WineBottonDifferent"]:
         if not i in setting:
             change = True
             setting[i] = defultProgramList[i]
@@ -831,12 +847,18 @@ tips = '''提示：
 exe路径\' 参数 \'
 即可（单引号需要输入）
 5、wine 容器如果没有指定，则会默认为 ~/.wine'''
-updateThingsString = '''※1、新增专门的程序设置，支持设置 Wine 容器架构、DEBUG 信息是否输出、默认的 Wine、默认容器路径、是否使用终端打开和 Wine 参数
-※2、修复了 wine 打包器的控件禁用不全和打包的 deb 用户残留的问题
-※3、新增暗黑主题
-4、合并了 deepin wine 文管设置器'''
+updateThingsString = '''※1、新增程序感谢、谢明以及程序的建议和问题反馈和内置更新程序
+※2、支持 winetricks 指定 Wine 打开
+※3、新增窗口透明工具，感谢@a2035274 和 @虚幻的早晨 在论坛的讨论
+※4、支持在指定容器、Wine 安装 MSXML
+※5、支持启用/关闭 opengl（感谢@zhangs 在论坛发帖）以及支持安装/卸载 winbind
+※6、添加云沙箱的网站链接快捷方式
+※7、支持从星火应用商店源安装 Windows 常见字体
+8、优化窗口布局以及默认显示位置
+9、支持打开指定容器、Wine 的资源管理器
+'''
 title = "wine 运行器 {}".format(version)
-updateTime = "2022年07月07日"
+updateTime = "2022年07月10日"
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 thankText = ""
 for i in information["Thank"]:
@@ -917,6 +939,7 @@ wineOption.add_command(label="在指定wine、指定容器安装 Visual Studio C
 wineOption.add_command(label="在指定wine、指定容器安装 MSXML", command=lambda: threading.Thread(target=InstallMSXML).start())
 wineOption.add_command(label="在指定wine、指定容器安装 gecko", command=lambda: threading.Thread(target=InstallMonoGecko, args=["gecko"]).start())
 wineOption.add_command(label="在指定wine、指定容器安装 mono", command=lambda: threading.Thread(target=InstallMonoGecko, args=["mono"]).start())
+wineOption.add_command(label="在指定wine、指定容器安装其它运行库", command=lambda: threading.Thread(target=InstallOther).start())
 wineOption.add_separator()
 wineOption.add_command(label="打开指定wine、指定容器的控制面板", command=lambda: threading.Thread(target=RunWineProgram, args=["control"]).start())
 wineOption.add_command(label="打开指定wine、指定容器的浏览器", command=lambda: threading.Thread(target=RunWineProgram, args=["iexplore' 'https://www.deepin.org"]).start())
@@ -929,7 +952,7 @@ wineOption.add_command(label="设置 run_v3.sh 的文管为 Deepin 默认文管"
 wineOption.add_command(label="设置 run_v3.sh 的文管为 Wine 默认文管", command=SetDeepinFileDialogDefult)
 wineOption.add_command(label="重新安装 deepin-wine-helper", command=SetDeepinFileDialogRecovery)
 wineOption.add_separator()
-wineOption.add_command(label="使用winetricks打开指定容器(只能使用wine和wine64)", command=lambda: threading.Thread(target=RunWinetricks).start())
+wineOption.add_command(label="使用winetricks打开指定容器", command=lambda: threading.Thread(target=RunWinetricks).start())
 wineOption.add_separator()
 opengl = tk.Menu()
 opengl.add_command(label="开启 opengl", command=lambda: threading.Thread(target=RunWineProgram, args=[f"regedit.exe' /s '{programPath}/EnabledOpengl.reg"]).start())
@@ -1008,4 +1031,8 @@ o1.grid(row=2, column=1)
 returnText.grid(row=6, column=0, columnspan=3)
 # 启动窗口
 window.pack(fill=tk.BOTH, expand = True)
+# 窗口居中
+win.update()
+win.geometry(f"{win.winfo_width()}x{win.winfo_height()}+{win.winfo_screenwidth() // 2 - win.winfo_width() // 2}+{win.winfo_screenheight() // 2 - win.winfo_height() // 2}")
+# 显示窗口
 win.mainloop()
