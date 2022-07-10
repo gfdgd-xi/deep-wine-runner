@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #########################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布
-# 版本：1.5.3
+# 版本：1.6.1
 # 感谢：感谢 deepin-wine 团队，提供了 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 的 tkinter 构建
 #########################################################################
@@ -213,7 +213,7 @@ Multi-Arch: foreign
 Description: {}
 '''.format(e1_text.get(), e2_text.get(), e4_text.get(), wineVersion.get(), e3_text.get()))
         else:
-            write_txt("{}/DEBIAN/control".format(debPackagePath), '''Package: {}
+            write_txt("{}/DEBIAN/postrm".format(debPackagePath), '''Package: {}
 Version: {}
 Architecture: i386
 Maintainer: {}
@@ -223,6 +223,23 @@ Priority: optional
 Multi-Arch: foreign
 Description: {}
 '''.format(e1_text.get(), e2_text.get(), e4_text.get(), wineVersion.get(), e3_text.get()))
+        write_txt("{}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.get()), f'''#!/bin/bash
+
+if [ "$1" = "remove" ] || [ "$1" = "purge" ];then
+
+echo"清理卸载残留"
+for username in ls /home
+do
+echo /home/$username
+if [ -d "/home/$username/.deepinwine/{e5_text.get()}" ]
+then
+rm -rf "/home/$username/.deepinwine/{e5_text.get()}"
+fi
+done
+else
+echo"非卸载，跳过清理"
+fi
+''')
         write_txt("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.get(), e1_text.get()), '#!/usr/bin/env xdg-open\n[Desktop Entry]\nEncoding=UTF-8\nType=Application\nX-Created-By={}\nCategories={};\nIcon={}\nExec="/opt/apps/{}/files/run.sh" {}\nName={}\nComment={}\nMimeType={}\nGenericName={}\nTerminal=false\nStartupNotify=false\n'.format(e4_text.get(), option1_text.get(), a, e1_text.get(), e15_text.get(), e8_text.get(), e3_text.get(), e10_text.get(), e1_text.get()))
         if not bool(chooseWineHelperValue.get()):
             write_txt("{}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.get()), '''#!/bin/sh
@@ -448,7 +465,8 @@ tips = """提示：
 2、如果要填写路径，有“浏览……”按钮的是要填本计算机对应文件的路径，否则就是填写安装到其他计算机使用的路径
 3、输入 wine 的容器路径时最后面请不要输入“/”
 4、输入可执行文件的运行路径时是以“C:/XXX/XXX.exe”的格式进行输入，默认是以 C： 为开头，不用“\”做命令的分隔，而是用“/”
-5、.desktop 的图标只支持 PNG 格式和 SVG 格式，其他格式无法显示图标"""
+5、.desktop 的图标只支持 PNG 格式和 SVG 格式，其他格式无法显示图标
+6、路径建议不要带空格，容易出问题"""
 
 ###############
 # 窗口创建
