@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icon.png</file>
+    </qresource>
+    <qresource prefix="/picture">
+        <file>截图_VirtualBox Machine_20220712142929.png</file>
+        <file>截图/截图_VirtualBox Machine_20220712143103.png</file>
+        <file>截图/截图_VirtualBox Machine_20220712143044.png</file>
+        <file>截图/截图_VirtualBox Machine_20220712143037.png</file>
+        <file>截图/截图_VirtualBox Machine_20220712143029.png</file>
+        <file>截图/截图_VirtualBox Machine_20220712143018.png</file>
+        <file>截图/截图_VirtualBox Machine_20220712143006.png</file>
+        <file>截图/截图_VirtualBox Machine_20220712191756.png</file>
+        <file>截图/截图_VirtualBox Machine_20220712192850.png</file>
+        <file>截图/截图_VirtualBox Machine_20220712193527.png</file>
+    </qresource>
+</RCC>
