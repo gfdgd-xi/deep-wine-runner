@@ -102,7 +102,8 @@ def make_deb_threading():
     # 程序创建的 deb 构建临时文件夹目录树：
     # /XXX
     # ├── DEBIAN
-    # │   └── control
+    # │   ├── control
+    # │   └── postrm
     # └── opt
     # └── apps
     #     └── XXX
