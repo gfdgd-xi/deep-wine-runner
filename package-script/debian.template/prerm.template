@@ -1,0 +1,30 @@
+#!/bin/sh
+
+case $1 in
+    "remove")
+        if [ "#$2" == "#in-favour" ]; then
+            echo "Conflictor: install $3 version $4 to remove me"
+        else
+            echo "normal remove"
+        fi
+        ;;
+    "upgrade")
+        echo "Old: upgrade to version $2"
+        ;;
+    "failed-upgrade")
+        echo "failed to upgrade from $3"
+        ;;
+    "deconfigure")
+        # $2 == "in-favour"
+        echo "Deconfigured: install package:$3 version $4"
+        if [ "#$5" == "removing" ]; then
+            echo "Deconfigured: removing conflicting package $6 version $7"
+        fi
+        ;;
+    *)
+esac
+
+# Make sure the script returns 0
+true
+
+#DEBHELPER#

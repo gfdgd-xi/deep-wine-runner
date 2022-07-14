@@ -110,3 +110,16 @@ class Manager:
 
     def ShareFile(self, name, path):
         os.system(f"\"{self.managerPath}\" sharedfolder add \"{self.name}\" -name \"{name}\" -hostpath \"{path}\"")
+
+    def SetVBoxSVGA(self):
+        os.system(f"\"{self.managerPath}\" modifyvm \"{self.name}\" --graphicscontroller vboxsvga")
+
+    def SetMousePS2(self):
+        os.system(f"\"{self.managerPath}\" modifyvm \"{self.name}\" --mouse usb")
+
+    def SetKeyboardPS2(self):
+        os.system(f"\"{self.managerPath}\" modifyvm \"{self.name}\" --keyboard usb")
+
+    def OpenUSB(self):
+        os.system(f"\"{self.managerPath}\" modifyvm \"{self.name}\" --usbohci on")
+        pass

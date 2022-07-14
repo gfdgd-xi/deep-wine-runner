@@ -5,6 +5,7 @@ import sys
 import psutil
 
 if __name__ == "__main__":
+    os.system("clear")
     programPath = os.path.split(os.path.realpath(__file__))[0]
     if len(sys.argv) < 3 :
         print("参数不齐！")
@@ -33,13 +34,17 @@ if __name__ == "__main__":
         vm.MountISO(f"{programPath}/Windows7X86Auto.iso", device=1)
     elif sys.argv[2] == "1":
         vm.MountISO(f"{programPath}/Windows7X64Auto.iso", device=1)
-    vm.SetCPU(2)
+    vm.SetCPU(1)
     vm.SetMemory(psutil.virtual_memory().total // 1024 // 1024 // 3)
     vm.SetDisplayMemory(32)
     vm.SetNetBridge(net)
     vm.EnabledAudio()
     vm.EnabledClipboardMode()
     vm.EnabledDraganddrop()
+    vm.SetVBoxSVGA()
+    vm.SetMousePS2()
+    vm.SetKeyboardPS2()
+    vm.OpenUSB()
     vm.ShareFile("ROOT", "/")
     vm.ShareFile("HOME", api.homePath)
     vm.Start()

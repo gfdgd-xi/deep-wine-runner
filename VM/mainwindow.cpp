@@ -21,7 +21,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_browser_clicked()
 {
     // 浏览镜像文件
-    QString filePath = QFileDialog::getOpenFileName(this, "选择 ISO 文件", "~", "ISO 镜像文件(*.iso);;所有文件(*.*)");
+    QString filePath = QFileDialog::getOpenFileName(this, "选择 ISO 文件", QDir::homePath(), "ISO 镜像文件(*.iso);;所有文件(*.*)");
     if(filePath != ""){
         ui->isoPath->setText(filePath);
     }
