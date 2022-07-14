@@ -1,0 +1,49 @@
+#!/bin/sh
+
+PACK_NAME="@deb_package_name@"
+BOTTLE_NAME="@public_bottle_name@"
+ACTIVEX_NAME="@activex_name@"
+MAKE_AUTOSTART="@make_autostart@"
+SEND_TO_DESKTOP="@send_to_desktop@"
+
+make_autostart()
+{
+    for file in $(ls /home)
+    do
+        if [ -d "/home/$file/.config/autostart" ]
+        then
+            rm /home/$file/.config/autostart/${PACK_NAME}.desktop
+        fi
+    done
+}
+
+send_to_desktop()
+{
+    for file in $(ls /home)
+    do
+        if [ -d "/home/$file/.config/autostart" ]
+        then
+            desktop=$(cat /etc/xdg/user-dirs.defaults | grep DESKTOP | awk -F= '{print $2}')
+            if [ -d "/home/$file/$desktop" ]; then
+                rm /home/$file/$desktop/${PACK_NAME}*.desktop
+            fi
+        fi
+    done
+}
+
+if [ -n "$MAKE_AUTOSTART" ]; then
+    make_autostart
+fi
+
+if [ -n "$SEND_TO_DESKTOP" ]; then
+    send_to_desktop
+fi
+
+if [ -n "$ACTIVEX_NAME" ]; then
+    rm /usr/lib/mozilla/plugins/libpipelight-${ACTIVEX_NAME}.so
+fi
+
+# Make sure the script returns 0
+true
+
+#DEBHELPER#

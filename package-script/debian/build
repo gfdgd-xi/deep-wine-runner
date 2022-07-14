@@ -1,0 +1,15 @@
+#!/bin/sh
+# (c) Copyright 2008. CodeWeavers, Inc.
+set -e
+cd "$1"
+dh_testdir
+dh_testroot
+dh_installdirs
+dh_install --sourcedir=/
+dh_link
+dh_compress
+dh_fixperms
+dh_installdeb
+dh_gencontrol
+dh_md5sums
+dh_builddeb --destdir=.

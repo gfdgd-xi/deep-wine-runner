@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# Make sure the script returns 0
+true
+
+#DEBHELPER#

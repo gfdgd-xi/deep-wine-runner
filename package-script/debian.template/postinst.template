@@ -1,0 +1,29 @@
+#!/bin/sh
+
+case $1 in
+    "configure")
+        echo "most recently configured version $2"
+        ;;
+    "abort-upgrade")
+        echo "Old: abort upgrade to $2"
+        ;;
+    "abort-remove")
+        if [ "#$2" == "#in-favour" ]; then
+            echo "Conflictor: try to install package $3 version $4"
+        else
+            echo "abort-remove"
+        fi
+        ;;
+    "abort-deconfigure")
+        # $2 == "in-favour"
+        echo "Conflictor: failed install package:$3 version $4"
+        if [ "#$5" == "removing" ]; then
+            echo "Deconfigured: removing conflicting package $6 version $7"
+        fi
+    *)
+esac
+
+# Make sure the script returns 0
+true
+
+#DEBHELPER#
