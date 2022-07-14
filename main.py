@@ -10,6 +10,7 @@
 #################
 # 引入所需的库
 #################
+from ast import arg
 import os
 import sys
 import time
@@ -502,6 +503,9 @@ def GetScreenSize():
         ])
     return screenInformation  # 返回结果
 
+def UOSPackageScript():
+    threading.Thread(target=os.system, args=[f"python3 '{programPath}/deepin-wine-packager-with-script.py'"]).start()
+
 class UpdateWindow():
     data = {}
     def ShowWindow():
@@ -608,7 +612,7 @@ class GetDllFromWindowsISO:
         GetDllFromWindowsISO.setWineBotton.grid(row=0, column=1)
         # 设置
         GetDllFromWindowsISO.message.protocol('WM_DELETE_WINDOW', GetDllFromWindowsISO.ExitWindow)
-        GetDllFromWindowsISO.message.title("从 ISO 提取 DLL")
+        GetDllFromWindowsISO.message.title(f"Wine 运行器 {version}——从 ISO 提取 DLL")
         # 显示
         GetDllFromWindowsISO.message.mainloop()
 
@@ -887,7 +891,7 @@ updateThingsString = '''※1、添加 @delsin 和 @神末shenmo 建议的 postrm
 4、修复 1.6.0 程序无法保存设置的问题
 '''
 title = "wine 运行器 {}".format(version)
-updateTime = "2022年07月11日"
+updateTime = "2022年07月14日"
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 thankText = ""
 for i in information["Thank"]:
@@ -911,6 +915,7 @@ else:
     import ttkbootstrap
     style = ttkbootstrap.Style(theme="darkly")
     win = style.master  # 创建窗口
+
 win.title(title)  # 设置标题
 window = tk.Frame()
 # 设置变量以修改和获取值项
@@ -960,22 +965,26 @@ wineOption.add_command(label="安装自定义字体", command=OpenWineFontPath)
 wineOption.add_command(label="删除选择的 Wine 容器", command=DeleteWineBotton)
 wineOption.add_separator()
 wineOption.add_command(label="打包 wine 应用", command=BuildExeDeb)
+wineOption.add_command(label="使用官方 Wine 适配活动的脚本进行打包（测试只支持UOS）", command=UOSPackageScript)
 wineOption.add_separator()
 wineOption.add_command(label="从镜像获取DLL（只支持Windows XP、Windows Server 2003官方安装镜像）", command=GetDllFromWindowsISO.ShowWindow)
 wineOption.add_separator()
-wineOption.add_command(label="在指定wine、指定容器安装 .net framework", command=lambda: threading.Thread(target=InstallNetFramework).start())
-wineOption.add_command(label="在指定wine、指定容器安装 Visual Studio C++", command=lambda: threading.Thread(target=InstallVisualStudioCPlusPlus).start())
-wineOption.add_command(label="在指定wine、指定容器安装 MSXML", command=lambda: threading.Thread(target=InstallMSXML).start())
-wineOption.add_command(label="在指定wine、指定容器安装 gecko", command=lambda: threading.Thread(target=InstallMonoGecko, args=["gecko"]).start())
-wineOption.add_command(label="在指定wine、指定容器安装 mono", command=lambda: threading.Thread(target=InstallMonoGecko, args=["mono"]).start())
-wineOption.add_command(label="在指定wine、指定容器安装其它运行库", command=lambda: threading.Thread(target=InstallOther).start())
-wineOption.add_separator()
-wineOption.add_command(label="打开指定wine、指定容器的控制面板", command=lambda: threading.Thread(target=RunWineProgram, args=["control"]).start())
-wineOption.add_command(label="打开指定wine、指定容器的浏览器", command=lambda: threading.Thread(target=RunWineProgram, args=["iexplore' 'https://www.deepin.org"]).start())
-wineOption.add_command(label="打开指定wine、指定容器的注册表", command=lambda: threading.Thread(target=RunWineProgram, args=["regedit"]).start())
-wineOption.add_command(label="打开指定wine、指定容器的任务管理器", command=lambda: threading.Thread(target=RunWineProgram, args=["taskmgr"]).start())
-wineOption.add_command(label="打开指定wine、指定容器的资源管理器", command=lambda: threading.Thread(target=RunWineProgram, args=["explorer"]).start())
-wineOption.add_command(label="打开指定wine、指定容器的关于 wine", command=lambda: threading.Thread(target=RunWineProgram, args=["winver"]).start())
+wineInstall = tk.Menu()
+wineOption.add_cascade(label="在指定 Wine、容器安装组件", menu=wineInstall)
+wineInstall.add_command(label="在指定wine、指定容器安装 .net framework", command=lambda: threading.Thread(target=InstallNetFramework).start())
+wineInstall.add_command(label="在指定wine、指定容器安装 Visual Studio C++", command=lambda: threading.Thread(target=InstallVisualStudioCPlusPlus).start())
+wineInstall.add_command(label="在指定wine、指定容器安装 MSXML", command=lambda: threading.Thread(target=InstallMSXML).start())
+wineInstall.add_command(label="在指定wine、指定容器安装 gecko", command=lambda: threading.Thread(target=InstallMonoGecko, args=["gecko"]).start())
+wineInstall.add_command(label="在指定wine、指定容器安装 mono", command=lambda: threading.Thread(target=InstallMonoGecko, args=["mono"]).start())
+wineInstall.add_command(label="在指定wine、指定容器安装其它运行库", command=lambda: threading.Thread(target=InstallOther).start())
+wineDefultMenu = tk.Menu()
+wineOption.add_cascade(label="在指定 Wine、容器运行基础应用", menu=wineDefultMenu)
+wineDefultMenu.add_command(label="打开指定wine、指定容器的控制面板", command=lambda: threading.Thread(target=RunWineProgram, args=["control"]).start())
+wineDefultMenu.add_command(label="打开指定wine、指定容器的浏览器", command=lambda: threading.Thread(target=RunWineProgram, args=["iexplore' 'https://www.deepin.org"]).start())
+wineDefultMenu.add_command(label="打开指定wine、指定容器的注册表", command=lambda: threading.Thread(target=RunWineProgram, args=["regedit"]).start())
+wineDefultMenu.add_command(label="打开指定wine、指定容器的任务管理器", command=lambda: threading.Thread(target=RunWineProgram, args=["taskmgr"]).start())
+wineDefultMenu.add_command(label="打开指定wine、指定容器的资源管理器", command=lambda: threading.Thread(target=RunWineProgram, args=["explorer"]).start())
+wineDefultMenu.add_command(label="打开指定wine、指定容器的关于 wine", command=lambda: threading.Thread(target=RunWineProgram, args=["winver"]).start())
 wineOption.add_separator()
 wineOption.add_command(label="设置 run_v3.sh 的文管为 Deepin 默认文管", command=SetDeepinFileDialogDeepin)
 wineOption.add_command(label="设置 run_v3.sh 的文管为 Wine 默认文管", command=SetDeepinFileDialogDefult)
@@ -1023,7 +1032,12 @@ if len(sys.argv) > 1 and sys.argv[1]:
 menu.configure(activebackground="dodgerblue")
 programmenu.configure(activebackground="dodgerblue")
 wineOption.configure(activebackground="dodgerblue")
+wineDefultMenu.configure(activebackground="dodgerblue")
+wineInstall.configure(activebackground="dodgerblue")
+opengl.configure(activebackground="dodgerblue")
+winbind.configure(activebackground="dodgerblue")
 safeWebsize.configure(activebackground="dodgerblue")
+moreProgram.configure(activebackground="dodgerblue")
 help.configure(activebackground="dodgerblue")
 e1['value'] = findExeHistory
 e2['value'] = wineBottonHistory

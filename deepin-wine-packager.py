@@ -541,7 +541,7 @@ button1 = ttk.Button(window, text="浏览……", command=button1_cl)
 button2 = ttk.Button(window, text="浏览……", command=button2_cl)
 button4 = ttk.Button(window, text="浏览……", command=button4_cl)
 button5 = ttk.Button(window, text="打包……", command=make_deb)
-option1 = ttk.OptionMenu(window, option1_text, "Network", "Chat", "Audio", "Video", "Graphics", "Office", "Translation", "Development", "Utility")
+option1 = ttk.OptionMenu(window, option1_text, "Network", "Network", "Chat", "Audio", "Video", "Graphics", "Office", "Translation", "Development", "Utility", "System")
 textbox1 = tk.Text(window, width=100, height=4)
 textbox1.configure(state=tk.DISABLED)
 menu = tk.Menu(window)  # 设置菜单栏
