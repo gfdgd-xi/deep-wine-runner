@@ -940,7 +940,7 @@ label_l_1 = ttk.Label(frame_left_2,text="请选择容器的路径:")
 label_l_1.config(font=("幼圆",16))
 label_l_1.grid(row=0,column=0,sticky='w')
 ##
-e1 = ttk.Combobox(frame_left_2, width=50)
+e1 = ttk.Combobox(frame_left_2, width=65)
 e1.grid(row=1,column=0)
 ##
 button1 = tk.Button(frame_left_2,text="浏览", command=liulanbutton)
@@ -954,7 +954,7 @@ label_l_2 = ttk.Label(frame_left_3,text="请选择待执行程序:")
 label_l_2.config(font=("幼圆",16))
 label_l_2.grid(row=0,column=0,sticky='w')
 ##
-e2 = ttk.Combobox(frame_left_3, width=50)
+e2 = ttk.Combobox(frame_left_3, width=65)
 e2.grid(row=1,column=0)
 ##
 button2 = tk.Button(frame_left_3,text="浏览", command=liulanexebutton)
@@ -1013,7 +1013,7 @@ label_r_2 = ttk.Label(frame_right_3,text="名称:")
 label_r_2.config(font=("幼圆",14))
 label_r_2.grid(row=0,column=0)
 ##
-combobox1 = ttk.Combobox(frame_right_3,width=15)
+combobox1 = ttk.Combobox(frame_right_3,width=20)
 combobox1.grid(row=0,column=1)
 ##
 empty1 = ttk.Label(frame_right_3,text=" "*5)

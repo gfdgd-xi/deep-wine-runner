@@ -3,10 +3,9 @@ from tkinter import ttk
 
 root = tk.Tk()
 root.title("wine运行器1.6.0")
-#root.geometry("1275x900")
+root.geometry("1275x900")
 
 frame_up = tk.Frame(root)
-
 frame_left = tk.Frame(frame_up)#快速启动区
 frame_left.config(bd=30)
 #
