@@ -506,6 +506,9 @@ def GetScreenSize():
 def UOSPackageScript():
     threading.Thread(target=os.system, args=[f"python3 '{programPath}/deepin-wine-packager-with-script.py'"]).start()
 
+def RunVM():
+    threading.Thread(target=os.system, args=[f"bash '{programPath}/RunVM.sh'"]).start()
+
 class UpdateWindow():
     data = {}
     def ShowWindow():
@@ -1000,6 +1003,9 @@ winbind = tk.Menu()
 winbind.add_command(label="安装 winbind", command=lambda: os.system(f"'{programPath}/launch.sh' deepin-terminal -C 'pkexec apt install winbind -y' --keep-open"))
 winbind.add_command(label="卸载 winbind", command=lambda: os.system(f"'{programPath}/launch.sh' deepin-terminal -C 'pkexec apt purge winbind -y' --keep-open"))
 wineOption.add_cascade(label="安装/卸载 winbind", menu=winbind)
+virtualMachine = tk.Menu(menu, tearoff=0, background="white")
+menu.add_cascade(label="虚拟机", menu=virtualMachine)
+virtualMachine.add_command(label="使用 Virtualbox 虚拟机运行 Windows 应用", command=RunVM)
 safeWebsize = tk.Menu(menu, tearoff=0, background="white")
 menu.add_cascade(label="云沙箱", menu=safeWebsize)
 safeWebsize.add_command(label="360 沙箱云", command=lambda: webbrowser.open_new_tab("https://ata.360.net/"))
@@ -1007,7 +1013,6 @@ safeWebsize.add_command(label="微步云沙箱", command=lambda: webbrowser.open
 safeWebsize.add_command(label="VIRUSTOTAL", command=lambda: webbrowser.open_new_tab("https://www.virustotal.com/"))
 
 help = tk.Menu(menu, tearoff=0, background="white")  # 设置“帮助”菜单栏
-
 menu.add_cascade(label="帮助", menu=help)
 help.add_command(label="程序官网", command=OpenProgramURL)  # 设置“程序官网”项
 help.add_separator()
@@ -1036,6 +1041,7 @@ wineDefultMenu.configure(activebackground="dodgerblue")
 wineInstall.configure(activebackground="dodgerblue")
 opengl.configure(activebackground="dodgerblue")
 winbind.configure(activebackground="dodgerblue")
+virtualMachine.configure(activebackground="dodgerblue")
 safeWebsize.configure(activebackground="dodgerblue")
 moreProgram.configure(activebackground="dodgerblue")
 help.configure(activebackground="dodgerblue")

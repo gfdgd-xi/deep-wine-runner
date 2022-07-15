@@ -506,6 +506,9 @@ def GetScreenSize():
 def UOSPackageScript():
     threading.Thread(target=os.system, args=[f"python3 '{programPath}/deepin-wine-packager-with-script.py'"]).start()
 
+def RunVM():
+    threading.Thread(target=os.system, args=[f"bash '{programPath}/RunVM.sh'"]).start()
+
 class UpdateWindow():
     data = {}
     def ShowWindow():
@@ -1094,7 +1097,7 @@ frame_right.grid(row=0,column=1,sticky='n')#第一行第二列
 frame_up.grid(row=0,sticky='w')
 
 frame_down = tk.Frame(win,bd=30)
-returnText = tk.Text(frame_down,width=120)
+returnText = tk.Text(frame_down,width=120, height=15)
 returnText.insert("end", "此可以查看到 Wine 应用安装时的程序返回值")
 returnText.config(state=tk.DISABLED)
 returnText.grid(row=0,column=0,sticky='e'+'w')
@@ -1152,6 +1155,9 @@ winbind = tk.Menu()
 winbind.add_command(label="安装 winbind", command=lambda: os.system(f"'{programPath}/launch.sh' deepin-terminal -C 'pkexec apt install winbind -y' --keep-open"))
 winbind.add_command(label="卸载 winbind", command=lambda: os.system(f"'{programPath}/launch.sh' deepin-terminal -C 'pkexec apt purge winbind -y' --keep-open"))
 wineOption.add_cascade(label="安装/卸载 winbind", menu=winbind)
+virtualMachine = tk.Menu(menu, tearoff=0, background="white")
+menu.add_cascade(label="虚拟机", menu=virtualMachine)
+virtualMachine.add_command(label="使用 Virtualbox 虚拟机运行 Windows 应用", command=RunVM)
 safeWebsize = tk.Menu(menu, tearoff=0, background="white")
 menu.add_cascade(label="云沙箱", menu=safeWebsize)
 safeWebsize.add_command(label="360 沙箱云", command=lambda: webbrowser.open_new_tab("https://ata.360.net/"))
@@ -1189,6 +1195,7 @@ wineDefultMenu.configure(activebackground="dodgerblue")
 wineInstall.configure(activebackground="dodgerblue")
 opengl.configure(activebackground="dodgerblue")
 winbind.configure(activebackground="dodgerblue")
+virtualMachine.configure(activebackground="dodgerblue")
 safeWebsize.configure(activebackground="dodgerblue")
 moreProgram.configure(activebackground="dodgerblue")
 help.configure(activebackground="dodgerblue")
