@@ -7,11 +7,16 @@
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 的 tkinter 构建
 ###########################################################################################
-cd `dirname $0`
-which VBoxManage
-if test $? == 0 ; then
-    VM/VirtualMachine
+VBoxManage showvminfo Windows
+if test 0 == $?; then
+    # 检测到虚拟机存在，启动虚拟机
+    VBoxManage startvm Windows
     exit
 fi
-echo 未安装 VirtualBox，开始安装，安装结束重新运行即可
-./launch.sh deepin-terminal -C "pkexec apt install virtualbox-6.1 -y && zenity --info --text=\"安装完毕，关闭此对话框和安装终端重新运行程序即可\" --no-wrap" --keep-open
+zenity --question --no-wrap --text="检查到您未创建所指定的虚拟机，是否创建虚拟机并继续？\n如果不创建将无法使用"
+if test 1 == $?; then
+    # 用户不想创建虚拟机，结束
+    exit
+fi
+cd `dirname $0`
+./VM/VirtualMachine
