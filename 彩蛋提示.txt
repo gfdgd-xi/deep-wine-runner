@@ -1,0 +1,7 @@
+你会发现在这个目录下有几个main-xxx.py的文件，这个是界面的旧版/废稿，如果想要调用，需要输入以下命令：  
+```bash
+sudo apt install python3 python3-tk python3-pip
+python3 -m pip install --upgrade ttkthemes    --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple
+python3 -m pip install --upgrade ttkbootstrap --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple
+python3 -m pip install --upgrade easygui      --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple
+```
