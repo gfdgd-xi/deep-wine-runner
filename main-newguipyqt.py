@@ -18,12 +18,9 @@ import shutil
 import requests
 import threading
 import traceback
-import ttkthemes
 import webbrowser
 import subprocess
-import ttkbootstrap
 import tkinter as tk
-#import tkinter.ttk as ttk
 import tkinter.filedialog
 import tkinter.messagebox
 import PyQt5.QtGui as QtGui
@@ -82,7 +79,6 @@ def liulanbutton():
 # 第二个浏览按钮事件
 def liulanexebutton():
     path = QtWidgets.QFileDialog.getOpenFileName(widget, "选择 exe 可执行文件", json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindExe.json"))["path"], "exe 可执行文件(*.exe);;EXE 可执行文件(*.EXE);;所有文件(*.*)")
-    #path = tkinter.filedialog.askopenfilename(title="选择 exe 可执行文件", filetypes=[("exe 可执行文件", "*.exe"), ("EXE 可执行文件", "*.EXE"), ("所有文件", "*.*")], initialdir=json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindExe.json"))["path"])
     if path != "" and path != "()":
         e2.setEditText(path[0])  # 显示路径
         write_txt(get_home() + "/.config/deepin-wine-runner/FindExe.json", json.dumps({"path": os.path.dirname(path[0])}))  # 写入配置文件
@@ -93,7 +89,6 @@ def runexebutton(self):
     global run
     DisableButton(True)
     if not CheckProgramIsInstall(wine[o1.currentText()]):
-        #if not tkinter.messagebox.askyesno(title="提示", message="检查到您未安装这个 wine，是否继续使用这个 wine 运行？"):
         if QtWidgets.QMessageBox.question(widget, "提示", "检查到您未安装这个 wine，是否继续使用这个 wine 运行？") == QtWidgets.QMessageBox.No:
             DisableButton(False)
             return
@@ -286,7 +281,7 @@ def ListToDictionary(list):
     return dictionary
 
 def CleanProgramHistory():
-    if tkinter.messagebox.askokcancel(title="警告", message="删除后将无法恢复，你确定吗？\n删除后软件将会自动重启。"):
+    if QtWidgets.QMessageBox.question(title="警告", message="删除后将无法恢复，你确定吗？\n删除后软件将会自动重启。") == QtWidgets.QMessageBox.Yes:
         shutil.rmtree(get_home() + "/.config/deepin-wine-runner")
         ReStartProgram()
 
@@ -365,7 +360,7 @@ def RunWineProgram(wineProgram, history = False, Disbled = True):
     global runProgram
     DisableButton(True)
     if not CheckProgramIsInstall(wine[o1.currentText()]):
-        if not tkinter.messagebox.askyesno(title="提示", message="检查到您未安装这个 wine，是否继续使用这个 wine 运行？"):
+        if QtWidgets.QMessageBox.question(title="提示", message="检查到您未安装这个 wine，是否继续使用这个 wine 运行？") == QtWidgets.QMessageBox.No:
             DisableButton(False)
             return
     returnText.setText("")
@@ -407,7 +402,7 @@ def RunWinetricks():
     global runWinetricks
     DisableButton(True)
     if not CheckProgramIsInstall(wine[o1.currentText()]):
-        if not tkinter.messagebox.askyesno(title="提示", message="检查到您未安装这个 wine，是否继续使用这个 wine 运行？"):
+        if QtWidgets.QMessageBox.question(widget, "提示", "检查到您未安装这个 wine，是否继续使用这个 wine 运行？") == QtWidgets.QMessageBox.No:
             DisableButton(False)
             return
     returnText.setText("")
@@ -676,7 +671,6 @@ class GetDllFromWindowsISO:
         widgetLayout.addWidget(GetDllFromWindowsISO.foundButton, 3, 2, 1, 1)
         widgetLayout.addWidget(GetDllFromWindowsISO.dllList, 4, 1, 1, 1)
         widgetLayout.addWidget(dllControl, 5, 1, 1, 1)
-        #widgetLayout.addWidget(GetDllFromWindowsISO.setWineBotton, 5, 2, 1, 1)
         widget.setLayout(widgetLayout)
         GetDllFromWindowsISO.browser.clicked.connect(GetDllFromWindowsISO.Browser)
         GetDllFromWindowsISO.mountButton.clicked.connect(GetDllFromWindowsISO.MountDisk)
@@ -689,6 +683,8 @@ class GetDllFromWindowsISO:
         GetDllFromWindowsISO.dllListModel.setStringList([])
         GetDllFromWindowsISO.dllList.setModel(GetDllFromWindowsISO.dllListModel)
         GetDllFromWindowsISO.isoPath.currentText()
+        GetDllFromWindowsISO.message.setWindowTitle(f"Wine 运行器 {version}——从 ISO 提取 DLL")
+        GetDllFromWindowsISO.message.setWindowIcon(iconPath)
         GetDllFromWindowsISO.message.show()
 
     def DisbledUp(state):
@@ -732,13 +728,6 @@ class GetDllFromWindowsISO:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", traceback.format_exc())
 
-
-    def ExitWindow():
-        if GetDllFromWindowsISO.mount:
-            tkinter.messagebox.showinfo(title="提示", message="请关闭/卸载镜像后再关闭本窗口")
-            return
-        DisableButton(False)
-        GetDllFromWindowsISO.message.quit()
 
     def MountDisk():
         if not os.path.exists(GetDllFromWindowsISO.isoPath.currentText()):
@@ -856,7 +845,7 @@ class ProgramSetting():
         return
 
     def Browser():
-        path = QtWidgets.QFileDialog.getExistingDirectory(ProgramSetting.message, "选择 Wine 容器", json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineBotton.json"))["path"])#tkinter.filedialog.askdirectory(title="选择 Wine 容器", initialdir=json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineBotton.json"))["path"])
+        path = QtWidgets.QFileDialog.getExistingDirectory(ProgramSetting.message, "选择 Wine 容器", json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineBotton.json"))["path"])
         if path == "" or path == None or path == "()" or path == ():
             return
         ProgramSetting.defultBotton.setText(path)

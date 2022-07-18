@@ -21,6 +21,7 @@ import subprocess
 from PIL import Image
 import tkinter as tk
 import tkinter.ttk as ttk
+import PyQt5.QtWidgets as QtWidgets
 import tkinter.messagebox as messagebox
 import tkinter.filedialog as filedialog
 
@@ -487,7 +488,8 @@ else:
     style = ttkbootstrap.Style(theme="darkly")
     window = style.master  # 创建窗口
 # 设置变量以修改和获取值项
-wineVersion = tk.StringVar()
+wineVersion = QtWidgets.QComboBox()
+wineVersion.addItems
 wineVersion.set("deepin-wine6 stable")
 e1_text = tk.StringVar()
 e2_text = tk.StringVar()
