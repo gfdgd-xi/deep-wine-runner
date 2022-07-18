@@ -10,7 +10,6 @@
 #################
 # 引入所需的库
 #################
-from ast import arg
 import os
 import sys
 import time
