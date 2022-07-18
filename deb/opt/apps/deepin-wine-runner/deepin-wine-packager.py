@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #########################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布
-# 版本：1.5.3
+# 版本：1.7.0
 # 感谢：感谢 deepin-wine 团队，提供了 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 的 tkinter 构建
 #########################################################################
@@ -14,195 +14,203 @@ import json
 import shutil
 import random
 import pathlib
-import ttkthemes
-import threading
 import traceback
 import subprocess
 from PIL import Image
-import tkinter as tk
-import tkinter.ttk as ttk
-import tkinter.messagebox as messagebox
-import tkinter.filedialog as filedialog
+import PyQt5.QtGui as QtGui
+import PyQt5.QtCore as QtCore
+import PyQt5.QtWidgets as QtWidgets
 
 #################
 # 程序所需事件
 #################
 
 def button1_cl():
-    path = filedialog.askdirectory(title="选择 wine 容器", initialdir="~/.deepinwine")
+    path = QtWidgets.QFileDialog.getExistingDirectory(widget, "选择 wine 容器", f"{get_home()}/.deepinwine")
     if path != "":
-        e6_text.set(path)
+        e6_text.setText(path)
 
 def button2_cl():
-    path = filedialog.askopenfilename(filetypes=[("PNG图标", "*.png"), ("SVG图标", "*.svg"), ("全部文件", "*.*")], title="选择图标文件", initialdir="~")
+    path = QtWidgets.QFileDialog.getOpenFileName(widget, "选择图标文件", get_home(), "PNG图标(*.png);;SVG图标(*.svg);;全部文件(*.*)")[0]
     if path != "":
-        e9_text.set(path)
+        e9_text.setText(path)
 
 def button4_cl():
-    path = filedialog.asksaveasfilename(filetypes=[("deb 文件", "*.deb"), ("所有文件", "*.*")], title="保存 deb 包", initialdir="~", initialfile="{}_{}_i386.deb".format(e1_text.get(), e2_text.get()))
+    path = QtWidgets.QFileDialog.getSaveFileName(widget, "保存 deb 包", get_home(), "deb 文件(*.deb);;所有文件(*.*)", "{}_{}_i386.deb".format(e1_text.text(), e2_text.text()))[0]
     if path != "":
-        e12_text.set(path)
+        e12_text.setText(path)
 
 def disabled_or_NORMAL_all(choose):
-    chooses = {True: tk.NORMAL, False: tk.DISABLED}
-    a = chooses[choose]
-    label1.configure(state=a)
-    label2.configure(state=a)
-    label3.configure(state=a)
-    label4.configure(state=a)
-    label5.configure(state=a)
-    label6.configure(state=a)
-    label7.configure(state=a)
-    label8.configure(state=a)
-    label9.configure(state=a)
-    label10.configure(state=a)
-    label12.configure(state=a)
-    label14.configure(state=a)
-    label15.configure(state=a)
-    e1.configure(state=a)
-    e2.configure(state=a)
-    e3.configure(state=a)
-    e4.configure(state=a)
-    e5.configure(state=a)
-    e6.configure(state=a)
-    e7.configure(state=a)
-    e8.configure(state=a)
-    e9.configure(state=a)
-    e10.configure(state=a)
-    e12.configure(state=a)
-    e15.configure(state=a)
-    button1.config(state=a)
-    button2.config(state=a)
-    button4.config(state=a)
-    button5.config(state=a)
-    option1.config(state=a)
-    chooseWineHelper.config(state=a)
-    chooseWineVersion.config(state=a)
+    choose = not choose
+    e1_text.setDisabled(choose)
+    e2_text.setDisabled(choose)
+    e3_text.setDisabled(choose)
+    e4_text.setDisabled(choose)
+    e5_text.setDisabled(choose)
+    e6_text.setDisabled(choose)
+    e7_text.setDisabled(choose)
+    e8_text.setDisabled(choose)
+    e9_text.setDisabled(choose)
+    e10_text.setDisabled(choose)
+    e12_text.setDisabled(choose)
+    e15_text.setDisabled(choose)
+    button1.setDisabled(choose)
+    button2.setDisabled(choose)
+    button4.setDisabled(choose)
+    button5.setDisabled(choose)
+    option1_text.setDisabled(choose)
+    chooseWineHelperValue.setDisabled(choose)
+    wineVersion.setDisabled(choose)
     
+class QT:
+    thread = None
 
 def make_deb():
     clean_textbox1_things()
     disabled_or_NORMAL_all(False)
-    if e1_text.get() == "" or e2_text.get() == "" or e3_text.get() == "" or e4_text.get() == "" or e5_text.get() == "" or e6_text.get() == "" or e7_text.get() == "" or e8_text.get() == "" or e12_text.get() == "":
-        messagebox.showinfo(title="提示", message="必填信息没有填写完整，无法继续构建 deb 包")
+    if e1_text.text() == "" or e2_text.text() == "" or e3_text.text() == "" or e4_text.text() == "" or e5_text.text() == "" or e6_text.text() == "" or e7_text.text() == "" or e8_text.text() == "" or e12_text.text() == "":
+        QtWidgets.QMessageBox.critical(widget, "错误", "必填信息没有填写完整，无法继续构建 deb 包")
         disabled_or_NORMAL_all(True)
         label13_text_change("必填信息没有填写完整，无法继续构建 deb 包")
         return
-    if not messagebox.askyesno(title="提示", message="打包将会改动现在选择的容器，是否继续？"):
+    if QtWidgets.QMessageBox.question(widget, "提示", "打包将会改动现在选择的容器，是否继续？") == QtWidgets.QMessageBox.No:
         disabled_or_NORMAL_all(True)
         return
-    thread = threading.Thread(target=make_deb_threading)
-    thread.start()
+    #thread = threading.Thread(target=make_deb_threading)
+    QT.thread = make_deb_threading()
+    QT.thread.signal.connect(chang_textbox1_things)
+    QT.thread.label.connect(label13_text_change)
+    QT.thread.start()
+    #thread.start()
+
 
 def label13_text_change(thing):
-    label13_text.set("当前 deb 打包情况：{}".format(thing))
+    label13_text.setText(f"<p align='center'>当前 deb 打包情况：{thing}</p>")
 
-def make_deb_threading():
-    #####################################
-    # 程序创建的 deb 构建临时文件夹目录树：
-    # /XXX
-    # ├── DEBIAN
-    # │   └── control
-    # └── opt
-    # └── apps
-    #     └── XXX
-    #         ├── entries
-    #         │   ├── applications
-    #         │   │   └── XXX.desktop
-    #         │   └── icons
-    #         │       └── hicolor
-    #         │           └── scalable
-    #         │               └── apps
-    #         │                   └── XXX.png（XXX.svg）
-    #         ├── files
-    #         │   ├── files.7z
-    #         │   └── run.sh
-    #         └── info
-    #
-    # 11 directories, 6 files
-    #####################################
-    try:
-        #####################
-        # 判断文件是否存在
-        #####################
-        label13_text_change("正在检查文件是否存在并为后面步骤准备……")
-        a = ""
-        if e6_text.get() == "/":
-            b = e6_text.get()[:-1]
-        else:
-            b = e6.get()
-        if e9_text.get() != "":
-            # 获取图片格式（不太准）
+class make_deb_threading(QtCore.QThread):
+    signal = QtCore.pyqtSignal(str)
+    label = QtCore.pyqtSignal(str)
+    def __init__(self) -> None:
+        super().__init__()
+
+    def run_command(self, command):
+        res = subprocess.Popen([command], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        # 实时读取程序返回
+        while res.poll() is None:
             try:
-                im = Image.open(e9_text.get())
-                imms = im.format.lower()
-            except: # 未知（就直接设置为 svg 后缀）
-                imms = ".svg"
-            a = "/opt/apps/{}/entries/icons/hicolor/scalable/apps/{}.{}".format(e1_text.get(), e1_text.get(), imms)
-            if not os.path.exists(e9_text.get()):
-                messagebox.showerror(title="提示", message="图标的路径填写错误，无法进行构建 deb 包")
+                text = res.stdout.readline().decode("utf8")
+            except:
+                text = ""
+            print(text, end="")
+            self.signal.emit(text)
+
+    def run(self):
+        #####################################
+        # 程序创建的 deb 构建临时文件夹目录树：
+        # /XXX
+        # ├── DEBIAN
+        # │   ├── control
+        # │   └── postrm
+        # └── opt
+        # └── apps
+        #     └── XXX
+        #         ├── entries
+        #         │   ├── applications
+        #         │   │   └── XXX.desktop
+        #         │   └── icons
+        #         │       └── hicolor
+        #         │           └── scalable
+        #         │               └── apps
+        #         │                   └── XXX.png（XXX.svg）
+        #         ├── files
+        #         │   ├── files.7z
+        #         │   └── run.sh
+        #         └── info
+        #
+        # 11 directories, 7 files
+        #####################################
+        try:
+            #####################
+            # 判断文件是否存在
+            #####################
+            self.label.emit("正在检查文件是否存在并为后面步骤准备……")
+            a = ""
+            if e6_text.text() == "/":
+                b = e6_text.text()[:-1]
+            else:
+                b = e6_text.text()
+            if e9_text.text() != "":
+                # 获取图片格式（不太准）
+                try:
+                    im = Image.open(e9_text.text())
+                    imms = im.format.lower()
+                except: # 未知（就直接设置为 svg 后缀）
+                    imms = ".svg"
+                a = "/opt/apps/{}/entries/icons/hicolor/scalable/apps/{}.{}".format(e1_text.text(), e1_text.text(), imms)
+                if not os.path.exists(e9_text.text()):
+                    QtWidgets.QMessageBox.critical(widget, "错误", "图标的路径填写错误，无法进行构建 deb 包")
+                    disabled_or_NORMAL_all(True)
+                    label13_text_change("图标的路径填写错误，无法进行构建 deb 包")
+                    return
+            if not os.path.exists(e6_text.text()):
+                QtWidgets.QMessageBox.critical(widget, "错误", "路径填写错误，无法继续构建 deb 包")
                 disabled_or_NORMAL_all(True)
                 label13_text_change("图标的路径填写错误，无法进行构建 deb 包")
                 return
-        if not os.path.exists(e6_text.get()):
-            messagebox.showerror(title="提示", message="路径填写错误，无法继续构建 deb 包")
-            disabled_or_NORMAL_all(True)
-            label13_text_change("图标的路径填写错误，无法进行构建 deb 包")
-            return
-        #############
-        # 删除文件
-        #############
-        label13_text_change("正在删除对构建 deb 包有影响的文件……")
-        debPackagePath = f"/tmp/{random.randint(0, 9999)}"
-        run_command(f"rm -rfv /tmp/{debPackagePath}")
-        ###############
-        # 创建目录
-        ###############
-        label13_text_change("正在创建目录……")
-        os.makedirs("{}/DEBIAN".format(debPackagePath))
-        os.makedirs("{}/opt/apps/{}/entries/applications".format(debPackagePath, e1_text.get()))
-        os.makedirs("{}/opt/apps/{}/entries/icons/hicolor/scalable/apps".format(debPackagePath, e1_text.get()))
-        os.makedirs("{}/opt/apps/{}/files".format(debPackagePath, e1_text.get()))
-        ###############
-        # 创建文件
-        ###############
-        label13_text_change("正在创建文件……")
-        os.mknod("{}/DEBIAN/control".format(debPackagePath))
-        os.mknod("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.get(), e1_text.get()))
-        os.mknod("{}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.get()))
-        os.mknod("{}/opt/apps/{}/info".format(debPackagePath, e1_text.get()))
-        ###############
-        # 设置容器
-        ###############
-        label13_text_change("正在设置 wine 容器")
-        os.chdir(b)
-        run_command("sed -i \"s#$USER#@current_user@#\" ./*.reg")
-        os.chdir(f"{b}/drive_c/users")
-        run_command(f"mv -v '{os.getlogin()}' @current_user@")
-        os.chdir(programPath)
-        ###############
-        # 压缩容器
-        ###############
-        label13_text_change("正在打包 wine 容器")
-        run_command("7z a {}/opt/apps/{}/files/files.7z {}/*".format(debPackagePath, e1_text.get(), b))
-        ###############
-        # 复制图片
-        ###############
-        label13_text_change("正在复制文件……")
-        run_command(f"cp -rv '{programPath}/dlls' {debPackagePath}/opt/apps/{e1_text.get()}/files/")
-        if e9_text.get() != "":
-            shutil.copy(e9_text.get(), "{}/opt/apps/{}/entries/icons/hicolor/scalable/apps/{}.{}".format(debPackagePath, e1_text.get(), e1_text.get(), imms))
-        ################
-        # 获取文件大小
-        ################
-        label13_text_change("正在计算文件大小……")
-        size = getFileFolderSize(debPackagePath) / 1024
-        ################
-        # 写入文本文档
-        ################
-        label13_text_change("正在写入文件……")
-        if not bool(chooseWineHelperValue.get()):
-            write_txt("{}/DEBIAN/control".format(debPackagePath), '''Package: {}
+            #############
+            # 删除文件
+            #############
+            self.label.emit("正在删除对构建 deb 包有影响的文件……")
+            debPackagePath = f"/tmp/{random.randint(0, 9999)}"
+            self.run_command(f"rm -rfv /tmp/{debPackagePath}")
+            ###############
+            # 创建目录
+            ###############
+            self.label.emit("正在创建目录……")
+            os.makedirs("{}/DEBIAN".format(debPackagePath))
+            os.makedirs("{}/opt/apps/{}/entries/applications".format(debPackagePath, e1_text.text()))
+            os.makedirs("{}/opt/apps/{}/entries/icons/hicolor/scalable/apps".format(debPackagePath, e1_text.text()))
+            os.makedirs("{}/opt/apps/{}/files".format(debPackagePath, e1_text.text()))
+            ###############
+            # 创建文件
+            ###############
+            self.label.emit("正在创建文件……")
+            os.mknod("{}/DEBIAN/control".format(debPackagePath))
+            os.mknod("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()))
+            os.mknod("{}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()))
+            os.mknod("{}/opt/apps/{}/info".format(debPackagePath, e1_text.text()))
+            ###############
+            # 设置容器
+            ###############
+            self.label.emit("正在设置 wine 容器")
+            os.chdir(b)
+            self.run_command("sed -i \"s#$USER#@current_user@#\" ./*.reg")
+            os.chdir(f"{b}/drive_c/users")
+            self.run_command(f"mv -v '{os.getlogin()}' @current_user@")
+            os.chdir(programPath)
+            ###############
+            # 压缩容器
+            ###############
+            self.label.emit("正在打包 wine 容器")
+            self.run_command("7z a {}/opt/apps/{}/files/files.7z {}/*".format(debPackagePath, e1_text.text(), b))
+            ###############
+            # 复制图片
+            ###############
+            self.label.emit("正在复制文件……")
+            self.run_command(f"cp -rv '{programPath}/dlls' {debPackagePath}/opt/apps/{e1_text.text()}/files/")
+            if e9_text.text() != "":
+                shutil.copy(e9_text.text(), "{}/opt/apps/{}/entries/icons/hicolor/scalable/apps/{}.{}".format(debPackagePath, e1_text.text(), e1_text.text(), imms))
+            ################
+            # 获取文件大小
+            ################
+            self.label.emit("正在计算文件大小……")
+            size = getFileFolderSize(debPackagePath) / 1024
+            ################
+            # 写入文本文档
+            ################
+            self.label.emit("正在写入文件……")
+            if not chooseWineHelperValue.isChecked():
+                write_txt("{}/DEBIAN/control".format(debPackagePath), '''Package: {}
 Version: {}
 Architecture: i386
 Maintainer: {}
@@ -211,9 +219,9 @@ Section: non-free/otherosfs
 Priority: optional
 Multi-Arch: foreign
 Description: {}
-'''.format(e1_text.get(), e2_text.get(), e4_text.get(), wineVersion.get(), e3_text.get()))
-        else:
-            write_txt("{}/DEBIAN/control".format(debPackagePath), '''Package: {}
+'''.format(e1_text.text(), e2_text.text(), e4_text.text(), wineVersion.currentText(), e3_text.text()))
+            else:
+                write_txt("{}/DEBIAN/postrm".format(debPackagePath), '''Package: {}
 Version: {}
 Architecture: i386
 Maintainer: {}
@@ -222,10 +230,28 @@ Section: non-free/otherosfs
 Priority: optional
 Multi-Arch: foreign
 Description: {}
-'''.format(e1_text.get(), e2_text.get(), e4_text.get(), wineVersion.get(), e3_text.get()))
-        write_txt("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.get(), e1_text.get()), '#!/usr/bin/env xdg-open\n[Desktop Entry]\nEncoding=UTF-8\nType=Application\nX-Created-By={}\nCategories={};\nIcon={}\nExec="/opt/apps/{}/files/run.sh" {}\nName={}\nComment={}\nMimeType={}\nGenericName={}\nTerminal=false\nStartupNotify=false\n'.format(e4_text.get(), option1_text.get(), a, e1_text.get(), e15_text.get(), e8_text.get(), e3_text.get(), e10_text.get(), e1_text.get()))
-        if not bool(chooseWineHelperValue.get()):
-            write_txt("{}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.get()), '''#!/bin/sh
+'''.format(e1_text.text(), e2_text.text(), e4_text.text(), wineVersion.currentText(), e3_text.text()))
+            if rmBash.isChecked():
+                write_txt("{}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()), f'''#!/bin/bash
+
+if [ "$1" = "remove" ] || [ "$1" = "purge" ];then
+
+echo"清理卸载残留"
+for username in ls /home
+do
+echo /home/$username
+if [ -d "/home/$username/.deepinwine/{e5_text.text()}" ]
+then
+rm -rf "/home/$username/.deepinwine/{e5_text.text()}"
+fi
+done
+else
+echo"非卸载，跳过清理"
+fi
+''')
+            write_txt("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()), '#!/usr/bin/env xdg-open\n[Desktop Entry]\nEncoding=UTF-8\nType=Application\nX-Created-By={}\nCategories={};\nIcon={}\nExec="/opt/apps/{}/files/run.sh" {}\nName={}\nComment={}\nMimeType={}\nGenericName={}\nTerminal=false\nStartupNotify=false\n'.format(e4_text.text(), option1_text.currentText(), a, e1_text.text(), e15_text.text(), e8_text.text(), e3_text.text(), e10_text.text(), e1_text.text()))
+            if not bool(chooseWineHelperValue.text()):
+                write_txt("{}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()), '''#!/bin/sh
 
 #   Copyright (C) 2016 Deepin, Inc.
 #
@@ -269,9 +295,9 @@ if [ -n "$EXEC_PATH" ];then
 else
     $START_SHELL_PATH $BOTTLENAME $APPVER "uninstaller.exe" "$@"
 fi
-'''.format(e5_text.get(), e2_text.get(), e7_text.get(), e1_text.get(), wineVersion.get()))
-        else:
-            write_txt("{}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.get()), '''#!/bin/sh
+'''.format(e5_text.text(), e2_text.text(), e7_text.text(), e1_text.text(), wineVersion.currentText()))
+            else:
+                write_txt("{}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()), '''#!/bin/sh
 
 #   Copyright (C) 2016 Deepin, Inc.
 #
@@ -341,33 +367,33 @@ if [ -n "$EXEC_PATH" ];then
 else
     $START_SHELL_PATH $BOTTLENAME $APPVER "uninstaller.exe" "$@"
 fi
-'''.format(e5_text.get(), e2_text.get(), e7_text.get(), e1_text.get(), wineVersion.get()))
-        write_txt("{}/opt/apps/{}/info".format(debPackagePath, e1_text.get()), '{\n    "appid": "' + e1_text.get() + '",\n    "name": "' + e8_text.get() + '",\n    "version": "' + e2_text.get() + '",\n    "arch": ["i386"],\n    "permissions": {\n        "autostart": false,\n        "notification": false,\n        "trayicon": true,\n        "clipboard": true,\n        "account": false,\n        "bluetooth": false,\n        "camera": false,\n        "audio_record": false,\n        "installed_apps": false\n    }\n}')
-        ################
-        # 修改文件权限
-        ################
-        label13_text_change("正在修改文件权限……")
-        run_command("chmod -Rv 644 {}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.get()))
-        run_command("chmod -Rv 644 {}/opt/apps/{}/info".format(debPackagePath, e1_text.get()))
-        run_command("chmod -Rv 755 {}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.get()))
-        run_command("chmod -Rv 755 {}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.get(), e1_text.get()))
-        ################
-        # 构建 deb 包
-        ################
-        label13_text_change("正在构建 deb 包……")
-        run_command("dpkg -b {} {}".format(debPackagePath, e12_text.get()))
-        ################
-        # 完成构建
-        ################
-        label13_text_change("完成构建！")
-        disabled_or_NORMAL_all(True)
-        messagebox.showinfo(title="提示", message="打包完毕！")
-    except:
-        traceback.print_exc()
-        messagebox.showerror(title="错误", message="程序出现错误，错误信息：\n{}".format(traceback.format_exc()))
-        label13_text_change("deb 包构建出现错误")
-        chang_textbox1_things(traceback.format_exc())
-        disabled_or_NORMAL_all(True)
+'''.format(e5_text.text(), e2_text.text(), e7_text.text(), e1_text.text(), wineVersion.currentText()))
+            write_txt("{}/opt/apps/{}/info".format(debPackagePath, e1_text.text()), '{\n    "appid": "' + e1_text.text() + '",\n    "name": "' + e8_text.text() + '",\n    "version": "' + e2_text.text() + '",\n    "arch": ["i386"],\n    "permissions": {\n        "autostart": false,\n        "notification": false,\n        "trayicon": true,\n        "clipboard": true,\n        "account": false,\n        "bluetooth": false,\n        "camera": false,\n        "audio_record": false,\n        "installed_apps": false\n    }\n}')
+            ################
+            # 修改文件权限
+            ################
+            self.label.emit("正在修改文件权限……")
+            self.run_command("chmod -Rv 644 {}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()))
+            self.run_command("chmod -Rv 644 {}/opt/apps/{}/info".format(debPackagePath, e1_text.text()))
+            self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()))
+            self.run_command("chmod -Rv 755 {}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()))
+            ################
+            # 构建 deb 包
+            ################
+            self.label.emit("正在构建 deb 包……")
+            self.run_command("dpkg -b {} {}".format(debPackagePath, e12_text.text()))
+            ################
+            # 完成构建
+            ################
+            self.label.emit("完成构建！")
+            disabled_or_NORMAL_all(True)
+            QtWidgets.QMessageBox.information(widget, "提示", "打包完毕！")
+        except:
+            traceback.print_exc()
+            QtWidgets.QMessageBox.critical(widget, "错误", "程序出现错误，错误信息：\n{}".format(traceback.format_exc()))
+            self.label.emit("deb 包构建出现错误")
+            self.signal.emit(traceback.format_exc())
+            disabled_or_NORMAL_all(True)
 
 # 写入文本文档
 def write_txt(path, things):
@@ -376,25 +402,12 @@ def write_txt(path, things):
     file.close()  # 关闭文本对象
 
 def chang_textbox1_things(things):
-    textbox1.configure(state=tk.NORMAL)
-    textbox1.insert('end', things)
-    textbox1.configure(state=tk.DISABLED)
+    if things.replace("\n", "").replace(" ", "") == "":
+        return
+    textbox1.append(things)
 
 def clean_textbox1_things():
-    textbox1.configure(state=tk.NORMAL)
-    textbox1.delete('1.0','end')
-    textbox1.configure(state=tk.DISABLED)
-
-def run_command(command):
-    res = subprocess.Popen([command], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    # 实时读取程序返回
-    while res.poll() is None:
-        try:
-            text = res.stdout.readline().decode("utf8")
-        except:
-            text = ""
-        print(text)
-        chang_textbox1_things(text)
+    textbox1.setText("")
 
 
 def getFileFolderSize(fileOrFolderPath):
@@ -419,7 +432,7 @@ def getFileFolderSize(fileOrFolderPath):
 
 # 显示“提示”窗口
 def helps():
-    messagebox.showinfo(title="提示", message=tips)
+    QtWidgets.QMessageBox.information(widget, "提示", tips)
 
 # 读取文本文档
 def readtxt(path):
@@ -448,136 +461,106 @@ tips = """提示：
 2、如果要填写路径，有“浏览……”按钮的是要填本计算机对应文件的路径，否则就是填写安装到其他计算机使用的路径
 3、输入 wine 的容器路径时最后面请不要输入“/”
 4、输入可执行文件的运行路径时是以“C:/XXX/XXX.exe”的格式进行输入，默认是以 C： 为开头，不用“\”做命令的分隔，而是用“/”
-5、.desktop 的图标只支持 PNG 格式和 SVG 格式，其他格式无法显示图标"""
+5、.desktop 的图标只支持 PNG 格式和 SVG 格式，其他格式无法显示图标
+6、路径建议不要带空格，容易出问题"""
 
 ###############
 # 窗口创建
 ###############
-# 读取主题
-try:
-    theme = not ("dark" in readtxt(get_home() + "/.gtkrc-2.0") and "gtk-theme-name=" in readtxt(get_home() + "/.gtkrc-2.0"))
-except:
-    print("主题读取错误，默认使用浅色主题")
-    theme = True
-if theme:
-    window = tk.Tk()
-    themes = ttkthemes.ThemedStyle(window)
-    themes.set_theme("breeze")
-else:
-    import ttkbootstrap
-    style = ttkbootstrap.Style(theme="darkly")
-    window = style.master  # 创建窗口
+app = QtWidgets.QApplication(sys.argv)
+window = QtWidgets.QMainWindow()
+widget = QtWidgets.QWidget()
+widgetLayout = QtWidgets.QGridLayout()
 # 设置变量以修改和获取值项
-wineVersion = tk.StringVar()
-wineVersion.set("deepin-wine6 stable")
-e1_text = tk.StringVar()
-e2_text = tk.StringVar()
-e3_text = tk.StringVar()
-e4_text = tk.StringVar()
-e5_text = tk.StringVar()
-e6_text = tk.StringVar()
-e7_text = tk.StringVar()
-e8_text = tk.StringVar()
-e9_text = tk.StringVar()
-e10_text = tk.StringVar()
-e12_text = tk.StringVar()
-e15_text = tk.StringVar()
-label13_text = tk.StringVar()
-option1_text = tk.StringVar()
-option1_text.set("Network")
-label13_text.set("当前 deb 打包情况：暂未打包")
+wineVersion = QtWidgets.QComboBox()
+wineVersion.addItems(wine.keys())
+wineVersion.setCurrentText("deepin-wine6 stable")
+e1_text = QtWidgets.QLineEdit()
+e2_text = QtWidgets.QLineEdit()
+e3_text = QtWidgets.QLineEdit()
+e4_text = QtWidgets.QLineEdit()
+e5_text = QtWidgets.QLineEdit()
+e6_text = QtWidgets.QLineEdit()
+e7_text = QtWidgets.QLineEdit()
+e8_text = QtWidgets.QLineEdit()
+e9_text = QtWidgets.QLineEdit()
+e10_text = QtWidgets.QLineEdit()
+e12_text = QtWidgets.QLineEdit()
+e15_text = QtWidgets.QLineEdit()
+label13_text = QtWidgets.QLabel("<p align='center'>当前 deb 打包情况：暂未打包</p>")
+option1_text = QtWidgets.QComboBox()
+button1 = QtWidgets.QPushButton("浏览……")
+button2 = QtWidgets.QPushButton("浏览……")
+button4 = QtWidgets.QPushButton("浏览……")
+button5 = QtWidgets.QPushButton("打包……")
+rmBash = QtWidgets.QCheckBox("设置卸载该 deb 后自动删除该容器")
+textbox1 = QtWidgets.QTextBrowser()
+option1_text.addItems(["Network", "Chat", "Audio", "Video", "Graphics", "Office", "Translation", "Development", "Utility", "System"])
+option1_text.setCurrentText("Network")
+wineFrame = QtWidgets.QHBoxLayout()
+chooseWineHelperValue = QtWidgets.QCheckBox("使用星火wine helper（如不勾选默认为deepin-wine-helper）")
+button1.clicked.connect(button1_cl)
+button2.clicked.connect(button2_cl)
+button4.clicked.connect(button4_cl)
+button5.clicked.connect(make_deb)
+wineFrame.addWidget(wineVersion)
+wineFrame.addWidget(chooseWineHelperValue)
 # 创建控件
-label1 = ttk.Label(window, text="要打包的 deb 包的包名（※必填）：")
-label2 = ttk.Label(window, text="要打包的 deb 包的版本号（※必填）：")
-label3 = ttk.Label(window, text="要打包的 deb 包的说明（※必填）：")
-label4 = ttk.Label(window, text="要打包的 deb 包的维护者（※必填）：")
-label5 = ttk.Label(window, text="要解压的 wine 容器的容器名（※必填）：")
-label6 = ttk.Label(window, text="要解压的 wine 容器（※必填）：")
-label7 = ttk.Label(window, text="要解压的 wine 容器里需要运行的可执行文件路径（※必填）：")
-label8 = ttk.Label(window, text="要显示的 .desktop 文件的名称（※必填）：")
-label9 = ttk.Label(window, text="要显示的 .desktop 文件的图标（选填）：")
-label10 = ttk.Label(window, text="要显示的 .desktop 文件的 MimeType 内容（选填）：")
-label12 = ttk.Label(window, text="打包 deb 的保存路径（※必填）：")
-label13 = ttk.Label(window, textvariable=label13_text)
-label14 = ttk.Label(window, text="要显示的 .desktop 文件的分类（※必填）：")
-label15 = ttk.Label(window,text="要解压的 wine 容器里需要运行的可执行文件的参数（选填）：")
-wineFrame = ttk.Frame(window)
-chooseWineVersionTips = ttk.Label(window,text="选择打包的 wine 版本（※必选）：")
-chooseWineVersion = ttk.OptionMenu(wineFrame, wineVersion, "deepin-wine6 stable", *list(wine))  # 创建选择框控件
-chooseWineHelperValue = tk.IntVar()
-chooseWineHelper = ttk.Checkbutton(wineFrame, text="使用星火wine helper（如不勾选默认为deepin-wine-helper）", variable=chooseWineHelperValue)
-e1 = ttk.Entry(window, textvariable=e1_text, width=100)
-e2 = ttk.Entry(window, textvariable=e2_text, width=100)
-e3 = ttk.Entry(window, textvariable=e3_text, width=100)
-e4 = ttk.Entry(window, textvariable=e4_text, width=100)
-e5 = ttk.Entry(window, textvariable=e5_text, width=100)
-e6 = ttk.Entry(window, textvariable=e6_text, width=100)
-e7 = ttk.Entry(window, textvariable=e7_text, width=100)
-e8 = ttk.Entry(window, textvariable=e8_text, width=100)
-e9 = ttk.Entry(window, textvariable=e9_text, width=100)
-e10 = ttk.Entry(window, textvariable=e10_text, width=100)
-e12 = ttk.Entry(window, textvariable=e12_text, width=100)
-e15 = ttk.Entry(window, textvariable=e15_text, width=100)
-button1 = ttk.Button(window, text="浏览……", command=button1_cl)
-button2 = ttk.Button(window, text="浏览……", command=button2_cl)
-button4 = ttk.Button(window, text="浏览……", command=button4_cl)
-button5 = ttk.Button(window, text="打包……", command=make_deb)
-option1 = ttk.OptionMenu(window, option1_text, "Network", "Chat", "Audio", "Video", "Graphics", "Office", "Translation", "Development", "Utility")
-textbox1 = tk.Text(window, width=100, height=4)
-textbox1.configure(state=tk.DISABLED)
-menu = tk.Menu(window)  # 设置菜单栏
-programmenu = tk.Menu(menu, tearoff=0)  # 设置“程序”菜单栏
-menu.add_cascade(label="程序", menu=programmenu)
-programmenu.add_command(label="退出程序", command=window.quit)  # 设置“退出程序”项
-help = tk.Menu(menu, tearoff=0) # 设置“帮助”菜单栏
-menu.add_cascade(label="帮助", menu=help)
-help.add_command(label="小提示", command=helps)  # 设置“小提示”项
-# 设置窗口
-window.title(f"wine 应用打包器 {version}")
-window.iconphoto(False, tk.PhotoImage(file=iconPath))
+widgetLayout.addWidget(QtWidgets.QLabel("要打包的 deb 包的包名（※必填）："), 0, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("要打包的 deb 包的版本号（※必填）："), 1, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("要打包的 deb 包的说明（※必填）："), 2, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("要打包的 deb 包的维护者（※必填）："), 3, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("要解压的 wine 容器的容器名（※必填）："), 4, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("要解压的 wine 容器（※必填）："), 5, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("要解压的 wine 容器里需要运行的可执行文件路径（※必填）："), 6, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("要显示的 .desktop 文件的分类（※必填）："), 7, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("要解压的 wine 容器里需要运行的可执行文件的参数（选填）："), 8, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("要显示的 .desktop 文件的名称（※必填）："), 9, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("要显示的 .desktop 文件的图标（选填）："), 10, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("要显示的 .desktop 文件的 MimeType 内容（选填）："), 11, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("选择打包的 wine 版本（※必选）："), 12, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("打包 deb 的保存路径（※必填）："), 13, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("自动删除选项（选填）："), 14, 0, 1, 1)
+widgetLayout.addWidget(e1_text, 0, 1, 1, 1)
+widgetLayout.addWidget(e2_text, 1, 1, 1, 1)
+widgetLayout.addWidget(e3_text, 2, 1, 1, 1)
+widgetLayout.addWidget(e4_text, 3, 1, 1, 1)
+widgetLayout.addWidget(e5_text, 4, 1, 1, 1)
+widgetLayout.addWidget(e6_text, 5, 1, 1, 1)
+widgetLayout.addWidget(button1, 5, 2, 1, 1)
+widgetLayout.addWidget(e7_text, 6, 1, 1, 1)
+widgetLayout.addWidget(option1_text, 7, 1, 1, 1)
+widgetLayout.addWidget(e15_text, 8, 1, 1, 1)
+widgetLayout.addWidget(e8_text, 9, 1, 1, 1)
+widgetLayout.addWidget(e9_text, 10, 1, 1, 1)
+widgetLayout.addWidget(button2, 10, 2, 1, 1)
+widgetLayout.addWidget(e10_text, 11, 1, 1, 1)
+widgetLayout.addLayout(wineFrame, 12, 1, 1, 1)
+widgetLayout.addWidget(e12_text, 13, 1, 1, 1)
+widgetLayout.addWidget(button4, 13, 2, 1, 1)
+widgetLayout.addWidget(rmBash, 14, 1, 1, 1)
+widgetLayout.addWidget(button5, 15, 1, 1, 1)
+widgetLayout.addWidget(label13_text, 16, 0, 1, 3)
+widgetLayout.addWidget(textbox1, 17, 0, 1, 3)
+menu = window.menuBar()
+programmenu = menu.addMenu("程序")
+help = menu.addMenu("帮助")
+exit = QtWidgets.QAction("退出程序")
+tip = QtWidgets.QAction("小提示")
+exit.triggered.connect(window.close)
+tip.triggered.connect(helps)
+programmenu.addAction(exit)
+help.addAction(tip)
 # 控件配置
 try:
-    e6_text.set(sys.argv[1])
-    e5_text.set(pathlib.PurePath(sys.argv[1]).name)
-    wineVersion.set(sys.argv[2])
+    e6_text.setText(sys.argv[1])
+    e5_text.setText(pathlib.PurePath(sys.argv[1]).name)
+    wineVersion.setCurrentText(sys.argv[2])
 except:
     pass
-# 添加控件
-window.config(menu=menu)  # 显示菜单栏
-label1.grid(row=0, column=0)
-e1.grid(row=0, column=1)
-label2.grid(row=1, column=0)
-e2.grid(row=1, column=1)
-label3.grid(row=2, column=0)
-e3.grid(row=2, column=1)
-label4.grid(row=3, column=0)
-e4.grid(row=3, column=1)
-label5.grid(row=4, column=0)
-e5.grid(row=4, column=1)
-label6.grid(row=5, column=0)
-e6.grid(row=5, column=1)
-button1.grid(row=5, column=2)
-label7.grid(row=6, column=0)
-e7.grid(row=6, column=1)
-label14.grid(row=7, column=0)
-option1.grid(row=7, column=1)
-label15.grid(row=8, column=0)
-e15.grid(row=8, column=1)
-label8.grid(row=9, column=0)
-e8.grid(row=9, column=1)
-label9.grid(row=10, column=0)
-e9.grid(row=10, column=1)
-button2.grid(row=10, column=2)
-label10.grid(row=11, column=0)
-e10.grid(row=11, column=1)
-chooseWineVersionTips.grid(row=12, column=0)
-wineFrame.grid(row=12, column=1)
-chooseWineVersion.grid(row=0, column=0)
-chooseWineHelper.grid(row=0, column=1)
-label12.grid(row=13, column=0)
-e12.grid(row=13, column=1)
-button4.grid(row=13, column=2)
-button5.grid(row=14, column=1)
-label13.grid(row=15, column=0, columnspan=3)
-textbox1.grid(row=16, column=0, columnspan=3)
-window.mainloop()
+widget.setLayout(widgetLayout)
+window.setCentralWidget(widget)
+window.setWindowTitle(f"wine 应用打包器 {version}")
+window.setWindowIcon(QtGui.QIcon(iconPath))
+window.show()
+sys.exit(app.exec_())

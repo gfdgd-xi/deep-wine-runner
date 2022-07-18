@@ -231,7 +231,8 @@ Priority: optional
 Multi-Arch: foreign
 Description: {}
 '''.format(e1_text.text(), e2_text.text(), e4_text.text(), wineVersion.currentText(), e3_text.text()))
-            write_txt("{}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()), f'''#!/bin/bash
+            if rmBash.isChecked():
+                write_txt("{}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()), f'''#!/bin/bash
 
 if [ "$1" = "remove" ] || [ "$1" = "purge" ];then
 
@@ -492,6 +493,7 @@ button1 = QtWidgets.QPushButton("浏览……")
 button2 = QtWidgets.QPushButton("浏览……")
 button4 = QtWidgets.QPushButton("浏览……")
 button5 = QtWidgets.QPushButton("打包……")
+rmBash = QtWidgets.QCheckBox("设置卸载该 deb 后自动删除该容器")
 textbox1 = QtWidgets.QTextBrowser()
 option1_text.addItems(["Network", "Chat", "Audio", "Video", "Graphics", "Office", "Translation", "Development", "Utility", "System"])
 option1_text.setCurrentText("Network")
@@ -518,6 +520,7 @@ widgetLayout.addWidget(QtWidgets.QLabel("要显示的 .desktop 文件的图标�
 widgetLayout.addWidget(QtWidgets.QLabel("要显示的 .desktop 文件的 MimeType 内容（选填）："), 11, 0, 1, 1)
 widgetLayout.addWidget(QtWidgets.QLabel("选择打包的 wine 版本（※必选）："), 12, 0, 1, 1)
 widgetLayout.addWidget(QtWidgets.QLabel("打包 deb 的保存路径（※必填）："), 13, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("自动删除选项（选填）："), 14, 0, 1, 1)
 widgetLayout.addWidget(e1_text, 0, 1, 1, 1)
 widgetLayout.addWidget(e2_text, 1, 1, 1, 1)
 widgetLayout.addWidget(e3_text, 2, 1, 1, 1)
@@ -535,9 +538,10 @@ widgetLayout.addWidget(e10_text, 11, 1, 1, 1)
 widgetLayout.addLayout(wineFrame, 12, 1, 1, 1)
 widgetLayout.addWidget(e12_text, 13, 1, 1, 1)
 widgetLayout.addWidget(button4, 13, 2, 1, 1)
-widgetLayout.addWidget(button5, 14, 1, 1, 1)
-widgetLayout.addWidget(label13_text, 15, 0, 1, 3)
-widgetLayout.addWidget(textbox1, 16, 0, 1, 3)
+widgetLayout.addWidget(rmBash, 14, 1, 1, 1)
+widgetLayout.addWidget(button5, 15, 1, 1, 1)
+widgetLayout.addWidget(label13_text, 16, 0, 1, 3)
+widgetLayout.addWidget(textbox1, 17, 0, 1, 3)
 menu = window.menuBar()
 programmenu = menu.addMenu("程序")
 help = menu.addMenu("帮助")

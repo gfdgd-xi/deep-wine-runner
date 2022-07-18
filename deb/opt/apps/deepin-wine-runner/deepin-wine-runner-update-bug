@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 import os
+import sys
 import json
 import base64
 import requests
-import ttkthemes
 import traceback
 import webbrowser
-import tkinter as tk
-import tkinter.ttk as ttk
-import tkinter.messagebox as messagebox
 import urllib.parse as parse
+import PyQt5.QtGui as QtGui
+import PyQt5.QtWidgets as QtWidgets
 
 # 读取文本文档
 def readtxt(path: "路径")->"读取文本文档":
@@ -28,17 +27,17 @@ def Update(name, stars, contact, things, version):
         "Version": version
     }
     try:
-        messagebox.showinfo(message=requests.post(parse.unquote(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9idWcvdXBsb2FkLnBocA==").decode("utf-8")), data=data).text)
+        QtWidgets.QMessageBox.information(widget, "提示", requests.post(parse.unquote(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9idWcvdXBsb2FkLnBocA==").decode("utf-8")), data=data).text)
     except:
         traceback.print_exc()
-        messagebox.showerror(title="错误", message="服务器疑似出现错误，可以进行以下尝试：①多尝试几次；②使用其他反馈途径\n错误信息：{}".format(traceback.format_exc()))
+        QtWidgets.QMessageBox.critical(widget, "错误", f"服务器疑似出现错误，可以进行以下尝试：①多尝试几次；②使用其他反馈途径\n错误信息：{traceback.format_exc()}")
     
 def UpdateButtonClick():
     #判断是否为空
-    if nameThings.get() == "" or starValue.get() == "" or contactThings.get() == "" or updateThings.get(1.0, "end").replace(" ", "").replace("\n", "") == "":
-        messagebox.showerror(title="错误", message="反馈信息未填写完整！")
+    if nameThings.text() == "" or starMenu.currentText() == "" or contactThings.text() == "" or updateThings.toPlainText().replace(" ", "").replace("\n", "") == "":
+        QtWidgets.QMessageBox.critical(widget, "错误", "反馈信息未填写完整！")
         return
-    Update(name=nameThings.get(), stars=starValue.get(), contact=contactThings.get(), things=updateThings.get(1.0, "end"), version=version)
+    Update(name=nameThings.text(), stars=starMenu.currentText(), contact=contactThings.text(), things=updateThings.toPlainText(), version=version)
 
 def OpenGiteeIssues():
     webbrowser.open_new_tab("https://gitee.com/gfdgd-xi/deep-wine-runner/issues")
@@ -64,70 +63,42 @@ version = information["Version"]
 ###########################
 # 窗口创建
 ###########################
-# 读取主题
-try:
-    theme = not ("dark" in readtxt(get_home() + "/.gtkrc-2.0") and "gtk-theme-name=" in readtxt(get_home() + "/.gtkrc-2.0"))
-except:
-    print("主题读取错误，默认使用浅色主题")
-    theme = True
-if theme:
-    window = tk.Tk()
-    themes = ttkthemes.ThemedStyle(window)
-    themes.set_theme("breeze")
-else:
-    import ttkbootstrap
-    style = ttkbootstrap.Style(theme="darkly")
-    window = style.master  # 创建窗口
-win = ttk.Frame()
-
-starValue = tk.StringVar()
-starValue.set("5分")
-
-name = ttk.Label(win, text="你的昵称：")
-nameThings = ttk.Entry(win, width=25)
-
-contact = ttk.Label(win, text="联系方式（电子邮箱）：")
-contactThings = ttk.Entry(win, width=25)
-
-star = ttk.Label(win, text="评分：")
-starMenu = ttk.OptionMenu(win, starValue, "5分", "5分", "4分", "3分", "2分", "1分")
-
-updateThingsTips = ttk.Label(win, text="反馈内容（支持 Markdown 格式）：")
-updateThings = tk.Text(win, width=100)
-
-otherUpload = ttk.Frame(win)
-# 所属内容
-tips = ttk.Label(otherUpload, text="如果无法正常反馈，可以用其他方式反馈：")
-giteeButton = ttk.Button(otherUpload, text="Gitee Issues", command=OpenGiteeIssues)
-githubButton = ttk.Button(otherUpload, text="Github Issues", command=OpenGithubIssues)
-gitlinkButton = ttk.Button(otherUpload, text="Gitlink Issues", command=OpenGitlinkIssues)
-
-updateButton = ttk.Button(win, text="提交", command=UpdateButtonClick)
-
-# 设置窗口
-window.title("Wine 运行器 {} 问题/建议反馈".format(version))
-window.resizable(0, 0)
-window.iconphoto(False, tk.PhotoImage(file=iconPath))
-
-tips.grid(row=0, column=0)
-giteeButton.grid(row=0, column=1)
-githubButton.grid(row=0, column=2)
-gitlinkButton.grid(row=0, column=3)
-
-name.grid(row=0, column=0)
-nameThings.grid(row=0, column=1)
-
-contact.grid(row=0, column=2)
-contactThings.grid(row=0, column=3)
-
-star.grid(row=0, column=4)
-starMenu.grid(row=0, column=5)
-
-updateThingsTips.grid(row=1, column=0, columnspan=2)
-updateThings.grid(row=2, column=0, columnspan=6)
-
-otherUpload.grid(row=3, column=0, columnspan=4, sticky=tk.W)
-updateButton.grid(row=3, column=5)
-
-win.pack(expand="yes", fill="both")
-window.mainloop()
+app = QtWidgets.QApplication(sys.argv)
+window = QtWidgets.QMainWindow()
+widget = QtWidgets.QWidget()
+widgetLayout = QtWidgets.QGridLayout()
+nameThings = QtWidgets.QLineEdit()
+contactThings = QtWidgets.QLineEdit()
+starMenu = QtWidgets.QComboBox()
+updateThings = QtWidgets.QTextEdit()
+updateButton = QtWidgets.QPushButton("提交")
+otherUpload = QtWidgets.QHBoxLayout()
+giteeButton = QtWidgets.QPushButton("Gitee Issues")
+githubButton = QtWidgets.QPushButton("Github Issues")
+gitlinkButton = QtWidgets.QPushButton("Gitlink Issues")
+otherUpload.addWidget(QtWidgets.QLabel("如果无法正常反馈，可以用其他方式反馈："))
+otherUpload.addWidget(giteeButton)
+otherUpload.addWidget(githubButton)
+otherUpload.addWidget(gitlinkButton)
+otherUpload.addSpacerItem(QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum))
+starMenu.addItems(["5分", "4分", "3分", "2分", "1分"])
+widgetLayout.addWidget(QtWidgets.QLabel("你的昵称："), 0, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("联系方式（电子邮箱）："), 0, 2, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("评分："), 0, 4, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("反馈内容（支持 Markdown 格式）："), 1, 0, 1, 2)
+widgetLayout.addWidget(nameThings, 0, 1, 1, 1)
+widgetLayout.addWidget(contactThings, 0, 3, 1, 1)
+widgetLayout.addWidget(starMenu, 0, 5, 1, 1)
+widgetLayout.addWidget(updateThings, 2, 0, 1, 6)
+widgetLayout.addLayout(otherUpload, 3, 0, 1, 5)
+widgetLayout.addWidget(updateButton, 3, 5, 1, 1)
+giteeButton.clicked.connect(OpenGiteeIssues)
+githubButton.clicked.connect(OpenGithubIssues)
+gitlinkButton.clicked.connect(OpenGitlinkIssues)
+updateButton.clicked.connect(UpdateButtonClick)
+widget.setLayout(widgetLayout)
+window.setCentralWidget(widget)
+window.setWindowTitle(f"Wine 运行器 {version} 问题/建议反馈")
+window.setWindowIcon(QtGui.QIcon(iconPath))
+window.show()
+sys.exit(app.exec_())

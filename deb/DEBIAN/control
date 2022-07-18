@@ -4,18 +4,17 @@ Maintainer: gfdgd xi <3025613752@qq.com>, 为什么您不喜欢熊出没和阿�
 Homepage: https://gitee.com/gfdgd-xi/deep-wine-runner
 Architecture: all
 Priority: optional
-Depends: python3, python3-tk, python3-pip, python3-pil, python3-pil.imagetk, python3-pyquery, deepin-terminal, aria2, curl, unrar, unzip, python3-requests, fakeroot, bash
+Depends: python3, python3-pil, python3-pil.imagetk, python3-pyquery, deepin-terminal, aria2, curl, unrar, unzip, python3-requests, fakeroot, bash, python3-pyqt5
 Conflicts: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer
 Replaces: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer
 Description: gfdgd xi 制作的 wine 运行器
  更新内容：
- ※1、新增程序感谢、谢明以及程序的建议和问题反馈和内置更新程序
- ※2、支持 winetricks 指定 Wine 打开
- ※3、新增窗口透明工具，感谢@a2035274 和 @虚幻的早晨 在论坛的讨论
- ※4、支持在指定容器、Wine 安装 MSXML
- ※5、支持启用/关闭 opengl（感谢@zhangs 在论坛发帖）以及支持安装/卸载 winbind
- ※6、添加云沙箱的网站链接快捷方式
- ※7、支持从星火应用商店源安装 Windows 常见字体
- 8、优化窗口布局以及默认显示位置
- 9、支持打开指定容器、Wine 的资源管理器
+ ※1、界面大改造，从使用 Tkinter 改为 Qt，参考了 @134******28 和 @sgb76 提供的设计方案和代码
+ ※2、添加了基于 UOS 生态适配活动打包脚本的打包器，以及基于 Virtualbox 的简易 Windows 镜像安装工具
+ ※3、将 pip 由阿里源改为华为源，提升下载安装速度，并删除使用 pip 下载库的功能（已不需要，废弃）
+ 4、添加 @delsin 和 @神末shenmo 建议的 postrm 脚本
+ 5、优化多屏窗口居中问题
+ 6、修复 1.6.0 程序无法保存设置的问题
+ 7、修复 1.6.0 的更新程序无法正常更新的问题
+ 8、升级 Geek Uninstaller 版本
  作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
