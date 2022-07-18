@@ -15,7 +15,6 @@ import sys
 import time
 import json
 import shutil
-import easygui
 import requests
 import threading
 import traceback
@@ -24,7 +23,7 @@ import webbrowser
 import subprocess
 import ttkbootstrap
 import tkinter as tk
-import tkinter.ttk as ttk
+#import tkinter.ttk as ttk
 import tkinter.filedialog
 import tkinter.messagebox
 import PyQt5.QtGui as QtGui
@@ -583,34 +582,7 @@ class UpdateWindow():
         UpdateWindow.update.setWindowTitle("检查更新")
         UpdateWindow.update.resize(updateWidget.frameGeometry().width(), updateWidget.frameGeometry().height() * 1.5)
         UpdateWindow.update.show()
-        return
-        update = tk.Toplevel()
-        update.title("检查更新")
-        update.resizable(0, 0)
-        update.iconphoto(False, tk.PhotoImage(file=iconPath))
-        versionLabel = ttk.Label(update, text="当前版本：{}\n最新版本：未知\n更新内容：".format(version))
-        updateText = tk.Text(update)
-        controlFrame = ttk.Frame(update)
-        ok = ttk.Button(controlFrame, text="更新（更新过程中会关闭所有Python应用，包括这个应用）", command=UpdateWindow.Update)
-        cancel = ttk.Button(controlFrame, text="取消", command=update.quit)
-        try:
-            UpdateWindow.data = json.loads(requests.get("http://120.25.153.144/spark-deepin-wine-runner/update.json").text)
-            versionLabel = ttk.Label(update, text="当前版本：{}\n最新版本：{}\n更新内容：".format(version, UpdateWindow.data["Version"]))
-            if UpdateWindow.data["Version"] == version:
-                updateText.insert("0.0", "此为最新版本，无需更新")
-                ok.configure(state=tk.DISABLED)
-            else:
-                updateText.insert("0.0", UpdateWindow.data["New"].replace("\\n", "\n"))
-        except:
-            traceback.print_exc()
-            tkinter.messagebox.showerror(title="错误", message="无法连接服务器！")
-        updateText.configure(state=tk.DISABLED)
-        versionLabel.pack(anchor=tk.W)
-        updateText.pack()
-        controlFrame.pack(anchor=tk.E)
-        cancel.grid(row=0, column=0)
-        ok.grid(row=0, column=1)
-        update.mainloop()
+
     def Update():
         if os.path.exists("/tmp/spark-deepin-wine-runner/update"):
             shutil.rmtree("/tmp/spark-deepin-wine-runner/update")
@@ -638,7 +610,7 @@ zenity --info --text=\"更新完毕！\" --ellipsize
 
 class GetDllFromWindowsISO:
     wineBottonPath = get_home() + "/.wine"
-    isoPath = None#ttk.Entry()
+    isoPath = None
     dllList = None
     message = None
     dllFound = None
@@ -649,94 +621,116 @@ class GetDllFromWindowsISO:
     browser = None
     mount = False
     mountButton = None
+    dllListModel = None
     def ShowWindow():
         DisableButton(True)
-        GetDllFromWindowsISO.message = tk.Toplevel()
+        GetDllFromWindowsISO.message = QtWidgets.QMainWindow()
+        widget = QtWidgets.QWidget()
+        widgetLayout = QtWidgets.QGridLayout()
         if not e1.currentText() == "":
             GetDllFromWindowsISO.wineBottonPath = e1.currentText()
-        ttk.Label(GetDllFromWindowsISO.message, text=f"""提示：
+        widgetLayout.addWidget(QtWidgets.QLabel(f"""提示：
     目前本提取功能只支持 Windows XP 以及 Windows Server 2003 等老系统的官方安装镜像，只支持读取 i386 安装方法的安装镜像，不支持读取 wim、ghost 安装方式
     以及不要拷贝/替换太多的 dll，否则可能会导致 wine 容器异常
     最后，拷贝/替换 dll 后，建议点击下面“设置 wine 容器”按钮==》函数库 进行设置
-当前选择的 Wine 容器：{GetDllFromWindowsISO.wineBottonPath}""").grid(row=0, column=0, columnspan=3, sticky=tk.W)
-        ttk.Label(GetDllFromWindowsISO.message, text="ISO镜像：").grid(row=1, column=0, sticky=tk.W)
-        GetDllFromWindowsISO.isoPath = ttk.Combobox(GetDllFromWindowsISO.message, width=100)
-        GetDllFromWindowsISO.browser = ttk.Button(GetDllFromWindowsISO.message, text="浏览……", command=GetDllFromWindowsISO.Browser)
-        isoControl = ttk.Frame(GetDllFromWindowsISO.message)
-        GetDllFromWindowsISO.mountButton = ttk.Button(isoControl, text="读取/挂载ISO镜像", command=GetDllFromWindowsISO.MountDisk)
-        ttk.Button(isoControl, text="关闭/卸载ISO镜像", command=GetDllFromWindowsISO.UmountDisk).grid(row=0, column=1)
-        ttk.Label(GetDllFromWindowsISO.message, text="查找DLL\n（为空则代表不查找，\n将显示全部内容）：").grid(row=3, column=0)
-        GetDllFromWindowsISO.dllFound = ttk.Combobox(GetDllFromWindowsISO.message, width=100)
-        GetDllFromWindowsISO.foundButton = ttk.Button(GetDllFromWindowsISO.message, text="查找", command=GetDllFromWindowsISO.Found)
-        GetDllFromWindowsISO.dllList = tk.Listbox(GetDllFromWindowsISO.message, width=100)
-        GetDllFromWindowsISO.dllControl = ttk.Frame(GetDllFromWindowsISO.message)
-        GetDllFromWindowsISO.saveDll = ttk.Button(GetDllFromWindowsISO.dllControl, text="保存到 wine 容器中", command=GetDllFromWindowsISO.CopyDll)
-        GetDllFromWindowsISO.setWineBotton = ttk.Button(GetDllFromWindowsISO.dllControl, text="设置 wine 容器", command=lambda: threading.Thread(target=RunWineProgram, args=["winecfg", False, False]).start())
-        # 设置控件
+当前选择的 Wine 容器：{GetDllFromWindowsISO.wineBottonPath}"""), 0, 0, 1, 5)
+        isoLabel = QtWidgets.QLabel("ISO镜像：")
+        GetDllFromWindowsISO.isoPath = QtWidgets.QComboBox()
+        GetDllFromWindowsISO.browser = QtWidgets.QPushButton("浏览")
+        isoControl = QtWidgets.QWidget()
+        isoControlLayout = QtWidgets.QHBoxLayout()
+        isoControl.setLayout(isoControlLayout)
+        dllControl = QtWidgets.QWidget()
+        dllControlLayout = QtWidgets.QHBoxLayout()
+        dllControl.setLayout(dllControlLayout)
+        GetDllFromWindowsISO.mountButton = QtWidgets.QPushButton("读取/挂载ISO镜像")
+        umountButton = QtWidgets.QPushButton("关闭/卸载ISO镜像")
+        GetDllFromWindowsISO.dllFound = QtWidgets.QComboBox()
+        GetDllFromWindowsISO.foundButton = QtWidgets.QPushButton("查找")
+        GetDllFromWindowsISO.dllList = QtWidgets.QListView()
+        GetDllFromWindowsISO.saveDll = QtWidgets.QPushButton("保存到 wine 容器中")
+        GetDllFromWindowsISO.setWineBotton = QtWidgets.QPushButton("设置 wine 容器")
+        isoLabel.setSizePolicy(size)
+        GetDllFromWindowsISO.isoPath.setEditable(True)
+        GetDllFromWindowsISO.isoPath.addItems(isoPath)
+        GetDllFromWindowsISO.isoPath.setEditText("")
+        GetDllFromWindowsISO.browser.setSizePolicy(size)
+        GetDllFromWindowsISO.mountButton.setSizePolicy(size)
+        isoControlLayout.addWidget(GetDllFromWindowsISO.mountButton)
+        umountButton.setSizePolicy(size)
+        isoControlLayout.addWidget(umountButton)
+        GetDllFromWindowsISO.dllFound.setEditable(True)
+        GetDllFromWindowsISO.dllFound.addItems(isoPathFound)
+        GetDllFromWindowsISO.dllFound.setEditText("")
+        GetDllFromWindowsISO.saveDll.setSizePolicy(size)
+        dllControlLayout.addWidget(GetDllFromWindowsISO.saveDll)
+        GetDllFromWindowsISO.setWineBotton.setSizePolicy(size)
         GetDllFromWindowsISO.DisbledDown(True)
-        GetDllFromWindowsISO.isoPath['value'] = isoPath
-        GetDllFromWindowsISO.dllFound['value'] = isoPathFound  
-        # 显示控件
-        GetDllFromWindowsISO.isoPath.grid(row=1, column=1)
-        GetDllFromWindowsISO.browser.grid(row=1, column=2)
-        GetDllFromWindowsISO.mountButton.grid(row=0, column=0)
-        isoControl.grid(row=2, column=0, columnspan=3)
-        GetDllFromWindowsISO.dllFound.grid(row=3, column=1)
-        GetDllFromWindowsISO.foundButton.grid(row=3, column=2)
-        GetDllFromWindowsISO.dllList.grid(row=4, column=0, columnspan=3)
-        GetDllFromWindowsISO.dllControl.grid(row=5, column=0, columnspan=3)
-        GetDllFromWindowsISO.saveDll.grid(row=0, column=0)
-        GetDllFromWindowsISO.setWineBotton.grid(row=0, column=1)
-        # 设置
-        GetDllFromWindowsISO.message.protocol('WM_DELETE_WINDOW', GetDllFromWindowsISO.ExitWindow)
-        GetDllFromWindowsISO.message.title(f"Wine 运行器 {version}——从 ISO 提取 DLL")
-        # 显示
-        GetDllFromWindowsISO.message.mainloop()
+        dllControlLayout.addWidget(GetDllFromWindowsISO.setWineBotton)
+        widgetLayout.addWidget(isoLabel, 1, 0, 1, 1)
+        widgetLayout.addWidget(GetDllFromWindowsISO.isoPath, 1, 1, 1, 1)
+        widgetLayout.addWidget(GetDllFromWindowsISO.browser, 1, 2, 1, 1)
+        widgetLayout.addWidget(isoControl, 2, 1, 1, 1)
+        widgetLayout.addWidget(QtWidgets.QLabel("查找DLL\n（为空则代表不查找，\n将显示全部内容）："), 3, 0, 1, 1)
+        widgetLayout.addWidget(GetDllFromWindowsISO.dllFound, 3, 1, 1, 1)
+        widgetLayout.addWidget(GetDllFromWindowsISO.foundButton, 3, 2, 1, 1)
+        widgetLayout.addWidget(GetDllFromWindowsISO.dllList, 4, 1, 1, 1)
+        widgetLayout.addWidget(dllControl, 5, 1, 1, 1)
+        #widgetLayout.addWidget(GetDllFromWindowsISO.setWineBotton, 5, 2, 1, 1)
+        widget.setLayout(widgetLayout)
+        GetDllFromWindowsISO.browser.clicked.connect(GetDllFromWindowsISO.Browser)
+        GetDllFromWindowsISO.mountButton.clicked.connect(GetDllFromWindowsISO.MountDisk)
+        umountButton.clicked.connect(GetDllFromWindowsISO.UmountDisk)
+        GetDllFromWindowsISO.foundButton.clicked.connect(GetDllFromWindowsISO.Found)
+        GetDllFromWindowsISO.saveDll.clicked.connect(GetDllFromWindowsISO.CopyDll)
+        GetDllFromWindowsISO.setWineBotton.clicked.connect(lambda: RunWineProgram("winecfg", Disbled=False))
+        GetDllFromWindowsISO.message.setCentralWidget(widget)
+        GetDllFromWindowsISO.dllListModel = QtCore.QStringListModel()
+        GetDllFromWindowsISO.dllListModel.setStringList([])
+        GetDllFromWindowsISO.dllList.setModel(GetDllFromWindowsISO.dllListModel)
+        GetDllFromWindowsISO.isoPath.currentText()
+        GetDllFromWindowsISO.message.show()
 
     def DisbledUp(state):
-        nd = [tk.NORMAL, tk.DISABLED]
-        GetDllFromWindowsISO.isoPath.configure(state=nd[int(state)])
-        GetDllFromWindowsISO.browser.configure(state=nd[int(state)])
-        GetDllFromWindowsISO.mountButton.configure(state=nd[int(state)])
+        GetDllFromWindowsISO.isoPath.setDisabled(state)
+        GetDllFromWindowsISO.browser.setDisabled(state)
+        GetDllFromWindowsISO.mountButton.setDisabled(state)
 
 
     def DisbledDown(state):
-        nd = [tk.NORMAL, tk.DISABLED]
-        GetDllFromWindowsISO.dllList.configure(state=nd[int(state)])
-        GetDllFromWindowsISO.dllFound.configure(state=nd[int(state)])
-        #GetDllFromWindowsISO.dllControl.configure(state=nd[int(state)])
-        GetDllFromWindowsISO.saveDll.configure(state=nd[int(state)])
-        GetDllFromWindowsISO.setWineBotton.configure(state=nd[int(state)])
-        GetDllFromWindowsISO.foundButton.configure(state=nd[int(state)])
+        GetDllFromWindowsISO.dllList.setDisabled(state)
+        GetDllFromWindowsISO.dllFound.setDisabled(state)
+        GetDllFromWindowsISO.saveDll.setDisabled(state)
+        GetDllFromWindowsISO.setWineBotton.setDisabled(state)
+        GetDllFromWindowsISO.foundButton.setDisabled(state)
 
     def Browser():
-        path = tkinter.filedialog.askopenfilename(title="选择 ISO 镜像文件", 
-            filetypes=[("ISO 镜像文件", "*.iso"), ("ISO 镜像文件", "*.ISO"), ("所有文件", "*.*")], 
-            initialdir=json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindISO.json"))["path"])
+        path = QtWidgets.QFileDialog.getOpenFileName(GetDllFromWindowsISO.message, "选择 ISO 镜像文件", json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindISO.json"))["path"], "iso 镜像文件(*.iso);;ISO 镜像文件(*.ISO);;所有文件(*.*)")[0]
         if path == None or path == "":
             return
-        GetDllFromWindowsISO.isoPath.set(path)
+        GetDllFromWindowsISO.isoPath.setEditText(path)
         write_txt(get_home() + "/.config/deepin-wine-runner/FindISO.json", json.dumps({"path": os.path.dirname(path)}))  # 写入配置文件
 
     def Found():
-        found = GetDllFromWindowsISO.dllFound.get()
-        GetDllFromWindowsISO.dllList.configure(state=tk.NORMAL)
-        GetDllFromWindowsISO.dllList.delete(0, tk.END)
+        found = GetDllFromWindowsISO.dllFound.currentText()
+        findList = []
         try:
             if found == "":
                 for i in os.listdir("/tmp/wine-runner-getdll/i386"):
                     if i[-3:] == "dl_":
-                        GetDllFromWindowsISO.dllList.insert("end", i[:-1] + "l")    
+                        findList.append(i[:-1] + "l")    
                 return
             for i in os.listdir("/tmp/wine-runner-getdll/i386"):
                 if found in i[:-1] + "l":
-                    GetDllFromWindowsISO.dllList.insert("end", i[:-1] + "l")  
+                    findList.append(i[:-1] + "l")  
             isoPathFound.append(found)  # 将记录写进数组
             write_txt(get_home() + "/.config/deepin-wine-runner/ISOPathFound.json", str(json.dumps(ListToDictionary(isoPathFound))))  # 将历史记录的数组转换为字典并写入
-            GetDllFromWindowsISO.dllFound['value'] = isoPathFound  
+            GetDllFromWindowsISO.dllFound.clear()
+            GetDllFromWindowsISO.dllFound.addItems(isoPathFound)
+            GetDllFromWindowsISO.dllListModel.setStringList(findList)
         except:
             traceback.print_exc()
-            tkinter.messagebox.showerror(title="错误", message=traceback.format_exc())
+            QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", traceback.format_exc())
 
 
     def ExitWindow():
@@ -747,8 +741,8 @@ class GetDllFromWindowsISO:
         GetDllFromWindowsISO.message.quit()
 
     def MountDisk():
-        if not os.path.exists(GetDllFromWindowsISO.isoPath.get()):
-            tkinter.messagebox.showerror(title="错误", message="您选择的 ISO 镜像文件不存在")
+        if not os.path.exists(GetDllFromWindowsISO.isoPath.currentText()):
+            QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", "您选择的 ISO 镜像文件不存在")
             return
         if os.path.exists("/tmp/wine-runner-getdll"):
             try:
@@ -760,53 +754,53 @@ class GetDllFromWindowsISO:
                     os.rmdir("/tmp/wine-runner-getdll")
                 except:
                     traceback.print_exc()
-                    tkinter.messagebox.showerror(title="错误", message=traceback.format_exc())
+                    QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", traceback.format_exc())
                     return
         os.makedirs("/tmp/wine-runner-getdll")
-        GetDllFromWindowsISO.dllList.configure(state=tk.NORMAL)
-        os.system(f"pkexec mount '{GetDllFromWindowsISO.isoPath.get()}' /tmp/wine-runner-getdll")
-        GetDllFromWindowsISO.dllList.delete(0, tk.END)
+        os.system(f"pkexec mount '{GetDllFromWindowsISO.isoPath.currentText()}' /tmp/wine-runner-getdll")
+        findList = []
         try:
             for i in os.listdir("/tmp/wine-runner-getdll/i386"):
                 if i[-3:] == "dl_":
-                    GetDllFromWindowsISO.dllList.insert("end", i[:-1] + "l")     
+                    findList.append(i[:-1] + "l")     
         except:
             traceback.print_exc()
-            tkinter.messagebox.showerror(title="错误", message=f"镜像内容读取/挂载失败，报错如下：\n{traceback.format_exc()}")
+            QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", f"镜像内容读取/挂载失败，报错如下：\n{traceback.format_exc()}")
             return
+        GetDllFromWindowsISO.dllListModel.setStringList(findList)
         GetDllFromWindowsISO.DisbledDown(False)  
         GetDllFromWindowsISO.DisbledUp(True)
         GetDllFromWindowsISO.mount = True
-        isoPath.append(GetDllFromWindowsISO.isoPath.get())  # 将记录写进数组
+        isoPath.append(GetDllFromWindowsISO.isoPath.currentText())  # 将记录写进数组
         write_txt(get_home() + "/.config/deepin-wine-runner/ISOPath.json", str(json.dumps(ListToDictionary(isoPath))))  # 将历史记录的数组转换为字典并写入
-        GetDllFromWindowsISO.isoPath['value'] = isoPath
+        GetDllFromWindowsISO.isoPath.clear()
+        GetDllFromWindowsISO.isoPath.addItems(isoPath)
+        #GetDllFromWindowsISO.isoPath['value'] = isoPath
 
     def UmountDisk():
         os.system("pkexec umount /tmp/wine-runner-getdll")
-        GetDllFromWindowsISO.dllList.configure(state=tk.NORMAL)
         try:
             shutil.rmtree("/tmp/wine-runner-getdll")
         except:
             traceback.print_exc()
-            tkinter.messagebox.showerror(title="错误", message=f"关闭/卸载镜像失败，报错如下：\n{traceback.format_exc()}")
+            QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", f"关闭/卸载镜像失败，报错如下：\n{traceback.format_exc()}")
             return
         GetDllFromWindowsISO.DisbledDown(True)
         GetDllFromWindowsISO.DisbledUp(False)
         GetDllFromWindowsISO.mount = False
+        QtWidgets.QMessageBox.information(GetDllFromWindowsISO.message, "提示", "关闭/卸载成功！")
 
     def CopyDll():
-        for i in GetDllFromWindowsISO.dllList.curselection():
-            choose = GetDllFromWindowsISO.dllList.get(i)
-            if os.path.exists(f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}"):
-                if not tkinter.messagebox.askyesno(title="提示", message=f"DLL {choose} 已经存在，是否覆盖？"):
-                    continue
-            print(i)
-            try:
-                shutil.copy(f"/tmp/wine-runner-getdll/i386/{choose[:-1]}_", f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}")
-                tkinter.messagebox.showinfo(title="提示", message="提取成功！")
-            except:
-                traceback.print_exc()
-                tkinter.messagebox.showerror(title="错误", message=traceback.format_exc())
+        choose = GetDllFromWindowsISO.dllList.selectionModel().selectedIndexes()[0].data()
+        if os.path.exists(f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}"):
+            if QtWidgets.QMessageBox.question(title="提示", message=f"DLL {choose} 已经存在，是否覆盖？") == QtWidgets.QMessageBox.No:
+                return
+        try:
+            shutil.copy(f"/tmp/wine-runner-getdll/i386/{choose[:-1]}_", f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}")
+            QtWidgets.QMessageBox.information(GetDllFromWindowsISO.message, "提示", "提取成功！")
+        except:
+            traceback.print_exc()
+            QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", traceback.format_exc())
             
 class ProgramSetting():
     wineBottonA = None
@@ -937,9 +931,9 @@ try:
     if change:
         write_txt(get_home() + "/.config/deepin-wine-runner/WineSetting.json", json.dumps(setting))
 except:
-    root = tk.Tk()
-    root.withdraw()
-    tkinter.messagebox.showerror(title="错误", message="无法读取配置，无法继续")
+    traceback.print_exc()
+    app = QtWidgets.QApplication(sys.argv)
+    QtWidgets.QMessageBox.critical(None, "错误", f"无法读取配置，无法继续\n{traceback.format_exc()}")
     sys.exit(1)
 
 ###########################
@@ -987,6 +981,10 @@ Qt 版本：{QtCore.qVersion()}
 <pre>{updateThingsString}
 <b>更新时间：{updateTime}</b></pre>
 <hr>
+<h1>提示</h1>
+<pre>{tips}
+</pre>
+<hr>
 <h1>©2020~{time.strftime("%Y")} gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
 title = "wine 运行器 {}".format(version)
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
@@ -997,20 +995,6 @@ updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updat
 ###########################
 # 因为没有完全改完，所以需要这些东西来兼容 tkinter 的主题
 # 读取主题
-try:
-    theme = not ("dark" in readtxt(get_home() + "/.gtkrc-2.0") and "gtk-theme-name=" in readtxt(get_home() + "/.gtkrc-2.0"))
-except:
-    print("主题读取错误，默认使用浅色主题")
-    theme = True
-if theme:
-    win = tk.Tk()
-    themes = ttkthemes.ThemedStyle(win)
-    themes.set_theme("breeze")
-else:
-    import ttkbootstrap
-    style = ttkbootstrap.Style(theme="darkly")
-    win = style.master  # 创建窗口
-win.withdraw()  # 不显示 tkinter 根窗口
 # Qt 窗口
 app = QtWidgets.QApplication(sys.argv)
 window = QtWidgets.QMainWindow()
@@ -1321,319 +1305,3 @@ if len(sys.argv) > 1 and sys.argv[1]:
 if not os.path.exists("/opt/durapps/spark-dwine-helper/spark-dwine-helper-settings/settings.sh"):
     sparkWineSetting.setEnabled(False)
 sys.exit(app.exec_())
-
-# 读取主题
-try:
-    theme = not ("dark" in readtxt(get_home() + "/.gtkrc-2.0") and "gtk-theme-name=" in readtxt(get_home() + "/.gtkrc-2.0"))
-except:
-    print("主题读取错误，默认使用浅色主题")
-    theme = True
-if theme:
-    style = ttkbootstrap.Style(theme="litera")
-    win = style.master  # 创建窗口
-else:
-    style = ttkbootstrap.Style(theme="darkly")
-    win = style.master  # 创建窗口
-
-win.title(title)  # 设置标题
-#root.geometry("1275x900")
-# 设置变量以修改和获取值项
-o1_text = tk.StringVar()
-combobox1 = tk.StringVar()
-o1_text.set("deepin-wine6 stable")
-frame_up = ttk.Frame(win)
-
-frame_left = tk.Frame(frame_up)#快速启动区
-frame_left.config(bd=30)
-#
-frame_left_1 = ttk.Frame(frame_left)#左侧标题
-left_title = ttk.Label(frame_left_1,text="快速启动")
-left_title.config(font=("幼圆",24))
-left_title.pack(anchor="w")
-frame_left_1.grid(row=0,sticky="w" + "e")
-#
-frame_left_2 = ttk.Frame(frame_left)#容器路径
-##
-label_l_1 = ttk.Label(frame_left_2,text="请选择容器的路径:")
-label_l_1.config(font=("幼圆",16))
-label_l_1.grid(row=0,column=0,sticky='w')
-##
-e1 = ttk.Combobox(frame_left_2, width=65)
-e1.grid(row=1,column=0)
-##
-button1 = tk.Button(frame_left_2,text="浏览", command=liulanbutton)
-button1.config(font=("幼圆",12),padx=20,pady=3)
-button1.grid(row=1,column=1)
-##
-frame_left_2.grid(row=1)
-#
-frame_left_3 = ttk.Frame(frame_left)#程序路径
-label_l_2 = ttk.Label(frame_left_3,text="请选择待执行程序:")
-label_l_2.config(font=("幼圆",16))
-label_l_2.grid(row=0,column=0,sticky='w')
-##
-e2 = ttk.Combobox(frame_left_3, width=65)
-e2.grid(row=1,column=0)
-##
-button2 = tk.Button(frame_left_3,text="浏览", command=liulanexebutton)
-button2.config(font=("幼圆",12),padx=20,pady=3)
-button2.grid(row=1,column=1)
-##
-frame_left_3.grid(row=2)
-#
-frame_left_4 = ttk.Frame(frame_left)#wine的版本
-##
-label_l_3 = ttk.Label(frame_left_4,text="请选择wine的版本")
-label_l_3.config(font=("幼圆",16))
-label_l_3.grid(row=0,column=0,sticky='w')
-##
-o1 = ttk.OptionMenu(frame_left_4, o1_text, setting["DefultWine"], *list(wine))
-o1.grid(row=1,column=0)
-##
-label_l_4 = ttk.Label(frame_left_4,text=" "*4)#占位用字符串
-label_l_4.grid(row=1,column=1)
-##
-button3 = tk.Button(frame_left_4,text="运行程序", command=runexebutton)
-button3.config(font=("幼圆",12),padx=21,pady=3)
-button3.grid(row=1,column=2)
-##
-label_l_5 = ttk.Label(frame_left_4,text=" "*13)#占位用字符串
-label_l_5.grid(row=1,column=3)
-##
-killProgram = tk.Button(frame_left_4,text="终止程序", command=KillProgram)
-killProgram.config(font=("幼圆",12),padx=21,pady=3)
-killProgram.grid(row=1,column=4)
-##
-frame_left_4.grid(row=3)
-#
-frame_left.grid(row=0,column=0)#第一行第一列
-
-frame_right = tk.Frame(frame_up)#高级配置区
-frame_right.config(bd=30)
-#
-frame_right_1 = ttk.Frame(frame_right)
-right_title = ttk.Label(frame_right_1,text="高级功能")
-right_title.config(font=("幼圆",24))
-right_title.pack(anchor="w")
-frame_right_1.grid(row=0,sticky="w" + "e")
-#
-frame_right_2 = tk.Frame(frame_right)
-##
-label_r_1 = ttk.Label(frame_right_2,text="创建快捷方式(Desktop文件):")
-label_r_1.config(font=("幼圆",16))
-label_r_1.grid(row=0,column=0)
-##
-frame_right_2.grid(row=1,sticky='w')
-#
-frame_right_3 = tk.Frame(frame_right)
-##
-label_r_2 = ttk.Label(frame_right_3,text="名称:")
-label_r_2.config(font=("幼圆",14))
-label_r_2.grid(row=0,column=0)
-##
-combobox1 = ttk.Combobox(frame_right_3,width=20)
-combobox1.grid(row=0,column=1)
-##
-empty1 = ttk.Label(frame_right_3,text=" "*5)
-empty1.grid(row=0,column=2)
-##
-button5 = tk.Button(frame_right_3,text="创建到桌面", command=make_desktop_on_desktop)
-button5.config(font=("幼圆",12),padx=20,pady=3)
-button5.grid(row=0,column=3)
-##
-empty2 = ttk.Label(frame_right_3,text=" "*5)
-empty2.grid(row=0,column=4)
-##
-saveDesktopFileOnLauncher = tk.Button(frame_right_3,text="创建到开始菜单", command=make_desktop_on_launcher)
-saveDesktopFileOnLauncher.config(font=("幼圆",12),padx=20,pady=3)
-saveDesktopFileOnLauncher.grid(row=0,column=5)
-##
-frame_right_3.grid(row=2,sticky='w')
-#
-frame_right_4 = ttk.Frame(frame_right)
-##
-label_r_2 = ttk.Label(frame_right_4,text="管理该程序:")
-label_r_2.config(font=("幼圆",16))
-label_r_2.grid(row=0,column=0)
-##
-frame_right_4.grid(row=3,sticky='w')
-#
-frame_right_5 = ttk.Frame(frame_right)
-##
-uninstallProgram = tk.Button(frame_right_5,text="卸载程序", command=UninstallProgram)
-uninstallProgram.config(font=("幼圆",12),padx=20,pady=3)
-uninstallProgram.grid(column=0)
-##
-empty3 = ttk.Label(frame_right_5,text=" "*5)
-empty3.grid(row=0,column=1)
-##
-getProgramIcon = tk.Button(frame_right_5,text="提取图标", command=lambda: threading.Thread(target=RunWineProgram, args=[f"{programPath}/BeCyIconGrabber.exe"]).start())
-getProgramIcon.config(font=("幼圆",12),padx=20,pady=3)
-getProgramIcon.grid(row=0,column=2)
-##
-empty6 = ttk.Label(frame_right_5,text=" "*5)
-empty6.grid(row=0,column=3)
-##
-trasButton = tk.Button(frame_right_5,text="窗口透明度工具", command=lambda: threading.Thread(target=RunWineProgram, args=[programPath + "/窗体透明度设置工具.exe"]).start())
-trasButton.config(font=("幼圆",12),padx=20,pady=3)
-trasButton.grid(row=0,column=4)
-##
-frame_right_5.grid(row=4,sticky='w')
-#
-frame_right_6 = ttk.Frame(frame_right)
-##
-label_r_3 = ttk.Label(frame_right_6,text="管理该wine")
-label_r_3.config(font=("幼圆",16))
-label_r_3.grid(row=0,column=0)
-##
-frame_right_6.grid(row=5,sticky='w')
-#
-frame_right_7 = ttk.Frame(frame_right)
-##
-wineConfig = tk.Button(frame_right_7,text="配置容器", command=ConfigWineBotton)
-wineConfig.config(font=("幼圆",12),padx=20,pady=3)
-wineConfig.grid(row=0,column=0)
-##
-empty4 = ttk.Label(frame_right_7,text=" "*5)
-empty4.grid(row=0,column=1)
-##
-button_r_6 = tk.Button(frame_right_7,text="安装字体", command=OpenWineFontPath)
-button_r_6.config(font=("幼圆",12),padx=20,pady=3)
-button_r_6.grid(row=0,column=2)
-##
-empty5 = ttk.Label(frame_right_7,text=" "*5)
-empty5.grid(row=0,column=3)
-##
-sparkWineSetting = tk.Button(frame_right_7,text="星火wine设置", command=lambda: threading.Thread(target=os.system, args=["/opt/durapps/spark-dwine-helper/spark-dwine-helper-settings/settings.sh"]).start())
-sparkWineSetting.config(font=("幼圆",12),padx=20,pady=3)
-sparkWineSetting.grid(row=0,column=4)
-##
-frame_right_7.grid(row=6,sticky='w')
-#
-frame_right.grid(row=0,column=1,sticky='n')#第一行第二列
-
-frame_up.grid(row=0,sticky='w')
-
-frame_down = tk.Frame(win,bd=30)
-returnText = tk.Text(frame_down,width=120, height=15)
-returnText.insert("end", "此可以查看到 Wine 应用安装时的程序返回值")
-returnText.config(state=tk.DISABLED)
-returnText.grid(row=0,column=0,sticky='e'+'w')
-frame_down.grid(row=1,sticky='w')
-
-menu = tk.Menu(win, background="white")  # 设置菜单栏
-programmenu = tk.Menu(menu, tearoff=0, background="white")  # 设置“程序”菜单栏
-menu.add_cascade(label="程序", menu=programmenu)
-programmenu.add_command(label="安装 wine", command=InstallWine)
-programmenu.add_separator()  # 设置分界线
-programmenu.add_command(label="设置程序", command=ProgramSetting.ShowWindow)
-programmenu.add_command(label="清空软件历史记录", command=CleanProgramHistory)
-programmenu.add_separator()  # 设置分界线
-programmenu.add_command(label="退出程序", command=win.quit)  # 设置“退出程序”项
-wineOption = tk.Menu(menu, tearoff=0, background="white")  # 设置“Wine”菜单栏
-menu.add_cascade(label="Wine", menu=wineOption)
-wineOption.add_command(label="打开 Wine 容器目录", command=OpenWineBotton)
-wineOption.add_command(label="安装常见字体", command=InstallWineFont)
-wineOption.add_command(label="安装自定义字体", command=OpenWineFontPath)
-wineOption.add_command(label="删除选择的 Wine 容器", command=DeleteWineBotton)
-wineOption.add_separator()
-wineOption.add_command(label="打包 wine 应用", command=BuildExeDeb)
-wineOption.add_command(label="使用官方 Wine 适配活动的脚本进行打包（测试只支持UOS）", command=UOSPackageScript)
-wineOption.add_separator()
-wineOption.add_command(label="从镜像获取DLL（只支持Windows XP、Windows Server 2003官方安装镜像）", command=GetDllFromWindowsISO.ShowWindow)
-wineOption.add_separator()
-wineInstall = tk.Menu()
-wineOption.add_cascade(label="在指定 Wine、容器安装组件", menu=wineInstall)
-wineInstall.add_command(label="在指定wine、指定容器安装 .net framework", command=lambda: threading.Thread(target=InstallNetFramework).start())
-wineInstall.add_command(label="在指定wine、指定容器安装 Visual Studio C++", command=lambda: threading.Thread(target=InstallVisualStudioCPlusPlus).start())
-wineInstall.add_command(label="在指定wine、指定容器安装 MSXML", command=lambda: threading.Thread(target=InstallMSXML).start())
-wineInstall.add_command(label="在指定wine、指定容器安装 gecko", command=lambda: threading.Thread(target=InstallMonoGecko, args=["gecko"]).start())
-wineInstall.add_command(label="在指定wine、指定容器安装 mono", command=lambda: threading.Thread(target=InstallMonoGecko, args=["mono"]).start())
-wineInstall.add_command(label="在指定wine、指定容器安装其它运行库", command=lambda: threading.Thread(target=InstallOther).start())
-wineDefultMenu = tk.Menu()
-wineOption.add_cascade(label="在指定 Wine、容器运行基础应用", menu=wineDefultMenu)
-wineDefultMenu.add_command(label="打开指定wine、指定容器的控制面板", command=lambda: threading.Thread(target=RunWineProgram, args=["control"]).start())
-wineDefultMenu.add_command(label="打开指定wine、指定容器的浏览器", command=lambda: threading.Thread(target=RunWineProgram, args=["iexplore' 'https://www.deepin.org"]).start())
-wineDefultMenu.add_command(label="打开指定wine、指定容器的注册表", command=lambda: threading.Thread(target=RunWineProgram, args=["regedit"]).start())
-wineDefultMenu.add_command(label="打开指定wine、指定容器的任务管理器", command=lambda: threading.Thread(target=RunWineProgram, args=["taskmgr"]).start())
-wineDefultMenu.add_command(label="打开指定wine、指定容器的资源管理器", command=lambda: threading.Thread(target=RunWineProgram, args=["explorer"]).start())
-wineDefultMenu.add_command(label="打开指定wine、指定容器的关于 wine", command=lambda: threading.Thread(target=RunWineProgram, args=["winver"]).start())
-wineOption.add_separator()
-wineOption.add_command(label="设置 run_v3.sh 的文管为 Deepin 默认文管", command=SetDeepinFileDialogDeepin)
-wineOption.add_command(label="设置 run_v3.sh 的文管为 Wine 默认文管", command=SetDeepinFileDialogDefult)
-wineOption.add_command(label="重新安装 deepin-wine-helper", command=SetDeepinFileDialogRecovery)
-wineOption.add_separator()
-wineOption.add_command(label="使用winetricks打开指定容器", command=lambda: threading.Thread(target=RunWinetricks).start())
-wineOption.add_separator()
-opengl = tk.Menu()
-opengl.add_command(label="开启 opengl", command=lambda: threading.Thread(target=RunWineProgram, args=[f"regedit.exe' /s '{programPath}/EnabledOpengl.reg"]).start())
-opengl.add_command(label="禁用 opengl", command=lambda: threading.Thread(target=RunWineProgram, args=[f"regedit.exe' /s '{programPath}/DisabledOpengl.reg"]).start())
-wineOption.add_cascade(label="启用/禁用 opengl", menu=opengl)
-winbind = tk.Menu()
-winbind.add_command(label="安装 winbind", command=lambda: os.system(f"'{programPath}/launch.sh' deepin-terminal -C 'pkexec apt install winbind -y' --keep-open"))
-winbind.add_command(label="卸载 winbind", command=lambda: os.system(f"'{programPath}/launch.sh' deepin-terminal -C 'pkexec apt purge winbind -y' --keep-open"))
-wineOption.add_cascade(label="安装/卸载 winbind", menu=winbind)
-virtualMachine = tk.Menu(menu, tearoff=0, background="white")
-menu.add_cascade(label="虚拟机", menu=virtualMachine)
-virtualMachine.add_command(label="使用 Virtualbox 虚拟机运行 Windows 应用", command=RunVM)
-safeWebsize = tk.Menu(menu, tearoff=0, background="white")
-menu.add_cascade(label="云沙箱", menu=safeWebsize)
-safeWebsize.add_command(label="360 沙箱云", command=lambda: webbrowser.open_new_tab("https://ata.360.net/"))
-safeWebsize.add_command(label="微步云沙箱", command=lambda: webbrowser.open_new_tab("https://s.threatbook.cn/"))
-safeWebsize.add_command(label="VIRUSTOTAL", command=lambda: webbrowser.open_new_tab("https://www.virustotal.com/"))
-
-help = tk.Menu(menu, tearoff=0, background="white")  # 设置“帮助”菜单栏
-
-menu.add_cascade(label="帮助", menu=help)
-help.add_command(label="程序官网", command=OpenProgramURL)  # 设置“程序官网”项
-help.add_separator()
-help.add_command(label="小提示", command=helps)  # 设置“小提示”项
-help.add_command(label="更新内容", command=UpdateThings)  # 设置“更新内容”项
-help.add_command(label="谢明名单", command=ThankWindow)
-help.add_separator()
-help.add_command(label="更新这个程序", command=UpdateWindow.ShowWindow)
-help.add_command(label="反馈这个程序的建议和问题", command=WineRunnerBugUpload)
-help.add_command(label="关于这个程序", command=about_this_program)  # 设置“关于这个程序”项
-help.add_separator()
-moreProgram = tk.Menu(menu, tearoff=0, background="white")  
-help.add_cascade(label="更多生态适配应用", menu=moreProgram)
-moreProgram.add_command(label="运行 Android 应用：UEngine 运行器", command=lambda: webbrowser.open_new_tab("https://gitee.com/gfdgd-xi/uengine-runner"))
-# 设置窗口
-win.iconphoto(False, tk.PhotoImage(file=iconPath))
-#win.config(bg="white")
-win.config(menu=menu)
-# 设置控件
-e1.set(setting["DefultBotton"])
-if len(sys.argv) > 1 and sys.argv[1]:
-    e2.set(sys.argv[1])
-menu.configure(activebackground="dodgerblue")
-programmenu.configure(activebackground="dodgerblue")
-wineOption.configure(activebackground="dodgerblue")
-wineDefultMenu.configure(activebackground="dodgerblue")
-wineInstall.configure(activebackground="dodgerblue")
-opengl.configure(activebackground="dodgerblue")
-winbind.configure(activebackground="dodgerblue")
-virtualMachine.configure(activebackground="dodgerblue")
-safeWebsize.configure(activebackground="dodgerblue")
-moreProgram.configure(activebackground="dodgerblue")
-help.configure(activebackground="dodgerblue")
-e1['value'] = findExeHistory
-e2['value'] = wineBottonHistory
-combobox1['value'] = shellHistory
-returnText.insert("end", "此可以查看到 Wine 应用安装时的程序返回值")
-returnText.config(state=tk.DISABLED)
-if not os.path.exists("/opt/durapps/spark-dwine-helper/spark-dwine-helper-settings/settings.sh"):
-    sparkWineSetting.config(state=tk.DISABLED)
-# 启动窗口
-if setting["CenterWindow"]:
-    try:
-        # 窗口居中（如果设置开启）
-        win.update()
-        # 获取主显示器分辨率
-        for i in GetScreenSize():
-            if i[4]:
-                win.geometry(f"{win.winfo_width()}x{win.winfo_height()}+{i[2] + (i[0] // 2 - win.winfo_width() // 2)}+{i[3] + (i[1] // 2 - win.winfo_height() // 2)}")
-    except:
-        print("设置居中错误，忽略")
-# 显示窗口
-win.mainloop()
