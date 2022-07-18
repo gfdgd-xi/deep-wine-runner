@@ -10,13 +10,11 @@
 #################
 # 引入所需的库
 #################
-import json
 import os
 import sys
-import ttkthemes
+import json
 import threading
-import tkinter as tk
-import tkinter.ttk as ttk
+import PyQt5.QtWidgets as QtWidgets
 
 # 读取文本文档
 def readtxt(path):
@@ -29,7 +27,6 @@ def Unzip():
     os.system("mkdir -p ~")
     os.chdir(f"{homePath}")
     os.system(f"unzip -o \"{programPath}/package-script.zip\"")
-    window.quit()
     print("Unzip Done")
     ReStartProgram()
 
@@ -43,30 +40,23 @@ homePath = os.path.expanduser('~')
 information = json.loads(readtxt(f"{programPath}/information.json"))
 version = information["Version"]
 if not os.path.exists(f"{homePath}/package-script") or not json.loads(readtxt(f"{homePath}/package-script/information.json"))["Version"] == version:
-    print("未检测到指定文件，解压文件")
-    # 读取主题
-    try:
-        theme = not ("dark" in readtxt(homePath + "/.gtkrc-2.0") and "gtk-theme-name=" in readtxt(homePath + "/.gtkrc-2.0"))
-    except:
-        print("主题读取错误，默认使用浅色主题")
-        theme = True
-    if theme:
-        window = tk.Tk()
-        themes = ttkthemes.ThemedStyle(window)
-        themes.set_theme("breeze")
-    else:
-        import ttkbootstrap
-        style = ttkbootstrap.Style(theme="darkly")
-        window = style.master  # 创建窗口
-    window.title("解压中")
-    ttk.Label(window, text="正在解压所需程序，请稍后……").pack()
-    progress = ttk.Progressbar(window, mode='indeterminate')
-    progress.start()
-    progress.pack()
+    app = QtWidgets.QApplication(sys.argv)
+    widget = QtWidgets.QWidget()
+    widgetLayout = QtWidgets.QVBoxLayout()
+    widget.setWindowTitle("解压中")
+    widgetLayout.addWidget(QtWidgets.QLabel("正在解压所需程序，请稍后……"))
+    progress = QtWidgets.QProgressBar()
+    progress.setMaximum(0)
+    progress.setMinimum(0)
+    progress.update()
+    widgetLayout.addWidget(progress)
+    widget.setLayout(widgetLayout)
+    widget.show()
     # 解压流程
+    QtWidgets.QProgressDialog(None)
     t = threading.Thread(target=Unzip)
     t.start()
-    window.mainloop()
+    sys.exit(app.exec_())
 os.chdir(f"{homePath}/package-script")
-os.system("python3 main.py")
+os.system("./package.py")
 print("End")
