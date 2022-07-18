@@ -20,9 +20,6 @@ import threading
 import traceback
 import webbrowser
 import subprocess
-import tkinter as tk
-import tkinter.filedialog
-import tkinter.messagebox
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
@@ -185,7 +182,7 @@ def about_this_program()->"显示“关于这个程序”窗口":
     messageLayout.addWidget(ok, 1, 1, 1, 1, QtCore.Qt.AlignBottom | QtCore.Qt.AlignRight)
     messageWidget.setLayout(messageLayout)
     QT.message.setCentralWidget(messageWidget)
-    QT.message.resize(messageWidget.frameGeometry().width() * 1.5, messageWidget.frameGeometry().height() * 1.5)
+    QT.message.resize(int(messageWidget.frameGeometry().width() * 1.5), int(messageWidget.frameGeometry().height() * 1.5))
     QT.message.show()
 
 # 显示“提示”窗口
@@ -575,7 +572,7 @@ class UpdateWindow():
         updateWidget.setLayout(updateWidgetLayout)
         UpdateWindow.update.setCentralWidget(updateWidget)
         UpdateWindow.update.setWindowTitle("检查更新")
-        UpdateWindow.update.resize(updateWidget.frameGeometry().width(), updateWidget.frameGeometry().height() * 1.5)
+        UpdateWindow.update.resize(updateWidget.frameGeometry().width(), int(updateWidget.frameGeometry().height() * 1.5))
         UpdateWindow.update.show()
 
     def Update():
@@ -840,7 +837,6 @@ class ProgramSetting():
         widget.setLayout(widgetLayout)
         ProgramSetting.message.setCentralWidget(widget)
         ProgramSetting.message.setWindowTitle(f"设置 wine 运行器 {version}")
-        #ProgramSetting.message.resize(ProgramSetting.message.frameSize().width() * 1.2, ProgramSetting.message.frameSize().height())
         ProgramSetting.message.show()
         return
 
@@ -943,13 +939,14 @@ tips = '''提示：
 exe路径\' 参数 \'
 即可（单引号需要输入）
 5、wine 容器如果没有指定，则会默认为 ~/.wine'''
-updateThingsString = '''※1、添加 @delsin 和 @神末shenmo 建议的 postrm 脚本
-2、将 pip 由阿里源改为华为源，提升下载速度
-3、优化多屏窗口居中问题，并设置居中选项为选开防止错误
-4、修复 1.6.0 程序无法保存设置的问题
-5、修复 1.6.0 的更新程序无法正常更新的问题
-6、界面大改造，从使用 Tkinter 改为 Qt，参考了 @134******28 和 @sgb76 提供的设计方案和代码
-7、添加了基于 UOS 生态适配活动打包脚本的打包器，以及基于 Virtualbox 的简易 Windows 镜像安装工具
+updateThingsString = '''※1、界面大改造，从使用 Tkinter 改为 Qt，参考了 @134******28 和 @sgb76 提供的设计方案和代码
+※2、添加了基于 UOS 生态适配活动打包脚本的打包器，以及基于 Virtualbox 的简易 Windows 镜像安装工具
+※3、将 pip 由阿里源改为华为源，提升下载安装速度，并删除使用 pip 下载库的功能（已不需要，废弃）
+4、添加 @delsin 和 @神末shenmo 建议的 postrm 脚本
+5、优化多屏窗口居中问题
+6、修复 1.6.0 程序无法保存设置的问题
+7、修复 1.6.0 的更新程序无法正常更新的问题
+8、升级 Geek Uninstaller 版本
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
@@ -959,7 +956,6 @@ about = f'''<h1>关于</h1>
 
 版本：{version}
 适用平台：{goodRunSystem}
-tkinter 版本：{tk.TkVersion}
 Qt 版本：{QtCore.qVersion()}
 程序官网：{programUrl}</pre>
 <hr>
