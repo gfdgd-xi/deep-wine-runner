@@ -455,7 +455,7 @@ def InstallOther():
     DisableButton(False)
 
 def BuildExeDeb():
-    if e1.get() == "":
+    if e1.currentText() == "":
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
@@ -615,7 +615,7 @@ class GetDllFromWindowsISO:
     mountButton = None
     dllListModel = None
     def ShowWindow():
-        DisableButton(True)
+        #DisableButton(True)
         GetDllFromWindowsISO.message = QtWidgets.QMainWindow()
         widget = QtWidgets.QWidget()
         widgetLayout = QtWidgets.QGridLayout()
@@ -681,7 +681,7 @@ class GetDllFromWindowsISO:
         GetDllFromWindowsISO.dllList.setModel(GetDllFromWindowsISO.dllListModel)
         GetDllFromWindowsISO.isoPath.currentText()
         GetDllFromWindowsISO.message.setWindowTitle(f"Wine 运行器 {version}——从 ISO 提取 DLL")
-        GetDllFromWindowsISO.message.setWindowIcon(iconPath)
+        GetDllFromWindowsISO.message.setWindowIcon(QtGui.QIcon(iconPath))
         GetDllFromWindowsISO.message.show()
 
     def DisbledUp(state):
