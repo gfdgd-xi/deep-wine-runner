@@ -8,13 +8,14 @@ env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 让你可以简易方便的使用 wine  
 是使用 Python3 的 tkinter 构建的    
 （自己美术功底太差，图标只能在网络上找了）    
-（测试平台：deepin 20.6；UOS 家庭版 21；Ubuntu 22.04）    
-![image.png](https://storage.deepin.org/thread/202207101734379289_image.png)
+（测试平台：deepin 20.6；UOS 家庭版 21.3；Ubuntu 22.04）    
+![image.png](https://storage.deepin.org/thread/202207190819153104_image.png)
 而打包器可以方便的把您的 wine 容器打包成 deb 包供他人使用，程序创建的 deb 构建临时文件夹目录树如下：  
 ```bash
 /XXX
 ├── DEBIAN
 │   └── control
+│   └── postrm（可选）
 └── opt
 └── apps
     └── XXX
@@ -51,6 +52,7 @@ exe路径\' 参数 \'
 ```
 即可（单引号需要输入）  
 5、wine 容器如果没有指定，则会默认为 ~/.wine  
+![image.png](https://storage.deepin.org/thread/202207190819153104_image.png)
 ### 打包器
 1、deb 打包软件包名要求：  
 软件包名只能含有小写字母(a-z)、数字(0-9)、加号(+)和减号(-)、以及点号(.)，软件包名最短长度两个字符；它必须以字母开头
@@ -58,8 +60,33 @@ exe路径\' 参数 \'
 3、输入 wine 的容器路径时最后面请不要输入“/”  
 4、输入可执行文件的运行路径时是以“C:/XXX/XXX.exe”的格式进行输入，默认是以 C： 为开头，不用“\”做命令的分隔，而是用“/”  
 5、.desktop 的图标只支持 PNG 格式和 SVG 格式，其他格式无法显示图标  
+![image.png](https://storage.deepin.org/thread/202207190820337719_image.png)
+### 基于统信 Wine 生态适配脚本的打包器
+第一个文本框是应用程序中文名  
+第二个文本框是应用程序英文名  
+第三个文本框是最终生成的包的描述  
+第四个选择框是desktop文件中的分类  
+第五个输入框是程序在 Wine 容器的位置，以 c:\\XXX 的形式，盘符必须小写，用反斜杠，如果路径带用户名的话会自动替换为$USER  
+而 StartupWMClass 字段将会由程序自动生成，作用如下：  
+desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与desktop文件相对应。这个值为实际运行的主程序EXE的文件名，wine/crossover在程序运行后会将文件名设置为窗口类名  
+第六个输入框是最终生成的包的包名,包名的命名规则以deepin开头，加官网域名（需要前后对调位置），如还不能区分再加上应用名  
+最后一个是最终生成的包的版本号，版本号命名规则：应用版本号+deepin+数字  
+![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志
+### 1.7.0（2022年07月19日）
+<b>※1、界面大改造，从使用 Tkinter 改为 Qt，参考了 @134******28 和 @sgb76 提供的设计方案和代码</b>  
+
+**※2、添加了基于 UOS 生态适配活动打包脚本的打包器，以及基于 Virtualbox 的简易 Windows 镜像安装工具**  
+**※3、将 pip 由阿里源改为华为源，提升下载安装速度，并删除使用 pip 下载库的功能（已不需要，废弃）**  
+4、添加 @delsin 和 @神末shenmo 建议的 postrm 脚本  
+5、优化多屏窗口居中问题  
+6、修复 1.6.0 程序无法保存设置的问题  
+7、修复 1.6.0 的更新程序无法正常更新的问题  
+8、升级 Geek Uninstaller 版本  
+![image.png](https://storage.deepin.org/thread/202207190819153104_image.png)
+
+
 ### 1.6.0（2022年07月10日）
 **※1、新增程序感谢、谢明以及程序的建议和问题反馈和内置更新程序**  
 **※2、支持 winetricks 指定 Wine 打开**  

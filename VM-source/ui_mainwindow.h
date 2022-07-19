@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.15.3
+** Created by: Qt User Interface Compiler version 5.11.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -61,45 +61,45 @@ public:
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
-            MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
+            MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->resize(807, 429);
         QIcon icon;
-        icon.addFile(QString::fromUtf8(":/icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QStringLiteral(":/icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         MainWindow->setWindowIcon(icon);
         action = new QAction(MainWindow);
-        action->setObjectName(QString::fromUtf8("action"));
+        action->setObjectName(QStringLiteral("action"));
         action_2 = new QAction(MainWindow);
-        action_2->setObjectName(QString::fromUtf8("action_2"));
+        action_2->setObjectName(QStringLiteral("action_2"));
         centralWidget = new QWidget(MainWindow);
-        centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
+        centralWidget->setObjectName(QStringLiteral("centralWidget"));
         horizontalLayout = new QHBoxLayout(centralWidget);
         horizontalLayout->setSpacing(6);
         horizontalLayout->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
         tabWidget = new QTabWidget(centralWidget);
-        tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
+        tabWidget->setObjectName(QStringLiteral("tabWidget"));
         tabWidget->setTabShape(QTabWidget::Rounded);
         tab = new QWidget();
-        tab->setObjectName(QString::fromUtf8("tab"));
+        tab->setObjectName(QStringLiteral("tab"));
         verticalLayout = new QVBoxLayout(tab);
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setSpacing(6);
-        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
         label = new QLabel(tab);
-        label->setObjectName(QString::fromUtf8("label"));
+        label->setObjectName(QStringLiteral("label"));
 
         horizontalLayout_2->addWidget(label);
 
         isoPath = new QLineEdit(tab);
-        isoPath->setObjectName(QString::fromUtf8("isoPath"));
+        isoPath->setObjectName(QStringLiteral("isoPath"));
 
         horizontalLayout_2->addWidget(isoPath);
 
         browser = new QPushButton(tab);
-        browser->setObjectName(QString::fromUtf8("browser"));
+        browser->setObjectName(QStringLiteral("browser"));
 
         horizontalLayout_2->addWidget(browser);
 
@@ -108,9 +108,9 @@ public:
 
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setSpacing(6);
-        horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
+        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
         label_2 = new QLabel(tab);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
+        label_2->setObjectName(QStringLiteral("label_2"));
 
         horizontalLayout_3->addWidget(label_2);
 
@@ -118,7 +118,7 @@ public:
         systemVersion->addItem(QString());
         systemVersion->addItem(QString());
         systemVersion->addItem(QString());
-        systemVersion->setObjectName(QString::fromUtf8("systemVersion"));
+        systemVersion->setObjectName(QStringLiteral("systemVersion"));
 
         horizontalLayout_3->addWidget(systemVersion);
 
@@ -128,13 +128,13 @@ public:
 
         horizontalLayout_4 = new QHBoxLayout();
         horizontalLayout_4->setSpacing(6);
-        horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
+        horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
         horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout_4->addItem(horizontalSpacer);
 
         install = new QPushButton(tab);
-        install->setObjectName(QString::fromUtf8("install"));
+        install->setObjectName(QStringLiteral("install"));
 
         horizontalLayout_4->addWidget(install);
 
@@ -142,26 +142,26 @@ public:
         verticalLayout->addLayout(horizontalLayout_4);
 
         textBrowser_3 = new QTextBrowser(tab);
-        textBrowser_3->setObjectName(QString::fromUtf8("textBrowser_3"));
+        textBrowser_3->setObjectName(QStringLiteral("textBrowser_3"));
 
         verticalLayout->addWidget(textBrowser_3);
 
         tabWidget->addTab(tab, QString());
         tab_3 = new QWidget();
-        tab_3->setObjectName(QString::fromUtf8("tab_3"));
+        tab_3->setObjectName(QStringLiteral("tab_3"));
         horizontalLayout_5 = new QHBoxLayout(tab_3);
         horizontalLayout_5->setSpacing(6);
         horizontalLayout_5->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
+        horizontalLayout_5->setObjectName(QStringLiteral("horizontalLayout_5"));
         textBrowser = new QTextBrowser(tab_3);
-        textBrowser->setObjectName(QString::fromUtf8("textBrowser"));
+        textBrowser->setObjectName(QStringLiteral("textBrowser"));
         textBrowser->setUndoRedoEnabled(false);
 
         horizontalLayout_5->addWidget(textBrowser);
 
         tabWidget->addTab(tab_3, QString());
         tab_2 = new QWidget();
-        tab_2->setObjectName(QString::fromUtf8("tab_2"));
+        tab_2->setObjectName(QStringLiteral("tab_2"));
         QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -170,12 +170,12 @@ public:
         horizontalLayout_6 = new QHBoxLayout(tab_2);
         horizontalLayout_6->setSpacing(6);
         horizontalLayout_6->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_6->setObjectName(QString::fromUtf8("horizontalLayout_6"));
+        horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
         verticalLayout_3 = new QVBoxLayout();
         verticalLayout_3->setSpacing(6);
-        verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
+        verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
         label_3 = new QLabel(tab_2);
-        label_3->setObjectName(QString::fromUtf8("label_3"));
+        label_3->setObjectName(QStringLiteral("label_3"));
         QSizePolicy sizePolicy1(QSizePolicy::Maximum, QSizePolicy::Maximum);
         sizePolicy1.setHorizontalStretch(0);
         sizePolicy1.setVerticalStretch(0);
@@ -183,7 +183,7 @@ public:
         label_3->setSizePolicy(sizePolicy1);
         label_3->setMinimumSize(QSize(200, 313));
         label_3->setMaximumSize(QSize(200, 313));
-        label_3->setStyleSheet(QString::fromUtf8("border-image: url(:/icon.png);"));
+        label_3->setStyleSheet(QStringLiteral("border-image: url(:/icon.png);"));
 
         verticalLayout_3->addWidget(label_3);
 
@@ -195,7 +195,7 @@ public:
         horizontalLayout_6->addLayout(verticalLayout_3);
 
         textBrowser_2 = new QTextBrowser(tab_2);
-        textBrowser_2->setObjectName(QString::fromUtf8("textBrowser_2"));
+        textBrowser_2->setObjectName(QStringLiteral("textBrowser_2"));
         QSizePolicy sizePolicy2(QSizePolicy::Minimum, QSizePolicy::Expanding);
         sizePolicy2.setHorizontalStretch(0);
         sizePolicy2.setVerticalStretch(0);
@@ -220,21 +220,21 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "Windows \345\272\224\347\224\250\351\200\202\351\205\215\345\267\245\345\205\267", nullptr));
-        action->setText(QCoreApplication::translate("MainWindow", "\351\200\200\345\207\272", nullptr));
-        action_2->setText(QCoreApplication::translate("MainWindow", "\345\205\263\344\272\216", nullptr));
-        label->setText(QCoreApplication::translate("MainWindow", "\351\225\234\345\203\217\350\267\257\345\276\204\357\274\232", nullptr));
-        isoPath->setPlaceholderText(QCoreApplication::translate("MainWindow", "\350\257\267\351\200\211\346\213\251\347\263\273\347\273\237\351\225\234\345\203\217", nullptr));
-        browser->setText(QCoreApplication::translate("MainWindow", "\346\265\217\350\247\210\342\200\246\342\200\246", nullptr));
-        label_2->setText(QCoreApplication::translate("MainWindow", "\347\263\273\347\273\237\347\211\210\346\234\254\357\274\232", nullptr));
-        systemVersion->setItemText(0, QCoreApplication::translate("MainWindow", "Windows 7 32 \344\275\215\357\274\210\346\224\257\346\214\201\350\207\252\345\212\250\345\256\211\350\243\205\357\274\211", nullptr));
-        systemVersion->setItemText(1, QCoreApplication::translate("MainWindow", "Windows 7 64 \344\275\215\357\274\210\346\224\257\346\214\201\350\207\252\345\212\250\345\256\211\350\243\205\357\274\211", nullptr));
-        systemVersion->setItemText(2, QCoreApplication::translate("MainWindow", "\345\205\266\345\256\203 Windows \347\263\273\347\273\237\357\274\210\344\270\215\346\224\257\346\214\201\350\207\252\345\212\250\345\256\211\350\243\205\357\274\211", nullptr));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "Windows \345\272\224\347\224\250\351\200\202\351\205\215\345\267\245\345\205\267", nullptr));
+        action->setText(QApplication::translate("MainWindow", "\351\200\200\345\207\272", nullptr));
+        action_2->setText(QApplication::translate("MainWindow", "\345\205\263\344\272\216", nullptr));
+        label->setText(QApplication::translate("MainWindow", "\351\225\234\345\203\217\350\267\257\345\276\204\357\274\232", nullptr));
+        isoPath->setPlaceholderText(QApplication::translate("MainWindow", "\350\257\267\351\200\211\346\213\251\347\263\273\347\273\237\351\225\234\345\203\217", nullptr));
+        browser->setText(QApplication::translate("MainWindow", "\346\265\217\350\247\210\342\200\246\342\200\246", nullptr));
+        label_2->setText(QApplication::translate("MainWindow", "\347\263\273\347\273\237\347\211\210\346\234\254\357\274\232", nullptr));
+        systemVersion->setItemText(0, QApplication::translate("MainWindow", "Windows 7 32 \344\275\215\357\274\210\346\224\257\346\214\201\350\207\252\345\212\250\345\256\211\350\243\205\357\274\211", nullptr));
+        systemVersion->setItemText(1, QApplication::translate("MainWindow", "Windows 7 64 \344\275\215\357\274\210\346\224\257\346\214\201\350\207\252\345\212\250\345\256\211\350\243\205\357\274\211", nullptr));
+        systemVersion->setItemText(2, QApplication::translate("MainWindow", "\345\205\266\345\256\203 Windows \347\263\273\347\273\237\357\274\210\344\270\215\346\224\257\346\214\201\350\207\252\345\212\250\345\256\211\350\243\205\357\274\211", nullptr));
 
         systemVersion->setCurrentText(QString());
-        systemVersion->setPlaceholderText(QCoreApplication::translate("MainWindow", "\350\257\267\351\200\211\346\213\251\347\263\273\347\273\237\347\261\273\345\236\213\357\274\210\345\246\202\346\236\234\350\257\206\345\210\253\344\270\215\344\272\206\350\257\267\350\207\252\350\241\214\351\200\211\346\213\251\357\274\214\345\246\202\346\236\234\351\200\211\346\213\251\351\224\231\350\257\257\346\210\226\344\270\215\346\224\257\346\214\201\345\260\206\346\227\240\346\263\225\350\277\233\350\241\214\350\207\252\345\212\250\345\256\211\350\243\205\357\274\211", nullptr));
-        install->setText(QCoreApplication::translate("MainWindow", "\345\256\211\350\243\205", nullptr));
-        textBrowser_3->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        //systemVersion->setPlaceholderText(QApplication::translate("MainWindow", "\350\257\267\351\200\211\346\213\251\347\263\273\347\273\237\347\261\273\345\236\213\357\274\210\345\246\202\346\236\234\350\257\206\345\210\253\344\270\215\344\272\206\350\257\267\350\207\252\350\241\214\351\200\211\346\213\251\357\274\214\345\246\202\346\236\234\351\200\211\346\213\251\351\224\231\350\257\257\346\210\226\344\270\215\346\224\257\346\214\201\345\260\206\346\227\240\346\263\225\350\277\233\350\241\214\350\207\252\345\212\250\345\256\211\350\243\205\357\274\211", nullptr));
+        install->setText(QApplication::translate("MainWindow", "\345\256\211\350\243\205", nullptr));
+        textBrowser_3->setHtml(QApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Noto Sans CJK SC'; font-size:10.5pt; font-weight:400; font-style:normal;\">\n"
@@ -243,11 +243,9 @@ public:
                         "\246\202\346\236\234\344\270\213\350\275\275\350\277\231\344\270\252\357\274\214\347\263\273\347\273\237\347\211\210\346\234\254\351\200\211\347\254\254\344\270\200\351\241\271\357\274\214\344\270\200\350\210\254\346\216\250\350\215\220\350\277\231\344\270\252\357\274\211ed2k://|file|cn_windows_7_ultimate_with_sp1_x86_dvd_u_677486.iso|2653276160|7503E4B9B8738DFCB95872445C72AEFB|/</span></p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">\357\274\210\345\246\202\346\236\234\344\270\213\350\275\275\350\277\231\344\270\252\357\274\214\347\263\273\347\273\237\347\211\210\346\234\254\351\200\211\347\254\254\344\272\214\351\241\271\357\274\211ed2k://|file|cn_windows_7_ultimate_with_sp1_x64_dvd_u_677408.iso|3420557312|B58548681854236C7939003B583A8078|/</span></p>\n"
 "<hr /></body></html>", nullptr));
-        tabWidget->setTabText(tabWidget->indexOf(tab), QCoreApplication::translate("MainWindow", "\350\256\276\347\275\256", nullptr));
-#if QT_CONFIG(tooltip)
-        tabWidget->setTabToolTip(tabWidget->indexOf(tab), QCoreApplication::translate("MainWindow", "\350\256\276\347\275\256", nullptr));
-#endif // QT_CONFIG(tooltip)
-        textBrowser->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("MainWindow", "\350\256\276\347\275\256", nullptr));
+        tabWidget->setTabToolTip(tabWidget->indexOf(tab), QApplication::translate("MainWindow", "\350\256\276\347\275\256", nullptr));
+        textBrowser->setHtml(QApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Noto Sans CJK SC'; font-size:10.5pt; font-weight:400; font-style:normal;\">\n"
@@ -325,9 +323,9 @@ public:
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:11pt;\">6\343\200\201\347\255\211\345\276\205\345\256\211\350\243\205\345\256\214\346\257\225\345\220\216\357\274\214\351\200\211\346\213\251\342\200\234Reboot now\342\200\235\347\204\266\345\220\216\347\202\271\345\207\273\342\200\234Finish\342\200\235\351\207\215\345\220\257\346\255\244\350\231\232\346\213\237\346\234\272\345\215\263\345\217\257\345\256\211\350\243\205\346\210\220\345\212\237\357\274\210\351\200\211\346\213\251\342\200\234Reboot now\342\200\235\345\271\266\347\202\271\342\200\234Finish\342\200\235\344\274\232\350\207\252\345\212\250\351\207\215\346\226\260\345\220\257\345\212\250\357\274\211</span></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><img src=\":/picture/\346\210\252\345\233\276/\346\210\252\345\233\276_VirtualBox Machi"
                         "ne_20220712143103.png\" /></p></body></html>", nullptr));
-        tabWidget->setTabText(tabWidget->indexOf(tab_3), QCoreApplication::translate("MainWindow", "\345\256\211\350\243\205/\344\275\277\347\224\250\345\270\256\345\212\251", nullptr));
+        tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("MainWindow", "\345\256\211\350\243\205/\344\275\277\347\224\250\345\270\256\345\212\251", nullptr));
         label_3->setText(QString());
-        textBrowser_2->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        textBrowser_2->setHtml(QApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Noto Sans CJK SC'; font-size:10.5pt; font-weight:400; font-style:normal;\">\n"
@@ -348,7 +346,7 @@ public:
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\345\217\202\350\200\203\346\226\207\347\214\256\357\274\232</p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-b"
                         "lock-indent:0; text-indent:0px;\"><span style=\" font-family:'Droid Sans Mono','monospace','monospace'; font-size:11pt; color:#6a9955;\">https://juejin.cn/post/7080484519328874510</span></p></body></html>", nullptr));
-        tabWidget->setTabText(tabWidget->indexOf(tab_2), QCoreApplication::translate("MainWindow", "\345\205\263\344\272\216", nullptr));
+        tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("MainWindow", "\345\205\263\344\272\216", nullptr));
     } // retranslateUi
 
 };
