@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Categories=System;Wine;
+Version=1.7.0
+Exec=/usr/bin/deepin-wine-package-builder "~/.wine" %F
+Icon=/opt/apps/deepin-wine-runner/icon.png
+Name=Wine Package Builder
+Name[zh]=Wine 打包器
+Comment=Wine Package Builder
+Comment[zh]=Wine 打包器
+Terminal=false
+StartupNotify=true
+MimeType=application/vnd.microsoft.portable-executable;application/x-dosexec;application/x-msi;application-x-executable;application/application-x-ms-dos-executable;application/application-x-msdownload;application/octet-stream

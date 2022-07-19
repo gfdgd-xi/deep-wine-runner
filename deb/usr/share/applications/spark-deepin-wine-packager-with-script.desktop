@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Categories=System;Wine;
+Version=1.7.0
+Exec=/usr/bin/deepin-wine-packager-with-script
+Icon=/opt/apps/deepin-wine-runner/icon.png
+Name=Wine Package Builder For UOS
+Name[zh]=Wine 打包器(基于活动脚本)
+Comment=Wine Package Builder For UOS
+Comment[zh]=Wine 打包器(基于活动脚本)
+Terminal=false
+StartupNotify=true
