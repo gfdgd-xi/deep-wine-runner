@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #########################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布
-# 版本：1.7.0
+# 版本：1.8.0
 # 感谢：感谢 deepin-wine 团队，提供了 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 的 tkinter 构建
 #########################################################################
@@ -150,12 +150,12 @@ class make_deb_threading(QtCore.QThread):
                 if not os.path.exists(e9_text.text()):
                     QtWidgets.QMessageBox.critical(widget, "错误", "图标的路径填写错误，无法进行构建 deb 包")
                     disabled_or_NORMAL_all(True)
-                    label13_text_change("图标的路径填写错误，无法进行构建 deb 包")
+                    self.label.emit("图标的路径填写错误，无法进行构建 deb 包")
                     return
             if not os.path.exists(e6_text.text()):
                 QtWidgets.QMessageBox.critical(widget, "错误", "路径填写错误，无法继续构建 deb 包")
                 disabled_or_NORMAL_all(True)
-                label13_text_change("图标的路径填写错误，无法进行构建 deb 包")
+                self.label.emit("图标的路径填写错误，无法进行构建 deb 包")
                 return
             #############
             # 删除文件
@@ -452,7 +452,7 @@ def get_home():
 wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable": "deepin-wine6-stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine"}
 os.chdir("/")
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
-iconPath = "{}/icon.png".format(programPath)
+iconPath = "{}/deepin-wine-runner.svg".format(programPath)
 information = json.loads(readtxt(f"{programPath}/information.json"))
 version = information["Version"]
 tips = """提示：
@@ -495,7 +495,7 @@ button4 = QtWidgets.QPushButton("浏览……")
 button5 = QtWidgets.QPushButton("打包……")
 rmBash = QtWidgets.QCheckBox("设置卸载该 deb 后自动删除该容器")
 textbox1 = QtWidgets.QTextBrowser()
-option1_text.addItems(["Network", "Chat", "Audio", "Video", "Graphics", "Office", "Translation", "Development", "Utility", "System"])
+option1_text.addItems(["Network", "Chat", "Audio", "Video", "Graphics", "Office", "Translation", "Development", "Utility"])
 option1_text.setCurrentText("Network")
 wineFrame = QtWidgets.QHBoxLayout()
 chooseWineHelperValue = QtWidgets.QCheckBox("使用星火wine helper（如不勾选默认为deepin-wine-helper）")

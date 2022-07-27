@@ -1,4 +1,4 @@
-# wine 运行器 1.7.0
+# wine 运行器 1.7.1
 
 ## 介绍
 一个图形化了以下命令的程序  
@@ -189,6 +189,26 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 
 ### 1.0.0（2021年01月29日）
 1. 实现内容
+
+## 源码安装教程
+1. 安装需要的依赖  
+```bash
+sudo apt install git make
+```
+2. 下载仓库  
+```bash
+git clone https://gitee.com/gfdgd-xi/deep-wine-runner.git
+cd deep-wine-runner
+```
+3. 从源码运行程序（如果是从源码安装请跳过这一步）  
+```bash
+make depend
+make run
+```
+4. 从源码安装程序  
+```bash
+make install
+```
 
 ## 更多
 + https://gitee.com/gfdgd-xi/deep-wine-runner

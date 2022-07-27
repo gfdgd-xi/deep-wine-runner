@@ -50,6 +50,9 @@ while True:
     if 0 <= choose and choose < len(netList):
         break
 print(f"您选择了 .net framework {netList[choose][0]}")
+print(f"如果是 Offline Installer 版本，提示需要连接互联网，其实是不需要的，断网也可以安装")
+print(f"如果 Offline Installer 版本连接网络时安装失败，提示无法连接服务器或连接超时，可以尝试下载完安装包加载过程中断网以便断网安装")
+print(f"一般建议 Offline Installer 版本在下载完 exe 安装程序后在加载过程中断网以便提高安装速度")
 print("开始下载")
 os.system("rm -rf /tmp/wineinstallnetframework")
 os.system("mkdir -p /tmp/wineinstallnetframework")

@@ -55,7 +55,7 @@ def get_home()->"获取用户主目录":
 ###########################
 # 程序信息
 ###########################
-iconPath = "{}/icon.png".format(os.path.split(os.path.realpath(__file__))[0])
+iconPath = "{}/deepin-wine-runner.svg".format(os.path.split(os.path.realpath(__file__))[0])
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 information = json.loads(readtxt(programPath + "/information.json"))
 version = information["Version"]
