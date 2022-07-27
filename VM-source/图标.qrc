@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
-        <file>icon.png</file>
+        <file>deepin-wine-runner.svg</file>
+        <file>deepin-wine-runner.png</file>
     </qresource>
     <qresource prefix="/picture">
         <file>截图_VirtualBox Machine_20220712142929.png</file>

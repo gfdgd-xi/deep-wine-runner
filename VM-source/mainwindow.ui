@@ -14,7 +14,7 @@
    <string>Windows 应用适配工具</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="图标.qrc">
+   <iconset>
     <normaloff>:/icon.png</normaloff>:/icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
@@ -25,7 +25,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -237,17 +237,17 @@ p, li { white-space: pre-wrap; }
             <property name="minimumSize">
              <size>
               <width>200</width>
-              <height>313</height>
+              <height>200</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
               <width>200</width>
-              <height>313</height>
+              <height>200</height>
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">border-image: url(:/icon.png);</string>
+             <string notr="true">border-image: url(:/deepin-wine-runner.png);</string>
             </property>
             <property name="text">
              <string/>
@@ -315,8 +315,6 @@ p, li { white-space: pre-wrap; }
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources>
-  <include location="图标.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

@@ -314,22 +314,54 @@ if [ -n "$desktop_file_categories" ]; then
     find -iname "$desktop_file_icon" -exec cp "{}" "$outentries/icons/{}" \;
 
 fi
+systemVersion=`cat /etc/os-version`
+systemVersion=${systemVersion,,}  # 获取系统版本
+# 判断系统是否为 UOS
+if [[ "uos" == *"$systemVersion"* ]]; then
+    # 如果系统是 UOS，使用默认的打包方式
+    cd "$dstdir"
+    echo "$outdir/* /opt/apps/$deb_package_name" &>> "debian/install"
+    echo "<=====done."
+
+    echo "=====>Creating deb package..."
+    fakeroot "debian/build" "$dstdir"
+    echo "<=====done."
+
+    echo "=====> Removing temporary files..."
+    mv "$dstdir/$PKG_FILE" "$uos_package_save"
+ 
+    #rm -rf "$stgdir"
+    #rm -rf "$dstdir"
+    echo "<=====done."
+    echo -e "\n\nDeb file generated: $PKG_FILE\n"
+    echo "+++++ all done. +++++"
+    
+    exit 0
+fi
+# 非 UOS 操作系统，使用修改后的 dpkg-deb -b 打包方式
+# 参考 @虚幻的早晨 在 https://bbs.deepin.org/post/240570 和 https://wwd.lanzouy.com/ipwOt082k9qb 的建议和代码进行修改
+# 这里有个小坑坑，记录一下，如果想要使用 dpkg-deb -b 打包，需要修改 debian/control，修改为如下内容才能正常被 dpkg-deb 打包（删除空行和添加 Version）：
+# Source: @deb_package_name@
+# Section: non-free/otherosfs
+# Priority: optional
+# Maintainer: @deb_packager@
+# Build-Depends: debhelper (>= 3.0), fakeroot
+# Standards-Version: 3.7.3.0
+# Package: @deb_package_name@
+# Depends: @package_depends@
+# Recommends: libcapi20-3, libcups2, libdbus-1-3, libfontconfig1, libfreetype6, libglu1-mesa | libglu1, libgnutls30 | libgnutls28 | libgnutls26, libgsm1, libgssapi-krb5-2, libjpeg62-turbo | libjpeg8, libkrb5-3, libodbc1, libosmesa6, libpng16-16 | libpng12-0, libsane | libsane1, libsdl2-2.0-0, libtiff5, libv4l-0, libxcomposite1, libxcursor1, libxfixes3, libxi6, libxinerama1, libxrandr2, libxrender1, libxslt1.1, libxxf86vm1
+# Replaces: @old_package@
+# Provides: @old_package@
+# Conflicts: @old_package@
+# Architecture: @Arch@
+# Multi-Arch: foreign
+# Description:  @app_description@
+# Version:@deb_version_string@
 
 cd "$dstdir"
-echo "$outdir/* /opt/apps/$deb_package_name" &>> "debian/install"
 echo "<=====done."
-
 echo "=====>Creating deb package..."
-fakeroot "debian/build" "$dstdir"
+mv debian DEBIAN
+dpkg-deb -b ./ ../package_save/uos
 echo "<=====done."
-
-echo "=====> Removing temporary files..."
-mv "$dstdir/$PKG_FILE" "$uos_package_save"
- 
-#rm -rf "$stgdir"
-#rm -rf "$dstdir"
-echo "<=====done."
-echo -e "\n\nDeb file generated: $PKG_FILE\n"
-echo "+++++ all done. +++++"
-
 exit 0

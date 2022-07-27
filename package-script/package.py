@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
-# 版本：1.7.0
-# 更新时间：2022年07月18日
+# 版本：1.7.1
+# 更新时间：2022年07月19日
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 的 tkinter 构建
 ###########################################################################################
@@ -46,6 +46,7 @@ def DisbledOrEnabled(choose: bool):
     exePath.setDisabled(choose) 
     packageName.setDisabled(choose)
     versionName.setDisabled(choose)
+    buildDeb.setDisabled(choose)
 
 
 class PackageDebThread(QtCore.QThread):
@@ -128,7 +129,7 @@ def OpenPackageFolder():
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 information = json.loads(readtxt(f"{programPath}/information.json"))
 version = information["Version"]
-iconPath = "{}/icon.png".format(programPath)
+iconPath = "{}/deepin-wine-runner.svg".format(programPath)
 tips = """第一个文本框是应用程序中文名
 第二个文本框是应用程序英文名
 第三个文本框是最终生成的包的描述

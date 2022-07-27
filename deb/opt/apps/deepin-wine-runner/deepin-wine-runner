@@ -3,7 +3,7 @@
 ###########################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
 # 版本：1.7.0
-# 更新时间：2022年07月16日
+# 更新时间：2022年07月19日
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 的 tkinter 构建
 ###########################################################################################
@@ -23,8 +23,6 @@ import subprocess
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
-import PIL.Image as Image
-import PIL.ImageTk as ImageTk
 
 ###################
 # 程序所需事件
@@ -170,10 +168,11 @@ def about_this_program()->"显示“关于这个程序”窗口":
     global title
     global iconPath
     QT.message = QtWidgets.QMainWindow()  
+    QT.message.setWindowIcon(QtGui.QIcon(iconPath))
     messageWidget = QtWidgets.QWidget()
     QT.message.setWindowTitle(f"关于 {title}")
     messageLayout = QtWidgets.QGridLayout()
-    messageLayout.addWidget(QtWidgets.QLabel(f"<img src='{iconPath}'>"), 0, 0, 1, 1, QtCore.Qt.AlignTop)
+    messageLayout.addWidget(QtWidgets.QLabel(f"<img width=256 src='{iconPath}'>"), 0, 0, 1, 1, QtCore.Qt.AlignTop)
     aboutInfo = QtWidgets.QTextBrowser(messageWidget)
     aboutInfo.setHtml(about)
     messageLayout.addWidget(aboutInfo, 0, 1, 1, 1)
@@ -196,79 +195,89 @@ def UpdateThings():
 
 # 生成 desktop 文件在启动器
 def make_desktop_on_launcher():
-    if combobox1.currentText() == "" or e2.currentText() == "":  # 判断文本框是否有内容
-        QtWidgets.QMessageBox.information(widget, "提示", "没有填写需要使用 exe 应用或保存的文件名")
-        return
-    if not CheckProgramIsInstall(wine[o1.currentText()]):
-        if QtWidgets.QMessageBox.question(widget, "提示", "检查到您未安装这个 wine，是否继续使用这个 wine 写入？") == QtWidgets.QMessageBox.No:
-            DisableButton(False)
+    try:
+        if combobox1.currentText() == "" or e2.currentText() == "":  # 判断文本框是否有内容
+            QtWidgets.QMessageBox.information(widget, "提示", "没有填写需要使用 exe 应用或保存的文件名")
             return
-    else:  # 如果都有
-        if os.path.exists(get_home() + "/.local/share/applications/" + combobox1.currentText() + ".desktop"): # 判断目录是否有该文件，如果有
-            choose = QtWidgets.QMessageBox.question(widget, "提示", "文件已经存在，是否覆盖？") == QtWidgets.QMessageBox.Yes
-            if choose:   # 如要覆盖
-                os.remove(get_home() + "/.local/share/applications/" + combobox1.currentText() + ".desktop")  # 删除该文件
-            else:  # 如不覆盖
-                return  # 结束
-        if e1.currentText() == "":
-            wineBottonPath = setting["DefultBotton"]
-        else:
-            wineBottonPath = e1.currentText()
-        option = ""
-        if setting["Architecture"] != "Auto":
-            option += f"WINEARCH={setting['Architecture']} "
-        if not setting["Debug"]:
-            option += "WINEDEBUG=-all "
-        write_txt(get_home() + "/.local/share/applications/" + combobox1.currentText() + ".desktop", f'''[Desktop Entry]
+        if not CheckProgramIsInstall(wine[o1.currentText()]):
+            if QtWidgets.QMessageBox.question(widget, "提示", "检查到您未安装这个 wine，是否继续使用这个 wine 写入？") == QtWidgets.QMessageBox.No:
+                DisableButton(False)
+                return
+        else:  # 如果都有
+            if os.path.exists(get_home() + "/.local/share/applications/" + combobox1.currentText() + ".desktop"): # 判断目录是否有该文件，如果有
+                choose = QtWidgets.QMessageBox.question(widget, "提示", "文件已经存在，是否覆盖？") == QtWidgets.QMessageBox.Yes
+                if choose:   # 如要覆盖
+                    os.remove(get_home() + "/.local/share/applications/" + combobox1.currentText() + ".desktop")  # 删除该文件
+                else:  # 如不覆盖
+                    return  # 结束
+            if e1.currentText() == "":
+                wineBottonPath = setting["DefultBotton"]
+            else:
+                wineBottonPath = e1.currentText()
+            option = ""
+            if setting["Architecture"] != "Auto":
+                option += f"WINEARCH={setting['Architecture']} "
+            if not setting["Debug"]:
+                option += "WINEDEBUG=-all "
+            write_txt(get_home() + "/.local/share/applications/" + combobox1.currentText() + ".desktop", f'''[Desktop Entry]
 Name={combobox1.currentText()}
 Exec=env WINEPREFIX='{wineBottonPath}' {option} {wine[o1.currentText()]} '{e2.currentText()}' {setting["WineOption"]}
 Icon={iconPath}
 Type=Application
 StartupNotify=true''') # 写入文本文档
-        shellHistory.append(combobox1.currentText())  # 将记录写进数组
-        write_txt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json", str(json.dumps(ListToDictionary(shellHistory))))  # 将历史记录的数组转换为字典并写入
-        combobox1.clear()
-        combobox1.addItems(shellHistory)
-        QtWidgets.QMessageBox.information(widget, "提示", "生成完成！")  # 显示完成对话框
+            shellHistory.append(combobox1.currentText())  # 将记录写进数组
+            write_txt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json", str(json.dumps(ListToDictionary(shellHistory))))  # 将历史记录的数组转换为字典并写入
+            combobox1.clear()
+            combobox1.addItems(shellHistory)
+            QtWidgets.QMessageBox.information(widget, "提示", "生成完成！")  # 显示完成对话框
+    except:
+        traceback.print_exc()
+        QtWidgets.QMessageBox.critical(widget, "错误", f"快捷方式创建失败，错误如下：\n{traceback.format_exc()}")
 
 # 生成 desktop 文件在桌面
 # （第四个按钮的事件）
 def make_desktop_on_desktop():
-    if combobox1.currentText() == "" or e2.currentText() == "":  # 判断文本框是否有内容
-        QtWidgets.QMessageBox.information(widget, "提示", "没有填写需要使用 exe 应用或保存的文件名")
-        return
-    if not CheckProgramIsInstall(wine[o1.currentText()]):
-        if QtWidgets.QMessageBox.question(widget, "提示", "检查到您未安装这个 wine，是否继续使用这个 wine 写入？") == QtWidgets.QMessageBox.No:
-            DisableButton(False)
+    try:
+        if combobox1.currentText() == "" or e2.currentText() == "":  # 判断文本框是否有内容
+            QtWidgets.QMessageBox.information(widget, "提示", "没有填写需要使用 exe 应用或保存的文件名")
             return
-    else:  # 如果都有
-        if os.path.exists(get_desktop_path() + "/" + combobox1.currentText() + ".desktop"): # 判断目录是否有该文件，如果有
-            choose = QtWidgets.QMessageBox.question(widget, "提示", "文件已经存在，是否覆盖？") == QtWidgets.QMessageBox.Yes
-            if choose:   # 如要覆盖
-                os.remove(get_desktop_path() + "/" + combobox1.currentText() + ".desktop")  # 删除该文件
-            else:  # 如不覆盖
-                return  # 结束
-        if e1.currentText() == "":
-            wineBottonPath = setting["DefultBotton"]
-        else:
-            wineBottonPath = e1.currentText()
-        os.mknod(get_desktop_path() + "/" + combobox1.currentText() + ".desktop")
-        option = ""
-        if setting["Architecture"] != "Auto":
-            option += f"WINEARCH={setting['Architecture']} "
-        if not setting["Debug"]:
-            option += "WINEDEBUG=-all "
-        write_txt(get_desktop_path() + "/" + combobox1.currentText() + ".desktop", f'''[Desktop Entry]
+        if not CheckProgramIsInstall(wine[o1.currentText()]):
+            if QtWidgets.QMessageBox.question(widget, "提示", "检查到您未安装这个 wine，是否继续使用这个 wine 写入？") == QtWidgets.QMessageBox.No:
+                DisableButton(False)
+                return
+        else:  # 如果都有
+            if os.path.exists(get_desktop_path() + "/" + combobox1.currentText() + ".desktop"): # 判断目录是否有该文件，如果有
+                choose = QtWidgets.QMessageBox.question(widget, "提示", "文件已经存在，是否覆盖？") == QtWidgets.QMessageBox.Yes
+                if choose:   # 如要覆盖
+                    os.remove(get_desktop_path() + "/" + combobox1.currentText() + ".desktop")  # 删除该文件
+                else:  # 如不覆盖
+                    return  # 结束
+            if e1.currentText() == "":
+                wineBottonPath = setting["DefultBotton"]
+            else:
+                wineBottonPath = e1.currentText()
+            if not os.path.exists(get_desktop_path()):
+                os.makedirs(get_home())
+            os.mknod(get_desktop_path() + "/" + combobox1.currentText() + ".desktop")
+            option = ""
+            if setting["Architecture"] != "Auto":
+                option += f"WINEARCH={setting['Architecture']} "
+            if not setting["Debug"]:
+                option += "WINEDEBUG=-all "
+            write_txt(get_desktop_path() + "/" + combobox1.currentText() + ".desktop", f'''[Desktop Entry]
 Name={combobox1.currentText()}
 Exec=env WINEPREFIX='{wineBottonPath}' {option} {wine[o1.currentText()]} '{e2.currentText()}' {setting["WineOption"]}
 Icon={iconPath}
 Type=Application
 StartupNotify=true''') # 写入文本文档
-        shellHistory.append(combobox1.currentText())  # 将记录写进数组
-        write_txt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json", str(json.dumps(ListToDictionary(shellHistory))))  # 将历史记录的数组转换为字典并写入
-        combobox1.clear()
-        combobox1.addItems(shellHistory)
-        QtWidgets.QMessageBox.information(widget, "提示", "生成完成！")  # 显示完成对话框
+            shellHistory.append(combobox1.currentText())  # 将记录写进数组
+            write_txt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json", str(json.dumps(ListToDictionary(shellHistory))))  # 将历史记录的数组转换为字典并写入
+            combobox1.clear()
+            combobox1.addItems(shellHistory)
+            QtWidgets.QMessageBox.information(widget, "提示", "生成完成！")  # 显示完成对话框
+    except:
+        traceback.print_exc()
+        QtWidgets.QMessageBox.critical(widget, "错误", f"快捷方式创建失败，错误如下：\n{traceback.format_exc()}")
 
 # 数组转字典
 def ListToDictionary(list):
@@ -278,7 +287,7 @@ def ListToDictionary(list):
     return dictionary
 
 def CleanProgramHistory():
-    if QtWidgets.QMessageBox.question(title="警告", message="删除后将无法恢复，你确定吗？\n删除后软件将会自动重启。") == QtWidgets.QMessageBox.Yes:
+    if QtWidgets.QMessageBox.question(widget, "警告", "删除后将无法恢复，你确定吗？\n删除后软件将会自动重启。") == QtWidgets.QMessageBox.Yes:
         shutil.rmtree(get_home() + "/.config/deepin-wine-runner")
         ReStartProgram()
 
@@ -357,7 +366,7 @@ def RunWineProgram(wineProgram, history = False, Disbled = True):
     global runProgram
     DisableButton(True)
     if not CheckProgramIsInstall(wine[o1.currentText()]):
-        if QtWidgets.QMessageBox.question(title="提示", message="检查到您未安装这个 wine，是否继续使用这个 wine 运行？") == QtWidgets.QMessageBox.No:
+        if QtWidgets.QMessageBox.question(widget, "提示", "检查到您未安装这个 wine，是否继续使用这个 wine 运行？") == QtWidgets.QMessageBox.No:
             DisableButton(False)
             return
     returnText.setText("")
@@ -779,7 +788,7 @@ class GetDllFromWindowsISO:
     def CopyDll():
         choose = GetDllFromWindowsISO.dllList.selectionModel().selectedIndexes()[0].data()
         if os.path.exists(f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}"):
-            if QtWidgets.QMessageBox.question(title="提示", message=f"DLL {choose} 已经存在，是否覆盖？") == QtWidgets.QMessageBox.No:
+            if QtWidgets.QMessageBox.question(widget, "提示", f"DLL {choose} 已经存在，是否覆盖？") == QtWidgets.QMessageBox.No:
                 return
         try:
             shutil.copy(f"/tmp/wine-runner-getdll/i386/{choose[:-1]}_", f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}")
@@ -925,7 +934,7 @@ except:
 # 程序信息
 ###########################
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
-iconPath = "{}/icon.png".format(programPath)
+iconPath = "{}/deepin-wine-runner.svg".format(programPath)
 programUrl = "https://gitee.com/gfdgd-xi/deep-wine-runner\nhttps://github.com/gfdgd-xi/deep-wine-runner\nhttps://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner"
 information = json.loads(readtxt(f"{programPath}/information.json"))
 version = information["Version"]
@@ -939,20 +948,16 @@ tips = '''提示：
 exe路径\' 参数 \'
 即可（单引号需要输入）
 5、wine 容器如果没有指定，则会默认为 ~/.wine'''
-updateThingsString = '''※1、界面大改造，从使用 Tkinter 改为 Qt，参考了 @134******28 和 @sgb76 提供的设计方案和代码
-※2、添加了基于 UOS 生态适配活动打包脚本的打包器，以及基于 Virtualbox 的简易 Windows 镜像安装工具
-※3、将 pip 由阿里源改为华为源，提升下载安装速度，并删除使用 pip 下载库的功能（已不需要，废弃）
-4、添加 @delsin 和 @神末shenmo 建议的 postrm 脚本
-5、优化多屏窗口居中问题
-6、修复 1.6.0 程序无法保存设置的问题
-7、修复 1.6.0 的更新程序无法正常更新的问题
-8、升级 Geek Uninstaller 版本
+updateThingsString = '''※1、更换为 @PossibleVing 提供的程序图标
+※2、修改了统信 Wine 生态适配活动的脚本，支持在非 UOS 系统打包
+※3、修复了打包器在打包应用未指定图标的情况下显示对话框后强制退出的问题
+4、修改 .net framework 3.5 的安装包，从在线版改为本地版
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年07月18日"
+updateTime = "2022年07月20日"
 about = f'''<h1>关于</h1>
-<pre>一个基于 Python3 的 tkinter 制作的 wine 运行器
+<pre>一个基于 Python3 的 Qt 制作的 wine 运行器
 
 版本：{version}
 适用平台：{goodRunSystem}
@@ -978,7 +983,6 @@ updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updat
 ###########################
 # 窗口创建
 ###########################
-# 因为没有完全改完，所以需要这些东西来兼容 tkinter 的主题
 # 读取主题
 # Qt 窗口
 app = QtWidgets.QApplication(sys.argv)
@@ -1133,7 +1137,7 @@ w2 = QtWidgets.QAction("安装常见字体")
 w3 = QtWidgets.QAction("安装自定义字体")
 w4 = QtWidgets.QAction("删除选择的 Wine 容器")
 w5 = QtWidgets.QAction("打包 wine 应用")
-w6 = QtWidgets.QAction("使用官方 Wine 适配活动的脚本进行打包（测试只支持UOS）")
+w6 = QtWidgets.QAction("使用官方 Wine 适配活动的脚本进行打包")
 w7 = QtWidgets.QAction("从镜像获取DLL（只支持Windows XP、Windows Server 2003官方安装镜像）")
 wineOption.addAction(w1)
 wineOption.addAction(w2)
@@ -1272,7 +1276,7 @@ hm1_1.triggered.connect(lambda: webbrowser.open_new_tab("https://gitee.com/gfdgd
 window.resize(widget.frameGeometry().width() * 2, widget.frameGeometry().height())
 widget.setLayout(mainLayout)
 window.setWindowTitle(title)
-window.setWindowIcon(QtGui.QIcon(f"{programPath}/icon.png"))
+window.setWindowIcon(QtGui.QIcon(f"{programPath}/deepin-wine-runner.svg"))
 widget.show()
 window.show()
 
