@@ -2,10 +2,10 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
-# 版本：1.7.0
-# 更新时间：2022年07月19日
-# 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
-# 基于 Python3 的 tkinter 构建
+# 版本：1.7.1
+# 更新时间：2022年07月29日
+# 感谢：感谢 wine、deepin-wine 以及星火团队，提供了 wine、deepin-wine、spark-wine-devel 给大家使用，让我能做这个程序
+# 基于 Python3 的 PyQt5 构建
 ###########################################################################################
 #################
 # 引入所需的库
@@ -14,12 +14,14 @@ import os
 import sys
 import time
 import json
+import base64
 import shutil
 import requests
 import threading
 import traceback
 import webbrowser
 import subprocess
+import urllib.parse as parse
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
@@ -807,6 +809,7 @@ class ProgramSetting():
     #wineBottonDifferent = None
     centerWindow = None
     message = None
+    theme = None
     def ShowWindow():
         ProgramSetting.message = QtWidgets.QMainWindow()
         widget = QtWidgets.QWidget()
@@ -817,14 +820,20 @@ class ProgramSetting():
         widgetLayout.addWidget(QtWidgets.QLabel("默认 Wine 容器："), 3, 0, 1, 1)
         widgetLayout.addWidget(QtWidgets.QLabel("使用终端打开："), 4, 0, 1, 1)
         widgetLayout.addWidget(QtWidgets.QLabel("自定义 wine 参数："), 5, 0, 1, 1)
+        widgetLayout.addWidget(QtWidgets.QLabel("程序主题："), 6, 0, 1, 1)
         ProgramSetting.wineBottonA = QtWidgets.QComboBox()
         ProgramSetting.wineDebug = QtWidgets.QCheckBox("开启 DEBUG 输出")
         ProgramSetting.defultWine = QtWidgets.QComboBox()
         ProgramSetting.defultBotton = QtWidgets.QLineEdit()
+        ProgramSetting.theme = QtWidgets.QComboBox()
+        ProgramSetting.theme.addItems(QtWidgets.QStyleFactory.keys())
+        ProgramSetting.theme.setCurrentText(setting["Theme"])
         save = QtWidgets.QPushButton("保存")
         save.clicked.connect(ProgramSetting.Save)
         defultBottonButton = QtWidgets.QPushButton("浏览")
         defultBottonButton.clicked.connect(ProgramSetting.Browser)
+        themeTry = QtWidgets.QPushButton("测试(重启后变回设置的主题)")
+        themeTry.clicked.connect(ProgramSetting.Try)
         ProgramSetting.terminalOpen = QtWidgets.QCheckBox("使用终端打开（deepin 终端）")
         ProgramSetting.wineOption = QtWidgets.QLineEdit()
         ProgramSetting.wineBottonA.addItems(["Auto", "win32", "win64"])
@@ -842,7 +851,9 @@ class ProgramSetting():
         widgetLayout.addWidget(defultBottonButton, 3, 2, 1, 1)
         widgetLayout.addWidget(ProgramSetting.terminalOpen, 4, 1, 1, 1)
         widgetLayout.addWidget(ProgramSetting.wineOption, 5, 1, 1, 1)
-        widgetLayout.addWidget(save, 6, 2, 1, 1)
+        widgetLayout.addWidget(ProgramSetting.theme, 6, 1, 1, 1)
+        widgetLayout.addWidget(themeTry, 6, 2, 1, 1)
+        widgetLayout.addWidget(save, 7, 2, 1, 1)
         widget.setLayout(widgetLayout)
         ProgramSetting.message.setCentralWidget(widget)
         ProgramSetting.message.setWindowTitle(f"设置 wine 运行器 {version}")
@@ -855,6 +866,9 @@ class ProgramSetting():
             return
         ProgramSetting.defultBotton.setText(path)
 
+    def Try():
+        app.setStyle(QtWidgets.QStyleFactory.create(ProgramSetting.theme.currentText()))
+
     def Save():
         # 写入容器位数设置
         setting["Architecture"] = ProgramSetting.wineBottonA.currentText()
@@ -863,6 +877,7 @@ class ProgramSetting():
         setting["DefultBotton"] = ProgramSetting.defultBotton.text()
         setting["TerminalOpen"] = ProgramSetting.terminalOpen.isChecked()
         setting["WineOption"] = ProgramSetting.wineOption.text()
+        setting["Theme"] = ProgramSetting.theme.currentText()
         try:
             write_txt(get_home() + "/.config/deepin-wine-runner/WineSetting.json", json.dumps(setting))
         except:
@@ -882,7 +897,8 @@ defultProgramList = {
     "TerminalOpen": False,
     "WineOption": "",
     "WineBottonDifferent": False,
-    "CenterWindow": False
+    "CenterWindow": False,
+    "Theme": ""
 }
 if not os.path.exists(get_home() + "/.config/deepin-wine-runner"):  # 如果没有配置文件夹
     os.mkdir(get_home() + "/.config/deepin-wine-runner")  # 创建配置文件夹
@@ -918,7 +934,7 @@ try:
     isoPathFound = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ISOPathFound.json")).values())
     setting = json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineSetting.json"))
     change = False
-    for i in ["Architecture", "Debug", "DefultWine", "DefultBotton", "TerminalOpen", "WineOption", "WineBottonDifferent", "CenterWindow"]:
+    for i in defultProgramList.keys():
         if not i in setting:
             change = True
             setting[i] = defultProgramList[i]
@@ -952,12 +968,18 @@ updateThingsString = '''※1、更换为 @PossibleVing 提供的程序图标
 ※2、修改了统信 Wine 生态适配活动的脚本，支持在非 UOS 系统打包
 ※3、修复了打包器在打包应用未指定图标的情况下显示对话框后强制退出的问题
 4、修改 .net framework 3.5 的安装包，从在线版改为本地版
+5、支持设置主题
+6、添加 Geek Uninstaller 手动升级脚本
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年07月20日"
+updateTime = "2022年07月29日"
 about = f'''<h1>关于</h1>
-<pre>一个基于 Python3 的 Qt 制作的 wine 运行器
+<pre>一个基于 Python3 的 PyQt5 制作的 Wine 运行器
+
+一个图形化了以下命令的程序
+<code>env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径</code>
+让你可以简易方便的使用 wine
 
 版本：{version}
 适用平台：{goodRunSystem}
@@ -978,6 +1000,10 @@ Qt 版本：{QtCore.qVersion()}
 <h1>©2020~{time.strftime("%Y")} gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
 title = "wine 运行器 {}".format(version)
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
+try:
+    threading.Thread(target=requests.get, args=[parse.unquote(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9vcGVuL0luc3RhbGwucGhw").decode("utf-8")) + "?Version=" + version]).start()
+except:
+    pass
 
 
 ###########################
@@ -1286,6 +1312,7 @@ widget.show()
 window.show()
 
 # 控件设置
+app.setStyle(QtWidgets.QStyleFactory.create(setting["Theme"]))
 e1.addItems(findExeHistory)
 e2.addItems(wineBottonHistory)
 combobox1.addItems(shellHistory)

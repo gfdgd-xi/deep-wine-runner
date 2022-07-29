@@ -39,6 +39,7 @@ build:
 
 install:
 	make build
+	sudo apt update
 	sudo dpkg -i spark-deepin-wine-runner.deb
 	sudo apt install -f 
 
@@ -46,6 +47,7 @@ remove:
 	sudo apt purge spark-deepin-wine-runner 
 
 depend:
+	sudo apt update
 	sudo apt install python3 python3-pil python3-pil.imagetk\
 	 python3-pyquery deepin-terminal aria2 curl unrar unzip\
 	  python3-requests fakeroot bash python3-pyqt5
