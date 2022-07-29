@@ -8,8 +8,8 @@ env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 让你可以简易方便的使用 wine  
 是使用 Python3 的 tkinter 构建的    
 （自己美术功底太差，图标只能在网络上找了）    
-（测试平台：deepin 20.6；UOS 家庭版 21.3；Ubuntu 22.04）    
-![image.png](https://storage.deepin.org/thread/202207190819153104_image.png)
+（测试平台：deepin 20.6；UOS 家庭版 21.3.1；Ubuntu 22.04）    
+![image.png](https://storage.deepin.org/thread/202207291533597182_image.png)
 而打包器可以方便的把您的 wine 容器打包成 deb 包供他人使用，程序创建的 deb 构建临时文件夹目录树如下：  
 ```bash
 /XXX
@@ -74,6 +74,16 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志
+### 1.7.1（2022年07月29日）
+**※1、更换为 @PossibleVing 提供的程序图标**  
+**※2、修改了统信 Wine 生态适配活动的脚本，支持在非 UOS 系统打包**  
+**※3、修复了打包器在打包应用未指定图标的情况下显示对话框后强制退出的问题**  
+4、修改 .net framework 3.5 的安装包，从在线版改为本地版  
+5、支持设置主题  
+6、添加 Geek Uninstaller 手动升级脚本  
+
+![image.png](https://storage.deepin.org/thread/202207291533597182_image.png)
+
 ### 1.7.0（2022年07月19日）
 <b>※1、界面大改造，从使用 Tkinter 改为 Qt，参考了 @134******28 和 @sgb76 提供的设计方案和代码</b>  
 
