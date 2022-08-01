@@ -2,10 +2,10 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
-# 版本：1.5.2
-# 更新时间：2022年07月06日
+# 版本：1.8.0
+# 更新时间：2022年08月01日
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
-# 基于 Python3 的 tkinter 构建
+# 基于 Python3 构建
 ###########################################################################################
 #################
 # 引入所需的库
@@ -49,4 +49,4 @@ os.system("rm -rf /tmp/wineinstallvisualstudiocplusplus")
 os.system("mkdir -p /tmp/wineinstallvisualstudiocplusplus")
 os.system(f"aria2c -x 16 -s 16 -d /tmp/wineinstallvisualstudiocplusplus -o install.exe \"{netList[choose][1]}\"")
 os.system(f"WINEPREFIX={sys.argv[1]} {sys.argv[2]} /tmp/wineinstallvisualstudiocplusplus/install.exe")
-print("安装结束")
+input("安装结束，按回车键退出")

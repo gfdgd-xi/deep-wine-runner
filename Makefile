@@ -35,6 +35,7 @@ build:
 	cp -rv 窗体透明度设置工具.exe                    deb/opt/apps/deepin-wine-runner
 	cp -rv dlls                                   deb/opt/apps/deepin-wine-runner
 	cp -rv UpdateGeek.sh                          deb/opt/apps/deepin-wine-runner
+	cp -rv AppStore.py                            deb/opt/apps/deepin-wine-runner
 	dpkg -b deb spark-deepin-wine-runner.deb
 
 install:

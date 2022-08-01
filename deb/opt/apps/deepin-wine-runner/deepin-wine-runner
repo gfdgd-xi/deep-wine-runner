@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
-# 版本：1.7.1
-# 更新时间：2022年07月29日
+# 版本：1.8.0
+# 更新时间：2022年08月01日
 # 感谢：感谢 wine、deepin-wine 以及星火团队，提供了 wine、deepin-wine、spark-wine-devel 给大家使用，让我能做这个程序
 # 基于 Python3 的 PyQt5 构建
 ###########################################################################################
@@ -141,6 +141,8 @@ class Runexebutton_threading(QtCore.QThread):
         option = ""
         if setting["Architecture"] != "Auto":
             option += f"WINEARCH={setting['Architecture']} "
+        if setting["MonoGeckoInstaller"]:
+            option += f"WINEDLLOVERRIDES=\"mscoree,mshtml=\" "
         if not setting["Debug"]:
             option += "WINEDEBUG=-all "
         if setting["TerminalOpen"]:
@@ -335,6 +337,8 @@ class RunWineProgramThread(QtCore.QThread):
         else:
             wineBottonPath = e1.currentText()
         option = ""
+        if setting["MonoGeckoInstaller"]:
+            option += f"WINEDLLOVERRIDES=\"mscoree,mshtml=\" "
         if setting["Architecture"] != "Auto":
             option += f"WINEARCH={setting['Architecture']} "
         if not setting["Debug"]:
@@ -421,49 +425,46 @@ def RunWinetricks():
     
 
 def InstallMonoGecko(program):
-    DisableButton(True)
     if e1.currentText() == "":
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"'{programPath}/InstallMono.py' '{wineBottonPath}' {wine[o1.currentText()]} {program}\" --keep-open")
-    DisableButton(False)
+    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallMono.py' '{wineBottonPath}' {wine[o1.currentText()]} {program}")
 
 def InstallNetFramework():
-    DisableButton(True)
     if e1.currentText() == "":
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"'{programPath}/InstallNetFramework.py' '{wineBottonPath}' {wine[o1.currentText()]}\" --keep-open")
-    DisableButton(False)
+    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallNetFramework.py' '{wineBottonPath}' {wine[o1.currentText()]}")
 
 def InstallVisualStudioCPlusPlus():
-    DisableButton(True)
     if e1.currentText() == "":
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"'{programPath}/InstallVisualCPlusPlus.py' '{wineBottonPath}' {wine[o1.currentText()]}\" --keep-open")
-    DisableButton(False)
+    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallVisualCPlusPlus.py' '{wineBottonPath}' {wine[o1.currentText()]}")
 
 def InstallMSXML():
-    DisableButton(True)
     if e1.currentText() == "":
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"'{programPath}/InstallMsxml.py' '{wineBottonPath}' {wine[o1.currentText()]}\" --keep-open")
-    DisableButton(False)
+    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallMsxml.py' '{wineBottonPath}' {wine[o1.currentText()]}")
 
-def InstallOther():
-    DisableButton(True)
+def MiniAppStore():
     if e1.currentText()== "":
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"'{programPath}/InstallOther.py' '{wineBottonPath}' {wine[o1.currentText()]}\" --keep-open")
-    DisableButton(False)
+    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/AppStore.py' '{wineBottonPath}' {wine[o1.currentText()]}")
+
+def InstallOther():
+    if e1.currentText()== "":
+        wineBottonPath = setting["DefultBotton"]
+    else:
+        wineBottonPath = e1.currentText()
+    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallOther.py' '{wineBottonPath}' {wine[o1.currentText()]}")
 
 def BuildExeDeb():
     if e1.currentText() == "":
@@ -810,6 +811,7 @@ class ProgramSetting():
     centerWindow = None
     message = None
     theme = None
+    monogeckoInstaller = None
     def ShowWindow():
         ProgramSetting.message = QtWidgets.QMainWindow()
         widget = QtWidgets.QWidget()
@@ -821,6 +823,7 @@ class ProgramSetting():
         widgetLayout.addWidget(QtWidgets.QLabel("使用终端打开："), 4, 0, 1, 1)
         widgetLayout.addWidget(QtWidgets.QLabel("自定义 wine 参数："), 5, 0, 1, 1)
         widgetLayout.addWidget(QtWidgets.QLabel("程序主题："), 6, 0, 1, 1)
+        widgetLayout.addWidget(QtWidgets.QLabel("Wine 默认 Mono 和 Gecko 安装器："), 7, 0, 1, 1)
         ProgramSetting.wineBottonA = QtWidgets.QComboBox()
         ProgramSetting.wineDebug = QtWidgets.QCheckBox("开启 DEBUG 输出")
         ProgramSetting.defultWine = QtWidgets.QComboBox()
@@ -836,6 +839,7 @@ class ProgramSetting():
         themeTry.clicked.connect(ProgramSetting.Try)
         ProgramSetting.terminalOpen = QtWidgets.QCheckBox("使用终端打开（deepin 终端）")
         ProgramSetting.wineOption = QtWidgets.QLineEdit()
+        ProgramSetting.monogeckoInstaller = QtWidgets.QCheckBox("屏蔽 Wine 默认 Mono 和 Gecko 安装器")
         ProgramSetting.wineBottonA.addItems(["Auto", "win32", "win64"])
         ProgramSetting.wineBottonA.setCurrentText(setting["Architecture"])
         ProgramSetting.wineDebug.setChecked(setting["Debug"])
@@ -844,6 +848,7 @@ class ProgramSetting():
         ProgramSetting.defultBotton.setText(setting["DefultBotton"])
         ProgramSetting.terminalOpen.setChecked(setting["TerminalOpen"])
         ProgramSetting.wineOption.setText(setting["WineOption"])
+        ProgramSetting.monogeckoInstaller.setChecked(setting["MonoGeckoInstaller"])
         widgetLayout.addWidget(ProgramSetting.wineBottonA, 0, 1, 1, 1)
         widgetLayout.addWidget(ProgramSetting.wineDebug, 1, 1, 1, 1)
         widgetLayout.addWidget(ProgramSetting.defultWine, 2, 1, 1, 1)
@@ -853,7 +858,8 @@ class ProgramSetting():
         widgetLayout.addWidget(ProgramSetting.wineOption, 5, 1, 1, 1)
         widgetLayout.addWidget(ProgramSetting.theme, 6, 1, 1, 1)
         widgetLayout.addWidget(themeTry, 6, 2, 1, 1)
-        widgetLayout.addWidget(save, 7, 2, 1, 1)
+        widgetLayout.addWidget(ProgramSetting.monogeckoInstaller, 7, 1, 1, 1)
+        widgetLayout.addWidget(save, 8, 2, 1, 1)
         widget.setLayout(widgetLayout)
         ProgramSetting.message.setCentralWidget(widget)
         ProgramSetting.message.setWindowTitle(f"设置 wine 运行器 {version}")
@@ -878,6 +884,7 @@ class ProgramSetting():
         setting["TerminalOpen"] = ProgramSetting.terminalOpen.isChecked()
         setting["WineOption"] = ProgramSetting.wineOption.text()
         setting["Theme"] = ProgramSetting.theme.currentText()
+        setting["MonoGeckoInstaller"] = ProgramSetting.monogeckoInstaller.isChecked()
         try:
             write_txt(get_home() + "/.config/deepin-wine-runner/WineSetting.json", json.dumps(setting))
         except:
@@ -898,7 +905,8 @@ defultProgramList = {
     "WineOption": "",
     "WineBottonDifferent": False,
     "CenterWindow": False,
-    "Theme": ""
+    "Theme": "",
+    "MonoGeckoInstaller": True
 }
 if not os.path.exists(get_home() + "/.config/deepin-wine-runner"):  # 如果没有配置文件夹
     os.mkdir(get_home() + "/.config/deepin-wine-runner")  # 创建配置文件夹
@@ -954,7 +962,7 @@ iconPath = "{}/deepin-wine-runner.svg".format(programPath)
 programUrl = "https://gitee.com/gfdgd-xi/deep-wine-runner\nhttps://github.com/gfdgd-xi/deep-wine-runner\nhttps://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner"
 information = json.loads(readtxt(f"{programPath}/information.json"))
 version = information["Version"]
-goodRunSystem = "Linux"
+goodRunSystem = "常见 Linux"
 thankText = ""
 tips = '''提示：
 1、使用终端运行该程序，可以看到 wine 以及程序本身的提示和报错;
@@ -964,16 +972,15 @@ tips = '''提示：
 exe路径\' 参数 \'
 即可（单引号需要输入）
 5、wine 容器如果没有指定，则会默认为 ~/.wine'''
-updateThingsString = '''※1、更换为 @PossibleVing 提供的程序图标
-※2、修改了统信 Wine 生态适配活动的脚本，支持在非 UOS 系统打包
-※3、修复了打包器在打包应用未指定图标的情况下显示对话框后强制退出的问题
-4、修改 .net framework 3.5 的安装包，从在线版改为本地版
-5、支持设置主题
-6、添加 Geek Uninstaller 手动升级脚本
+updateThingsString = '''※1、修复了打包器（非基于活动脚本） control、postrm 写入文件颠倒的问题
+※2、内置一个微型的 Windows 应用商店（应用来源：腾讯软件管家）
+3、更新了打包器（非基于活动脚本）调用星火 spark-wine-helper 的 run.sh 脚本格式
+4、修复了打包器（基于活动脚本）在 dde-top-panel 和 dde-globalmenu-service 下无法打开帮助提示的问题
+5、支持屏蔽 Wine 默认的 Mono、Gecko 安装器（屏蔽方法来自星火应用商店审核组和提供的新 run.sh 标准）
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年07月29日"
+updateTime = "2022年08月01日"
 about = f'''<h1>关于</h1>
 <pre>一个基于 Python3 的 PyQt5 制作的 Wine 运行器
 
@@ -1089,7 +1096,11 @@ uninstallProgram = QtWidgets.QPushButton("卸载程序")
 uninstallProgram.clicked.connect(lambda: RunWineProgram(f"{programPath}/geek.exe"))
 programManager.addWidget(QtWidgets.QLabel(" "*5), 1, 3, 1, 1)
 programManager.addWidget(uninstallProgram, 1, 4, 1, 1)
-programManager.addItem(QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum), 1, 5, 1, 1)
+miniAppStore = QtWidgets.QPushButton("微型应用商店")
+miniAppStore.clicked.connect(lambda: threading.Thread(target=MiniAppStore).start())
+programManager.addWidget(QtWidgets.QLabel(" "*5), 1, 5, 1, 1)
+programManager.addWidget(miniAppStore, 1, 6, 1, 1)
+programManager.addItem(QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum), 1, 7, 1, 1)
 programManager.addWidget(QtWidgets.QLabel("WINE配置："), 2, 0, 1, 1)
 wineConfig = QtWidgets.QPushButton("配置容器")
 wineConfig.clicked.connect(lambda: RunWineProgram("winecfg"))
