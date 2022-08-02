@@ -18,6 +18,7 @@ def InstallWithDeepinSource(program):
     os.system(f"sudo apt update")
     os.system(f"sudo apt install {program}")
     os.system(f"sudo rm /etc/apt/sources.list.d/deepin20-withwinerunner.list")
+    os.system(f"sudo apt update")
     os.system(f"sudo dpkg --remove-architecture i386")
     os.system(f"sudo apt update")
 
@@ -29,10 +30,11 @@ def InstallWithSparkStoreSource(program):
     os.system(f"sudo rm -rf /tmp/spark-store-install/spark-store.asc")
     os.system(f"sudo wget -O /tmp/spark-store-install/spark-store.asc https://d.store.deepinos.org.cn/dcs-repo.gpg-key.asc")
     os.system(f"sudo gpg --dearmor /tmp/spark-store-install/spark-store.asc")
-    os.system(f"sudo cp /tmp/spark-store-install/spark-store.asc.gpg /etc/apt/trusted.gpg.d/spark-store.gpg")
     os.system(f"sudo apt update")
     os.system(f"sudo apt install {program}")
     os.system(f"sudo rm /etc/apt/sources.list.d/sparkstore-withwinerunner.list")
+    os.system(f"sudo rm /etc/apt/sources.list.d/deepin20-withwinerunner.list")
+    os.system(f"sudo apt update")
     os.system(f"sudo dpkg --remove-architecture i386")
     os.system(f"sudo apt update")
 
@@ -64,7 +66,7 @@ if __name__ == "__main__":
             print("安装中……")
             InstallWithDeepinSource(i[1])
             print("安装完成！")
-    exit()
+    #exit()
     for i in [
         ["deepin-wine", "deepin-wine"],
         ["spark-wine7-devel", "spark-wine7-devel"]

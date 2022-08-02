@@ -977,17 +977,24 @@ information = json.loads(readtxt(f"{programPath}/information.json"))
 version = information["Version"]
 goodRunSystem = "常见 Linux"
 thankText = ""
-tips = '''提示：
+tips = '''<h4>提示：</h4>
 1、使用终端运行该程序，可以看到 wine 以及程序本身的提示和报错;
 2、wine 32 位和 64 位的容器互不兼容;
 3、所有的 wine 和 winetricks 均需要自行安装（可以从 菜单栏=>程序 里面进行安装）
 4、本程序支持带参数运行 wine 程序（之前版本也可以），只需要按以下格式即可：
 exe路径\' 参数 \'
 即可（单引号需要输入）
-5、wine 容器如果没有指定，则会默认为 ~/.wine'''
+5、wine 容器如果没有指定，则会默认为 ~/.wine
+6、在使用 linglong 包的 Wine 应用时，必须安装至少一个 linglong 的使用 Wine 软件包才会出现该选项，
+而程序识别到的 Wine 是按 linglong 的使用 Wine 软件包名的字母排序第一个的 Wine，且生成的容器不在用户目录下，而是在容器的用户目录下（~/.deepinwine、/tmp、桌面、下载、文档等被映射的目录除外），
+同理需要运行的 EXE 也必须在被映射的目录内
+7、如果是使用 Deepin 23 的 Wine 安装脚本，请切记——安装过程会临时添加 Deepin 20 的 apt 源，不要中断安装以及
+<b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
+以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示
+<code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>'''
 updateThingsString = '''※1、修复了打包器（非基于活动脚本） control、postrm 写入文件颠倒的问题
 ※2、内置一个微型的 Windows 应用商店（应用来源：腾讯软件管家）
-※3、初步支持 deepin 23
+※3、初步支持 deepin 23（添加基于 linglong Wine 的运行方式，需要安装一个 linglong 包的 使用 Wine 应用<此方式运行限制较多，详细请见程序提示>；添加从 Deepin 20 源获取 Wine 的安装方式<不推荐>）
 4、更新了打包器（非基于活动脚本）调用星火 spark-wine-helper 的 run.sh 脚本格式
 5、修复了打包器（基于活动脚本）在 dde-top-panel 和 dde-globalmenu-service 下无法打开帮助提示的问题
 6、支持屏蔽 Wine 默认的 Mono、Gecko 安装器（屏蔽方法来自星火应用商店审核组和提供的新 run.sh 标准）
@@ -1019,7 +1026,7 @@ Qt 版本：{QtCore.qVersion()}
 </pre>
 <hr>
 <h1>©2020~{time.strftime("%Y")} gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
-title = "wine 运行器 {}".format(version)
+title = "Wine 运行器 {}".format(version)
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 try:
     threading.Thread(target=requests.get, args=[parse.unquote(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9vcGVuL0luc3RhbGwucGhw").decode("utf-8")) + "?Version=" + version]).start()
