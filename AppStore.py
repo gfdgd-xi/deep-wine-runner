@@ -89,6 +89,7 @@ if __name__ == "__main__":
         os.system("mkdir -p /tmp/wineappstore")
         os.system(f"aria2c -x 16 -s 16 -d /tmp/wineappstore -o install.exe \"{downloadUrl[choose]}\"")
         print("开始安装……")
+        print(f"WINEPREFIX={sys.argv[1]} {sys.argv[2]} /tmp/wineappstore/install.exe")
         os.system(f"WINEPREFIX={sys.argv[1]} {sys.argv[2]} /tmp/wineappstore/install.exe")
         print("安装结束……")
         input("按回车键继续……")
