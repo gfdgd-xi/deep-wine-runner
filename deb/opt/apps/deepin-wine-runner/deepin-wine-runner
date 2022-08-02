@@ -85,7 +85,7 @@ run = None
 def runexebutton(self):
     global run
     DisableButton(True)
-    if not CheckProgramIsInstall(wine[o1.currentText()]):
+    if not CheckProgramIsInstall(wine[o1.currentText()]) and o1.currentText() != "基于 linglong 的 deepin-wine6-stable（不推荐）":
         if QtWidgets.QMessageBox.question(widget, "提示", "检查到您未安装这个 wine，是否继续使用这个 wine 运行？") == QtWidgets.QMessageBox.No:
             DisableButton(False)
             return
@@ -307,6 +307,9 @@ def KillProgram():
 def InstallWine():
     threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e \"{programPath}/AllInstall.py\""]).start()
 
+def InstallWineOnDeepin23():
+    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e \"{programPath}/InstallWineOnDeepin23.py\""]).start()
+
 def OpenWineBotton():
     if e1.currentText() == "":
         wineBottonPath = setting["DefultBotton"]
@@ -429,42 +432,42 @@ def InstallMonoGecko(program):
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallMono.py' '{wineBottonPath}' {wine[o1.currentText()]} {program}")
+    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallMono.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {program}")
 
 def InstallNetFramework():
     if e1.currentText() == "":
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallNetFramework.py' '{wineBottonPath}' {wine[o1.currentText()]}")
+    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallNetFramework.py' '{wineBottonPath}' '{wine[o1.currentText()]}'")
 
 def InstallVisualStudioCPlusPlus():
     if e1.currentText() == "":
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallVisualCPlusPlus.py' '{wineBottonPath}' {wine[o1.currentText()]}")
+    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallVisualCPlusPlus.py' '{wineBottonPath}' '{wine[o1.currentText()]}'")
 
 def InstallMSXML():
     if e1.currentText() == "":
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallMsxml.py' '{wineBottonPath}' {wine[o1.currentText()]}")
+    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallMsxml.py' '{wineBottonPath}' '{wine[o1.currentText()]}'")
 
 def MiniAppStore():
     if e1.currentText()== "":
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/AppStore.py' '{wineBottonPath}' {wine[o1.currentText()]}")
+    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/AppStore.py' '{wineBottonPath}' '{wine[o1.currentText()]}'")
 
 def InstallOther():
     if e1.currentText()== "":
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallOther.py' '{wineBottonPath}' {wine[o1.currentText()]}")
+    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallOther.py' '{wineBottonPath}' '{wine[o1.currentText()]}'")
 
 def BuildExeDeb():
     if e1.currentText() == "":
@@ -935,6 +938,16 @@ if not os.path.exists(get_home() + "/.config/deepin-wine-runner/WineSetting.json
 # 如果要添加其他 wine，请在字典添加其名称和执行路径
 try:
     wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable": "deepin-wine6-stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine"}
+    if os.path.exists("/persistent/linglong/layers/"):  # 判断是否使用 linglong
+        for i in os.listdir("/persistent/linglong/layers/"):
+            try:
+                dire = os.listdir(f"/persistent/linglong/layers/{i}")[-1]
+                arch = os.listdir(f"/persistent/linglong/layers/{i}/{dire}")[-1]
+                if os.path.exists(f"/persistent/linglong/layers/{i}/{dire}/{arch}/runtime/bin/deepin-wine6-stable"):
+                    wine["基于 linglong 的 deepin-wine6-stable（不推荐）"] = f"ll-cli run {i} --exec '/bin/deepin-wine6-stable'"
+                    break
+            except:
+                pass
     shellHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json")).values())
     findExeHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json")).values())
     wineBottonHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json")).values())
@@ -974,9 +987,10 @@ exe路径\' 参数 \'
 5、wine 容器如果没有指定，则会默认为 ~/.wine'''
 updateThingsString = '''※1、修复了打包器（非基于活动脚本） control、postrm 写入文件颠倒的问题
 ※2、内置一个微型的 Windows 应用商店（应用来源：腾讯软件管家）
-3、更新了打包器（非基于活动脚本）调用星火 spark-wine-helper 的 run.sh 脚本格式
-4、修复了打包器（基于活动脚本）在 dde-top-panel 和 dde-globalmenu-service 下无法打开帮助提示的问题
-5、支持屏蔽 Wine 默认的 Mono、Gecko 安装器（屏蔽方法来自星火应用商店审核组和提供的新 run.sh 标准）
+※3、初步支持 deepin 23
+4、更新了打包器（非基于活动脚本）调用星火 spark-wine-helper 的 run.sh 脚本格式
+5、修复了打包器（基于活动脚本）在 dde-top-panel 和 dde-globalmenu-service 下无法打开帮助提示的问题
+6、支持屏蔽 Wine 默认的 Mono、Gecko 安装器（屏蔽方法来自星火应用商店审核组和提供的新 run.sh 标准）
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
@@ -1117,7 +1131,6 @@ saveDesktopFileOnLauncher.setSizePolicy(size)
 label_r_2.setSizePolicy(size)
 getProgramIcon.setSizePolicy(size)
 trasButton.setSizePolicy(size)
-#uninstallProgram.setSizePolicy(size)
 wineConfig.setSizePolicy(size)
 
 returnText = QtWidgets.QTextBrowser()
@@ -1154,16 +1167,19 @@ mainLayout.addWidget(programRun, 2, 1, 1, 1)
 menu = window.menuBar()
 programmenu = menu.addMenu("程序(&P)")
 p1 = QtWidgets.QAction("安装 wine(&I)")
+installWineOnDeepin23 = QtWidgets.QAction("安装 wine(只限Deepin23)")
 p2 = QtWidgets.QAction("设置程序(&S)")
 p3 = QtWidgets.QAction("清空软件历史记录(&C)")
 p4 = QtWidgets.QAction("退出程序(&E)")
 programmenu.addAction(p1)
+programmenu.addAction(installWineOnDeepin23)
 programmenu.addSeparator()
 programmenu.addAction(p2)
 programmenu.addAction(p3)
 programmenu.addSeparator()
 programmenu.addAction(p4)
 p1.triggered.connect(InstallWine)
+installWineOnDeepin23.triggered.connect(InstallWineOnDeepin23)
 p2.triggered.connect(ProgramSetting.ShowWindow)
 p3.triggered.connect(CleanProgramHistory)
 p4.triggered.connect(window.close)

@@ -1,6 +1,6 @@
 build:
-	cd VM-source && qmake
-	cd VM-source && make
+	#cd VM-source && qmake
+	#cd VM-source && make
 	cp -rv VM-source/VirtualMachine               VM
 	cp -rv VM-source/deepin-wine-runner.svg       VM
 	cp -rv VM-source/api                          VM
@@ -36,6 +36,7 @@ build:
 	cp -rv dlls                                   deb/opt/apps/deepin-wine-runner
 	cp -rv UpdateGeek.sh                          deb/opt/apps/deepin-wine-runner
 	cp -rv AppStore.py                            deb/opt/apps/deepin-wine-runner
+	cp -rv InstallWineOnDeepin23.py               deb/opt/apps/deepin-wine-runner
 	dpkg -b deb spark-deepin-wine-runner.deb
 
 install:
