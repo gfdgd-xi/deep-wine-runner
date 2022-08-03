@@ -12,6 +12,7 @@ env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 （自己美术功底太差，图标只能在网络上找了）    
 （测试平台：deepin 20.6；UOS 家庭版 21.3.1；Ubuntu 22.04）    
 ![image.png](https://storage.deepin.org/thread/202208031351466402_image.png)  
+![image.png](https://storage.deepin.org/thread/2022080317313975_image.png)  
 而打包器可以方便的把您的 wine 容器打包成 deb 包供他人使用，程序创建的 deb 构建临时文件夹目录树如下：  
 ```bash
 /XXX
@@ -92,6 +93,7 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 5、修复了打包器（基于活动脚本）在 dde-top-panel 和 dde-globalmenu-service 下无法打开帮助提示的问题  
 6、支持屏蔽 Wine 默认的 Mono、Gecko 安装器（屏蔽方法来自星火应用商店审核组和提供的新 run.sh 标准）  
 ![image.png](https://storage.deepin.org/thread/202208031351466402_image.png)  
+![image.png](https://storage.deepin.org/thread/2022080317313975_image.png)  
 
 ### 1.7.1（2022年07月29日）
 **※1、更换为 @PossibleVing 提供的程序图标**  
