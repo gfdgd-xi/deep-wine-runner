@@ -1,4 +1,6 @@
-# wine 运行器 1.8.0
+<p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
+<h1 align="center">Wine 运行器</h1>
+<hr>
 
 ## 介绍
 一个图形化了以下命令的程序  
@@ -37,6 +39,7 @@ env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 
 ## 软件架构
 i386 和 amd64，deepin-wine、deepin-wine5、wine、wine64、deepin-wine5-stable、deepin-wine6-stable、spark-wine7-devel、ukylin-wine 运行在哪就运行在哪  
+理论上支持全架构，如果 Python 能运行的话
 
 
 ## 使用说明
@@ -237,6 +240,18 @@ make run
 ```bash
 make install
 ```
+
+## 对于 Deepin/UOS（AMD64 平台）小白如何使用该程序？
+下面是送给小白的 wine 运行器简单使用方法，先声明，wine 并***不能完美的运行所有 exe 文件***，利用此 wine 运行器简易安装可执行文件的方法如下：  
+
+1. 安装本程序
+2. 在应用商店里随便安装一个 QQ 或者微信等基于 deepin-wine6-stable 打包的应用
+   ![image.png](https://storage.deepin.org/thread/202207061542433333_image.png)
+3. 找到需要安装的 exe，双击或者右键=》打开方式=》wine 运行器打开
+   ![image.png](https://storage.deepin.org/thread/202207061543443740_image.png)
+4. 点击“运行程序”即可
+   ![image.png](https://storage.deepin.org/thread/202207191920282406_image.png)
+
 
 ## 稍微讲一下目前 deepin 23 Preview 运行自定义 exe 的方法（Wine 运行器均已支持）
 
