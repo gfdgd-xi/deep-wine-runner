@@ -1001,7 +1001,7 @@ updateThingsString = '''※1、修复了打包器（非基于活动脚本） con
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年08月01日"
+updateTime = "2022年08月02日"
 about = f'''<h1>关于</h1>
 <pre>一个基于 Python3 的 PyQt5 制作的 Wine 运行器
 
