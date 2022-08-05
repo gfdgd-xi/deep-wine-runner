@@ -297,4 +297,8 @@ Gitlink：https://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner
 + https://github.com/gfdgd-xi/deep-wine-runner
 + https://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner
 
+## Star 一下吧
+开发不易，原创艰难，给一个 Star 吧，你的 Star 是我继续开发的动力  
+[![star](https://gitee.com/gfdgd-xi/deep-wine-runner/badge/star.svg?theme=dark)](https://gitee.com/gfdgd-xi/deep-wine-runner/stargazers)
+
 # ©2020-Now

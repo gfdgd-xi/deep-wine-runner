@@ -219,7 +219,7 @@ Section: non-free/otherosfs
 Priority: optional
 Multi-Arch: foreign
 Description: {}
-'''.format(e1_text.text(), e2_text.text(), e4_text.text(), wineVersion.currentText(), e3_text.text()))
+'''.format(e1_text.text(), e2_text.text(), e4_text.text(), wine[wineVersion.currentText()], e3_text.text()))
             else:
                 write_txt("{}/DEBIAN/control".format(debPackagePath), '''Package: {}
 Version: {}
@@ -230,7 +230,7 @@ Section: non-free/otherosfs
 Priority: optional
 Multi-Arch: foreign
 Description: {}
-'''.format(e1_text.text(), e2_text.text(), e4_text.text(), wineVersion.currentText(), e3_text.text()))
+'''.format(e1_text.text(), e2_text.text(), e4_text.text(), wine[wineVersion.currentText()], e3_text.text()))
             if rmBash.isChecked():
                 write_txt("{}/DEBIAN/postrm".format(debPackagePath, e1_text.text()), f'''#!/bin/bash
 
@@ -295,7 +295,7 @@ if [ -n "$EXEC_PATH" ];then
 else
     $START_SHELL_PATH $BOTTLENAME $APPVER "uninstaller.exe" "$@"
 fi
-'''.format(e5_text.text(), e2_text.text(), e7_text.text(), e1_text.text(), wineVersion.currentText()))
+'''.format(e5_text.text(), e2_text.text(), e7_text.text(), e1_text.text(), wine[wineVersion.currentText()]))
             else:
                 write_txt("{}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()), '''#!/bin/sh
 
@@ -404,7 +404,7 @@ if [ -n "$EXEC_PATH" ];then
 else
     $START_SHELL_PATH $BOTTLENAME $APPVER "uninstaller.exe" "$@"
 fi
-'''.format(e5_text.text(), e2_text.text(), e7_text.text(), e1_text.text(), wineVersion.currentText()))
+'''.format(e5_text.text(), e2_text.text(), e7_text.text(), e1_text.text(), wine[wineVersion.currentText()]))
             write_txt("{}/opt/apps/{}/info".format(debPackagePath, e1_text.text()), '{\n    "appid": "' + e1_text.text() + '",\n    "name": "' + e8_text.text() + '",\n    "version": "' + e2_text.text() + '",\n    "arch": ["i386"],\n    "permissions": {\n        "autostart": false,\n        "notification": false,\n        "trayicon": true,\n        "clipboard": true,\n        "account": false,\n        "bluetooth": false,\n        "camera": false,\n        "audio_record": false,\n        "installed_apps": false\n    }\n}')
             ################
             # 修改文件权限
