@@ -85,7 +85,7 @@ run = None
 def runexebutton(self):
     global run
     DisableButton(True)
-    if not CheckProgramIsInstall(wine[o1.currentText()]) and o1.currentText() != "基于 linglong 的 deepin-wine6-stable（不推荐）":
+    if not CheckProgramIsInstall(wine[o1.currentText()]) and o1.currentText() != "基于 linglong 的 deepin-wine6-stable（不推荐）" and o1.currentText() != "基于 exagear 的 deepin-wine6-stable" and o1.currentText() != "基于 box86 的 deepin-wine6-stable":
         if QtWidgets.QMessageBox.question(widget, "提示", "检查到您未安装这个 wine，是否继续使用这个 wine 运行？") == QtWidgets.QMessageBox.No:
             DisableButton(False)
             return
@@ -158,10 +158,12 @@ class Runexebutton_threading(QtCore.QThread):
                 text = ""
             self.signal.emit(text)
             print(text)
-        findExeHistory.append(wineBottonPath)  # 将记录写进数组
-        wineBottonHistory.append(e2.currentText())  # 将记录写进数组
-        write_txt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json", str(json.dumps(ListToDictionary(findExeHistory))))  # 将历史记录的数组转换为字典并写入
-        write_txt(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json", str(json.dumps(ListToDictionary(wineBottonHistory))))  # 将历史记录的数组转换为字典并写入
+        if len(findExeHistory) == 0 or findExeHistory[-1] != wineBottonPath:
+            findExeHistory.append(wineBottonPath)  # 将记录写进数组
+            write_txt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json", str(json.dumps(ListToDictionary(findExeHistory))))  # 将历史记录的数组转换为字典并写入
+        if len(wineBottonHistory) == 0 or wineBottonHistory[-1] != e2.currentText():
+            wineBottonHistory.append(e2.currentText())  # 将记录写进数组        
+            write_txt(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json", str(json.dumps(ListToDictionary(wineBottonHistory))))  # 将历史记录的数组转换为字典并写入
         self.showHistory.emit("")
         DisableButton(False)
   
@@ -229,10 +231,11 @@ Exec=env WINEPREFIX='{wineBottonPath}' {option} {wine[o1.currentText()]} '{e2.cu
 Icon={iconPath}
 Type=Application
 StartupNotify=true''') # 写入文本文档
-            shellHistory.append(combobox1.currentText())  # 将记录写进数组
-            write_txt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json", str(json.dumps(ListToDictionary(shellHistory))))  # 将历史记录的数组转换为字典并写入
-            combobox1.clear()
-            combobox1.addItems(shellHistory)
+            if len(shellHistory) == 0 or shellHistory[-1] != combobox1.currentText():
+                shellHistory.append(combobox1.currentText())  # 将记录写进数组
+                write_txt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json", str(json.dumps(ListToDictionary(shellHistory))))  # 将历史记录的数组转换为字典并写入
+                combobox1.clear()
+                combobox1.addItems(shellHistory)
             QtWidgets.QMessageBox.information(widget, "提示", "生成完成！")  # 显示完成对话框
     except:
         traceback.print_exc()
@@ -274,10 +277,11 @@ Exec=env WINEPREFIX='{wineBottonPath}' {option} {wine[o1.currentText()]} '{e2.cu
 Icon={iconPath}
 Type=Application
 StartupNotify=true''') # 写入文本文档
-            shellHistory.append(combobox1.currentText())  # 将记录写进数组
-            write_txt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json", str(json.dumps(ListToDictionary(shellHistory))))  # 将历史记录的数组转换为字典并写入
-            combobox1.clear()
-            combobox1.addItems(shellHistory)
+            if len(shellHistory) == 0 or shellHistory[-1] != combobox1.currentText():
+                shellHistory.append(combobox1.currentText())  # 将记录写进数组
+                write_txt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json", str(json.dumps(ListToDictionary(shellHistory))))  # 将历史记录的数组转换为字典并写入
+                combobox1.clear()
+                combobox1.addItems(shellHistory)
             QtWidgets.QMessageBox.information(widget, "提示", "生成完成！")  # 显示完成对话框
     except:
         traceback.print_exc()
@@ -359,13 +363,13 @@ class RunWineProgramThread(QtCore.QThread):
             self.signal.emit(text)
             print(text)
         if self.history:
-            findExeHistory.append(wineBottonPath)  # 将记录写进数组
-            wineBottonHistory.append(e2.currentText())  # 将记录写进数组
-            write_txt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json", str(json.dumps(ListToDictionary(findExeHistory))))  # 将历史记录的数组转换为字典并写入
-            write_txt(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json", str(json.dumps(ListToDictionary(wineBottonHistory))))  # 将历史记录的数组转换为字典并写入
+            if len(findExeHistory) == 0 or findExeHistory[-1] != wineBottonPath:
+                findExeHistory.append(wineBottonPath)  # 将记录写进数组
+                write_txt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json", str(json.dumps(ListToDictionary(findExeHistory))))  # 将历史记录的数组转换为字典并写入
+            if len(wineBottonHistory) == 0 or wineBottonHistory[-1] != e2.currentText():
+                wineBottonHistory.append(e2.currentText())  # 将记录写进数组
+                write_txt(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json", str(json.dumps(ListToDictionary(wineBottonHistory))))  # 将历史记录的数组转换为字典并写入
             self.showHistory.emit("")
-            #e1['value'] = findExeHistory
-            #e2['value'] = wineBottonHistory
         if self.Disbled:
             DisableButton(False)
 
@@ -374,7 +378,7 @@ runProgram = None
 def RunWineProgram(wineProgram, history = False, Disbled = True):
     global runProgram
     DisableButton(True)
-    if not CheckProgramIsInstall(wine[o1.currentText()]):
+    if not CheckProgramIsInstall(wine[o1.currentText()]) and o1.currentText() != "基于 linglong 的 deepin-wine6-stable（不推荐）" and o1.currentText() != "基于 exagear 的 deepin-wine6-stable" and o1.currentText() != "基于 box86 的 deepin-wine6-stable":
         if QtWidgets.QMessageBox.question(widget, "提示", "检查到您未安装这个 wine，是否继续使用这个 wine 运行？") == QtWidgets.QMessageBox.No:
             DisableButton(False)
             return
@@ -731,8 +735,9 @@ class GetDllFromWindowsISO:
             for i in os.listdir("/tmp/wine-runner-getdll/i386"):
                 if found in i[:-1] + "l":
                     findList.append(i[:-1] + "l")  
-            isoPathFound.append(found)  # 将记录写进数组
-            write_txt(get_home() + "/.config/deepin-wine-runner/ISOPathFound.json", str(json.dumps(ListToDictionary(isoPathFound))))  # 将历史记录的数组转换为字典并写入
+            if len(isoPath) == 0 or isoPathFound[-1] != found:
+                isoPathFound.append(found)  # 将记录写进数组
+                write_txt(get_home() + "/.config/deepin-wine-runner/ISOPathFound.json", str(json.dumps(ListToDictionary(isoPathFound))))  # 将历史记录的数组转换为字典并写入
             GetDllFromWindowsISO.dllFound.clear()
             GetDllFromWindowsISO.dllFound.addItems(isoPathFound)
             GetDllFromWindowsISO.dllListModel.setStringList(findList)
@@ -772,10 +777,11 @@ class GetDllFromWindowsISO:
         GetDllFromWindowsISO.DisbledDown(False)  
         GetDllFromWindowsISO.DisbledUp(True)
         GetDllFromWindowsISO.mount = True
-        isoPath.append(GetDllFromWindowsISO.isoPath.currentText())  # 将记录写进数组
-        write_txt(get_home() + "/.config/deepin-wine-runner/ISOPath.json", str(json.dumps(ListToDictionary(isoPath))))  # 将历史记录的数组转换为字典并写入
-        GetDllFromWindowsISO.isoPath.clear()
-        GetDllFromWindowsISO.isoPath.addItems(isoPath)
+        if len(isoPath) == 0 or isoPath[-1] != GetDllFromWindowsISO.isoPath.currentText():
+            isoPath.append(GetDllFromWindowsISO.isoPath.currentText())  # 将记录写进数组
+            write_txt(get_home() + "/.config/deepin-wine-runner/ISOPath.json", str(json.dumps(ListToDictionary(isoPath))))  # 将历史记录的数组转换为字典并写入
+            GetDllFromWindowsISO.isoPath.clear()
+            GetDllFromWindowsISO.isoPath.addItems(isoPath)
         #GetDllFromWindowsISO.isoPath['value'] = isoPath
 
     def UmountDisk():
@@ -909,7 +915,8 @@ defultProgramList = {
     "WineBottonDifferent": False,
     "CenterWindow": False,
     "Theme": "",
-    "MonoGeckoInstaller": True
+    "MonoGeckoInstaller": True,
+    "AutoWine": True
 }
 if not os.path.exists(get_home() + "/.config/deepin-wine-runner"):  # 如果没有配置文件夹
     os.mkdir(get_home() + "/.config/deepin-wine-runner")  # 创建配置文件夹
@@ -938,6 +945,10 @@ if not os.path.exists(get_home() + "/.config/deepin-wine-runner/WineSetting.json
 # 如果要添加其他 wine，请在字典添加其名称和执行路径
 try:
     wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable": "deepin-wine6-stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine"}
+    canUseWine = []
+    for i in wine.keys():
+        if not os.system(f"which '{wine[i]}'"):
+            canUseWine.append(i)
     if os.path.exists("/persistent/linglong/layers/"):  # 判断是否使用 linglong
         for i in os.listdir("/persistent/linglong/layers/"):
             try:
@@ -945,9 +956,16 @@ try:
                 arch = os.listdir(f"/persistent/linglong/layers/{i}/{dire}")[-1]
                 if os.path.exists(f"/persistent/linglong/layers/{i}/{dire}/{arch}/runtime/bin/deepin-wine6-stable"):
                     wine["基于 linglong 的 deepin-wine6-stable（不推荐）"] = f"ll-cli run {i} --exec '/bin/deepin-wine6-stable'"
+                    canUseWine.append("基于 linglong 的 deepin-wine6-stable（不推荐）")
                     break
             except:
                 pass
+    if os.path.exists("/opt/deepin-box86/box86"):
+        wine["基于 box86 的 deepin-wine6-stable"] = f"/opt/deepin-box86/box86 /opt/deepin-wine6-stable/bin/wine --disable-gpu"
+        canUseWine.append("基于 box86 的 deepin-wine6-stable")
+    if os.path.exists("/opt/exagear/bin/ubt_x64a64_al"):
+        wine["基于 exagear 的 deepin-wine6-stable"] = f"/opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al -- /opt/deepin-wine6-stable/bin/wine --disable-gpu"
+        canUseWine.append("基于 exagear 的 deepin-wine6-stable")
     shellHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json")).values())
     findExeHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json")).values())
     wineBottonHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json")).values())
@@ -975,7 +993,7 @@ iconPath = "{}/deepin-wine-runner.svg".format(programPath)
 programUrl = "https://gitee.com/gfdgd-xi/deep-wine-runner\nhttps://github.com/gfdgd-xi/deep-wine-runner\nhttps://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner"
 information = json.loads(readtxt(f"{programPath}/information.json"))
 version = information["Version"]
-goodRunSystem = "常见 Linux"
+goodRunSystem = "常见 Linux 发行版"
 thankText = ""
 tips = '''<h4>提示：</h4>
 1、使用终端运行该程序，可以看到 wine 以及程序本身的提示和报错;
@@ -992,20 +1010,19 @@ exe路径\' 参数 \'
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>'''
-updateThingsString = '''※1、修复了打包器（非基于活动脚本） control、postrm 写入文件颠倒的问题
-※2、内置一个微型的 Windows 应用商店（应用来源：腾讯软件管家）
-※3、初步支持 deepin 23（添加基于 linglong Wine 的运行方式，需要安装一个 linglong 包的 使用 Wine 应用<此方式运行限制较多，详细请见程序提示>；添加从 Deepin 20 源获取 Wine 的安装方式<不推荐>）
-4、更新了打包器（非基于活动脚本）调用星火 spark-wine-helper 的 run.sh 脚本格式
-5、修复了打包器（基于活动脚本）在 dde-top-panel 和 dde-globalmenu-service 下无法打开帮助提示的问题
-6、支持屏蔽 Wine 默认的 Mono、Gecko 安装器（屏蔽方法来自星火应用商店审核组和提供的新 run.sh 标准）
+updateThingsString = '''※1、修复了重复路径一直自动重复增加的问题
+※2、修复了两个打包器打包错误的问题（非基于生态活动脚本的为 wine 导入错误，基于生态活动脚本的为架构有误导致打包出的 deb 无法打包）
+※3、适配了部分非 i386、amd64 架构计算机的 UOS 系统使用的 wine
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年08月02日"
+updateTime = "2022年08月05日"
 about = f'''<h1>关于</h1>
-<pre>一个基于 Python3 的 PyQt5 制作的 Wine 运行器
+<p>一个能让Linux用户更加方便运行Windows应用的程序，内置了对wine图形话的支持和各种Wine工具和自制Wine程序打包器、运行库安装工具等等</p>
+<p>同时也内置了基于VirtualBox制作的小白Windows虚拟机安装工具，可以做到只需要用户下载系统镜像并点击安装即可，无需顾及虚拟机安装、创建、虚拟机的分区等等</p>
+<pre>
 
-一个图形化了以下命令的程序
+一个图形化了如下命令的程序（最简单格式）
 <code>env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径</code>
 让你可以简易方便的使用 wine
 
@@ -1350,7 +1367,10 @@ app.setStyle(QtWidgets.QStyleFactory.create(setting["Theme"]))
 e1.addItems(findExeHistory)
 e2.addItems(wineBottonHistory)
 combobox1.addItems(shellHistory)
-o1.addItems(wine.keys())
+if setting["AutoWine"]:
+    o1.addItems(canUseWine)
+else:
+    o1.addItems(wine.keys())
 o1.setCurrentText(setting["DefultWine"])
 e1.setEditText(setting["DefultBotton"])
 e2.setEditText("")
