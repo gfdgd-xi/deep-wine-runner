@@ -37,13 +37,16 @@ build:
 	cp -rv UpdateGeek.sh                          deb/opt/apps/deepin-wine-runner
 	cp -rv AppStore.py                            deb/opt/apps/deepin-wine-runner
 	cp -rv InstallWineOnDeepin23.py               deb/opt/apps/deepin-wine-runner
+	cp -rv dxvk                                   deb/opt/apps/deepin-wine-runner
+	cp -rv InstallFont.py                         deb/opt/apps/deepin-wine-runner
 	dpkg -b deb spark-deepin-wine-runner.deb
+	
 
 install:
 	make build
 	sudo apt update
-	sudo dpkg -i spark-deepin-wine-runner.deb
-	sudo apt install -f 
+	#sudo dpkg -i spark-deepin-wine-runner.deb
+	sudo apt install ./spark-deepin-wine-runner.deb -y --allow-downgrades
 
 remove:
 	sudo apt purge spark-deepin-wine-runner 
