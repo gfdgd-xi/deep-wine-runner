@@ -21,9 +21,12 @@ if "--help" in sys.argv:
 if len(sys.argv) <= 2 or sys.argv[1] == "" or sys.argv[2] == "":
     print("您未指定需要安装 .net framework 的容器和使用的 wine，无法继续")
     print("参数：")
-    print("XXX 参数一 参数二")
-    print("参数一为需要安装的容器，参数二为需要使用的wine，两个参数位置不能颠倒")
+    print("XXX 参数一 参数二 参数三(可略)")
+    print("参数一为需要安装的容器，参数二为需要使用的wine，参数三为是否缓存（可略），三个参数位置不能颠倒")
     sys.exit()
+
+homePath = os.path.expanduser('~')
+os.system("toilet .NET")
 netList = [
     ["3.5 SP1 Offline Installer", "https://download.visualstudio.microsoft.com/download/pr/b635098a-2d1d-4142-bef6-d237545123cb/2651b87007440a15209cac29634a4e45/dotnetfx35.exe"], 
     ["4.0 Offline Installer", "https://download.microsoft.com/download/9/5/A/95A9616B-7A37-4AF6-BC36-D6EA96C8DAAE/dotNetFx40_Full_x86_x64.exe"],
@@ -43,19 +46,35 @@ for i in range(0, len(netList)):
     print(f"{i} .net framework {netList[i][0]}")
 while True:
     try:
-        choose = int(input("请输入要选择的 .net framework 版本："))
+        choose = input("请输入要选择的 .net framework 版本（输入“exit”退出）：").lower()
+        if choose == "exit":
+            break
+        choose = int(choose)
     except:
         print("输入错误，请重新输入")
         continue
     if 0 <= choose and choose < len(netList):
         break
+
+if choose == "exit":
+    exit()
+if len(sys.argv) <= 3:
+    choice = True
+else:
+    choice = (sys.argv[3] == "1")
 print(f"您选择了 .net framework {netList[choose][0]}")
 print(f"如果是 Offline Installer 版本，提示需要连接互联网，其实是不需要的，断网也可以安装")
 print(f"如果 Offline Installer 版本连接网络时安装失败，提示无法连接服务器或连接超时，可以尝试下载完安装包加载过程中断网以便断网安装")
 print(f"一般建议 Offline Installer 版本在下载完 exe 安装程序后在加载过程中断网以便提高安装速度")
+programName = os.path.split(netList[choose][1])[1]
+if os.path.exists(f"{homePath}/.cache/deepin-wine-runner/.netframework/{programName}") and choice:
+    print("已经缓存，使用本地版本")
+    os.system(f"WINEPREFIX={sys.argv[1]} {sys.argv[2]} '{homePath}/.cache/deepin-wine-runner/.netframework/{programName}'")
+    input("安装结束，按回车键退出")
+    exit()
 print("开始下载")
-os.system("rm -rf /tmp/wineinstallnetframework")
-os.system("mkdir -p /tmp/wineinstallnetframework")
-os.system(f"aria2c -x 16 -s 16 -d /tmp/wineinstallnetframework -o install.exe \"{netList[choose][1]}\"")
-os.system(f"WINEPREFIX={sys.argv[1]} {sys.argv[2]} /tmp/wineinstallnetframework/install.exe")
+os.system(f"rm -rf '{homePath}/.cache/deepin-wine-runner/.netframework/{programName}'")
+os.system(f"mkdir -p '{homePath}/.cache/deepin-wine-runner/.netframework'")
+os.system(f"aria2c -x 16 -s 16 -d \"{homePath}/.cache/deepin-wine-runner/.netframework\" -o \"{programName}\" \"{netList[choose][1]}\"")
+os.system(f"WINEPREFIX={sys.argv[1]} {sys.argv[2]} '{homePath}/.cache/deepin-wine-runner/.netframework/{programName}'")
 input("安装结束，按回车键退出")

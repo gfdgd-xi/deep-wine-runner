@@ -1,10 +1,10 @@
 Package: spark-deepin-wine-runner
-Version: 1.9.0Alpha1
+Version: 1.9.0
 Maintainer: gfdgd xi <3025613752@qq.com>, 为什么您不喜欢熊出没和阿布呢
 Homepage: https://gitee.com/gfdgd-xi/deep-wine-runner
 Architecture: all
 Priority: optional
-Depends: python3, python3-pil, python3-pil.imagetk, python3-pyquery, deepin-terminal, aria2, curl, unrar, unzip, python3-requests, fakeroot, bash, python3-pyqt5
+Depends: python3, python3-pil, python3-pil.imagetk, python3-pyquery, deepin-terminal, aria2, curl, unrar, unzip, python3-requests, fakeroot, bash, python3-pyqt5, toilet
 Conflicts: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer
 Replaces: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer
 Description: gfdgd xi、为什么您不喜欢熊出没和阿布呢 制作的 wine 运行器

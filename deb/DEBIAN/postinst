@@ -1,3 +1,3 @@
 # !/bin/sh
 # 向服务器返回安装数加1（不显示内容且忽略错误）
-curl http://120.25.153.144/spark-deepin-wine-runner/Install.php?Version=1.8.0 -s > /dev/null | true
+curl http://120.25.153.144/spark-deepin-wine-runner/Install.php?Version=1.9.0 -s > /dev/null | true
