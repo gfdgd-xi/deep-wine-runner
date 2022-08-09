@@ -145,8 +145,11 @@ class Runexebutton_threading(QtCore.QThread):
             option += f"WINEDLLOVERRIDES=\"mscoree,mshtml=\" "
         if not setting["Debug"]:
             option += "WINEDEBUG=-all "
+        wineUsingOption = ""
+        if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
+            wineUsingOption = "--disable-gpu"
         if setting["TerminalOpen"]:
-            res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"] + "\" --keep-open"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"] + "\" --keep-open" + wineUsingOption], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         else:
             res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         # 实时读取程序返回
@@ -225,9 +228,12 @@ def make_desktop_on_launcher():
                 option += f"WINEARCH={setting['Architecture']} "
             if not setting["Debug"]:
                 option += "WINEDEBUG=-all "
+            wineUsingOption = ""
+            if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
+                wineUsingOption = "--disable-gpu"
             write_txt(get_home() + "/.local/share/applications/" + combobox1.currentText() + ".desktop", f'''[Desktop Entry]
 Name={combobox1.currentText()}
-Exec=env WINEPREFIX='{wineBottonPath}' {option} {wine[o1.currentText()]} '{e2.currentText()}' {setting["WineOption"]}
+Exec=env WINEPREFIX='{wineBottonPath}' {option} {wine[o1.currentText()]} '{e2.currentText()}' {setting["WineOption"]} {wineUsingOption}
 Icon={iconPath}
 Type=Application
 StartupNotify=true''') # 写入文本文档
@@ -263,6 +269,9 @@ def make_desktop_on_desktop():
                 wineBottonPath = setting["DefultBotton"]
             else:
                 wineBottonPath = e1.currentText()
+            wineUsingOption = ""
+            if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
+                wineUsingOption = "--disable-gpu"
             if not os.path.exists(get_desktop_path()):
                 os.makedirs(get_home())
             os.mknod(get_desktop_path() + "/" + combobox1.currentText() + ".desktop")
@@ -273,7 +282,7 @@ def make_desktop_on_desktop():
                 option += "WINEDEBUG=-all "
             write_txt(get_desktop_path() + "/" + combobox1.currentText() + ".desktop", f'''[Desktop Entry]
 Name={combobox1.currentText()}
-Exec=env WINEPREFIX='{wineBottonPath}' {option} {wine[o1.currentText()]} '{e2.currentText()}' {setting["WineOption"]}
+Exec=env WINEPREFIX='{wineBottonPath}' {option} {wine[o1.currentText()]} '{e2.currentText()}' {setting["WineOption"]} {wineUsingOption}
 Icon={iconPath}
 Type=Application
 StartupNotify=true''') # 写入文本文档
@@ -363,6 +372,9 @@ class RunWineProgramThread(QtCore.QThread):
             option += f"WINEARCH={setting['Architecture']} "
         if not setting["Debug"]:
             option += "WINEDEBUG=-all "
+        wineUsingOption = ""
+        if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
+            wineUsingOption = "--disable-gpu"
         if setting["TerminalOpen"]:
             res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + self.wineProgram + "' " + setting["WineOption"] + "\" --keep-open"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         else:
@@ -1011,10 +1023,10 @@ try:
             except:
                 pass
     if os.path.exists("/opt/deepin-box86/box86"):
-        wine["基于 box86 的 deepin-wine6-stable"] = f"/opt/deepin-box86/box86 /opt/deepin-wine6-stable/bin/wine --disable-gpu"
+        wine["基于 box86 的 deepin-wine6-stable"] = f"BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86 /opt/deepin-wine6-stable/bin/wine "
         canUseWine.append("基于 box86 的 deepin-wine6-stable")
     if os.path.exists("/opt/exagear/bin/ubt_x64a64_al"):
-        wine["基于 exagear 的 deepin-wine6-stable"] = f"/opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al -- /opt/deepin-wine6-stable/bin/wine --disable-gpu"
+        wine["基于 exagear 的 deepin-wine6-stable"] = f"/opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al -- /opt/deepin-wine6-stable/bin/wine "
         canUseWine.append("基于 exagear 的 deepin-wine6-stable")
     shellHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json")).values())
     findExeHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json")).values())
