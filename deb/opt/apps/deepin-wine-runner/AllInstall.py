@@ -22,11 +22,12 @@ def AddSparkStoreSource():
     os.system("sudo apt update -o Dir::Etc::sourcelist=\"sources.list.d/sparkstore.list\"     -o Dir::Etc::sourceparts=\"-\" -o APT::Get::List-Cleanup=\"0\"")
 
 def InstallSparkWine(wine):
-    if os.path.exists("/usr/local/bin/ss-apt-fast"):
-        os.system("sudo apt install apt-fast -y")
-        os.system(f"sudo ss-apt-fast install \"{wine}\" -y")
-        return
-    os.system(f"sudo apt install \"{wine}\" -y")
+    #if os.path.exists("/usr/local/bin/ss-apt-fast"):
+        #os.system("sudo apt install apt-fast -y")
+        #os.system(f"sudo ss-apt-fast install \"{wine}\" -y")
+        #return
+    os.system("sudo ss-apt-fast update")
+    os.system(f"sudo ss-apt-fast install \"{wine}\" -y")
 
 ###################
 # 程序功能
@@ -47,12 +48,8 @@ print("请问是否要安装 deepin-wine？[Y/N]", end=' ')
 choose = input().upper()
 if not choose == "N":
     os.system("sudo apt install deepin-wine -y")
-print("请问是否要安装 deepin-wine5（需要添加星火应用商店的源）？[Y/N]", end=' ')
+print("请问是否要安装 deepin-wine5（需要安装最新版星火应用商店）？[Y/N]", end=' ')
 choose = input().upper()
-if not choose == "N":
-    if not os.path.exists("/etc/apt/sources.list.d/sparkstore.list"):
-        AddSparkStoreSource()
-    InstallSparkWine("deepin-wine5")
 print("请问是否要安装 deepin-wine5-stable？[Y/N]", end=' ')
 choose = input().upper()
 if not choose == "N":
@@ -61,11 +58,9 @@ print("请问是否要安装 deepin-wine6-stable？[Y/N]", end=' ')
 choose = input().upper()
 if not choose == "N":
     os.system("sudo apt install deepin-wine6-stable -y")
-print("请问是否要安装 spark-wine7-devel（需要添加星火应用商店的源）？[Y/N]", end=' ')
+print("请问是否要安装 spark-wine7-devel（需要安装最新版星火应用商店）？[Y/N]", end=' ')
 choose = input().upper()
 if not choose == "N":
-    if not os.path.exists("/etc/apt/sources.list.d/sparkstore.list"):
-        AddSparkStoreSource()
     InstallSparkWine("spark-wine7-devel")
 print("请问是否要安装 ukylin-wine（需要添加 ukylin 源，但因为可能会导致系统问题，将不会自动添加）？[Y/N]", end=" ")
 choose = input().upper()

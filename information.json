@@ -1,5 +1,5 @@
 {
-    "Version": "1.9.0Alpha3",
+    "Version": "1.9.0",
     "Thank": [
         "感谢 @a2035274 @虚幻的早晨 https://bbs.deepin.org/post/238301",
         "感谢 @zhangs https://bbs.deepin.org/post/227948",
@@ -12,7 +12,13 @@
         "感谢 @PossibleVing 提供的新版应用图标",
         "感谢 @zhengjl 反馈的 1.7.0 中 .net framrwork 3.5 非离线版安装包的问题以及 1.8.0 重复路径一直自动重复增加的问题",
         "感谢 @国川 @刘岐 提供的非 i386、amd64 运行 wine 使用 i386/amd64 可执行文件的教程和脚本",
+        "感谢 @勇往直前 梦想启航 @189******09 @tfhyl 提供在非 X86 平台的国产 PC 进行测试",
+        "感谢 @cuisirwork 提供的提供视频教程的建议",
+        "感谢 @办公助手 提供的非 X86 平台 Wine 运行自定义 exe 应用教程和 deb 包",
+        "感谢 @季星火 反馈的无法使用该程序删除生成的 .desktop 的问题",
         "感谢统信在 Wine 生态适配活动中提供的打包脚本",
+        "也感谢 DXVK 的开发者开发了 DXVK 这个程序，项目链接：https://github.com/doitsujin/dxvk",
+        "也感谢 WineHQ 开发团队开发的 WineHQ，项目网址：https://dl.winehq.org/",
         "",
         "可以从上面的各种解决方案更好的学习 Wine 生态适配，也可以看 deepin 论坛板块 https://bbs.deepin.org/module/detail/116 进行学习，最后也向各位有进行 Wine 生态适配的大佬进行由衷的感谢！",
         "如果上面有遗漏，请向我反馈补充"

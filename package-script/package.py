@@ -115,7 +115,8 @@ def PackageDeb():
     QT.run.start()
 
 def RunCommand(command):
-    commandReturn.append(command)
+    if command.replace("\n", "").replace(" ", "") != "":
+        commandReturn.append(command.replace("\n", ""))
 
 def ShowHelp():
     QtWidgets.QMessageBox.information(widget, "帮助", f"下面是有关打包器的各个输入框的意义以及有关的 UOS 填写标准\n{tips}")

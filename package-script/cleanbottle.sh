@@ -1,6 +1,9 @@
 #!/bin/sh
-
-WINE_CMD="deepin-wine5"
+if [ $WINE = "" ]; then
+	WINE_CMD="deepin-wine5"
+else
+	WINE_CMD=$WINE
+fi
 userdir=$USER
 
 remove_file()
@@ -364,7 +367,7 @@ if [ -z "$1" ]; then
     echo "prefix should be given"
     exit 1
 fi
-
+WINEPREFIX=$1
 BottlePath=$1
 BottleBase=${BottlePath}/drive_c
 

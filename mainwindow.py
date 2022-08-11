@@ -10,6 +10,7 @@
 #################
 # 引入所需的库
 #################
+from fileinput import close
 import os
 import sys
 import time
@@ -85,7 +86,7 @@ run = None
 def runexebutton(self):
     global run
     DisableButton(True)
-    if not CheckProgramIsInstall(wine[o1.currentText()]) and o1.currentText() != "基于 linglong 的 deepin-wine6-stable（不推荐）" and o1.currentText() != "基于 exagear 的 deepin-wine6-stable" and o1.currentText() != "基于 box86 的 deepin-wine6-stable":
+    if not CheckProgramIsInstall(wine[o1.currentText()]) and not o1.currentText() in untipsWine:
         if QtWidgets.QMessageBox.question(widget, "提示", "检查到您未安装这个 wine，是否继续使用这个 wine 运行？") == QtWidgets.QMessageBox.No:
             DisableButton(False)
             return
@@ -148,6 +149,14 @@ class Runexebutton_threading(QtCore.QThread):
         wineUsingOption = ""
         if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
             wineUsingOption = "--disable-gpu"
+        if o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
+            os.system(f"'{programPath}/deepin-wine-runner-create-botton.py' '{wineBottonPath}'")
+        if o1.currentText() == "基于 box86 的 deepin-wine6-stable":
+            if not os.path.exists(f"{programPath}/dlls-arm"):
+                if os.system(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
+                    QtWidgets.QMessageBox(widget, "错误", "无法解压资源")
+                    return
+                os.remove(f"{programPath}/dlls-arm.7z")
         if setting["TerminalOpen"]:
             res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"] + "\" --keep-open" + wineUsingOption], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         else:
@@ -160,7 +169,7 @@ class Runexebutton_threading(QtCore.QThread):
             except:
                 text = ""
             self.signal.emit(text)
-            print(text)
+            print(text, end="")
         if len(findExeHistory) == 0 or findExeHistory[-1] != wineBottonPath:
             findExeHistory.append(wineBottonPath)  # 将记录写进数组
             write_txt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json", str(json.dumps(ListToDictionary(findExeHistory))))  # 将历史记录的数组转换为字典并写入
@@ -208,7 +217,7 @@ def make_desktop_on_launcher():
         if combobox1.currentText() == "" or e2.currentText() == "":  # 判断文本框是否有内容
             QtWidgets.QMessageBox.information(widget, "提示", "没有填写需要使用 exe 应用或保存的文件名")
             return
-        if not CheckProgramIsInstall(wine[o1.currentText()]):
+        if not CheckProgramIsInstall(wine[o1.currentText()]) and not o1.currentText() in untipsWine:
             if QtWidgets.QMessageBox.question(widget, "提示", "检查到您未安装这个 wine，是否继续使用这个 wine 写入？") == QtWidgets.QMessageBox.No:
                 DisableButton(False)
                 return
@@ -229,6 +238,12 @@ def make_desktop_on_launcher():
             if not setting["Debug"]:
                 option += "WINEDEBUG=-all "
             wineUsingOption = ""
+            if o1.currentText() == "基于 box86 的 deepin-wine6-stable":
+                if not os.path.exists(f"{programPath}/dlls-arm"):
+                    if os.system(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
+                        QtWidgets.QMessageBox(widget, "错误", "无法解压资源")
+                        return
+                    os.remove(f"{programPath}/dlls-arm.7z")
             if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
                 wineUsingOption = "--disable-gpu"
             write_txt(get_home() + "/.local/share/applications/" + combobox1.currentText() + ".desktop", f'''[Desktop Entry]
@@ -254,7 +269,7 @@ def make_desktop_on_desktop():
         if combobox1.currentText() == "" or e2.currentText() == "":  # 判断文本框是否有内容
             QtWidgets.QMessageBox.information(widget, "提示", "没有填写需要使用 exe 应用或保存的文件名")
             return
-        if not CheckProgramIsInstall(wine[o1.currentText()]):
+        if not CheckProgramIsInstall(wine[o1.currentText()]) and not o1.currentText() in untipsWine:
             if QtWidgets.QMessageBox.question(widget, "提示", "检查到您未安装这个 wine，是否继续使用这个 wine 写入？") == QtWidgets.QMessageBox.No:
                 DisableButton(False)
                 return
@@ -272,6 +287,12 @@ def make_desktop_on_desktop():
             wineUsingOption = ""
             if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
                 wineUsingOption = "--disable-gpu"
+            if o1.currentText() == "基于 box86 的 deepin-wine6-stable":
+                if not os.path.exists(f"{programPath}/dlls-arm"):
+                    if os.system(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
+                        QtWidgets.QMessageBox(widget, "错误", "无法解压资源")
+                        return
+                    os.remove(f"{programPath}/dlls-arm.7z")
             if not os.path.exists(get_desktop_path()):
                 os.makedirs(get_home())
             os.mknod(get_desktop_path() + "/" + combobox1.currentText() + ".desktop")
@@ -336,6 +357,9 @@ def InstallWine():
 def InstallWineOnDeepin23():
     threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e \"{programPath}/InstallWineOnDeepin23.py\""]).start()
 
+def InstallWineHQ():
+    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e \"{programPath}/InstallNewWineHQ.sh\""]).start()
+
 def OpenWineBotton():
     if e1.currentText() == "":
         wineBottonPath = setting["DefultBotton"]
@@ -373,10 +397,18 @@ class RunWineProgramThread(QtCore.QThread):
         if not setting["Debug"]:
             option += "WINEDEBUG=-all "
         wineUsingOption = ""
+        if o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
+            os.system(f"'{programPath}/deepin-wine-runner-create-botton.py' '{wineBottonPath}'")
         if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
             wineUsingOption = "--disable-gpu"
+        if o1.currentText() == "基于 box86 的 deepin-wine6-stable":
+            if not os.path.exists(f"{programPath}/dlls-arm"):
+                if os.system(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
+                    QtWidgets.QMessageBox(widget, "错误", "无法解压资源")
+                    return
+                os.remove(f"{programPath}/dlls-arm.7z")
         if setting["TerminalOpen"]:
-            res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + self.wineProgram + "' " + setting["WineOption"] + "\" --keep-open"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + self.wineProgram + "' " + setting["WineOption"] + " " + wineUsingOption + "\" --keep-open"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         else:
             res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + self.wineProgram + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         # 实时读取程序返回
@@ -386,7 +418,7 @@ class RunWineProgramThread(QtCore.QThread):
             except:
                 text = ""
             self.signal.emit(text)
-            print(text)
+            print(text, end="")
         if self.history:
             if len(findExeHistory) == 0 or findExeHistory[-1] != wineBottonPath:
                 findExeHistory.append(wineBottonPath)  # 将记录写进数组
@@ -404,7 +436,7 @@ def RunWineProgram(wineProgram, history = False, Disbled = True):
     global runProgram
     DisableButton(True)
     if not CheckProgramIsInstall(wine[o1.currentText()]) and o1.currentText() != "基于 linglong 的 deepin-wine6-stable（不推荐）" and o1.currentText() != "基于 exagear 的 deepin-wine6-stable" and o1.currentText() != "基于 box86 的 deepin-wine6-stable":
-        if QtWidgets.QMessageBox.question(widget, "提示", "检查到您未安装这个 wine，是否继续使用这个 wine 运行？") == QtWidgets.QMessageBox.No:
+        if not CheckProgramIsInstall(wine[o1.currentText()]) and not o1.currentText() in untipsWine:
             DisableButton(False)
             return
     returnText.setText("")
@@ -427,8 +459,17 @@ class RunWinetricksThread(QtCore.QThread):
             option += f"WINEARCH={setting['Architecture']} "
         if not setting["Debug"]:
             option += "WINEDEBUG=-all "
+        wineUsingOption = ""
+        if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
+            wineUsingOption = "--disable-gpu"
+        if o1.currentText() == "基于 box86 的 deepin-wine6-stable":
+            if not os.path.exists(f"{programPath}/dlls-arm"):
+                if os.system(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
+                    QtWidgets.QMessageBox(widget, "错误", "无法解压资源")
+                    return
+                os.remove(f"{programPath}/dlls-arm.7z")
         if setting["TerminalOpen"]:
-            res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='{wineBottonPath}' {option} WINE=" + subprocess.getoutput(f"which {wine[o1.currentText()]}").replace(" ", "").replace("\n", "") + " winetricks --gui\" --keep-open"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='{wineBottonPath}' {option} WINE=" + subprocess.getoutput(f"which {wine[o1.currentText()]}").replace(" ", "").replace("\n", "") + f" winetricks --gui {wineUsingOption}\" --keep-open"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         else:    
             res = subprocess.Popen([f"WINEPREFIX='{wineBottonPath}' {option} WINE='" + subprocess.getoutput(f"which {wine[o1.currentText()]}").replace(" ", "").replace("\n", "") + "' winetricks --gui"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         # 实时读取程序返回
@@ -445,21 +486,34 @@ runWinetricks = None
 def RunWinetricks():
     global runWinetricks
     DisableButton(True)
-    if not CheckProgramIsInstall(wine[o1.currentText()]):
-        if QtWidgets.QMessageBox.question(widget, "提示", "检查到您未安装这个 wine，是否继续使用这个 wine 运行？") == QtWidgets.QMessageBox.No:
+    if not CheckProgramIsInstall(wine[o1.currentText()]) and o1.currentText() != "基于 linglong 的 deepin-wine6-stable（不推荐）" and o1.currentText() != "基于 exagear 的 deepin-wine6-stable" and o1.currentText() != "基于 box86 的 deepin-wine6-stable":
+        if not CheckProgramIsInstall(wine[o1.currentText()]) and not o1.currentText() in untipsWine:
             DisableButton(False)
             return
+    if o1.currentText() == "基于 box86 的 deepin-wine6-stable":
+        if not os.path.exists(f"{programPath}/dlls-arm"):
+            if os.system(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
+                QtWidgets.QMessageBox(widget, "错误", "无法解压资源")
+                return
+            os.remove(f"{programPath}/dlls-arm.7z")
     returnText.setText("")
     runWinetricks = RunWinetricksThread()
     runWinetricks.signal.connect(QT.ShowWineReturn)
     runWinetricks.start()
-    
+
+def CleanWineBottonByUOS():
+    if e1.currentText() == "":
+        wineBottonPath = setting["DefultBotton"]
+    else:
+        wineBottonPath = e1.currentText()
+    os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"WINE='{wine[o1.currentText()]}' '{programPath}/cleanbottle.sh' '{wineBottonPath}'; echo 按回车退出; read; read; exit;\"")
+
 def FontAppStore():
     if e1.currentText() == "":
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallFont.py' '{wineBottonPath}' {int(setting['RuntimeCache'])}")
+    os.system(f"WINE='{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallFont.py' '{wineBottonPath}' {int(setting['RuntimeCache'])}")
 
 def InstallMonoGecko(program):
     if e1.currentText() == "":
@@ -490,6 +544,11 @@ def InstallMSXML():
     os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallMsxml.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
 
 def InstallDXVK():
+    if not os.path.exists(f"{programPath}/dxvk"):
+        if os.system(f"7z x \"{programPath}/dxvk.7z\" -o\"{programPath}\""):
+            QtWidgets.QMessageBox(widget, "错误", "无法解压资源")
+            return
+        os.remove(f"{programPath}/dxvk.7z")
     if e1.currentText() == "":
         wineBottonPath = setting["DefultBotton"]
     else:
@@ -500,6 +559,11 @@ def InstallDXVK():
             f"{programPath}/dxvk/setup_dxvk.sh", "install"])
 
 def UninstallDXVK():
+    if not os.path.exists(f"{programPath}/dxvk"):
+        if os.system(f"7z x \"{programPath}/dxvk.7z\" -o\"{programPath}\""):
+            QtWidgets.QMessageBox(widget, "错误", "无法解压资源")
+            return
+        os.remove(f"{programPath}/dxvk.7z")
     if e1.currentText() == "":
         wineBottonPath = setting["DefultBotton"]
     else:
@@ -552,6 +616,16 @@ def SetDeepinFileDialogDefult():
 
 def SetDeepinFileDialogRecovery():
     threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C 'pkexec \"{programPath}/deepin-wine-venturi-setter.py\" recovery' --keep-open"]).start()
+
+def DeleteDesktopIcon():
+    if os.path.exists(f"{get_home()}/.local/share/applications/wine"):
+        try:
+            shutil.rmtree(f"{get_home()}/.local/share/applications/wine")
+        except:
+            traceback.print_exc()
+            QtWidgets.QMessageBox.critical(widget, "错误", traceback.format_exc())
+            return
+    QtWidgets.QMessageBox.information(widget, "提示", "删除完成")
 
 def DeleteWineBotton():
     if QtWidgets.QMessageBox.question(widget, "提示", "你确定要删除容器吗？删除后将无法恢复！\n如果没有选择 wine 容器，将会自动删除默认的容器！") == QtWidgets.QMessageBox.No:
@@ -609,6 +683,9 @@ def UOSPackageScript():
 
 def RunVM():
     threading.Thread(target=os.system, args=[f"bash '{programPath}/RunVM.sh'"]).start()
+
+def CleanProgram():
+    os.system(f"'{programPath}/launch.sh' deepin-terminal -e \"{programPath}/clean-unuse-program.py\"")
 
 class UpdateWindow():
     data = {}
@@ -978,7 +1055,8 @@ defultProgramList = {
     "Theme": "",
     "MonoGeckoInstaller": True,
     "AutoWine": True,
-    "RuntimeCache": True
+    "RuntimeCache": True,
+    "MustRead": False
 }
 if not os.path.exists(get_home() + "/.config/deepin-wine-runner"):  # 如果没有配置文件夹
     os.mkdir(get_home() + "/.config/deepin-wine-runner")  # 创建配置文件夹
@@ -1004,10 +1082,28 @@ if not os.path.exists(get_home() + "/.config/deepin-wine-runner/WineSetting.json
 ###########################
 # 设置变量
 ###########################
+programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 # 如果要添加其他 wine，请在字典添加其名称和执行路径
 try:
-    wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable": "deepin-wine6-stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine"}
+    wine = {
+        "基于 box86 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86 /opt/deepin-wine6-stable/bin/wine ",
+        "基于 exagear 的 deepin-wine6-stable": f"/opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al -- /opt/deepin-wine6-stable/bin/wine ",
+        "deepin-wine6 stable": "deepin-wine6-stable", 
+        "deepin-wine5 stable": "deepin-wine5-stable", 
+        "spark-wine7-devel": "spark-wine7-devel", 
+        "deepin-wine": "deepin-wine", 
+        "deepin-wine5": "deepin-wine5", 
+        "wine": "wine", 
+        "wine64": "wine64", 
+        "ukylin-wine": "ukylin-wine",
+        "基于 linglong 的 deepin-wine6-stable（不推荐）": f"ll-cli run '' --exec '/bin/deepin-wine6-stable'"
+    }
+    untipsWine = ["基于 box86 的 deepin-wine6-stable", "基于 exagear 的 deepin-wine6-stable", "基于 linglong 的 deepin-wine6-stable（不推荐）"]
     canUseWine = []
+    if os.path.exists("/opt/deepin-box86/box86"):
+        canUseWine.append("基于 box86 的 deepin-wine6-stable")
+    if os.path.exists("/opt/exagear/bin/ubt_x64a64_al"):
+        canUseWine.append("基于 exagear 的 deepin-wine6-stable")
     for i in wine.keys():
         if not os.system(f"which '{wine[i]}'"):
             canUseWine.append(i)
@@ -1022,12 +1118,6 @@ try:
                     break
             except:
                 pass
-    if os.path.exists("/opt/deepin-box86/box86"):
-        wine["基于 box86 的 deepin-wine6-stable"] = f"BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86 /opt/deepin-wine6-stable/bin/wine "
-        canUseWine.append("基于 box86 的 deepin-wine6-stable")
-    if os.path.exists("/opt/exagear/bin/ubt_x64a64_al"):
-        wine["基于 exagear 的 deepin-wine6-stable"] = f"/opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al -- /opt/deepin-wine6-stable/bin/wine "
-        canUseWine.append("基于 exagear 的 deepin-wine6-stable")
     shellHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json")).values())
     findExeHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json")).values())
     wineBottonHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json")).values())
@@ -1050,7 +1140,6 @@ except:
 ###########################
 # 程序信息
 ###########################
-programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 iconPath = "{}/deepin-wine-runner.svg".format(programPath)
 programUrl = "https://gitee.com/gfdgd-xi/deep-wine-runner\nhttps://github.com/gfdgd-xi/deep-wine-runner\nhttps://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner"
 information = json.loads(readtxt(f"{programPath}/information.json"))
@@ -1065,26 +1154,32 @@ tips = '''<h4>提示：</h4>
 exe路径\' 参数 \'
 即可（单引号需要输入）
 5、wine 容器如果没有指定，则会默认为 ~/.wine
-6、在使用 linglong 包的 Wine 应用时，必须安装至少一个 linglong 的使用 Wine 软件包才会出现该选项，
+6、对于非 X86 的用户来说，请不要使用本程序自带的 Wine 安装程序和 Windows 虚拟机安装功能（检测到为非 X86 架构会自动禁用）
+7、在使用 linglong 包的 Wine 应用时，必须安装至少一个 linglong 的使用 Wine 软件包才会出现该选项，
 而程序识别到的 Wine 是按 linglong 的使用 Wine 软件包名的字母排序第一个的 Wine，且生成的容器不在用户目录下，而是在容器的用户目录下（~/.deepinwine、/tmp、桌面、下载、文档等被映射的目录除外），
 同理需要运行的 EXE 也必须在被映射的目录内
-7、如果是使用 Deepin 23 的 Wine 安装脚本，请切记——安装过程会临时添加 Deepin 20 的 apt 源，不要中断安装以及
+8、如果是使用 Deepin 23 的 Wine 安装脚本，请切记——安装过程会临时添加 Deepin 20 的 apt 源，不要中断安装以及
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>'''
-updateThingsString = '''※1、修复了重复路径一直自动重复增加的问题
+updateThingsString = '''<b>※1、修复了重复路径一直自动重复增加的问题
 ※2、修复了两个打包器打包错误的问题（非基于生态活动脚本的为 wine 导入错误，基于生态活动脚本的为架构有误导致打包出的 deb 无法打包）
-※3、适配了部分非 i386、amd64 架构计算机的 UOS 系统使用的 wine
+※3、适配了部分非 i386、amd64 架构计算机的 UOS 系统使用的 wine 并支持打包非 i386、amd64 架构计算机的 UOS 系统使用的 wine 程序 deb 包
 ※4、支持安装 dxvk（遵守 Zlib 开源协议）
-5、支持不显示没有安装的 Wine，方便用户识别
-6、增加字体商店
+※5、运行器、打包器（包括非基于生态适配活动脚本制作的）支持使用 Wine 生态适配活动的容器清理脚本
+※6、支持更加简易的安装最新版的 WineHQ</b>
+7、支持不显示没有安装的 Wine，方便用户识别
+8、增加字体商店
+9、修改了 Wine 的顺序使其更加合理
+10、支持删除安装 exe 后在启动器的快捷方式
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年08月05日"
+updateTime = "2022年08月11日"
 about = f'''<h1>关于</h1>
 <p>一个能让Linux用户更加方便运行Windows应用的程序，内置了对wine图形话的支持和各种Wine工具和自制Wine程序打包器、运行库安装工具等等</p>
 <p>同时也内置了基于VirtualBox制作的小白Windows虚拟机安装工具，可以做到只需要用户下载系统镜像并点击安装即可，无需顾及虚拟机安装、创建、虚拟机的分区等等</p>
+<p>本程序依照 GPLV3 协议开源</p>
 <pre>
 
 一个图形化了如下命令的程序（最简单格式）
@@ -1261,24 +1356,30 @@ menu = window.menuBar()
 programmenu = menu.addMenu("程序(&P)")
 p1 = QtWidgets.QAction("安装 wine(&I)")
 installWineOnDeepin23 = QtWidgets.QAction("安装 wine(只限Deepin23)")
+installWineHQ = QtWidgets.QAction("安装 WineHQ")
 p2 = QtWidgets.QAction("设置程序(&S)")
 p3 = QtWidgets.QAction("清空软件历史记录(&C)")
 cleanCache = QtWidgets.QAction("清空软件缓存")
+cleanProgramUnuse = QtWidgets.QAction("删除程序组件")
 p4 = QtWidgets.QAction("退出程序(&E)")
 programmenu.addAction(p1)
 programmenu.addAction(installWineOnDeepin23)
+programmenu.addAction(installWineHQ)
 programmenu.addSeparator()
 programmenu.addAction(p2)
 programmenu.addSeparator()
 programmenu.addAction(p3)
 programmenu.addAction(cleanCache)
+programmenu.addAction(cleanProgramUnuse)
 programmenu.addSeparator()
 programmenu.addAction(p4)
 p1.triggered.connect(InstallWine)
 installWineOnDeepin23.triggered.connect(InstallWineOnDeepin23)
+installWineHQ.triggered.connect(InstallWineHQ)
 p2.triggered.connect(ProgramSetting.ShowWindow)
 p3.triggered.connect(CleanProgramHistory)
 cleanCache.triggered.connect(CleanProgramCache)
+cleanProgramUnuse.triggered.connect(CleanProgram)
 p4.triggered.connect(window.close)
 
 wineOption = menu.addMenu("Wine(&W)")
@@ -1286,14 +1387,17 @@ w1 = QtWidgets.QAction("打开 Wine 容器目录")
 w2 = QtWidgets.QAction("安装常见字体")
 w3 = QtWidgets.QAction("安装自定义字体")
 w4 = QtWidgets.QAction("删除选择的 Wine 容器")
+cleanBottonUOS = QtWidgets.QAction("清理 Wine 容器（基于 Wine 适配活动脚本）")
 w5 = QtWidgets.QAction("打包 wine 应用")
 w6 = QtWidgets.QAction("使用官方 Wine 适配活动的脚本进行打包")
 w7 = QtWidgets.QAction("从镜像获取DLL（只支持Windows XP、Windows Server 2003官方安装镜像）")
 updateGeek = QtWidgets.QAction("从 Geek Uninstaller 官网升级程序")
+deleteDesktopIcon = QtWidgets.QAction("删除所有 Wine 程序在启动器的快捷方式")
 wineOption.addAction(w1)
 wineOption.addAction(w2)
 wineOption.addAction(w3)
 wineOption.addAction(w4)
+wineOption.addAction(cleanBottonUOS)
 wineOption.addSeparator()
 wineOption.addAction(w5)
 wineOption.addAction(w6)
@@ -1354,10 +1458,13 @@ installDxvk = QtWidgets.QAction("安装 DXVK")
 uninstallDxvk = QtWidgets.QAction("卸载 DXVK")
 dxvkMenu.addAction(installDxvk)
 dxvkMenu.addAction(uninstallDxvk)
+wineOption.addSeparator()
+wineOption.addAction(deleteDesktopIcon)
 w1.triggered.connect(OpenWineBotton)
 w2.triggered.connect(InstallWineFont)
 w3.triggered.connect(OpenWineFontPath)
 w4.triggered.connect(DeleteWineBotton)
+cleanBottonUOS.triggered.connect(CleanWineBottonByUOS)
 w5.triggered.connect(BuildExeDeb)
 w6.triggered.connect(UOSPackageScript)
 w7.triggered.connect(GetDllFromWindowsISO.ShowWindow)
@@ -1384,6 +1491,7 @@ wm4_1.triggered.connect(lambda: os.system(f"'{programPath}/launch.sh' deepin-ter
 wm4_2.triggered.connect(lambda: os.system(f"'{programPath}/launch.sh' deepin-terminal -C 'pkexec apt purge winbind -y' --keep-open"))
 installDxvk.triggered.connect(InstallDXVK)
 uninstallDxvk.triggered.connect(UninstallDXVK)
+deleteDesktopIcon.triggered.connect(DeleteDesktopIcon)
 
 virtualMachine = menu.addMenu("虚拟机(&V)")
 v1 = QtWidgets.QAction("使用 Virtualbox 虚拟机运行 Windows 应用")
@@ -1451,6 +1559,24 @@ if setting["AutoWine"]:
     o1.addItems(canUseWine)
 else:
     o1.addItems(wine.keys())
+# 禁用被精简掉的控件
+for i in [
+    [[p1, installWineOnDeepin23, installWineHQ], f"{programPath}/InstallWineOnDeepin23.py"],
+    [[w5], f"{programPath}/deepin-wine-packager.py"],
+    [[w6], f"{programPath}/deepin-wine-packager-with-script.py"],
+    [[p1, v1], f"{programPath}/RunVM.sh"]
+]:
+    if not os.path.exists(i[1]):
+        for x in i[0]:
+            x.setDisabled(True)
+# 有些功能是非 X86 不适用的，需要屏蔽
+if subprocess.getoutput("arch").lower() != "x86_64":
+    p1.setDisabled(True)
+    installWineOnDeepin23.setDisabled(True)
+    virtualMachine.setDisabled(True)
+    v1.setDisabled(True)
+    installWineHQ.setDisabled(True)
+    pass
 o1.setCurrentText(setting["DefultWine"])
 e1.setEditText(setting["DefultBotton"])
 e2.setEditText("")

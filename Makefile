@@ -8,6 +8,16 @@ build:
 	cp -rv VM-source/Windows7X86Auto.iso          VM
 	cp -rv VM-source/run.py                       VM
 	zip -v -q -r package-script.zip package-script
+	#rm -rfv dlls.7z
+	#rm -rfv dlls-arm.7z
+	#rm -rfv dxvk.7z
+	#rm -rfv exagear.7z
+	#rm -rfv wined3d.dll.so.7z
+	#7z a dlls.7z           dlls
+	#7z a dlls-arm.7z       dlls-arm
+	#7z a dxvk.7z           dxvk
+	#7z a exagear.7z        exagear
+	#7z a wined3d.dll.so.7z wined3d.dll.so
 	cp -rv VM                                     deb/opt/apps/deepin-wine-runner
 	cp -rv AllInstall.py                          deb/opt/apps/deepin-wine-runner
 	cp -rv BeCyIconGrabber.exe                    deb/opt/apps/deepin-wine-runner
@@ -33,12 +43,18 @@ build:
 	cp -rv RunVM.sh                               deb/opt/apps/deepin-wine-runner
 	cp -rv "wine install"                         deb/opt/apps/deepin-wine-runner
 	cp -rv 窗体透明度设置工具.exe                    deb/opt/apps/deepin-wine-runner
-	cp -rv dlls                                   deb/opt/apps/deepin-wine-runner
+	cp -rv dlls.7z                                   deb/opt/apps/deepin-wine-runner
 	cp -rv UpdateGeek.sh                          deb/opt/apps/deepin-wine-runner
 	cp -rv AppStore.py                            deb/opt/apps/deepin-wine-runner
 	cp -rv InstallWineOnDeepin23.py               deb/opt/apps/deepin-wine-runner
-	cp -rv dxvk                                   deb/opt/apps/deepin-wine-runner
+	cp -rv dxvk.7z                                   deb/opt/apps/deepin-wine-runner
 	cp -rv InstallFont.py                         deb/opt/apps/deepin-wine-runner
+	cp -rv dlls-arm.7z                               deb/opt/apps/deepin-wine-runner
+	cp -rv deepin.list                            deb/opt/apps/deepin-wine-runner
+	cp -rv sparkstore.list                        deb/opt/apps/deepin-wine-runner
+	cp -rv wined3d.dll.so.7z                         deb/opt/apps/deepin-wine-runner
+	cp -rv clean-unuse-program.py                    deb/opt/apps/deepin-wine-runner
+	cp -rv InstallNewWineHQ.sh                       deb/opt/apps/deepin-wine-runner
 	dpkg -b deb spark-deepin-wine-runner.deb
 	
 
@@ -46,7 +62,7 @@ install:
 	make build
 	sudo apt update
 	#sudo dpkg -i spark-deepin-wine-runner.deb
-	sudo apt install ./spark-deepin-wine-runner.deb -y --allow-downgrades
+	sudo apt reinstall ./spark-deepin-wine-runner.deb -y --allow-downgrades 
 
 remove:
 	sudo apt purge spark-deepin-wine-runner 
