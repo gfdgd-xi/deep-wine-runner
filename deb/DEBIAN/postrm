@@ -1,0 +1,3 @@
+#!/bin/sh
+# 删除软件残留
+rm -rfv /opt/apps/spark-deepin-wine-runner/*
