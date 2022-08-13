@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #########################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布
-# 版本：1.8.0
+# 版本：1.9.0
 # 感谢：感谢 deepin-wine 团队，提供了 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 的 PyQt5 构建
 #########################################################################
@@ -62,6 +62,9 @@ def disabled_or_NORMAL_all(choose):
     chooseWineHelperValue.setDisabled(choose)
     wineVersion.setDisabled(choose)
     debArch.setDisabled(choose)
+    rmBash.setDisabled(choose)
+    cleanBottonByUOS.setDisabled(choose)
+    installDeb.setDisabled(choose)
     if not choose:
         ChangeArchCombobox()
     
@@ -174,18 +177,18 @@ class make_deb_threading(QtCore.QThread):
 
 if [ "$1" = "remove" ] || [ "$1" = "purge" ];then
 
-echo"清理卸载残留"
-for username in ls /home
-do
-echo /home/$username
-if [ -d "/home/$username/.deepinwine/{e5_text.text()}" ]
-then
-rm -rf "/home/$username/.deepinwine/{e5_text.text()}"
-fi
-done
+echo "清理卸载残留"
+for username in `ls /home`
+    do
+        echo /home/$username
+        if [ -d "/home/$username/.deepinwine/{e5_text.text()}" ]
+            then
+                rm -rf "/home/$username/.deepinwine/{e5_text.text()}"
+            fi
+    done
 else
-echo"非卸载，跳过清理"
-fi"""][int()],
+    echo "非卸载，跳过清理"
+fi"""][int(rmBash.isChecked())],
                     "run.sh": [
                         f"""#!/bin/sh
 
@@ -541,7 +544,7 @@ reconstruct_bottle_symlink() {{
 }}
 
 extract_image() {{
-
+[doge]
     progpid=$(ps -ef | grep "zenity --progress --title=${{BOTTLE}}" | grep -v grep)
     if [ -n "$progpid" ];then
 	    echo "one $BOTTLE app is extracting runtime images too."
@@ -670,29 +673,40 @@ WINEPREFIX=$BOTTLE $EMU $EMU_ARGS $WINE "$EXE" --disable-gpu &""",
             # 设置容器
             ###############
             self.label.emit("正在设置 wine 容器")
-            os.chdir(b)
-            self.run_command("sed -i \"s#$USER#@current_user@#\" ./*.reg")
-            os.chdir(f"{b}/drive_c/users")
-            self.run_command(f"mv -v '{os.getlogin()}' @current_user@")
             os.chdir(programPath)
             if cleanBottonByUOS.isChecked():
                 self.run_command(f"WINE='{debInformation[debArch.currentIndex()]['Wine']}' '{programPath}/cleanbottle.sh' '{b}'")
+            os.chdir(b)
+            # 对用户目录进行处理
+            self.run_command("sed -i \"s#$USER#@current_user@#\" ./*.reg")
+            os.chdir(f"{b}/drive_c/users")
+            if os.path.exists(f"{b}/drive_c/users/@current_user@"):
+                self.run_command(f"rm -rfv '{b}/drive_c/users/@current_user@'")
+            self.run_command(f"mv -fv '{os.getlogin()}' @current_user@")
+            # 如果缩放文件 scale.txt 存在，需要移除以便用户自行调节缩放设置
+            if os.path.exists(f"{b}/scale.txt"):
+                os.remove(f"{b}/scale.txt")
+            # 删除因为脚本失误导致用户目录嵌套（如果存在）
+            if os.path.exists(f"{b}{b}/drive_c/users/@current_user@/@current_user@"):
+                shutil.rmtree(f"{b}{b}/drive_c/users/@current_user@/@current_user@")
+            # 删除无用的软链
+            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/我的'*")
+            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/My '*")
+            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Desktop'")
+            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Downloads'")
+            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Templates'")
+            os.chdir(programPath)
             ###############
             # 压缩容器
             ###############
             self.label.emit("正在打包 wine 容器")
             self.run_command("7z a {}/opt/apps/{}/files/files.7z {}/*".format(debPackagePath, e1_text.text(), b))
             ###############
-            # 复制图片
+            # 复制文件
             ###############
             self.label.emit("正在复制文件……")
             # arm64 box86 需要复制 dlls-arm 目录
-            if debArch.currentIndex() == 0:
-                if not os.path.exists(f"{programPath}/dlls"):
-                    self.run_command(f"7z x \"{programPath}/dlls.7z\" -o\"{programPath}\"")
-                    os.remove(f"{programPath}/dlls.7z")
-                self.run_command(f"cp -rv '{programPath}/dlls' {debPackagePath}/opt/apps/{e1_text.text()}/files/")
-            elif debArch.currentIndex() == 1:
+            if debArch.currentIndex() == 1:
                 if not os.path.exists(f"{programPath}/dlls-arm"):
                     self.run_command(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\"")
                     os.remove(f"{programPath}/dlls-arm.7z")
@@ -718,7 +732,6 @@ WINEPREFIX=$BOTTLE $EMU $EMU_ARGS $WINE "$EXE" --disable-gpu &""",
             # 写入文本文档
             ################
             self.label.emit("正在写入文件……")
-            
             write_txt(f"{debPackagePath}/DEBIAN/control", f'''Package: {e1_text.text()}
 Version: {e2_text.text()}
 Architecture: {debInformation[debArch.currentIndex()]["Architecture"]}
@@ -727,6 +740,7 @@ Depends: {debInformation[debArch.currentIndex()]["Depends"]}
 Section: non-free/otherosfs
 Priority: optional
 Multi-Arch: foreign
+Installed-Size: {size}
 Description: {e3_text.text()}
 ''')
             if debInformation[debArch.currentIndex()]["postinst"] != "":
@@ -772,7 +786,7 @@ def write_txt(path, things):
 def chang_textbox1_things(things):
     if things.replace("\n", "").replace(" ", "") == "":
         return
-    textbox1.append(things)
+    textbox1.append(things.replace("\n", ""))
 
 def clean_textbox1_things():
     textbox1.setText("")
@@ -824,6 +838,8 @@ def ChangeArchCombobox():
     #chooseWineHelperValue.setEnabled(option)
     rmBash.setEnabled(option)
 
+def InstallDeb():
+    os.system(f"xdg-open '{e12_text.text()}'")
 
 ###############
 # 程序信息
@@ -872,7 +888,11 @@ option1_text = QtWidgets.QComboBox()
 button1 = QtWidgets.QPushButton("浏览……")
 button2 = QtWidgets.QPushButton("浏览……")
 button4 = QtWidgets.QPushButton("浏览……")
+debControlFrame = QtWidgets.QHBoxLayout()
 button5 = QtWidgets.QPushButton("打包……")
+installDeb = QtWidgets.QPushButton("安装打包完成的 deb……")
+debControlFrame.addWidget(button5)
+debControlFrame.addWidget(installDeb)
 debOption = QtWidgets.QHBoxLayout()
 rmBash = QtWidgets.QCheckBox("设置卸载该 deb 后自动删除该容器")
 cleanBottonByUOS = QtWidgets.QCheckBox("使用统信 Wine 生态适配活动容器清理脚本")
@@ -889,6 +909,7 @@ button1.clicked.connect(button1_cl)
 button2.clicked.connect(button2_cl)
 button4.clicked.connect(button4_cl)
 button5.clicked.connect(make_deb)
+installDeb.clicked.connect(InstallDeb)
 wineFrame.addWidget(wineVersion)
 debArch.currentIndexChanged.connect(ChangeArchCombobox)
 wineFrame.addWidget(chooseWineHelperValue)
@@ -928,7 +949,7 @@ widgetLayout.addWidget(e12_text, 13, 1, 1, 1)
 widgetLayout.addWidget(button4, 13, 2, 1, 1)
 widgetLayout.addLayout(debOption, 14, 1, 1, 1)
 widgetLayout.addWidget(debArch, 15, 1, 1, 1)
-widgetLayout.addWidget(button5, 16, 1, 1, 1)
+widgetLayout.addLayout(debControlFrame, 16, 1, 1, 1)
 widgetLayout.addWidget(label13_text, 17, 0, 1, 3)
 widgetLayout.addWidget(textbox1, 18, 0, 1, 3)
 menu = window.menuBar()
@@ -942,7 +963,7 @@ programmenu.addAction(exit)
 help.addAction(tip)
 # 控件配置
 try:
-    e6_text.setText(sys.argv[1])
+    e6_text.setText(sys.argv[1].replace("~", get_home()))
     e5_text.setText(pathlib.PurePath(sys.argv[1]).name)
     wineVersion.setCurrentText(sys.argv[2])
 except:
