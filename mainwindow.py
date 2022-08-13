@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
-# 版本：1.8.0
-# 更新时间：2022年08月01日
+# 版本：1.9.0
+# 更新时间：2022年08月12日
 # 感谢：感谢 wine、deepin-wine 以及星火团队，提供了 wine、deepin-wine、spark-wine-devel 给大家使用，让我能做这个程序
 # 基于 Python3 的 PyQt5 构建
 ###########################################################################################
@@ -11,6 +11,7 @@
 # 引入所需的库
 #################
 from fileinput import close
+import hashlib
 import os
 import sys
 import time
@@ -935,7 +936,149 @@ class GetDllFromWindowsISO:
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", traceback.format_exc())
-            
+
+class ProgramRunStatusShow():
+    msgWindow = None
+    def ShowWindow():
+        if not os.path.exists(e2.currentText()):
+            QtWidgets.QMessageBox.information(widget, "提示", "您输入的 exe 不存在")
+            return
+        try:
+            sha = ProgramRunStatusUpload.GetSHA1(e2.currentText())
+            lists = json.loads(requests.get(f"http://120.25.153.144/spark-deepin-wine-runner/app/{sha}/all.json").text)
+            r = requests.get(f"http://120.25.153.144/spark-deepin-wine-runner/app/{sha}/title.txt")
+            r.encoding = "utf-8"
+            title = r.text
+        except:
+            if QtWidgets.QMessageBox.question(widget, "提示", "暂时还没有该软件的运行情况信息\n是否自己上传该软件的运行情况？") == QtWidgets.QMessageBox.Yes:
+                ProgramRunStatusUpload.ShowWindow(sha)
+            return
+        informationList = ["0分：无法运行并且也没有报错，自己无法解决",
+    "1分：无法运行但有报错，自己无法解决",
+    "2分：可以运行但是效果很差，几乎无法使用",
+    "3分：可以运行且勉强可以使用",
+    "4分：可以运行，体验大差不差，还是有点小问题",
+    "5分：可以运行且完全没有bug和问题，和在 Windows 上一样",
+    "含有不良内容，不宜安装",
+    "含有病毒、木马等对计算机有害的软件"
+    ]
+        if title.lower() == "null":
+            title = "未知应用"
+        maxHead = lists.index(max(lists))
+        ProgramRunStatusShow.msgWindow = QtWidgets.QMainWindow()
+        msgWidget = QtWidgets.QWidget()
+        msgWidgetLayout = QtWidgets.QGridLayout()
+        starLayout = QtWidgets.QHBoxLayout()
+        uploadButton = QtWidgets.QPushButton("点此上传运行情况")
+        uploadButton.clicked.connect(lambda: ProgramRunStatusUpload.ShowWindow(sha, title))
+        msgWidgetLayout.addWidget(QtWidgets.QLabel("综合评价："), 0, 0)
+        msgWidgetLayout.addLayout(starLayout, 0, 1)
+        msgWidgetLayout.addWidget(QtWidgets.QLabel(informationList[maxHead]), 1, 0, 1, 2)
+        msgWidgetLayout.addWidget(uploadButton, 2, 0, 1, 2)
+        end = 5
+        if maxHead > 5:
+            for i in range(end):
+                starLayout.addWidget(QtWidgets.QLabel(f"<img src='{programPath}/Icon/BadStar.svg' width=50>"))
+        else:
+            for i in range(maxHead):
+                starLayout.addWidget(QtWidgets.QLabel(f"<img src='{programPath}/Icon/Star.svg' width=50>"))
+            head = maxHead
+            for i in range(head, end):
+                starLayout.addWidget(QtWidgets.QLabel(f"<img src='{programPath}/Icon/UnStar.svg' width=50>"))
+        msgWidget.setLayout(msgWidgetLayout)
+        ProgramRunStatusShow.msgWindow.setCentralWidget(msgWidget)
+        ProgramRunStatusShow.msgWindow.setWindowIcon(QtGui.QIcon(iconPath))
+        ProgramRunStatusShow.msgWindow.setWindowTitle(f"应用“{title}”的运行情况")
+        ProgramRunStatusShow.msgWindow.show()
+
+class ProgramRunStatusUpload():
+    msgWindow = None
+    starLayout = None
+    fen = None
+    starList = []
+    sha1Value = ""
+    programName = None
+    def ChangeStar():
+        if ProgramRunStatusUpload.fen.currentIndex() > 5:
+            for i in ProgramRunStatusUpload.starList:
+                i.setText(f"<img src='{programPath}/Icon/BadStar.svg' width=25>")
+            return
+        for i in range(ProgramRunStatusUpload.fen.currentIndex()):
+            ProgramRunStatusUpload.starList[i].setText(f"<img src='{programPath}/Icon/Star.svg' width=25>")
+        head = ProgramRunStatusUpload.fen.currentIndex() 
+        end = len(ProgramRunStatusUpload.starList)
+        for i in range(head, end):
+            ProgramRunStatusUpload.starList[i].setText(f"<img src='{programPath}/Icon/UnStar.svg' width=25>")
+        
+    def ShowWindow(sha="", title=""):
+        ProgramRunStatusUpload.starList = []
+        ProgramRunStatusUpload.sha1Value = sha
+        ProgramRunStatusUpload.msgWindow = QtWidgets.QMainWindow()
+        msgWidget = QtWidgets.QWidget()
+        msgWidgetLayout = QtWidgets.QGridLayout()
+        ProgramRunStatusUpload.programName = QtWidgets.QLineEdit()
+        ProgramRunStatusUpload.fen = QtWidgets.QComboBox()
+        ProgramRunStatusUpload.starLayout = QtWidgets.QHBoxLayout()
+        upload = QtWidgets.QPushButton("上传")
+        upload.clicked.connect(ProgramRunStatusUpload.Upload)
+        if title != "":
+            ProgramRunStatusUpload.programName.setText(title)
+            ProgramRunStatusUpload.programName.setDisabled(True)
+        # 生成星星列表
+        for i in [1, 1, 1, 1, 0]:
+            ProgramRunStatusUpload.starList.append(QtWidgets.QLabel(f"<img src='{programPath}/Icon/{['Un', ''][i]}Star.svg' width=25>"))
+            ProgramRunStatusUpload.starLayout.addWidget(ProgramRunStatusUpload.starList[-1])
+        ProgramRunStatusUpload.starLayout.addItem(QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum))
+        ProgramRunStatusUpload.programName.setPlaceholderText("如果这个程序和程序名确实是合法还是检测到敏感词，改为“NULL”即可")
+        ProgramRunStatusUpload.fen.addItems(["0分：无法运行并且也没有报错，自己无法解决",
+    "1分：无法运行但有报错，自己无法解决",
+    "2分：可以运行但是效果很差，几乎无法使用",
+    "3分：可以运行且勉强可以使用",
+    "4分：可以运行，体验大差不差，还是有点小问题",
+    "5分：可以运行且完全没有bug和问题，和在 Windows 上一样",
+    "含有不良内容，不宜安装",
+    "含有病毒、木马等对计算机有害的软件"])
+        ProgramRunStatusUpload.fen.setCurrentIndex(4)
+        ProgramRunStatusUpload.fen.currentIndexChanged.connect(ProgramRunStatusUpload.ChangeStar)
+        msgWidgetLayout.addWidget(QtWidgets.QLabel("程序名："), 0, 0)
+        msgWidgetLayout.addWidget(QtWidgets.QLabel("评分："), 1, 0)
+        msgWidgetLayout.addWidget(ProgramRunStatusUpload.programName, 0, 1)
+        msgWidgetLayout.addWidget(ProgramRunStatusUpload.fen, 1, 1)
+        msgWidgetLayout.addLayout(ProgramRunStatusUpload.starLayout, 2, 1)
+        msgWidgetLayout.addWidget(upload, 3, 1)
+        msgWidget.setLayout(msgWidgetLayout)
+        ProgramRunStatusUpload.msgWindow.setCentralWidget(msgWidget)
+        ProgramRunStatusUpload.msgWindow.setWindowTitle("上传程序运行情况")
+        ProgramRunStatusUpload.msgWindow.setWindowIcon(QtGui.QIcon(iconPath))
+        ProgramRunStatusUpload.msgWindow.show()
+
+    def Upload():
+        if not os.path.exists(e2.currentText()):
+            QtWidgets.QMessageBox.critical(None, "错误", "exe 文件不存在！")
+            return
+        try:
+            if ProgramRunStatusUpload.sha1Value == "":
+                ProgramRunStatusUpload.sha1Value = ProgramRunStatusUpload.GetSHA1(e2.currentText())
+            QtWidgets.QMessageBox.information(None, "提示", json.loads(requests.post("http://120.25.153.144:30250", {
+            "SHA1": ProgramRunStatusUpload.sha1Value,
+            "Name": ProgramRunStatusUpload.programName.text(),
+            "Fen": ProgramRunStatusUpload.fen.currentIndex(),
+            "Wine": o1.currentText()
+            }).text)["Error"])
+        except:
+            QtWidgets.QMessageBox.critical(None, "错误", "数据上传失败！")
+
+    def GetSHA1(filePath):
+        sha1 = hashlib.sha1()
+        file = open(filePath, "rb")
+        while True:
+            readByte = file.read(1024 * 1024)
+            sha1.update(readByte)
+            if not readByte:
+                break
+        file.close()
+        return sha1.hexdigest()
+
 class ProgramSetting():
     wineBottonA = None
     wineDebug = None
@@ -1008,6 +1151,7 @@ class ProgramSetting():
         widgetLayout.addWidget(save, 10, 2, 1, 1)
         widget.setLayout(widgetLayout)
         ProgramSetting.message.setCentralWidget(widget)
+        ProgramSetting.message.setWindowIcon(QtGui.QIcon(iconPath))
         ProgramSetting.message.setWindowTitle(f"设置 wine 运行器 {version}")
         ProgramSetting.message.show()
 
@@ -1154,11 +1298,13 @@ tips = '''<h4>提示：</h4>
 exe路径\' 参数 \'
 即可（单引号需要输入）
 5、wine 容器如果没有指定，则会默认为 ~/.wine
-6、对于非 X86 的用户来说，请不要使用本程序自带的 Wine 安装程序和 Windows 虚拟机安装功能（检测到为非 X86 架构会自动禁用）
-7、在使用 linglong 包的 Wine 应用时，必须安装至少一个 linglong 的使用 Wine 软件包才会出现该选项，
+6、如果可执行文件比较大的话，会出现点击“获取该程序运行情况”出现假死的情况，因为正在后台读取 SHA1，只需要等一下即可（读取速度依照您电脑处理速度、读写速度、可执行文件大小等有关）
+7、对于非 X86 的用户来说，请不要使用本程序自带的 Wine 安装程序和 Windows 虚拟机安装功能（检测到为非 X86 架构会自动禁用）
+8、如果非 X86 的用户的 UOS 专业版用户想要使用的话，只需要在应用商店安装一个 Wine 版本微信即可在本程序选择正确的 Wine 运行程序
+9、在使用 linglong 包的 Wine 应用时，必须安装至少一个 linglong 的使用 Wine 软件包才会出现该选项，
 而程序识别到的 Wine 是按 linglong 的使用 Wine 软件包名的字母排序第一个的 Wine，且生成的容器不在用户目录下，而是在容器的用户目录下（~/.deepinwine、/tmp、桌面、下载、文档等被映射的目录除外），
 同理需要运行的 EXE 也必须在被映射的目录内
-8、如果是使用 Deepin 23 的 Wine 安装脚本，请切记——安装过程会临时添加 Deepin 20 的 apt 源，不要中断安装以及
+10、如果是使用 Deepin 23 的 Wine 安装脚本，请切记——安装过程会临时添加 Deepin 20 的 apt 源，不要中断安装以及
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>'''
@@ -1168,14 +1314,20 @@ updateThingsString = '''<b>※1、修复了重复路径一直自动重复增加�
 ※4、支持安装 dxvk（遵守 Zlib 开源协议）
 ※5、运行器、打包器（包括非基于生态适配活动脚本制作的）支持使用 Wine 生态适配活动的容器清理脚本
 ※6、支持更加简易的安装最新版的 WineHQ</b>
-7、支持不显示没有安装的 Wine，方便用户识别
-8、增加字体商店
-9、修改了 Wine 的顺序使其更加合理
-10、支持删除安装 exe 后在启动器的快捷方式
+※7、增加字体商店
+※8、新增查看可执行文件运行情况的功能
+9、支持不显示没有安装的 Wine，方便用户识别
+10、修改了 Wine 的顺序使其更加合理
+11、支持删除安装 exe 后在启动器的快捷方式
+12、优化了 Wine 打包器（非基于生态活动脚本）对容器的处理
+13、修复了 Wine 打包器（非基于生态活动脚本）打包出的 deb 安装时显示为解压缩后会消耗 0 B 的额外空间以及 postrm 的一些问题
+14、支持删除无需使用的程序组件
+15、支持组件/运行库下载后缓存方便下次使用（可以清理）
+16、点击获取图标按钮后会自动读取 exe 框的程序图标（不支持相对路径和包内路径，只支持绝对路径）
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年08月11日"
+updateTime = "2022年08月12日"
 about = f'''<h1>关于</h1>
 <p>一个能让Linux用户更加方便运行Windows应用的程序，内置了对wine图形话的支持和各种Wine工具和自制Wine程序打包器、运行库安装工具等等</p>
 <p>同时也内置了基于VirtualBox制作的小白Windows虚拟机安装工具，可以做到只需要用户下载系统镜像并点击安装即可，无需顾及虚拟机安装、创建、虚拟机的分区等等</p>
@@ -1284,7 +1436,7 @@ programManager = QtWidgets.QGridLayout()
 leftDownLayout.addLayout(programManager)
 programManager.addWidget(QtWidgets.QLabel("程序管理："), 0, 0, 1, 1)
 getProgramIcon = QtWidgets.QPushButton("提取图标")
-getProgramIcon.clicked.connect(lambda: RunWineProgram(f"{programPath}/BeCyIconGrabber.exe"))
+getProgramIcon.clicked.connect(lambda: RunWineProgram(f"{programPath}/BeCyIconGrabber.exe' 'z:/{e2.currentText()}"))
 programManager.addWidget(getProgramIcon, 1, 0, 1, 1)
 programManager.addWidget(QtWidgets.QLabel(" "*5), 1, 1, 1, 1)
 trasButton = QtWidgets.QPushButton("窗口透明工具")
@@ -1298,7 +1450,11 @@ miniAppStore = QtWidgets.QPushButton("微型应用商店")
 miniAppStore.clicked.connect(lambda: threading.Thread(target=MiniAppStore).start())
 programManager.addWidget(QtWidgets.QLabel(" "*5), 1, 5, 1, 1)
 programManager.addWidget(miniAppStore, 1, 6, 1, 1)
-programManager.addItem(QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum), 1, 7, 1, 1)
+programManager.addWidget(QtWidgets.QLabel(" "*5), 1, 7, 1, 1)
+getProgramStatus = QtWidgets.QPushButton("获取该程序运行情况")
+getProgramStatus.clicked.connect(ProgramRunStatusShow.ShowWindow)
+programManager.addWidget(getProgramStatus, 1, 8, 1, 1)
+programManager.addItem(QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum), 1, 9, 1, 1)
 programManager.addWidget(QtWidgets.QLabel("WINE配置："), 2, 0, 1, 1)
 wineConfig = QtWidgets.QPushButton("配置容器")
 wineConfig.clicked.connect(lambda: RunWineProgram("winecfg"))
@@ -1564,7 +1720,8 @@ for i in [
     [[p1, installWineOnDeepin23, installWineHQ], f"{programPath}/InstallWineOnDeepin23.py"],
     [[w5], f"{programPath}/deepin-wine-packager.py"],
     [[w6], f"{programPath}/deepin-wine-packager-with-script.py"],
-    [[p1, v1], f"{programPath}/RunVM.sh"]
+    [[p1, v1], f"{programPath}/RunVM.sh"],
+    [[getProgramIcon, uninstallProgram, updateGeek, trasButton, miniAppStore, fontAppStore, wm1_1, wm1_2, wm1_3, wm1_6, w7, w2], f"{programPath}/geek.exe"],
 ]:
     if not os.path.exists(i[1]):
         for x in i[0]:
@@ -1585,4 +1742,6 @@ if len(sys.argv) > 1 and sys.argv[1]:
     e2.setEditText(sys.argv[1])
 if not os.path.exists("/opt/durapps/spark-dwine-helper/spark-dwine-helper-settings/settings.sh"):
     sparkWineSetting.setEnabled(False)
+#ProgramRunStatusShow.ShowWindow()
+#ProgramRunStatusUpload.ShowWindow()
 sys.exit(app.exec_())

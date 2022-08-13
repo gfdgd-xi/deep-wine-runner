@@ -4,21 +4,40 @@ import os
 if __name__ == "__main__":
     programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
     print("此程序可以帮助您删除程序无需的组件以节约空间")
+    print("如果全部删除，将只会有核心功能")
     print("如果删除后想要恢复这样组件需要重新安装该软件包")
     delProgramList = []
     delProramCommand = "#!/bin/bash\n"
     for i in [
         [
+            "含有商业软件的内容",
+            [
+                f"{programPath}/StartVM.sh",
+	            f"{programPath}/RunVM.sh",
+	            f"{programPath}/VM",
+	            "/usr/share/applications/spark-deepin-wine-runner-control-vm.desktop",
+	            "/usr/share/applications/spark-deepin-wine-runner-start-vm.desktop",
+                f"{programPath}/BeCyIconGrabber.exe",
+                f"{programPath}/geek.exe",
+                f"{programPath}/窗体透明度设置工具.exe",
+                f"{programPath}/UpdateGeek.sh",
+                f"{programPath}/AppStore.py",
+                f"{programPath}/InstallFont.py",
+                f"{programPath}/InstallMsxml.py",
+                f"{programPath}/InstallNetFramework.py",
+                f"{programPath}/InstallOther.py",
+                f"{programPath}/InstallVisualCPlusPlus.py"
+            ]
+        ],
+        [
             "Wine 打包器（不基于生态打包脚本）", 
             [
-                f"{programPath}/dlls.7z",
-                f"{programPath}/dlls",
+                f"{programPath}/deepin-wine-packager.py",
                 f"{programPath}/exagear",
                 f"{programPath}/exagear.7z",
                 f"{programPath}/exagear",
                 f"{programPath}/wined3d.dll.so.7z",
                 f"{programPath}/wined3d.dll.so",
-                f"{programPath}/deepin-wine-packager.py",
                 "/usr/bin/deepin-wine-package-builder",
                 "/usr/share/applications/spark-deepin-wine-package-builder.desktop"
             ]
@@ -37,7 +56,9 @@ if __name__ == "__main__":
             "Arm 64 box86 wine 运行 DLL",
             [
                 f"{programPath}/dlls-arm.7z",
-                f"{programPath}/dlls-arm"
+                f"{programPath}/dlls-arm",
+                f"{programPath}/wined3d.dll.so.7z",
+                f"{programPath}/wined3d.dll.so"
             ]
         ],
         [
