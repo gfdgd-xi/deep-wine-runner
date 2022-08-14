@@ -1,0 +1,17 @@
+{
+    "appid": "@deb_package_name@",
+    "name": "@app_name@",
+    "version": "@deb_version_string@",
+    "arch": ["i386"],
+    "permissions": {
+        "autostart": false,
+        "notification": false,
+        "trayicon": true,
+        "clipboard": true,
+        "account": false,
+        "bluetooth": false,
+        "camera": true,
+        "audio_record": true,
+        "installed_apps": false
+    }
+}

@@ -1,0 +1,5 @@
+@deb_package_name@ (@deb_version_string@) unstable; urgency=low
+
+  * New @app_name@ package.
+
+ -- @deb_packager@ <test@test.com>  @deb_date@
