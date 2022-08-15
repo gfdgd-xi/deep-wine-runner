@@ -48,7 +48,6 @@ build:
 install:
 	make build
 	sudo apt update
-	#sudo dpkg -i spark-deepin-wine-runner.deb
 	sudo apt reinstall ./spark-deepin-wine-runner-52.deb -y --allow-downgrades 
 
 remove:
