@@ -32,6 +32,15 @@ def InstallSparkWine(wine):
 ###################
 # 程序功能
 ###################
+print('''                            
+m     m   "                 
+#  #  # mmm    m mm    mmm  
+" #"# #   #    #"  #  #"  # 
+ ## ##"   #    #   #  #"""" 
+ #   #  mm#mm  #   #  "#mm" 
+                            
+                            
+''')
 print("请保证你能有 root 权限以便安装")
 print("如果有请按回车，否则按 [Ctrl+C] 退出", end=' ')
 input()

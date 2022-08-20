@@ -26,7 +26,15 @@ if len(sys.argv) <= 2 or sys.argv[1] == "" or sys.argv[2] == "":
     sys.exit()
 
 homePath = os.path.expanduser('~')
-os.system("toilet .NET")
+print('''                            
+        mm   m mmmmmmmmmmmmm
+        #"m  # #        #   
+        # #m # #mmmmm   #   
+        #  # # #        #   
+   #    #   ## #mmmmm   #   
+                            
+                            
+''')
 netList = [
     ["3.5 SP1 Offline Installer", "https://download.visualstudio.microsoft.com/download/pr/b635098a-2d1d-4142-bef6-d237545123cb/2651b87007440a15209cac29634a4e45/dotnetfx35.exe"], 
     ["4.0 Offline Installer", "https://download.microsoft.com/download/9/5/A/95A9616B-7A37-4AF6-BC36-D6EA96C8DAAE/dotNetFx40_Full_x86_x64.exe"],
