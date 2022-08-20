@@ -26,7 +26,15 @@ if len(sys.argv) <= 2 or sys.argv[1] == "" or sys.argv[2] == "":
     sys.exit()
 
 homePath = os.path.expanduser('~')
-os.system("toilet VC++")
+print('''                            
+ m    m   mmm               
+ "m  m" m"   "   m      m   
+  #  #  #        #      #   
+  "mm"  #     """#""""""#"""
+   ##    "mmm"   #      #   
+                            
+                            
+''')
 netList = [
     ["2005 Service Pack 1 Redistributable Package MFC 安全更新", "https://download.microsoft.com/download/4/A/2/4A22001F-FA3B-4C13-BF4E-42EC249D51C4/vcredist_x86.EXE", "vcredist05_x86.exe"],
     ["2008 (VC++ 9.0) SP1 (不再支持) ", "https://download.microsoft.com/download/5/D/8/5D8C65CB-C849-4025-8E95-C3966CAFD8AE/vcredist_x86.exe", "vcredist08_x86.exe"], 

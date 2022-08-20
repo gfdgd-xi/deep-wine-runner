@@ -37,6 +37,15 @@ if __name__ == "__main__":
         sys.exit()
 
     CleanTerminal()
+    print('''                                                        
+   mm                  mmmm    m                        
+   ##   mmmm   mmmm   #"   " mm#mm   mmm    m mm   mmm  
+  #  #  #" "#  #" "#  "#mmm    #    #" "#   #"  " #"  # 
+  #mm#  #   #  #   #      "#   #    #   #   #     #"""" 
+ #    # ##m#"  ##m#"  "mmm#"   "mm  "#m#"   #     "#mm" 
+        #      #                                        
+        "      "                                        
+''')
     while True:
         search = input(">")
         if search.replace(" ", "").replace("\n", "") == "":

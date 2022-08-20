@@ -2,6 +2,15 @@
 import os
 
 if __name__ == "__main__":
+    print('''                                   
+   mmm  ""#                        
+ m"   "   #     mmm    mmm   m mm  
+ #        #    #"  #  "   #  #"  # 
+ #        #    #""""  m"""#  #   # 
+  "mmm"   "mm  "#mm"  "mm"#  #   # 
+                                   
+                                   
+''')
     programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
     print("此程序可以帮助您删除程序无需的组件以节约空间")
     print("如果全部删除，将只会有核心功能")
@@ -79,6 +88,7 @@ if __name__ == "__main__":
                 f"{programPath}/InstallWineOnDeepin23.py",
                 f"{programPath}/sparkstore.list",
                 f"{programPath}/InstallNewWineHQ.sh",
+                f"{programPath}/wine",
                 "/usr/bin/deepin-wine-runner-wine-installer",
                 "/usr/bin/deepin-wine-runner-wine-install-deepin23",
                 "/usr/bin/deepin-wine-runner-wine-install",

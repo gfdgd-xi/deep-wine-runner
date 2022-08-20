@@ -26,7 +26,26 @@ if len(sys.argv) <= 3 or sys.argv[1] == "" or sys.argv[2] == "" or sys.argv[3] =
     print("参数一为需要安装的容器，参数二为需要使用的wine，参数三为安装gecko或mono（gecko/mono），参数四为是否缓存（可略），四个参数位置不能颠倒")
     sys.exit()
 
-os.system(f"toilet '{sys.argv[3]}'")
+if sys.argv[3] == "mono":
+    print('''                            
+ m    m                     
+ ##  ##  mmm   m mm    mmm  
+ # ## # #" "#  #"  #  #" "# 
+ # "" # #   #  #   #  #   # 
+ #    # "#m#"  #   #  "#m#" 
+                            
+                            
+''')
+else:
+    print('''                                   
+   mmm                #            
+ m"   "  mmm    mmm   #   m   mmm  
+ #   mm #"  #  #"  "  # m"   #" "# 
+ #    # #""""  #      #"#    #   # 
+  "mmm" "#mm"  "#mm"  #  "m  "#m#" 
+                                   
+                                   
+''')
 homePath = os.path.expanduser('~')
 try:
     # 获取最新版本的版本号

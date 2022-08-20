@@ -1,6 +1,7 @@
 build:
-	#cd VM-source && qmake
-	#cd VM-source && make
+	cd VM-source && qmake
+	cd VM-source && make
+	cd wine && make
 	cp -rv VM-source/VirtualMachine               VM
 	cp -rv VM-source/deepin-wine-runner.svg       VM
 	cp -rv VM-source/api                          VM
@@ -9,6 +10,9 @@ build:
 	cp -rv VM-source/run.py                       VM
 	zip -v -q -r package-script.zip package-script
 	cp -rv VM                                     deb/opt/apps/deepin-wine-runner
+	mkdir -p deb/opt/apps/deepin-wine-runner/wine
+	cp -rv wine/installwine  deb/opt/apps/deepin-wine-runner/wine
+	echo "[]" > deb/opt/apps/deepin-wine-runner/wine/winelist.json
 	cp -rv AllInstall.py                          deb/opt/apps/deepin-wine-runner
 	cp -rv BeCyIconGrabber.exe                    deb/opt/apps/deepin-wine-runner
 	cp -rv deepin-wine-packager-with-script.py    deb/opt/apps/deepin-wine-runner

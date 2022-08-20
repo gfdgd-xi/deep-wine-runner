@@ -2,7 +2,7 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
-# 版本：1.9.0
+# 版本：2.0.0
 # 更新时间：2022年08月12日
 # 感谢：感谢 wine、deepin-wine 以及星火团队，提供了 wine、deepin-wine、spark-wine-devel 给大家使用，让我能做这个程序
 # 基于 Python3 的 PyQt5 构建
@@ -10,14 +10,13 @@
 #################
 # 引入所需的库
 #################
-from fileinput import close
-import hashlib
 import os
 import sys
 import time
 import json
 import base64
 import shutil
+import hashlib
 import requests
 import threading
 import traceback
@@ -1262,6 +1261,28 @@ try:
                     break
             except:
                 pass
+    # 读取自定义安装的 Wine（需要解包的才能使用）
+    try:
+        for i in json.loads(readtxt(f"{programPath}/wine/winelist.json")):
+            if os.path.exists(f"{programPath}/wine/{i}"):
+                if os.path.exists(f"{programPath}/wine/{i}/bin/wine"):
+                    wine[f"{programPath}/wine/{i}/bin/wine"] = f"{programPath}/wine/{i}/bin/wine"
+                    canUseWine.append(f"{programPath}/wine/{i}/bin/wine")
+                if os.path.exists(f"{programPath}/wine/{i}/bin/wine64"):
+                    wine[f"{programPath}/wine/{i}/bin/wine64"] = f"{programPath}/wine/{i}/bin/wine64"
+                    canUseWine.append(f"{programPath}/wine/{i}/bin/wine64")
+    except:
+        pass
+    try:
+        for i in os.listdir(f"{get_home()}/.deepinwine/"):
+            if os.path.exists(f"{get_home()}/.deepinwine/{i}/bin/wine"):
+                wine[f"{get_home()}/.deepinwine/{i}/bin/wine"] = f"{get_home()}/.deepinwine/{i}/bin/wine"
+                canUseWine.append(f"{get_home()}/.deepinwine/{i}/bin/wine")
+            if os.path.exists(f"{get_home()}/.deepinwine/{i}/bin/wine64"):
+                wine[f"{get_home()}/.deepinwine/{i}/bin/wine64"] = f"{get_home()}/.deepinwine/{i}/bin/wine64"
+                canUseWine.append(f"{get_home()}/.deepinwine/{i}/bin/wine64")
+    except:
+        pass
     shellHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json")).values())
     findExeHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json")).values())
     wineBottonHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json")).values())
@@ -1285,7 +1306,7 @@ except:
 # 程序信息
 ###########################
 iconPath = "{}/deepin-wine-runner.svg".format(programPath)
-programUrl = "https://gitee.com/gfdgd-xi/deep-wine-runner\nhttps://github.com/gfdgd-xi/deep-wine-runner\nhttps://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner"
+programUrl = "https://gitee.com/gfdgd-xi/deep-wine-runner\nhttps://github.com/gfdgd-xi/deep-wine-runner\nhttps://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner\nhttps://gfdgd-xi.github.io"
 information = json.loads(readtxt(f"{programPath}/information.json"))
 version = information["Version"]
 goodRunSystem = "常见 Linux 发行版"
@@ -1327,9 +1348,9 @@ updateThingsString = '''<b>※1、修复了重复路径一直自动重复增加�
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年08月13日"
+updateTime = "2022年08月17日"
 about = f'''<h1>关于</h1>
-<p>一个能让Linux用户更加方便运行Windows应用的程序，内置了对wine图形话的支持和各种Wine工具和自制Wine程序打包器、运行库安装工具等等</p>
+<p>一个能让Linux用户更加方便运行Windows应用的程序，内置了对wine图形化的支持和各种Wine工具和自制Wine程序打包器、运行库安装工具等等</p>
 <p>同时也内置了基于VirtualBox制作的小白Windows虚拟机安装工具，可以做到只需要用户下载系统镜像并点击安装即可，无需顾及虚拟机安装、创建、虚拟机的分区等等</p>
 <p>本程序依照 GPLV3 协议开源</p>
 <pre>
@@ -1513,6 +1534,7 @@ programmenu = menu.addMenu("程序(&P)")
 p1 = QtWidgets.QAction("安装 wine(&I)")
 installWineOnDeepin23 = QtWidgets.QAction("安装 wine(只限Deepin23)")
 installWineHQ = QtWidgets.QAction("安装 WineHQ")
+installMoreWine = QtWidgets.QAction("安装更多 Wine")
 p2 = QtWidgets.QAction("设置程序(&S)")
 p3 = QtWidgets.QAction("清空软件历史记录(&C)")
 cleanCache = QtWidgets.QAction("清空软件缓存")
@@ -1521,6 +1543,7 @@ p4 = QtWidgets.QAction("退出程序(&E)")
 programmenu.addAction(p1)
 programmenu.addAction(installWineOnDeepin23)
 programmenu.addAction(installWineHQ)
+programmenu.addAction(installMoreWine)
 programmenu.addSeparator()
 programmenu.addAction(p2)
 programmenu.addSeparator()
@@ -1532,6 +1555,7 @@ programmenu.addAction(p4)
 p1.triggered.connect(InstallWine)
 installWineOnDeepin23.triggered.connect(InstallWineOnDeepin23)
 installWineHQ.triggered.connect(InstallWineHQ)
+installMoreWine.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/wine/installwine'"]).start())
 p2.triggered.connect(ProgramSetting.ShowWindow)
 p3.triggered.connect(CleanProgramHistory)
 cleanCache.triggered.connect(CleanProgramCache)
@@ -1717,7 +1741,7 @@ else:
     o1.addItems(wine.keys())
 # 禁用被精简掉的控件
 for i in [
-    [[p1, installWineOnDeepin23, installWineHQ], f"{programPath}/InstallWineOnDeepin23.py"],
+    [[p1, installWineOnDeepin23, installWineHQ, installMoreWine], f"{programPath}/InstallWineOnDeepin23.py"],
     [[w5], f"{programPath}/deepin-wine-packager.py"],
     [[w6], f"{programPath}/deepin-wine-packager-with-script.py"],
     [[p1, v1], f"{programPath}/RunVM.sh"],
@@ -1730,6 +1754,7 @@ for i in [
 if subprocess.getoutput("arch").lower() != "x86_64":
     p1.setDisabled(True)
     installWineOnDeepin23.setDisabled(True)
+    installMoreWine.setDisabled(True)
     virtualMachine.setDisabled(True)
     v1.setDisabled(True)
     installWineHQ.setDisabled(True)

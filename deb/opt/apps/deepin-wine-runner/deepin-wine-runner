@@ -10,14 +10,13 @@
 #################
 # 引入所需的库
 #################
-from fileinput import close
-import hashlib
 import os
 import sys
 import time
 import json
 import base64
 import shutil
+import hashlib
 import requests
 import threading
 import traceback
@@ -1262,6 +1261,18 @@ try:
                     break
             except:
                 pass
+    # 读取自定义安装的 Wine（需要解包的才能使用）
+    try:
+        for i in json.loads(readtxt(f"{programPath}/wine/winelist.json")):
+            if os.path.exists(f"{programPath}/wine/{i}"):
+                if os.path.exists(f"{programPath}/wine/{i}/bin/wine"):
+                    wine[f"{programPath}/wine/{i}/bin/wine"] = f"{programPath}/wine/{i}/bin/wine"
+                    canUseWine.append(f"{programPath}/wine/{i}/bin/wine")
+                if os.path.exists(f"{programPath}/wine/{i}/bin/wine64"):
+                    wine[f"{programPath}/wine/{i}/bin/wine64"] = f"{programPath}/wine/{i}/bin/wine64"
+                    canUseWine.append(f"{programPath}/wine/{i}/bin/wine64")
+    except:
+        pass
     shellHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json")).values())
     findExeHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json")).values())
     wineBottonHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json")).values())
@@ -1513,6 +1524,7 @@ programmenu = menu.addMenu("程序(&P)")
 p1 = QtWidgets.QAction("安装 wine(&I)")
 installWineOnDeepin23 = QtWidgets.QAction("安装 wine(只限Deepin23)")
 installWineHQ = QtWidgets.QAction("安装 WineHQ")
+installMoreWine = QtWidgets.QAction("安装更多 Wine")
 p2 = QtWidgets.QAction("设置程序(&S)")
 p3 = QtWidgets.QAction("清空软件历史记录(&C)")
 cleanCache = QtWidgets.QAction("清空软件缓存")
@@ -1521,6 +1533,7 @@ p4 = QtWidgets.QAction("退出程序(&E)")
 programmenu.addAction(p1)
 programmenu.addAction(installWineOnDeepin23)
 programmenu.addAction(installWineHQ)
+programmenu.addAction(installMoreWine)
 programmenu.addSeparator()
 programmenu.addAction(p2)
 programmenu.addSeparator()
@@ -1532,6 +1545,7 @@ programmenu.addAction(p4)
 p1.triggered.connect(InstallWine)
 installWineOnDeepin23.triggered.connect(InstallWineOnDeepin23)
 installWineHQ.triggered.connect(InstallWineHQ)
+installMoreWine.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/wine/wine'"]).start())
 p2.triggered.connect(ProgramSetting.ShowWindow)
 p3.triggered.connect(CleanProgramHistory)
 cleanCache.triggered.connect(CleanProgramCache)

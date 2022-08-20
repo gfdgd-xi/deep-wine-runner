@@ -6,7 +6,6 @@ Architecture: all
 Priority: optional
 Depends: python3, python3-pil, python3-pil.imagetk, python3-pyquery, deepin-terminal, aria2, curl, unrar, unzip, python3-requests, fakeroot, bash, python3-pyqt5, python3-psutil
 Conflicts: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer
-Recommand: toilet
 Replaces: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer
 Installed-Size: 23500
 Description: gfdgd xi、为什么您不喜欢熊出没和阿布呢 制作的 wine 运行器
