@@ -36,7 +36,19 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
+void MainWindow::MessageBoxInfo(QString info){
+    QMessageBox::information(this, "提示", info);
+}
+void MainWindow::MessageBoxError(QString info){
+    QMessageBox::critical(this, "错误", info);
+}
+void MainWindow::ChangeDialog(QProgressDialog *dialog, int value, int downloadBytes, int totalBytes){
+    dialog->setValue(value);
+    dialog->setLabelText(QString::number(downloadBytes) + "MB/" + QString::number(totalBytes) + "MB");
+}
+void MainWindow::DownloadFinish(){
+    ui->centralWidget->setEnabled(true);
+}
 void MainWindow::on_addButton_clicked()
 {
     // 获取下载链接
@@ -76,13 +88,12 @@ void MainWindow::on_addButton_clicked()
                 !ui->unzip->isChecked(),
                 &localJsonList
                 );
+    connect(thread, &DownloadThread::MessageBoxInfo, this, &MainWindow::MessageBoxInfo);
+    connect(thread, &DownloadThread::MessageBoxError, this, &MainWindow::MessageBoxError);
+    connect(thread, &DownloadThread::ChangeDialog, this, &MainWindow::ChangeDialog);
+    connect(thread, &DownloadThread::Finish, this, &MainWindow::DownloadFinish);
+    ui->centralWidget->setDisabled(true);
     thread->start();
-}
-void DownloadThread::MessageBoxInfo(QString info){
-    QMessageBox::information(NULL, "提示", info);
-}
-void DownloadThread::MessageBoxError(QString info){
-    QMessageBox::critical(NULL, "错误", info);
 }
 void MainWindow::ReadInternetInformation(){
     // 我们采用最简单的 curl 来获取信息

@@ -12,6 +12,7 @@
 
 class DownloadThread : public QThread  // 继承 QThread
 {
+    Q_OBJECT
 public:
     DownloadThread(QProgressDialog *dialog, QString url, QString save, QString fileName, QListView *view, bool deleteZip, bool unzip, QJsonArray *localList);
     void SettingVirtualMachine(QString savePath);
@@ -32,6 +33,8 @@ signals:
     // 防止非主线程刷新控件导致程序退出
     void MessageBoxInfo(QString info);
     void MessageBoxError(QString info);
+    void ChangeDialog(QProgressDialog *dialog, int value, int downloadBytes, int totalBytes);
+    void Finish();
 };
 
 #endif // DOWNLOADTHREAD_H

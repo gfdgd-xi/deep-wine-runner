@@ -105,6 +105,7 @@ def make_deb(build=False):
     QT.thread.getSavePath.connect(SavePathGet)
     QT.thread.errorMsg.connect(ErrorMsg)
     QT.thread.infoMsg.connect(InfoMsg)
+    QT.thread.disabled_or_NORMAL_all.connect(disabled_or_NORMAL_all)
     QT.thread.start()
     #thread.start()
 
@@ -113,11 +114,13 @@ def label13_text_change(thing):
     label13_text.setText(f"<p align='center'>当前 deb 打包情况：{thing}</p>")
 
 class make_deb_threading(QtCore.QThread):
+
     signal = QtCore.pyqtSignal(str)
     label = QtCore.pyqtSignal(str)
     getSavePath = QtCore.pyqtSignal(str)
     errorMsg = QtCore.pyqtSignal(str)
     infoMsg = QtCore.pyqtSignal(str)
+    disabled_or_NORMAL_all = QtCore.pyqtSignal(bool)
     build = False
     def __init__(self, build) -> None:
         super().__init__()
@@ -135,7 +138,6 @@ class make_deb_threading(QtCore.QThread):
             self.signal.emit(text)
 
     def run(self):
-        print("a")
         #####################################
         # 程序创建的 deb 构建临时文件夹目录树：
         # /XXX
@@ -180,13 +182,16 @@ class make_deb_threading(QtCore.QThread):
                 a = "/opt/apps/{}/entries/icons/hicolor/scalable/apps/{}.{}".format(e1_text.text(), e1_text.text(), imms)
                 if not os.path.exists(e9_text.text()):
                     self.errorMsg.emit("图标的路径填写错误，无法进行构建 deb 包")
-                    disabled_or_NORMAL_all(True)
+                    self.disabled_or_NORMAL_all.emit(True)
                     self.label.emit("图标的路径填写错误，无法进行构建 deb 包")
                     return
             if not os.path.exists(e6_text.text()):
+                print("aa")
                 self.errorMsg.emit("路径填写错误，无法继续构建 deb 包")
-                disabled_or_NORMAL_all(True)
+                print("aaa1")
+                self.disabled_or_NORMAL_all.emit(True)
                 self.label.emit("容器路径填写错误，无法进行构建 deb 包")
+                print("bbb")
                 return
             debInformation = [
                 {
@@ -672,10 +677,12 @@ WINEPREFIX=$BOTTLE $EMU $EMU_ARGS $WINE "$EXE" --disable-gpu &""",
     }}
 }}'''}
             ]
+            print("c")
             if os.path.exists(wine[wineVersion.currentText()]):
                 debInformation[0]["Depends"] = ["deepin-wine-helper (>= 5.1.30-1)",
                         "spark-dwine-helper (>= 1.6.2)"
                         ][int(chooseWineHelperValue.isChecked())] #+ ["", "libasound2 (>= 1.0.16), libc6 (>= 2.28), libglib2.0-0 (>= 2.12.0), libgphoto2-6 (>= 2.5.10), libgphoto2-port12 (>= 2.5.10), libgstreamer-plugins-base1.0-0 (>= 1.0.0), libgstreamer1.0-0 (>= 1.4.0), liblcms2-2 (>= 2.2+git20110628), libldap-2.4-2 (>= 2.4.7), libmpg123-0 (>= 1.13.7), libopenal1 (>= 1.14), libpcap0.8 (>= 0.9.8), libpulse0 (>= 0.99.1), libudev1 (>= 183), libvkd3d1 (>= 1.0), libx11-6, libxext6, libxml2 (>= 2.9.0), ocl-icd-libopencl1 | libopencl1, udis86, zlib1g (>= 1:1.1.4), libasound2-plugins, libncurses6 | libncurses5 | libncurses, deepin-wine-plugin-virtual\nRecommends: libcapi20-3, libcups2, libdbus-1-3, libfontconfig1, libfreetype6, libglu1-mesa | libglu1, libgnutls30 | libgnutls28 | libgnutls26, libgsm1, libgssapi-krb5-2, libjpeg62-turbo | libjpeg8, libkrb5-3, libodbc1, libosmesa6, libpng16-16 | libpng12-0, libsane | libsane1, libsdl2-2.0-0, libtiff5, libv4l-0, libxcomposite1, libxcursor1, libxfixes3, libxi6, libxinerama1, libxrandr2, libxrender1, libxslt1.1, libxxf86vm1"][]
+                print("d")
                 debInformation[0]["run.sh"] = f'''#!/bin/sh
 
 #   Copyright (C) 2016 Deepin, Inc.
@@ -744,6 +751,7 @@ else
     $START_SHELL_PATH $BOTTLENAME $APPVER "uninstaller.exe" "$@"
 fi
 '''
+
             #############
             # 删除文件
             #############
@@ -752,7 +760,7 @@ fi
                 global savePath
                 self.getSavePath.emit("")
                 if savePath == "":
-                    disabled_or_NORMAL_all(False)
+                    self.disabled_or_NORMAL_all.emit(False)
                     return
                 debPackagePath = savePath
             else:
@@ -804,6 +812,7 @@ fi
             ###############
             # 压缩 Wine
             ###############
+            print("e")
             self.label.emit("正在处理 Wine")
             if os.path.exists(wine[wineVersion.currentText()]):
                 if wine[wineVersion.currentText()][-3:] == ".7z":
@@ -885,14 +894,14 @@ Description: {e3_text.text()}
             # 完成构建
             ################
             self.label.emit("完成构建！")
-            disabled_or_NORMAL_all(True)
+            self.disabled_or_NORMAL_all.emit(True)
             self.infoMsg.emit(widget, "提示", "打包完毕！")
         except:
             traceback.print_exc()
             self.errorMsg.emit("程序出现错误，错误信息：\n{}".format(traceback.format_exc()))
             self.label.emit("deb 包构建出现错误")
             self.signal.emit(traceback.format_exc())
-            disabled_or_NORMAL_all(True)
+            self.disabled_or_NORMAL_all.emit(True)
 
 # 写入文本文档
 def write_txt(path, things):

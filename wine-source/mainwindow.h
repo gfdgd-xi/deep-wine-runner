@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QJsonArray>
+#include <QProgressDialog>
 
 namespace Ui {
 class MainWindow;
@@ -25,6 +26,12 @@ private slots:
     void ReadInternetInformation();
 
     void on_delButton_clicked();
+
+public slots:
+    void MessageBoxInfo(QString info);
+    void MessageBoxError(QString info);
+    void ChangeDialog(QProgressDialog *dialog, int value, int downloadBytes, int totalBytes);
+    void DownloadFinish();
 
 private:
     Ui::MainWindow *ui;
