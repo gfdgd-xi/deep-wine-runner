@@ -72,8 +72,9 @@ void DownloadThread::run(){
     connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
     connect(reply, &QNetworkReply::downloadProgress, [=, &f, &t](qint64 bytesRead, qint64 totalBytes){
         f.write(reply->readAll());
-        dialog->setValue((float)bytesRead / totalBytes * 100);
-        dialog->setLabelText(QString::number(bytesRead / 1024 / 1024) + "MB/" + QString::number(totalBytes / 1024 / 1024) + "MB（在下载/安装时不要乱点程序、拖动程序，否则容易闪退）");
+        emit ChangeDialog(dialog, (float)bytesRead / totalBytes * 100, bytesRead / 1024 / 1024, totalBytes / 1024 / 1024);
+        //dialog->setValue();
+        //dialog->setLabelText(QString::number(bytesRead / 1024 / 1024) + "MB/" + QString::number(totalBytes / 1024 / 1024) + "MB（在下载/安装时不要乱点程序、拖动程序，否则容易闪退）");
         if(t.isActive()){
             t.start(timeout);
         }
@@ -84,6 +85,7 @@ void DownloadThread::run(){
     }
     loop.exec();
     if(reply->error() != QNetworkReply::NoError){
+        qDebug() << "b";
         emit MessageBoxError("下载失败");
         f.close();
         delete reply;
@@ -129,4 +131,5 @@ void DownloadThread::run(){
     process.start(QCoreApplication::applicationDirPath() + "/../launch.sh", command);
     process.waitForFinished();
     delete reply;
+    emit Finish();
 }
