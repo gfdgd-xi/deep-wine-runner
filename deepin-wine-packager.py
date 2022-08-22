@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #########################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布
-# 版本：2.0.0
+# 版本：2.0.1
 # 感谢：感谢 deepin-wine 团队，提供了 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 的 PyQt5 构建
 #########################################################################
@@ -10,6 +10,7 @@
 #################
 import os
 import sys
+import time
 import json
 import shutil
 import random
@@ -77,9 +78,12 @@ class QT:
     thread = None
 
 savePath = ""
+savePathBlock = False
 def SavePathGet(temp):
     global savePath
-    savePath = QtWidgets.QFileDialog.getExistingDirectory(widget, "选择模板生成位置", "~")
+    global savePathBlock
+    savePath = QtWidgets.QFileDialog.getExistingDirectory(widget, "选择模板生成位置", get_home())
+    savePathBlock = True
 
 def ErrorMsg(info):
     QtWidgets.QMessageBox.critical(widget, "错误", info)
@@ -758,14 +762,27 @@ fi
             self.label.emit("正在删除对构建 deb 包有影响的文件……")
             if self.build:
                 global savePath
+                global savePathBlock
+                savePathBlock = False
                 self.getSavePath.emit("")
+                # 必须保证信号完全执行才可以继续
+                # 所以自制信号锁
+                while not savePathBlock:
+                    time.sleep(0.1)
+                #
                 if savePath == "":
-                    self.disabled_or_NORMAL_all.emit(False)
+                    print("ggg")
+                    self.disabled_or_NORMAL_all.emit(True)
                     return
+                print("aaa")
                 debPackagePath = savePath
+                print("g")
             else:
                 debPackagePath = f"/tmp/{random.randint(0, 9999)}"
-            self.run_command(f"rm -rfv /tmp/{debPackagePath}")
+            #self.run_command(f"rm -rfv /tmp/{debPackagePath}")
+            print("f")
+            self.run_command(f"rm -rfv '{debPackagePath}'")
+            print("d")
             ###############
             # 创建目录
             ###############
@@ -857,11 +874,25 @@ fi
             # 写入文本文档
             ################
             self.label.emit("正在写入文件……")
-            write_txt(f"{debPackagePath}/DEBIAN/control", f'''Package: {e1_text.text()}
+            if debRecommend.text() == "":
+                write_txt(f"{debPackagePath}/DEBIAN/control", f'''Package: {e1_text.text()}
 Version: {e2_text.text()}
 Architecture: {debInformation[debArch.currentIndex()]["Architecture"]}
 Maintainer: {e4_text.text()}
 Depends: {debInformation[debArch.currentIndex()]["Depends"]}
+Section: non-free/otherosfs
+Priority: optional
+Multi-Arch: foreign
+Installed-Size: {size}
+Description: {e3_text.text()}
+''')
+            else:
+                write_txt(f"{debPackagePath}/DEBIAN/control", f'''Package: {e1_text.text()}
+Version: {e2_text.text()}
+Architecture: {debInformation[debArch.currentIndex()]["Architecture"]}
+Maintainer: {e4_text.text()}
+Depends: {debInformation[debArch.currentIndex()]["Depends"]}
+Recommends: {debRecommend.text()}
 Section: non-free/otherosfs
 Priority: optional
 Multi-Arch: foreign
@@ -895,7 +926,7 @@ Description: {e3_text.text()}
             ################
             self.label.emit("完成构建！")
             self.disabled_or_NORMAL_all.emit(True)
-            self.infoMsg.emit(widget, "提示", "打包完毕！")
+            self.infoMsg.emit("打包完毕！")
         except:
             traceback.print_exc()
             self.errorMsg.emit("程序出现错误，错误信息：\n{}".format(traceback.format_exc()))
