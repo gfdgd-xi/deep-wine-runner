@@ -12,6 +12,8 @@
 #################
 import os
 import sys
+import json
+import requests
 
 if "--help" in sys.argv:
     print("作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢")
@@ -35,10 +37,13 @@ print('''
                                    
                                    
 ''')
-msxmlList = [
-    ["Windows Script 5.7 for Windows XP", "https://download.microsoft.com/download/f/f/e/ffea3abf-b55f-4924-b5a5-bde0805ad67c/scripten.exe", "exe", "scripten.exe"],
-    ["Windows Management Instrumentation 1.50.1131", "https://www.gitlink.org.cn/api/attachments/390680", "exe", "WMITools.exe"]  
-]
+try:
+    msxmlList = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/other/list.json").text)
+except:
+    msxmlList = [
+        ["Windows Script 5.7 for Windows XP", "https://download.microsoft.com/download/f/f/e/ffea3abf-b55f-4924-b5a5-bde0805ad67c/scripten.exe", "exe", "scripten.exe"],
+        ["Windows Management Instrumentation 1.50.1131", "https://www.gitlink.org.cn/api/attachments/390680", "exe", "WMITools.exe"]  
+    ]
 print("请选择以下的应用进行安装（不保证能正常安装运行）")
 for i in range(0, len(msxmlList)):
     print(f"{i}、{msxmlList[i][0]}")

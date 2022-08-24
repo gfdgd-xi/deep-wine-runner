@@ -45,6 +45,15 @@ def Repair():
     print("修复完成！")
 
 if __name__ == "__main__":
+    print('''                            
+m     m   "                 
+#  #  # mmm    m mm    mmm  
+" #"# #   #    #"  #  #"  # 
+ ## ##"   #    #   #  #"""" 
+ #   #  mm#mm  #   #  "#mm" 
+                            
+                            
+''')
     programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
     print("能不用这个就不用这个！！！真心建议！！！\n")
     print("下面的安装过程皆需要换源等操作，安装过程千万不要中断，以及千万不要 apt upgrade，感谢\n")

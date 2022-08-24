@@ -1,4 +1,13 @@
 #!/bin/bash
+echo                                           
+echo 'm     m   "                  m    m  mmmm '
+echo '#  #  # mmm    m mm    mmm   #    # m"  "m'
+echo '" #"# #   #    #"  #  #"  #  #mmmm# #    #'
+echo ' ## ##"   #    #   #  #""""  #    # #    #'
+echo ' #   #  mm#mm  #   #  "#mm"  #    #  #mm#"'
+echo '                                        # '
+                                          
+
 ubuntuSource=(
     "sudo wget -nc -P /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources" 
     "sudo wget -nc -P /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/impish/winehq-impish.sources" 
@@ -11,7 +20,6 @@ debianSource=(
     "sudo wget -nc -P /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources"
 )
 # 选择发行版
-toilet WineHQ
 echo "WineHQ 官网：https://wiki.winehq.org/"
 echo
 echo "选择发行版："

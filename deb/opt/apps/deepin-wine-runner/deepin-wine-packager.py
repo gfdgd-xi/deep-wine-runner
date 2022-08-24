@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #########################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布
-# 版本：1.9.0
+# 版本：2.0.1
 # 感谢：感谢 deepin-wine 团队，提供了 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 的 PyQt5 构建
 #########################################################################
@@ -10,6 +10,7 @@
 #################
 import os
 import sys
+import time
 import json
 import shutil
 import random
@@ -26,17 +27,17 @@ import PyQt5.QtWidgets as QtWidgets
 #################
 
 def button1_cl():
-    path = QtWidgets.QFileDialog.getExistingDirectory(widget, "选择 wine 容器", f"{get_home()}/.deepinwine")
+    path = QtWidgets.QFileDialog.getExistingDirectory(QtCore.QCoreApplication.translate("U", "选择 wine 容器"), f"{get_home()}/.deepinwine")
     if path != "":
         e6_text.setText(path)
 
 def button2_cl():
-    path = QtWidgets.QFileDialog.getOpenFileName(widget, "选择图标文件", get_home(), "PNG图标(*.png);;SVG图标(*.svg);;全部文件(*.*)")[0]
+    path = QtWidgets.QFileDialog.getOpenFileName(widget, QtCore.QCoreApplication.translate("U", "选择图标文件"), get_home(), "PNG图标(*.png);;SVG图标(*.svg);;全部文件(*.*)")[0]
     if path != "":
         e9_text.setText(path)
 
 def button4_cl():
-    path = QtWidgets.QFileDialog.getSaveFileName(widget, "保存 deb 包", get_home(), "deb 文件(*.deb);;所有文件(*.*)", "{}_{}_i386.deb".format(e1_text.text(), e2_text.text()))[0]
+    path = QtWidgets.QFileDialog.getSaveFileName(widget, QtCore.QCoreApplication.translate("U", "保存 deb 包"), get_home(), "deb 文件(*.deb);;所有文件(*.*)", "{}_{}_i386.deb".format(e1_text.text(), e2_text.text()))[0]
     if path != "":
         e12_text.setText(path)
 
@@ -65,13 +66,32 @@ def disabled_or_NORMAL_all(choose):
     rmBash.setDisabled(choose)
     cleanBottonByUOS.setDisabled(choose)
     installDeb.setDisabled(choose)
+    useInstallWineArch.setDisabled(choose)
+    buildDebDir.setDisabled(choose)
+    debDepends.setDisabled(choose)
+    debRecommend.setDisabled(choose)
     if not choose:
         ChangeArchCombobox()
+        ChangeWine()
     
 class QT:
     thread = None
 
-def make_deb():
+savePath = ""
+savePathBlock = False
+def SavePathGet(temp):
+    global savePath
+    global savePathBlock
+    savePath = QtWidgets.QFileDialog.getExistingDirectory(widget, "选择模板生成位置", get_home())
+    savePathBlock = True
+
+def ErrorMsg(info):
+    QtWidgets.QMessageBox.critical(widget, "错误", info)
+
+def InfoMsg(info):
+    QtWidgets.QMessageBox.information(widget, "提示", info)
+
+def make_deb(build=False):
     clean_textbox1_things()
     disabled_or_NORMAL_all(False)
     if e1_text.text() == "" or e2_text.text() == "" or e3_text.text() == "" or e4_text.text() == "" or e5_text.text() == "" or e6_text.text() == "" or e7_text.text() == "" or e8_text.text() == "" or e12_text.text() == "":
@@ -79,13 +99,17 @@ def make_deb():
         disabled_or_NORMAL_all(True)
         label13_text_change("必填信息没有填写完整，无法继续构建 deb 包")
         return
-    if QtWidgets.QMessageBox.question(widget, "提示", "打包将会改动现在选择的容器，是否继续？") == QtWidgets.QMessageBox.No:
+    if QtWidgets.QMessageBox.question(widget, QtCore.QCoreApplication.translate("U", "提示"), QtCore.QCoreApplication.translate("U", "打包将会改动现在选择的容器，是否继续？")) == QtWidgets.QMessageBox.No:
         disabled_or_NORMAL_all(True)
         return
     #thread = threading.Thread(target=make_deb_threading)
-    QT.thread = make_deb_threading()
+    QT.thread = make_deb_threading(build)
     QT.thread.signal.connect(chang_textbox1_things)
     QT.thread.label.connect(label13_text_change)
+    QT.thread.getSavePath.connect(SavePathGet)
+    QT.thread.errorMsg.connect(ErrorMsg)
+    QT.thread.infoMsg.connect(InfoMsg)
+    QT.thread.disabled_or_NORMAL_all.connect(disabled_or_NORMAL_all)
     QT.thread.start()
     #thread.start()
 
@@ -94,10 +118,17 @@ def label13_text_change(thing):
     label13_text.setText(f"<p align='center'>当前 deb 打包情况：{thing}</p>")
 
 class make_deb_threading(QtCore.QThread):
+
     signal = QtCore.pyqtSignal(str)
     label = QtCore.pyqtSignal(str)
-    def __init__(self) -> None:
+    getSavePath = QtCore.pyqtSignal(str)
+    errorMsg = QtCore.pyqtSignal(str)
+    infoMsg = QtCore.pyqtSignal(str)
+    disabled_or_NORMAL_all = QtCore.pyqtSignal(bool)
+    build = False
+    def __init__(self, build) -> None:
         super().__init__()
+        self.build = build
 
     def run_command(self, command):
         res = subprocess.Popen([command], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -154,14 +185,17 @@ class make_deb_threading(QtCore.QThread):
                     imms = ".svg"
                 a = "/opt/apps/{}/entries/icons/hicolor/scalable/apps/{}.{}".format(e1_text.text(), e1_text.text(), imms)
                 if not os.path.exists(e9_text.text()):
-                    QtWidgets.QMessageBox.critical(widget, "错误", "图标的路径填写错误，无法进行构建 deb 包")
-                    disabled_or_NORMAL_all(True)
+                    self.errorMsg.emit("图标的路径填写错误，无法进行构建 deb 包")
+                    self.disabled_or_NORMAL_all.emit(True)
                     self.label.emit("图标的路径填写错误，无法进行构建 deb 包")
                     return
             if not os.path.exists(e6_text.text()):
-                QtWidgets.QMessageBox.critical(widget, "错误", "路径填写错误，无法继续构建 deb 包")
-                disabled_or_NORMAL_all(True)
+                print("aa")
+                self.errorMsg.emit("路径填写错误，无法继续构建 deb 包")
+                print("aaa1")
+                self.disabled_or_NORMAL_all.emit(True)
                 self.label.emit("容器路径填写错误，无法进行构建 deb 包")
+                print("bbb")
                 return
             debInformation = [
                 {
@@ -173,7 +207,7 @@ class make_deb_threading(QtCore.QThread):
                         f"{wine[wineVersion.currentText()]}, spark-dwine-helper (>= 1.6.2), fonts-wqy-microhei, fonts-wqy-zenhei"
                         ][int(chooseWineHelperValue.isChecked())],
                     "postinst": "",
-                    "postrm": ["", f"""#!/bin/bash
+                    "postrm": ["", f"""#!/bin/bash..
 
 if [ "$1" = "remove" ] || [ "$1" = "purge" ];then
 
@@ -647,12 +681,108 @@ WINEPREFIX=$BOTTLE $EMU $EMU_ARGS $WINE "$EXE" --disable-gpu &""",
     }}
 }}'''}
             ]
+            print("c")
+            if os.path.exists(wine[wineVersion.currentText()]):
+                debInformation[0]["Depends"] = ["deepin-wine-helper (>= 5.1.30-1)",
+                        "spark-dwine-helper (>= 1.6.2)"
+                        ][int(chooseWineHelperValue.isChecked())] #+ ["", "libasound2 (>= 1.0.16), libc6 (>= 2.28), libglib2.0-0 (>= 2.12.0), libgphoto2-6 (>= 2.5.10), libgphoto2-port12 (>= 2.5.10), libgstreamer-plugins-base1.0-0 (>= 1.0.0), libgstreamer1.0-0 (>= 1.4.0), liblcms2-2 (>= 2.2+git20110628), libldap-2.4-2 (>= 2.4.7), libmpg123-0 (>= 1.13.7), libopenal1 (>= 1.14), libpcap0.8 (>= 0.9.8), libpulse0 (>= 0.99.1), libudev1 (>= 183), libvkd3d1 (>= 1.0), libx11-6, libxext6, libxml2 (>= 2.9.0), ocl-icd-libopencl1 | libopencl1, udis86, zlib1g (>= 1:1.1.4), libasound2-plugins, libncurses6 | libncurses5 | libncurses, deepin-wine-plugin-virtual\nRecommends: libcapi20-3, libcups2, libdbus-1-3, libfontconfig1, libfreetype6, libglu1-mesa | libglu1, libgnutls30 | libgnutls28 | libgnutls26, libgsm1, libgssapi-krb5-2, libjpeg62-turbo | libjpeg8, libkrb5-3, libodbc1, libosmesa6, libpng16-16 | libpng12-0, libsane | libsane1, libsdl2-2.0-0, libtiff5, libv4l-0, libxcomposite1, libxcursor1, libxfixes3, libxi6, libxinerama1, libxrandr2, libxrender1, libxslt1.1, libxxf86vm1"][]
+                print("d")
+                debInformation[0]["run.sh"] = f'''#!/bin/sh
+
+#   Copyright (C) 2016 Deepin, Inc.
+#
+#   Author:     Li LongYu <lilongyu@linuxdeepin.com>
+#               Peng Hao <penghao@linuxdeepin.com>
+
+version_gt() {{ test "$(echo "$@" | tr " " "\n" | sort -V | head -n 1)" != "$1"; }}
+
+extract_archive()
+{{
+    archive=$1
+    version_file=$2
+    dest_dir=$3
+    if [ -f "$archive" ] && [ -n "$dest_dir" ] && [ "$dest_dir" != "." ];then
+        archive_version=`cat $version_file`
+        if [ -d "$dest_dir" ];then
+            if [ -f "$dest_dir/VERSION" ];then
+                dest_version=`cat $dest_dir/VERSION`
+                if version_gt "$archive_version" "$dest_version";then
+                    7z x "$archive" -o/"$dest_dir" -aoa
+                    echo "$archive_version" > "$dest_dir/VERSION"
+                fi
+            fi
+        else
+            mkdir -p $dest_dir
+            7z x "$archive" -o/"$dest_dir" -aoa
+            echo "$archive_version" > "$dest_dir/VERSION"
+        fi
+    fi
+}}
+
+BOTTLENAME="{e5_text.text()}"
+APPVER="{e2_text.text()}"
+EXEC_PATH="{e7_text.text()}"
+START_SHELL_PATH="{["/opt/deepinwine/tools/run_v4.sh", "/opt/deepinwine/tools/spark_run_v4.sh"][int(chooseWineHelperValue.isChecked())]}"
+export MIME_TYPE=""
+export DEB_PACKAGE_NAME="{e1_text.text()}"
+export APPRUN_CMD="$HOME/.deepinwine/{os.path.basename(wine[wineVersion.currentText()]).replace('.7z', '')}/bin/{useInstallWineArch.currentText()}"
+export PATCH_LOADER_ENV=""
+export FILEDLG_PLUGIN="/opt/apps/$DEB_PACKAGE_NAME/files/gtkGetFileNameDlg"
+DISABLE_ATTACH_FILE_DIALOG="1"
+export SPECIFY_SHELL_DIR=`dirname $START_SHELL_PATH`
+
+DEEPIN_WINE_BIN_DIR=`dirname $APPRUN_CMD`
+DEEPIN_WINE_DIR=`dirname $DEEPIN_WINE_BIN_DIR`
+ARCHIVE_FILE_DIR="/opt/apps/$DEB_PACKAGE_NAME/files"
+
+if [ -n "$PATCH_LOADER_ENV" ] && [ -n "$EXEC_PATH" ];then
+    export $PATCH_LOADER_ENV
+fi
+
+extract_archive "$ARCHIVE_FILE_DIR/wine_archive.7z" "$ARCHIVE_FILE_DIR/wine_archive.md5sum" "$DEEPIN_WINE_DIR"
+
+if [ -d "$DEEPIN_WINE_BIN_DIR" ] && [ "$DEEPIN_WINE_BIN_DIR" != "." ];then
+    export DEEPIN_WINE_BIN_DIR
+fi
+
+if [ -z "$DISABLE_ATTACH_FILE_DIALOG" ];then
+    export ATTACH_FILE_DIALOG=1
+fi
+
+if [ -n "$EXEC_PATH" ];then
+    $START_SHELL_PATH $BOTTLENAME $APPVER "$EXEC_PATH" "$@"
+else
+    $START_SHELL_PATH $BOTTLENAME $APPVER "uninstaller.exe" "$@"
+fi
+'''
+
             #############
             # 删除文件
             #############
             self.label.emit("正在删除对构建 deb 包有影响的文件……")
-            debPackagePath = f"/tmp/{random.randint(0, 9999)}"
-            self.run_command(f"rm -rfv /tmp/{debPackagePath}")
+            if self.build:
+                global savePath
+                global savePathBlock
+                savePathBlock = False
+                self.getSavePath.emit("")
+                # 必须保证信号完全执行才可以继续
+                # 所以自制信号锁
+                while not savePathBlock:
+                    time.sleep(0.1)
+                #
+                if savePath == "":
+                    print("ggg")
+                    self.disabled_or_NORMAL_all.emit(True)
+                    return
+                print("aaa")
+                debPackagePath = savePath
+                print("g")
+            else:
+                debPackagePath = f"/tmp/{random.randint(0, 9999)}"
+            #self.run_command(f"rm -rfv /tmp/{debPackagePath}")
+            print("f")
+            self.run_command(f"rm -rfv '{debPackagePath}'")
+            print("d")
             ###############
             # 创建目录
             ###############
@@ -697,6 +827,17 @@ WINEPREFIX=$BOTTLE $EMU $EMU_ARGS $WINE "$EXE" --disable-gpu &""",
             self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Templates'")
             os.chdir(programPath)
             ###############
+            # 压缩 Wine
+            ###############
+            print("e")
+            self.label.emit("正在处理 Wine")
+            if os.path.exists(wine[wineVersion.currentText()]):
+                shutil.copy(f"{programPath}/gtkGetFileNameDlg", f"{debPackagePath}/opt/apps/{e1_text.text()}/files/gtkGetFileNameDlg")
+                if wine[wineVersion.currentText()][-3:] == ".7z":
+                    shutil.copy(wine[wineVersion.currentText()], f"{debPackagePath}/opt/apps/{e1_text.text()}/files/wine_archive.7z")
+                else:
+                    self.run_command(f"7z a '{debPackagePath}/opt/apps/{e1_text.text()}/files/wine_archive.7z' '{wine[wineVersion.currentText()]}/*'")
+            ###############
             # 压缩容器
             ###############
             self.label.emit("正在打包 wine 容器")
@@ -705,6 +846,8 @@ WINEPREFIX=$BOTTLE $EMU $EMU_ARGS $WINE "$EXE" --disable-gpu &""",
             # 复制文件
             ###############
             self.label.emit("正在复制文件……")
+            if os.path.exists(wine[wineVersion.currentText()]):
+                shutil.copy(f"{programPath}/gtkGetFileNameDlg", f"{debPackagePath}/opt/apps/{e1_text.text()}/files")
             # arm64 box86 需要复制 dlls-arm 目录
             if debArch.currentIndex() == 1:
                 if not os.path.exists(f"{programPath}/dlls-arm"):
@@ -732,11 +875,25 @@ WINEPREFIX=$BOTTLE $EMU $EMU_ARGS $WINE "$EXE" --disable-gpu &""",
             # 写入文本文档
             ################
             self.label.emit("正在写入文件……")
-            write_txt(f"{debPackagePath}/DEBIAN/control", f'''Package: {e1_text.text()}
+            if debRecommend.text() == "":
+                write_txt(f"{debPackagePath}/DEBIAN/control", f'''Package: {e1_text.text()}
 Version: {e2_text.text()}
 Architecture: {debInformation[debArch.currentIndex()]["Architecture"]}
 Maintainer: {e4_text.text()}
 Depends: {debInformation[debArch.currentIndex()]["Depends"]}
+Section: non-free/otherosfs
+Priority: optional
+Multi-Arch: foreign
+Installed-Size: {size}
+Description: {e3_text.text()}
+''')
+            else:
+                write_txt(f"{debPackagePath}/DEBIAN/control", f'''Package: {e1_text.text()}
+Version: {e2_text.text()}
+Architecture: {debInformation[debArch.currentIndex()]["Architecture"]}
+Maintainer: {e4_text.text()}
+Depends: {debInformation[debArch.currentIndex()]["Depends"]}
+Recommends: {debRecommend.text()}
 Section: non-free/otherosfs
 Priority: optional
 Multi-Arch: foreign
@@ -762,20 +919,21 @@ Description: {e3_text.text()}
             ################
             # 构建 deb 包
             ################
-            self.label.emit("正在构建 deb 包……")
-            self.run_command("dpkg -b {} {}".format(debPackagePath, e12_text.text()))
+            if not self.build:
+                self.label.emit("正在构建 deb 包……")
+                self.run_command("dpkg -b {} {}".format(debPackagePath, e12_text.text()))
             ################
             # 完成构建
             ################
             self.label.emit("完成构建！")
-            disabled_or_NORMAL_all(True)
-            QtWidgets.QMessageBox.information(widget, "提示", "打包完毕！")
+            self.disabled_or_NORMAL_all.emit(True)
+            self.infoMsg.emit("打包完毕！")
         except:
             traceback.print_exc()
-            QtWidgets.QMessageBox.critical(widget, "错误", "程序出现错误，错误信息：\n{}".format(traceback.format_exc()))
+            self.errorMsg.emit("程序出现错误，错误信息：\n{}".format(traceback.format_exc()))
             self.label.emit("deb 包构建出现错误")
             self.signal.emit(traceback.format_exc())
-            disabled_or_NORMAL_all(True)
+            self.disabled_or_NORMAL_all.emit(True)
 
 # 写入文本文档
 def write_txt(path, things):
@@ -834,20 +992,59 @@ def ChangeArchCombobox():
         option = False
     chooseWineHelperValue.setEnabled(option)
     wineVersion.setEnabled(option)
-    
-    #chooseWineHelperValue.setEnabled(option)
+    useInstallWineArch.setEnabled(option)
     rmBash.setEnabled(option)
+    if debArch.currentIndex() == 0:
+        ChangeWine()
+    elif debArch.currentIndex() == 1:
+        debDepends.setText("deepin-elf-verify (>= 0.0.16.7-1), com.deepin-wine6-stable.deepin(>=6.0deepin14), com.deepin-box86.deepin(>=0.2.3deepin8), p7zip-full, fonts-wqy-microhei, fonts-noto-cjk")
+    elif debArch.currentIndex() == 2:
+        debDepends.setText("zenity, com.deepin-wine6-stable.deepin(>=6.0deepin14), deepin-wine-exagear-images(>=10deepin4), com.deepin-box86.deepin(>=0.2.3deepin9), p7zip-full, fonts-wqy-microhei, fonts-noto-cjk")
 
 def InstallDeb():
     os.system(f"xdg-open '{e12_text.text()}'")
 
+def ChangeWine():
+    useInstallWineArch.setEnabled(os.path.exists(wine[wineVersion.currentText()]))
+    debDepends.setText([f"{wine[wineVersion.currentText()]}, deepin-wine-helper (>= 5.1.30-1), fonts-wqy-microhei, fonts-wqy-zenhei",
+                        f"{wine[wineVersion.currentText()]}, spark-dwine-helper (>= 1.6.2), fonts-wqy-microhei, fonts-wqy-zenhei"
+                        ][int(chooseWineHelperValue.isChecked())])
+    debRecommend.setText("")
+    if os.path.exists(wine[wineVersion.currentText()]):
+        debDepends.setText(["deepin-wine-helper (>= 5.1.30-1)",
+                        "spark-dwine-helper (>= 1.6.2)"
+                        ][int(chooseWineHelperValue.isChecked())])
+        if "deepin-wine5-stable" in wine[wineVersion.currentText()]:
+            debDepends.setText("libasound2 (>= 1.0.16), libc6 (>= 2.28), libglib2.0-0 (>= 2.12.0), libgphoto2-6 (>= 2.5.10), libgphoto2-port12 (>= 2.5.10), libgstreamer-plugins-base1.0-0 (>= 1.0.0), libgstreamer1.0-0 (>= 1.4.0), liblcms2-2 (>= 2.2+git20110628), libldap-2.4-2 (>= 2.4.7), libmpg123-0 (>= 1.13.7), libopenal1 (>= 1.14), libpcap0.8 (>= 0.9.8), libpulse0 (>= 0.99.1), libudev1 (>= 183), libvkd3d1 (>= 1.0), libx11-6, libxext6, libxml2 (>= 2.9.0), ocl-icd-libopencl1 | libopencl1, udis86, zlib1g (>= 1:1.1.4), libasound2-plugins, libncurses6 | libncurses5 | libncurses, deepin-wine-plugin-virtual")
+            debRecommend.setText("libcapi20-3, libcups2, libdbus-1-3, libfontconfig1, libfreetype6, libglu1-mesa | libglu1, libgnutls30 | libgnutls28 | libgnutls26, libgsm1, libgssapi-krb5-2, libjpeg62-turbo | libjpeg8, libkrb5-3, libodbc1, libosmesa6, libpng16-16 | libpng12-0, libsane | libsane1, libsdl2-2.0-0, libtiff5, libv4l-0, libxcomposite1, libxcursor1, libxfixes3, libxi6, libxinerama1, libxrandr2, libxrender1, libxslt1.1, libxxf86vm1")
+
+
 ###############
 # 程序信息
 ###############
+programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 # 如果要添加其他 wine，请在字典添加其名称和执行路径
 wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable": "deepin-wine6-stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine"}
+# 读取 wine 本地列表
+for i in ["/opt/wine-staging", "/opt/wine-dev", "/opt/wine-stable", "/opt/spark-wine7-devel"]:
+    if os.path.exists(i):
+        wine[i] = i
+try:
+    for i in os.listdir(f"{get_home()}/.deepinwine"):
+        if os.path.exists(f"{get_home()}/.deepinwine/{i}/bin/wine"):
+            wine[f"{get_home()}/.deepinwine/{i}"] = f"{get_home()}/.deepinwine/{i}"
+except:
+    pass
+try:
+    for i in json.loads(readtxt(f"{programPath}/wine/winelist.json")):
+        if os.path.exists(f"{programPath}/wine/{i}.7z"):
+            wine[f"{programPath}/wine/{i}.7z"] = f"{programPath}/wine/{i}.7z"
+            continue
+        if os.path.exists(f"{programPath}/wine/{i}"):
+            wine[f"{programPath}/wine/{i}"] = f"{programPath}/wine/{i}"
+except:
+    pass
 os.chdir("/")
-programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 iconPath = "{}/deepin-wine-runner.svg".format(programPath)
 information = json.loads(readtxt(f"{programPath}/information.json"))
 version = information["Version"]
@@ -885,51 +1082,46 @@ e12_text = QtWidgets.QLineEdit()
 e15_text = QtWidgets.QLineEdit()
 label13_text = QtWidgets.QLabel("<p align='center'>当前 deb 打包情况：暂未打包</p>")
 option1_text = QtWidgets.QComboBox()
-button1 = QtWidgets.QPushButton("浏览……")
-button2 = QtWidgets.QPushButton("浏览……")
-button4 = QtWidgets.QPushButton("浏览……")
+button1 = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "浏览……"))
+button2 = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "浏览……"))
+button4 = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "浏览……"))
 debControlFrame = QtWidgets.QHBoxLayout()
-button5 = QtWidgets.QPushButton("打包……")
-installDeb = QtWidgets.QPushButton("安装打包完成的 deb……")
+button5 = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "打包……"))
+installDeb = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "安装打包完成的 deb……"))
+buildDebDir = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "根据填写内容打包模板"))
 debControlFrame.addWidget(button5)
 debControlFrame.addWidget(installDeb)
-debOption = QtWidgets.QHBoxLayout()
-rmBash = QtWidgets.QCheckBox("设置卸载该 deb 后自动删除该容器")
-cleanBottonByUOS = QtWidgets.QCheckBox("使用统信 Wine 生态适配活动容器清理脚本")
-debOption.addWidget(rmBash)
-debOption.addWidget(cleanBottonByUOS)
+rmBash = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "设置卸载该 deb 后自动删除该容器"))
+cleanBottonByUOS = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "使用统信 Wine 生态适配活动容器清理脚本"))
 debArch = QtWidgets.QComboBox()
 debArch.addItems(["i386", "arm64(box86)", "arm64(exagear)"])
 textbox1 = QtWidgets.QTextBrowser()
 option1_text.addItems(["Network", "Chat", "Audio", "Video", "Graphics", "Office", "Translation", "Development", "Utility"])
 option1_text.setCurrentText("Network")
 wineFrame = QtWidgets.QHBoxLayout()
-chooseWineHelperValue = QtWidgets.QCheckBox("使用星火wine helper（如不勾选默认为deepin-wine-helper）")
+chooseWineHelperValue = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "使用星火wine helper\n（如不勾选默认为deepin-wine-helper）"))
 button1.clicked.connect(button1_cl)
 button2.clicked.connect(button2_cl)
 button4.clicked.connect(button4_cl)
 button5.clicked.connect(make_deb)
+buildDebDir.clicked.connect(lambda: make_deb(True))
 installDeb.clicked.connect(InstallDeb)
 wineFrame.addWidget(wineVersion)
 debArch.currentIndexChanged.connect(ChangeArchCombobox)
-wineFrame.addWidget(chooseWineHelperValue)
 # 创建控件
-widgetLayout.addWidget(QtWidgets.QLabel("要打包的 deb 包的包名（※必填）："), 0, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel("要打包的 deb 包的版本号（※必填）："), 1, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel("要打包的 deb 包的说明（※必填）："), 2, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel("要打包的 deb 包的维护者（※必填）："), 3, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel("要解压的 wine 容器的容器名（※必填）："), 4, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel("要解压的 wine 容器（※必填）："), 5, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel("要解压的 wine 容器里需要运行的可执行文件路径（※必填）："), 6, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel("要显示的 .desktop 文件的分类（※必填）："), 7, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel("要解压的 wine 容器里需要运行的可执行文件的参数（选填）："), 8, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel("要显示的 .desktop 文件的名称（※必填）："), 9, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel("要显示的 .desktop 文件的图标（选填）："), 10, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel("要显示的 .desktop 文件的 MimeType 内容（选填）："), 11, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel("选择打包的 wine 版本（※必选）："), 12, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel("打包 deb 的保存路径（※必填）："), 13, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel("deb 包选项（选填）："), 14, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel("打包 deb 架构（※必选）："), 15, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要打包的 deb 包的包名（※必填）：")), 0, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要打包的 deb 包的版本号（※必填）：")), 1, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要打包的 deb 包的说明（※必填）：")), 2, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要打包的 deb 包的维护者（※必填）：")), 3, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要解压的 wine 容器的容器名（※必填）：")), 4, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要解压的 wine 容器（※必填）：")), 5, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件路径（※必填）：")), 6, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的分类（※必填）：")), 7, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件的参数（选填）：")), 8, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的名称（※必填）：")), 9, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的图标（选填）：")), 10, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "选择打包的 wine 版本（※必选）：")), 12, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "打包 deb 的保存路径（※必填）：")), 13, 0, 1, 1)
 widgetLayout.addWidget(e1_text, 0, 1, 1, 1)
 widgetLayout.addWidget(e2_text, 1, 1, 1, 1)
 widgetLayout.addWidget(e3_text, 2, 1, 1, 1)
@@ -943,20 +1135,50 @@ widgetLayout.addWidget(e15_text, 8, 1, 1, 1)
 widgetLayout.addWidget(e8_text, 9, 1, 1, 1)
 widgetLayout.addWidget(e9_text, 10, 1, 1, 1)
 widgetLayout.addWidget(button2, 10, 2, 1, 1)
-widgetLayout.addWidget(e10_text, 11, 1, 1, 1)
 widgetLayout.addLayout(wineFrame, 12, 1, 1, 1)
 widgetLayout.addWidget(e12_text, 13, 1, 1, 1)
 widgetLayout.addWidget(button4, 13, 2, 1, 1)
-widgetLayout.addLayout(debOption, 14, 1, 1, 1)
-widgetLayout.addWidget(debArch, 15, 1, 1, 1)
 widgetLayout.addLayout(debControlFrame, 16, 1, 1, 1)
 widgetLayout.addWidget(label13_text, 17, 0, 1, 3)
 widgetLayout.addWidget(textbox1, 18, 0, 1, 3)
+# 高级功能
+moreSetting = QtWidgets.QGroupBox(QtCore.QCoreApplication.translate("U", "高级设置"))
+debDepends = QtWidgets.QLineEdit()
+debRecommend = QtWidgets.QLineEdit()
+debDepends.setPlaceholderText(QtCore.QCoreApplication.translate("U", "deb 包的依赖(如无特殊需求默认即可)"))
+debDepends.setText("deepin-wine6-stable, deepin-wine-helper (>= 5.1.30-1), fonts-wqy-microhei, fonts-wqy-zenhei")
+debRecommend.setPlaceholderText(QtCore.QCoreApplication.translate("U", "deb 包的推荐依赖(非强制，一般默认即可)"))
+moreSettingLayout = QtWidgets.QVBoxLayout()
+localWineVersion = QtWidgets.QComboBox()
+useInstallWineArch = QtWidgets.QComboBox()
+useInstallWineArch.addItems(["wine", "wine64"])
+moreSettingLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "Wine 位数(只限本地需要打包集成的Wine)：\n提示：32位的Wine不能使用64位容器")))
+#moreSettingLayout.addWidget(localWineVersion)
+moreSettingLayout.addWidget(useInstallWineArch)
+moreSettingLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "deb 包选项：")))
+moreSettingLayout.addWidget(rmBash)
+moreSettingLayout.addWidget(cleanBottonByUOS)
+moreSettingLayout.addWidget(chooseWineHelperValue)
+moreSettingLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "deb 的依赖(强制，如无特殊需求默认即可)：")))
+moreSettingLayout.addWidget(debDepends)
+moreSettingLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "deb 的推荐依赖(非强制，一般默认即可)：")))
+moreSettingLayout.addWidget(debRecommend)
+moreSettingLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的 MimeType：")))
+moreSettingLayout.addWidget(e10_text)
+moreSettingLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "打包 deb 架构：")))
+moreSettingLayout.addWidget(debArch)
+moreSetting.setLayout(moreSettingLayout)
+widgetLayout.addWidget(moreSetting, 0, 3, 16, 1)
+widgetLayout.addWidget(buildDebDir, 16, 3)
+useInstallWineArch.setDisabled(True)
+wineVersion.currentTextChanged.connect(ChangeWine)
+chooseWineHelperValue.stateChanged.connect(ChangeWine)
+# 菜单栏
 menu = window.menuBar()
-programmenu = menu.addMenu("程序")
-help = menu.addMenu("帮助")
-exit = QtWidgets.QAction("退出程序")
-tip = QtWidgets.QAction("小提示")
+programmenu = menu.addMenu(QtCore.QCoreApplication.translate("U", "程序"))
+help = menu.addMenu(QtCore.QCoreApplication.translate("U", "帮助"))
+exit = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "退出程序"))
+tip = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "小提示"))
 exit.triggered.connect(window.close)
 tip.triggered.connect(helps)
 programmenu.addAction(exit)
@@ -972,5 +1194,6 @@ widget.setLayout(widgetLayout)
 window.setCentralWidget(widget)
 window.setWindowTitle(f"wine 应用打包器 {version}")
 window.setWindowIcon(QtGui.QIcon(iconPath))
+window.resize(int(window.frameSize().width() * 2.1), window.frameSize().height())
 window.show()
 sys.exit(app.exec_())

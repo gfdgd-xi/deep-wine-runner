@@ -26,7 +26,15 @@ if len(sys.argv) <= 2 or sys.argv[1] == "" or sys.argv[2] == "":
     sys.exit()
 
 homePath = os.path.expanduser('~')
-os.system("toilet Other")
+print('''                                   
+  mmmm    m    #                   
+ m"  "m mm#mm  # mm    mmm    m mm 
+ #    #   #    #"  #  #"  #   #"  "
+ #    #   #    #   #  #""""   #    
+  #mm#    "mm  #   #  "#mm"   #    
+                                   
+                                   
+''')
 msxmlList = [
     ["Windows Script 5.7 for Windows XP", "https://download.microsoft.com/download/f/f/e/ffea3abf-b55f-4924-b5a5-bde0805ad67c/scripten.exe", "exe", "scripten.exe"],
     ["Windows Management Instrumentation 1.50.1131", "https://www.gitlink.org.cn/api/attachments/390680", "exe", "WMITools.exe"]  

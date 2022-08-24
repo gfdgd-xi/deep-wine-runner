@@ -19,7 +19,15 @@ if __name__ == "__main__":
     homePath = os.path.expanduser('~')
     while True:
         os.system("clear")
-        os.system("toilet Fonts")
+        print('''                                   
+ mmmmmm                 m          
+ #       mmm   m mm   mm#mm   mmm  
+ #mmmmm #" "#  #"  #    #    #   " 
+ #      #   #  #   #    #     """m 
+ #      "#m#"  #   #    "mm  "mmm" 
+                                   
+                                   
+''')
         if not os.path.exists(f"{sys.argv[1]}/drive_c/windows/Fonts"):
             input("您选择的不是 Wine 容器，无法继续，按回车键退出")
             exit()

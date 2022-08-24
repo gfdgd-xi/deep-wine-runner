@@ -5,6 +5,8 @@
 #-------------------------------------------------
 
 QT       += core gui
+TRANSLATIONS += zh_CN.ts\
+                en_US.ts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

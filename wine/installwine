@@ -262,6 +262,10 @@ def on_delButton_clicked():
         traceback.print_exc()
         QtWidgets.QMessageBox.critical(window, "错误", traceback.format_exc())
 
+# 获取当前语言
+def get_now_lang()->"获取当前语言":
+    return os.getenv('LANG')
+
 if __name__ == "__main__":
     localJsonList = []
     internetJsonList = []
@@ -269,9 +273,10 @@ if __name__ == "__main__":
     programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
     app = QtWidgets.QApplication(sys.argv)
     # 读取翻译
-    trans = QtCore.QTranslator()
-    trans.load(f"{programPath}/../LANG/installwine-en_US.qm")
-    app.installTranslator(trans)
+    if not get_now_lang() == "zh_CN.UTF-8":
+        trans = QtCore.QTranslator()
+        trans.load(f"{programPath}/../LANG/installwine-en_US.qm")
+        app.installTranslator(trans)
     # 窗口构建
     window = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()

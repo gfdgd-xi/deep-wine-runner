@@ -1,5 +1,5 @@
 {
-    "Version": "2.0.0-2",
+    "Version": "2.1.0",
     "Thank": [
         "感谢 @a2035274 @虚幻的早晨 https://bbs.deepin.org/post/238301",
         "感谢 @zhangs https://bbs.deepin.org/post/227948",
@@ -18,10 +18,13 @@
         "感谢 @办公助手 提供的非 X86 平台 Wine 运行自定义 exe 应用教程和 deb 包",
         "感谢 @季星火 反馈的无法使用该程序删除生成的 .desktop 的问题",
         "感谢 @ZYH 提供的敏感词列表",
+        "感谢 @五行缺钱 反馈的 2.0.0 在 Deepin 23 缺失依赖 toilet 的问题",
+        "感谢 @云的眼泪 @zhengjl 反馈的 2.0.0 发布忘记把安装包传蓝奏云的问题",
         "感谢 @虚幻的早晨 提出的添加 DXVK、VKD3D 的功能（VKD3D 暂未实现）",
         "感谢统信在 Wine 生态适配活动中提供的打包脚本",
         "也感谢 DXVK 的开发者开发了 DXVK 这个程序，项目链接：https://github.com/doitsujin/dxvk",
         "也感谢 WineHQ 开发团队开发的 WineHQ，项目网址：https://dl.winehq.org/",
+        "最后也感谢支持本程序的用户和上传相关软件运行情况数据的用户，有你们的支持和使用，使这个程序变得更好",
         "",
         "可以从上面的各种解决方案更好的学习 Wine 生态适配，也可以看 deepin 论坛板块 https://bbs.deepin.org/module/detail/116 进行学习，最后也向各位有进行 Wine 生态适配的大佬进行由衷的感谢！",
         "如果上面有遗漏，请向我反馈补充"

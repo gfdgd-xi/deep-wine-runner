@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 import os
 import sys
+import json
 import shutil
+import requests
 
 if __name__ == "__main__":
     if "--help" in sys.argv:
@@ -31,7 +33,10 @@ if __name__ == "__main__":
         if not os.path.exists(f"{sys.argv[1]}/drive_c/windows/Fonts"):
             input("您选择的不是 Wine 容器，无法继续，按回车键退出")
             exit()
-        fontList = [
+        try:
+            fontList = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/fonts/list.json").text)
+        except:
+            fontList = [
             ["fake_simsun.ttc", "https://gitlink.org.cn/api/attachments/392168", "simsun.ttc", "fake_simsun.ttc（会替换容器内的宋体，且与 deepin 有问题）"],
             ["simsun.ttc", "https://gitlink.org.cn/api/attachments/392181", "simsun.ttc", "simsun.ttc"],
             ["simsunb.ttf", "https://gitlink.org.cn/api/attachments/392180", "simsunb.ttf", "simsunb.ttf"],
