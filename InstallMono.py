@@ -12,6 +12,7 @@
 #################
 import os
 import sys
+import traceback
 import pyquery
 
 if "--help" in sys.argv:
@@ -48,19 +49,25 @@ else:
 ''')
 homePath = os.path.expanduser('~')
 try:
+    exitInputShow = int(os.getenv("ENTERNOTSHOW"))
+except:
+    exitInputShow = True
+try:
     # 获取最新版本的版本号
     programVersionList = pyquery.PyQuery(url=f"http://mirrors.ustc.edu.cn/wine/wine/wine-{sys.argv[3]}/")
 except:
     print("无法连接下载服务器，将使用本地缓存")
     if not os.path.exists(f"{homePath}/.cache/deepin-wine-runner/{sys.argv[3]}/install.msi") or not os.path.exists(f"{homePath}/.cache/deepin-wine-runner/{sys.argv[3]}/information.txt"):
         print("无本地缓存数据，无法进行、结束")
-        input("按回车键退出")
+        if exitInputShow:
+            input("按回车键退出")
         exit()
     file = open(f"{homePath}/.cache/deepin-wine-runner/{sys.argv[3]}/information.txt", "r")
     version = file.read().replace("\n", "")    
     print("安装版本:", version)
     os.system(f"WINEPREFIX={sys.argv[1]} {sys.argv[2]} msiexec /i \"{homePath}/.cache/deepin-wine-runner/{sys.argv[3]}/install.msi\"")
-    input("安装结束，按回车键退出")
+    if exitInputShow:
+        input("安装结束，按回车键退出")
     exit()
 programVersion = programVersionList("a:last-child").attr.href
 # 获取最新版本安装包的URL
@@ -92,7 +99,8 @@ if os.path.exists(f"{homePath}/.cache/deepin-wine-runner/{sys.argv[3]}/install.m
         print("已经缓存，使用本地版本")
         file.close()
         os.system(f"WINEPREFIX={sys.argv[1]} {sys.argv[2]} msiexec /i \"{homePath}/.cache/deepin-wine-runner/{sys.argv[3]}/install.msi\"")
-        input("安装结束，按回车键退出")
+        if exitInputShow:
+            input("安装结束，按回车键退出")
         exit()
 
 file = open(f"{homePath}/.cache/deepin-wine-runner/{sys.argv[3]}/information.txt", "w+")  
@@ -114,4 +122,5 @@ except:
     print("写入缓存")
     file.write(programVersion)
     file.close()
-input("安装结束，按回车键退出")
+if exitInputShow:
+    input("安装结束，按回车键退出")
