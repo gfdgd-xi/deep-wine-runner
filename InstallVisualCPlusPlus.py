@@ -12,6 +12,8 @@
 #################
 import os
 import sys
+import json
+import requests
 
 if "--help" in sys.argv:
     print("作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢")
@@ -35,14 +37,17 @@ print('''
                             
                             
 ''')
-netList = [
-    ["2005 Service Pack 1 Redistributable Package MFC 安全更新", "https://download.microsoft.com/download/4/A/2/4A22001F-FA3B-4C13-BF4E-42EC249D51C4/vcredist_x86.EXE", "vcredist05_x86.exe"],
-    ["2008 (VC++ 9.0) SP1 (不再支持) ", "https://download.microsoft.com/download/5/D/8/5D8C65CB-C849-4025-8E95-C3966CAFD8AE/vcredist_x86.exe", "vcredist08_x86.exe"], 
-    ["2010 (VC++ 10.0) SP1 (不再支持) ", "https://download.microsoft.com/download/1/6/5/165255E7-1014-4D0A-B094-B6A430A6BFFC/vcredist_x86.exe", "vcredist10_x86.exe"],
-    ["2012 (VC++ 11.0) Update 4", "https://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x86.exe", "vcredist12_x86.exe"],
-    ["2013 (VC++ 12.0) ", "https://download.visualstudio.microsoft.com/download/pr/10912113/5da66ddebb0ad32ebd4b922fd82e8e25/vcredist_x86.exe", "vcredist13_x86.exe"],
-    ["2015、2017、2019 和 2022", "https://aka.ms/vs/17/release/vc_redist.x86.exe", "vcredist15_x86.exe"]
-]
+try:
+    netList = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/vscpp/list.json").text)
+except:
+    netList = [
+        ["2005 Service Pack 1 Redistributable Package MFC 安全更新", "https://download.microsoft.com/download/4/A/2/4A22001F-FA3B-4C13-BF4E-42EC249D51C4/vcredist_x86.EXE", "vcredist05_x86.exe"],
+        ["2008 (VC++ 9.0) SP1 (不再支持) ", "https://download.microsoft.com/download/5/D/8/5D8C65CB-C849-4025-8E95-C3966CAFD8AE/vcredist_x86.exe", "vcredist08_x86.exe"], 
+        ["2010 (VC++ 10.0) SP1 (不再支持) ", "https://download.microsoft.com/download/1/6/5/165255E7-1014-4D0A-B094-B6A430A6BFFC/vcredist_x86.exe", "vcredist10_x86.exe"],
+        ["2012 (VC++ 11.0) Update 4", "https://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x86.exe", "vcredist12_x86.exe"],
+        ["2013 (VC++ 12.0) ", "https://download.visualstudio.microsoft.com/download/pr/10912113/5da66ddebb0ad32ebd4b922fd82e8e25/vcredist_x86.exe", "vcredist13_x86.exe"],
+        ["2015、2017、2019 和 2022", "https://aka.ms/vs/17/release/vc_redist.x86.exe", "vcredist15_x86.exe"]
+    ]
 print("请选择以下的 Visual Studio C++ 进行安装（不保证能正常安装运行）")
 for i in range(0, len(netList)):
     print(f"{i} Visual Studio C++ {netList[i][0]}")

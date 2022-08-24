@@ -26,7 +26,15 @@ if len(sys.argv) <= 2 or sys.argv[1] == "" or sys.argv[2] == "":
     sys.exit()
 
 homePath = os.path.expanduser('~')
-os.system("toilet MSXML")
+print('''                                   
+ m    m  mmmm  m    m m    m m     
+ ##  ## #"   "  #  #  ##  ## #     
+ # ## # "#mmm    ##   # ## # #     
+ # "" #     "#  m""m  # "" # #     
+ #    # "mmm#" m"  "m #    # #mmmmm
+                                   
+                                   
+''')
 msxmlList = [
     ["MSXML 4.0 SP2", "https://www.gitlink.org.cn/api/attachments/390679?gfdgd_xi", "msxml6.0.msi"],
     ["MSXML 4.0 SP3", "https://www.gitlink.org.cn/api/attachments/390678?gfdgd_xi", "msxml4.0SP3.msi"],

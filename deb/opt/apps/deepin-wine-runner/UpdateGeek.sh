@@ -1,3 +1,11 @@
+echo                            
+echo '   mmm                #     '
+echo ' m"   "  mmm    mmm   #   m '
+echo ' #   mm #"  #  #"  #  # m"  '
+echo ' #    # #""""  #""""  #"#   '
+echo '  "mmm" "#mm"  "#mm"  #  "m '
+echo
+echo
 cd /tmp
 echo 提示：
 echo Geek Uninstaller 官网访问较慢，所以请耐心等待

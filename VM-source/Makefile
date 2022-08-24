@@ -402,6 +402,7 @@ distdir: FORCE
 	$(COPY_FILE) --parents mainwindow.h $(DISTDIR)/
 	$(COPY_FILE) --parents main.cpp mainwindow.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents mainwindow.ui $(DISTDIR)/
+	$(COPY_FILE) --parents zh_CN.ts en_US.ts $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -444,7 +445,9 @@ qrc_图标.cpp: 图标.qrc \
 		截图/截图_VirtualBox\ Machine_20220712143037.png \
 		截图/截图_VirtualBox_20220712223705.png \
 		截图/截图_VirtualBox\ Machine_20220712143006.png \
-		截图/截图_VirtualBox\ Machine_20220712191756.png
+		截图/截图_VirtualBox\ Machine_20220712191756.png \
+		LANG/virtualmachine-en_US.ts \
+		LANG/virtualmachine-en_US.qm
 	/usr/lib/qt5/bin/rcc -name 图标 图标.qrc -o qrc_图标.cpp
 
 compiler_moc_predefs_make_all: moc_predefs.h

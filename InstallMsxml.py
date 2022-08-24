@@ -12,6 +12,8 @@
 #################
 import os
 import sys
+import json
+import requests
 
 if "--help" in sys.argv:
     print("作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢")
@@ -35,11 +37,14 @@ print('''
                                    
                                    
 ''')
-msxmlList = [
-    ["MSXML 4.0 SP2", "https://www.gitlink.org.cn/api/attachments/390679?gfdgd_xi", "msxml6.0.msi"],
-    ["MSXML 4.0 SP3", "https://www.gitlink.org.cn/api/attachments/390678?gfdgd_xi", "msxml4.0SP3.msi"],
-    ["MSXML 6.0", "https://www.gitlink.org.cn/api/attachments/390681?gfdgd_xi", "msxml6_x64.msi"]    
-]
+try:
+    msxmlList = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/msxml/list.json").text)
+except:
+    msxmlList = [
+        ["MSXML 4.0 SP2", "https://www.gitlink.org.cn/api/attachments/390679?gfdgd_xi", "msxml6.0.msi"],
+        ["MSXML 4.0 SP3", "https://www.gitlink.org.cn/api/attachments/390678?gfdgd_xi", "msxml4.0SP3.msi"],
+        ["MSXML 6.0", "https://www.gitlink.org.cn/api/attachments/390681?gfdgd_xi", "msxml6_x64.msi"]    
+    ]
 print("请选择以下的 MSXML 进行安装（不保证能正常安装运行）")
 for i in range(0, len(msxmlList)):
     print(f"{i}、{msxmlList[i][0]}")

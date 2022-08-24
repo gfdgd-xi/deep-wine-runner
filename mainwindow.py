@@ -26,8 +26,6 @@ import urllib.parse as parse
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
-# 方便一些，单独把 tr 抽出来
-from PyQt5.QtCore import QObject
 ###################
 # 程序所需事件
 ###################
@@ -122,6 +120,7 @@ def DisableButton(things):
     e1.setDisabled(things)
     e2.setDisabled(things)
     o1.setDisabled(things)
+    miniAppStore.setDisabled(things)
     #winetricksOpen.configure(state=a[things])
     getProgramIcon.setDisabled(things)
     uninstallProgram.setDisabled(things)
@@ -515,6 +514,13 @@ def FontAppStore():
     else:
         wineBottonPath = e1.currentText()
     os.system(f"WINE='{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallFont.py' '{wineBottonPath}' {int(setting['RuntimeCache'])}")
+
+def GetDllFromInternet():
+    if e1.currentText() == "":
+        wineBottonPath = setting["DefultBotton"]
+    else:
+        wineBottonPath = e1.currentText()
+    os.system(f"WINE='{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallDll.py' '{wineBottonPath}' {int(setting['RuntimeCache'])}")
 
 def InstallMonoGecko(program):
     if e1.currentText() == "":
@@ -1042,7 +1048,7 @@ class ProgramRunStatusUpload():
         ProgramRunStatusUpload.fen.setCurrentIndex(4)
         ProgramRunStatusUpload.fen.currentIndexChanged.connect(ProgramRunStatusUpload.ChangeStar)
         msgWidgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "程序名：")), 0, 0)
-        msgWidgetLayout.addWidget(QtCore.QCoreApplication.translate("U", QtWidgets.QLabel("评分：")), 1, 0)
+        msgWidgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "评分：")), 1, 0)
         msgWidgetLayout.addWidget(ProgramRunStatusUpload.programName, 0, 1)
         msgWidgetLayout.addWidget(ProgramRunStatusUpload.fen, 1, 1)
         msgWidgetLayout.addLayout(ProgramRunStatusUpload.starLayout, 2, 1)
@@ -1307,6 +1313,10 @@ except:
     QtWidgets.QMessageBox.critical(None, "错误", f"无法读取配置，无法继续\n{traceback.format_exc()}")
     sys.exit(1)
 
+# 获取当前语言
+def get_now_lang()->"获取当前语言":
+    return os.getenv('LANG')
+
 ###########################
 # 程序信息
 ###########################
@@ -1335,15 +1345,16 @@ exe路径\' 参数 \'
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>'''
 updateThingsString = '''<b>※1、新增新的 Wine 安装器，并支持将安装的 Wine 打包到 Wine 程序 deb 包中
-※2、Wine 打包器打包 Windows 应用支持将 Wine 打包入 deb 内，可以不依赖 Wine（一般不推荐把 Wine 打包入内，推荐用依赖的形式），并支持设置自定义依赖和生成模板</b>
-3、修改错别字（图形话=>图形化）
-3、修复评分功能名称为空也可以上传评分的问题
-4、去除 toilet 依赖，使在 Deepin 23 Preview 上运行更佳
-5、支持删除所有由 Wine 创建的启动器快捷方式
+※2、Wine 打包器打包 Windows 应用支持将 Wine 打包入 deb 内，可以不依赖 Wine（一般不推荐把 Wine 打包入内，推荐用依赖的形式），并支持设置自定义依赖和生成模板
+※3、开始初步多语言支持</b>
+4、修改错别字（图形话=>图形化）
+5、修复评分功能名称为空也可以上传评分的问题
+6、去除 toilet 依赖，使在 Deepin 23 Preview 上运行更佳
+7、支持删除所有由 Wine 创建的启动器快捷方式
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年08月22日"
+updateTime = "2022年08月24日"
 about = f'''<h1>关于</h1>
 <p>一个能让Linux用户更加方便运行Windows应用的程序，内置了对wine图形化的支持和各种Wine工具和自制Wine程序打包器、运行库安装工具等等</p>
 <p>同时也内置了基于VirtualBox制作的小白Windows虚拟机安装工具，可以做到只需要用户下载系统镜像并点击安装即可，无需顾及虚拟机安装、创建、虚拟机的分区等等</p>
@@ -1386,9 +1397,10 @@ except:
 # Qt 窗口
 app = QtWidgets.QApplication(sys.argv)
 # 语言载入
-trans = QtCore.QTranslator()
-trans.load(f"{programPath}/LANG/deepin-wine-runner-en_US.qm")
-app.installTranslator(trans)
+if not get_now_lang() == "zh_CN.UTF-8":
+    trans = QtCore.QTranslator()
+    trans.load(f"{programPath}/LANG/deepin-wine-runner-en_US.qm")
+    app.installTranslator(trans)
 window = QtWidgets.QMainWindow()
 widget = QtWidgets.QWidget()
 window.setCentralWidget(widget)
@@ -1569,6 +1581,7 @@ w4 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "删除选择的 W
 cleanBottonUOS = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "清理 Wine 容器（基于 Wine 适配活动脚本）"))
 w5 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "打包 wine 应用"))
 w6 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用官方 Wine 适配活动的脚本进行打包"))
+getDllOnInternet = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从互联网获取DLL"))
 w7 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从镜像获取DLL（只支持Windows XP、Windows Server 2003官方安装镜像）"))
 updateGeek = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从 Geek Uninstaller 官网升级程序"))
 deleteDesktopIcon = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "删除所有 Wine 程序在启动器的快捷方式"))
@@ -1581,6 +1594,7 @@ wineOption.addSeparator()
 wineOption.addAction(w5)
 wineOption.addAction(w6)
 wineOption.addSeparator()
+wineOption.addAction(getDllOnInternet)
 wineOption.addAction(w7)
 wineOption.addSeparator()
 wineOption.addAction(updateGeek)
@@ -1646,6 +1660,7 @@ w4.triggered.connect(DeleteWineBotton)
 cleanBottonUOS.triggered.connect(CleanWineBottonByUOS)
 w5.triggered.connect(BuildExeDeb)
 w6.triggered.connect(UOSPackageScript)
+getDllOnInternet.triggered.connect(GetDllFromInternet)
 w7.triggered.connect(GetDllFromWindowsISO.ShowWindow)
 updateGeek.triggered.connect(lambda: os.system(f"'{programPath}/launch.sh' deepin-terminal -C '\"{programPath}/UpdateGeek.sh\"' --keep-open"))
 w8.triggered.connect(SetDeepinFileDialogDeepin)
@@ -1689,7 +1704,7 @@ s2.triggered.connect(lambda: webbrowser.open_new_tab("https://s.threatbook.cn/")
 s3.triggered.connect(lambda: webbrowser.open_new_tab("https://www.virustotal.com/"))
 
 help = menu.addMenu(QtCore.QCoreApplication.translate("U", "帮助(&H)"))
-h1 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "程序官网"))
+h1 = help.addMenu(QtCore.QCoreApplication.translate("U", "程序官网"))
 h2 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "小提示"))
 h3 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "更新内容"))
 h4 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "谢明名单"))
@@ -1697,11 +1712,28 @@ h5 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "更新这个程�
 h6 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "反馈这个程序的建议和问题"))
 h7 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "关于这个程序"))
 h8 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "关于 Qt"))
-help.addAction(h1)
+gfdgdxiio = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "作者个人站"))
+gitee = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "Gitee"))
+github = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "Github"))
+gitlink = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "Gitlink"))
+gitlab = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "Gitlab"))
+jihu = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "极狐"))
+h1.addAction(gfdgdxiio)
+h1.addAction(gitee)
+h1.addAction(github)
+h1.addAction(gitlink)
+h1.addAction(gitlab)
+h1.addAction(jihu)
 help.addSeparator()
 help.addAction(h2)
 help.addAction(h3)
 help.addAction(h4)
+help.addSeparator()
+videoHelp = help.addMenu(QtCore.QCoreApplication.translate("U", "视频教程"))
+easyHelp = QtWidgets.QAction("简易使用教程")
+buildHelp = QtWidgets.QAction("打包教程")
+videoHelp.addAction(easyHelp)
+videoHelp.addAction(buildHelp)
 help.addSeparator()
 help.addAction(h5)
 help.addAction(h6)
@@ -1711,10 +1743,17 @@ help.addSeparator()
 hm1 = help.addMenu(QtCore.QCoreApplication.translate("U", "更多生态适配应用"))
 hm1_1 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "运行 Android 应用：UEngine 运行器"))
 hm1.addAction(hm1_1)
-h1.triggered.connect(OpenProgramURL)
+gfdgdxiio.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io"))
+gitee.triggered.connect(lambda: webbrowser.open_new_tab("https://gitee.com/gfdgd-xi/deep-wine-runner"))
+github.triggered.connect(lambda: webbrowser.open_new_tab("https://github.com/gfdgd-xi/deep-wine-runner"))
+gitlink.triggered.connect(lambda: webbrowser.open_new_tab("https://gitlink.org.cn/gfdgd_xi/deep-wine-runner"))
+gitlab.triggered.connect(lambda: webbrowser.open_new_tab("https://gitlab.com/gfdgd-xi/deep-wine-runner"))
+jihu.triggered.connect(lambda: webbrowser.open_new_tab("https://jihulab.com//gfdgd-xi/deep-wine-runner"))
 h2.triggered.connect(helps)
 h3.triggered.connect(UpdateThings)
 h4.triggered.connect(ThankWindow)
+easyHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://www.bilibili.com/video/BV1ma411972Y"))
+buildHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://www.bilibili.com/video/BV1EU4y1k7zr"))
 h5.triggered.connect(UpdateWindow.ShowWindow)
 h6.triggered.connect(WineRunnerBugUpload)
 h7.triggered.connect(about_this_program)

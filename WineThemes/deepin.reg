@@ -1,0 +1,212 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_USERS\S-1-5-21-0-0-0-1000\Control Panel\Colors]
+"ActiveBorder"="212 208 200"
+"ActiveTitle"="14 14 14"
+"AppWorkSpace"="128 128 128"
+"Background"="59 59 59"
+"ButtonAlternateFace"="181 181 181"
+"ButtonDkShadow"="255 255 255"
+"ButtonFace"="250 250 250"
+"ButtonHilight"="255 255 255"
+"ButtonLight"="241 239 226"
+"ButtonShadow"="225 225 225"
+"ButtonText"="0 0 0"
+"GradientActiveTitle"="59 59 59"
+"GradientInactiveTitle"="88 88 88"
+"GrayText"="172 168 153"
+"Hilight"="0 170 255"
+"HilightText"="255 255 255"
+"HotTrackingColor"="100 139 203"
+"InactiveBorder"="212 208 200"
+"InactiveTitle"="59 59 59"
+"InactiveTitleText"="161 161 161"
+"InfoText"="0 0 0"
+"InfoWindow"="255 255 225"
+"Menu"="255 255 255"
+"MenuBar"="250 250 250"
+"MenuHilight"="0 170 255"
+"MenuText"="46 52 54"
+"Scrollbar"="212 208 200"
+"TitleText"="255 255 255"
+"Window"="255 255 255"
+"WindowFrame"="0 0 0"
+"WindowText"="0 0 0"
+
+[HKEY_USERS\S-1-5-21-0-0-0-1000\Control Panel\Desktop]
+"ActiveWndTrackTimeout"=dword:00000000
+"BlockSendInputResets"="0"
+"CaretWidth"=dword:00000001
+"ClickLockTime"=dword:000004b0
+"DoubleClickHeight"="4"
+"DoubleClickWidth"="4"
+"DragFullWindows"="0"
+"DragHeight"="4"
+"DragWidth"="4"
+"FocusBorderHeight"=dword:00000001
+"FocusBorderWidth"=dword:00000001
+"FontSmoothing"="2"
+"FontSmoothingGamma"=dword:00000000
+"FontSmoothingOrientation"=dword:00000001
+"FontSmoothingType"=dword:00000001
+"ForegroundFlashCount"=dword:00000003
+"ForegroundLockTimeout"=dword:00000000
+"IconTitleWrap"="1"
+"LowPowerActive"="0"
+"MenuShowDelay"="400"
+"UserPreferencesMask"=hex:30,00,02,80,12,00,00,00
+"Wallpaper"=""
+"WheelScrollChars"="3"
+"WheelScrollLines"="3"
+
+[HKEY_USERS\S-1-5-21-0-0-0-1000\Control Panel\Desktop\WindowMetrics]
+"BorderWidth"="1"
+"CaptionFont"=hex:09,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,bc,02,00,00,\
+  00,00,00,86,00,00,00,22,8b,5b,53,4f,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
+"CaptionHeight"="-270"
+"CaptionWidth"="-270"
+"IconFont"=hex:0a,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,90,01,00,00,00,\
+  00,00,01,00,00,00,00,8b,5b,53,4f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
+"IconSpacing"="-1125"
+"IconTitleWrap"="1"
+"IconVerticalSpacing"="-1125"
+"MenuFont"=hex:09,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,90,01,00,00,00,\
+  00,00,86,00,00,00,22,8b,5b,53,4f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
+"MenuHeight"="-270"
+"MenuWidth"="-270"
+"MessageFont"=hex:09,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,90,01,00,00,\
+  00,00,00,86,00,00,00,22,8b,5b,53,4f,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
+"PaddedBorderWidth"="0"
+"ScrollHeight"="-240"
+"ScrollWidth"="-240"
+"SmCaptionFont"=hex:f8,ff,ff,ff,00,00,00,00,00,00,00,00,00,00,00,00,90,01,00,\
+  00,00,00,00,01,00,00,00,00,8b,5b,53,4f,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
+"SmCaptionHeight"="-300"
+"SmCaptionWidth"="-300"
+"StatusFont"=hex:09,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,90,01,00,00,\
+  00,00,00,86,00,00,00,22,8b,5b,53,4f,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
+
+[HKEY_USERS\S-1-5-21-0-0-0-1000\Software\Wine\Temporary System Parameters\Control Panel]
+
+[HKEY_USERS\S-1-5-21-0-0-0-1000\Software\Wine\Temporary System Parameters\Control Panel\Colors]
+"ActiveBorder"="212 208 200"
+"ActiveTitle"="14 14 14"
+"AppWorkSpace"="128 128 128"
+"Background"="59 59 59"
+"ButtonAlternateFace"="181 181 181"
+"ButtonDkShadow"="255 255 255"
+"ButtonFace"="250 250 250"
+"ButtonHilight"="255 255 255"
+"ButtonLight"="241 239 226"
+"ButtonShadow"="225 225 225"
+"ButtonText"="0 0 0"
+"GradientActiveTitle"="59 59 59"
+"GradientInactiveTitle"="88 88 88"
+"GrayText"="172 168 153"
+"Hilight"="0 170 255"
+"HilightText"="255 255 255"
+"HotTrackingColor"="100 139 203"
+"InactiveBorder"="212 208 200"
+"InactiveTitle"="59 59 59"
+"InactiveTitleText"="161 161 161"
+"InfoText"="0 0 0"
+"InfoWindow"="255 255 225"
+"Menu"="255 255 255"
+"MenuBar"="250 250 250"
+"MenuHilight"="0 170 255"
+"MenuText"="46 52 54"
+"Scrollbar"="212 208 200"
+"TitleText"="255 255 255"
+"Window"="255 255 255"
+"WindowFrame"="0 0 0"
+"WindowText"="0 0 0"
+
+[HKEY_USERS\S-1-5-21-0-0-0-1000\Software\Wine\Temporary System Parameters\Control Panel\Desktop]
+
+[HKEY_USERS\S-1-5-21-0-0-0-1000\Software\Wine\Temporary System Parameters\Control Panel\Desktop\WindowMetrics]
+
+[HKEY_USERS\S-1-5-21-0-0-0-1000\Software\Wine\Temporary System Parameters\Control Panel\Mouse]
+
+[HKEY_USERS\S-1-5-21-0-0-0-1000\Software\Wine\Temporary System Parameters\Control Panel\Sound]
+
+[HKEY_USERS\S-1-5-21-0-0-0-1000\Software\Microsoft\Windows\CurrentVersion\ThemeManager]
+"ColorName"="NormalColor"
+"DllName"="C:\\windows\\Resources\\Themes\\deepin\\deepin.msstyles"
+"FlatMenu"=dword:00000000
+"GradientCaption"=dword:00000001
+"IconTitleFont"=hex:f4,ff,ff,ff,00,00,00,00,00,00,00,00,00,00,00,00,90,01,00,\
+  00,00,00,00,86,00,00,00,22,8b,5b,53,4f,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
+"LoadedBefore"="1"
+"NonClientMetrics"=hex:f8,01,00,00,01,00,00,00,10,00,00,00,10,00,00,00,12,00,\
+  00,00,12,00,00,00,09,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,bc,02,00,\
+  00,00,00,00,86,00,00,00,22,8b,5b,53,4f,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,0f,00,\
+  00,00,0f,00,00,00,f9,ff,ff,ff,00,00,00,00,00,00,00,00,00,00,00,00,90,01,00,\
+  00,00,00,00,86,00,00,00,22,8b,5b,53,4f,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,12,00,\
+  00,00,12,00,00,00,09,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,90,01,00,\
+  00,00,00,00,86,00,00,00,22,8b,5b,53,4f,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,09,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,90,01,00,00,00,00,00,86,00,00,00,\
+  22,8b,5b,53,4f,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,09,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,90,01,00,00,00,00,00,86,00,00,00,22,8b,5b,53,4f,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+  00,00,00,00,00,00,00,00,00,00,00
+"SizeName"="NormalSize"
+"ThemeActive"="1"
+
+[HKEY_USERS\S-1-5-21-0-0-0-1000\Software\Microsoft\Windows\CurrentVersion\ThemeManager\Control Panel]
+
+[HKEY_USERS\S-1-5-21-0-0-0-1000\Software\Microsoft\Windows\CurrentVersion\ThemeManager\Control Panel\Colors]
+"ActiveBorder"="212 208 200"
+"ActiveTitle"="10 36 106"
+"AppWorkSpace"="128 128 128"
+"Background"="58 110 165"
+"ButtonAlternateFace"="181 181 181"
+"ButtonDkShadow"="64 64 64"
+"ButtonFace"="212 208 200"
+"ButtonHilight"="255 255 255"
+"ButtonLight"="212 208 200"
+"ButtonShadow"="128 128 128"
+"ButtonText"="0 0 0"
+"GradientActiveTitle"="166 202 240"
+"GradientInactiveTitle"="192 192 192"
+"GrayText"="128 128 128"
+"Hilight"="10 36 106"
+"HilightText"="255 255 255"
+"HotTrackingColor"="0 0 200"
+"InactiveBorder"="212 208 200"
+"InactiveTitle"="128 128 128"
+"InactiveTitleText"="212 208 200"
+"InfoText"="0 0 0"
+"InfoWindow"="255 255 225"
+"Menu"="212 208 200"
+"MenuBar"="212 208 200"
+"MenuHilight"="10 36 106"
+"MenuText"="0 0 0"
+"Scrollbar"="212 208 200"
+"TitleText"="255 255 255"
+"Window"="255 255 255"
+"WindowFrame"="0 0 0"
+"WindowText"="0 0 0"
+
