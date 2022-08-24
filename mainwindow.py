@@ -1351,6 +1351,7 @@ updateThingsString = '''<b>※1、新增新的 Wine 安装器，并支持将安�
 5、修复评分功能名称为空也可以上传评分的问题
 6、去除 toilet 依赖，使在 Deepin 23 Preview 上运行更佳
 7、支持删除所有由 Wine 创建的启动器快捷方式
+8、支持从云端获取 Dll 并添加
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"

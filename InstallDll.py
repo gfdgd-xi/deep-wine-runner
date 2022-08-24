@@ -15,6 +15,29 @@ import sys
 import json
 import traceback
 import requests
+# 获取云列表
+url = "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/dlls"
+print("获取列表中……", end="")
+try:
+    lists = json.loads(requests.get(f"{url}/list.json").text)
+except:
+    print("\r列表获取失败！")
+    exit()
+print("\r列表获取成功！")
+
+def GetUrlByNumber(dllID: int) -> str:
+    dllName = lists[dllID][0]
+    return f"{url}/{lists[int(dllID)][1]}/{lists[int(dllID)][2]}/{lists[int(dllID)][0]}"
+
+def GetNameByNumber(dllID: int) -> str:
+    return lists[dllID][0]
+
+def Download(wineBotton, dllName, urlPart) -> bool:
+    try:
+        os.remove(f"{wineBotton}/drive_c/windows/system32/{dllName}")
+    except:
+        pass
+    return not os.system(f"aria2c -x 16 -s 16 -d '{wineBotton}/drive_c/windows/system32' -o '{dllName}' '{urlPart}'")
 
 def exit():
     input("按回车键退出")
@@ -49,15 +72,6 @@ if __name__ == "__main__":
     if not os.path.exists(f"{wineBotton}/drive_c/windows/system32"):
         print("这不是 Wine 容器")
         exit()
-    # 获取云列表
-    url = "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/dlls"
-    print("获取列表中……", end="")
-    try:
-        lists = json.loads(requests.get(f"{url}/list.json").text)
-    except:
-        print("\r列表获取失败！")
-        exit()
-    print("\r列表获取成功！")
     # 获取用户希望安装的DLL
 
     while True:
@@ -74,7 +88,8 @@ if __name__ == "__main__":
                 break
             try:
                 dllName = lists[int(dllName)][0]
-                urlPart = f"{url}/{lists[int(dllName)][1]}/{lists[int(dllName)][2]}/{lists[int(dllName)][0]}"
+                urlPart = GetUrlByNumber(int(dllName))
+                f"{url}/{lists[int(dllName)][1]}/{lists[int(dllName)][2]}/{lists[int(dllName)][0]}"
                 break
             except:
                 pass
@@ -100,5 +115,5 @@ if __name__ == "__main__":
         # 下载 DLL
         print(f"正在下载{dllName}，请稍后")
         print(f"下载链接：{urlPart}")
-        if os.system(f"aria2c -x 16 -s 16 -d '{wineBotton}/drive_c/windows/system32' -o '{dllName}' '{urlPart}'"):
+        if not Download(wineBotton, dllName, urlPart):
             print("下载失败！请重试")
