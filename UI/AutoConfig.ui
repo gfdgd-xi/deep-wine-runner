@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>自动部署脚本</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="searchTips">
+        <property name="text">
+         <string>搜索内容（为空代表显示所有内容）：</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="searchThings"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="saerchBotton">
+        <property name="text">
+         <string>搜索</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QListView" name="searchList"/>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="runBotton">
+        <property name="text">
+         <string>部署此方案</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>36</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>帮助</string>
+    </property>
+    <addaction name="help"/>
+    <addaction name="separator"/>
+    <addaction name="about"/>
+   </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>程序</string>
+    </property>
+    <addaction name="openFile"/>
+    <addaction name="separator"/>
+    <addaction name="exitProgram"/>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menu_2"/>
+  </widget>
+  <action name="about">
+   <property name="text">
+    <string>关于</string>
+   </property>
+  </action>
+  <action name="exitProgram">
+   <property name="text">
+    <string>退出程序</string>
+   </property>
+  </action>
+  <action name="help">
+   <property name="text">
+    <string>帮助</string>
+   </property>
+  </action>
+  <action name="openFile">
+   <property name="text">
+    <string>打开本地部署脚本</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
