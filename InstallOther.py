@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
-# 版本：1.8.0
-# 更新时间：2022年08月01日
+# 版本：2.1.0
+# 更新时间：2022年08月25日
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 构建
 ###########################################################################################
@@ -66,11 +66,11 @@ print(f"您选择了{msxmlList[choose][0]}")
 if os.path.exists(f"{homePath}/.cache/deepin-wine-runner/other/{msxmlList[choose][3]}") and choice:
     print("已经缓存，使用本地版本")
     if msxmlList[choose][2] == "msi":
-        os.system(f"WINEPREFIX={sys.argv[1]} {sys.argv[2]} msiexec /i '{homePath}/.cache/deepin-wine-runner/other/{msxmlList[choose][3]}'")
+        os.system(f"WINEPREFIX='{sys.argv[1]}' '{sys.argv[2]}' msiexec /i '{homePath}/.cache/deepin-wine-runner/other/{msxmlList[choose][3]}'")
         input("安装结束，按回车键退出")
         sys.exit()
     if msxmlList[choose][2] == "exe":
-        os.system(f"WINEPREFIX={sys.argv[1]} {sys.argv[2]} '{homePath}/.cache/deepin-wine-runner/other/{msxmlList[choose][3]}'")
+        os.system(f"WINEPREFIX='{sys.argv[1]}' '{sys.argv[2]}' '{homePath}/.cache/deepin-wine-runner/other/{msxmlList[choose][3]}'")
         input("安装结束，按回车键退出")
         sys.exit()
 print("开始下载")
@@ -79,12 +79,12 @@ os.system(f"mkdir -p '{homePath}/.cache/deepin-wine-runner/other'")
 if msxmlList[choose][2] == "msi":
     os.system(f"aria2c -x 16 -s 16 -d '{homePath}/.cache/deepin-wine-runner/other' -o '{msxmlList[choose][3]}' \"{msxmlList[choose][1]}\"")
     print("开始安装")
-    os.system(f"WINEPREFIX={sys.argv[1]} {sys.argv[2]} msiexec /i '{homePath}/.cache/deepin-wine-runner/other/{msxmlList[choose][3]}'")
+    os.system(f"WINEPREFIX='{sys.argv[1]}' '{sys.argv[2]}' msiexec /i '{homePath}/.cache/deepin-wine-runner/other/{msxmlList[choose][3]}'")
     print("安装结束")
     sys.exit()
 if msxmlList[choose][2] == "exe":
     os.system(f"aria2c -x 16 -s 16 -d '{homePath}/.cache/deepin-wine-runner/other' -o '{msxmlList[choose][3]}' \"{msxmlList[choose][1]}\"")
     print("开始安装")
-    os.system(f"WINEPREFIX={sys.argv[1]} {sys.argv[2]} '{homePath}/.cache/deepin-wine-runner/other/{msxmlList[choose][3]}'")
+    os.system(f"WINEPREFIX='{sys.argv[1]}' '{sys.argv[2]}' '{homePath}/.cache/deepin-wine-runner/other/{msxmlList[choose][3]}'")
     input("安装结束，按回车键退出")
     sys.exit()

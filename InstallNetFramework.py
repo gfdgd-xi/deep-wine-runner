@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
-# 版本：1.8.0
-# 更新时间：2022年08月01日
+# 版本：2.1.0
+# 更新时间：2022年08月25日
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 构建
 ###########################################################################################
@@ -14,29 +14,6 @@ import os
 import sys
 import json
 import requests
-
-if "--help" in sys.argv:
-    print("作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢")
-    print("版本：1.0.0")
-    print("本程序可以更方便的在 wine 容器中安装 .net framework")
-    sys.exit()
-if len(sys.argv) <= 2 or sys.argv[1] == "" or sys.argv[2] == "":
-    print("您未指定需要安装 .net framework 的容器和使用的 wine，无法继续")
-    print("参数：")
-    print("XXX 参数一 参数二 参数三(可略)")
-    print("参数一为需要安装的容器，参数二为需要使用的wine，参数三为是否缓存（可略），三个参数位置不能颠倒")
-    sys.exit()
-
-homePath = os.path.expanduser('~')
-print('''                            
-        mm   m mmmmmmmmmmmmm
-        #"m  # #        #   
-        # #m # #mmmmm   #   
-        #  # # #        #   
-   #    #   ## #mmmmm   #   
-                            
-                            
-''')
 try:
     netList = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/net/list.json").text)
 except:
@@ -54,40 +31,69 @@ except:
         ["4.7.2 Offline Installer", "https://download.visualstudio.microsoft.com/download/pr/1f5af042-d0e4-4002-9c59-9ba66bcf15f6/089f837de42708daacaae7c04b7494db/ndp472-kb4054530-x86-x64-allos-enu.exe"],
         ["4.8 Offline Installer", "https://download.visualstudio.microsoft.com/download/pr/2d6bb6b2-226a-4baa-bdec-798822606ff1/8494001c276a4b96804cde7829c04d7f/ndp48-x86-x64-allos-enu.exe"]
     ]
-print("请选择以下的 .net framework 进行安装（不保证能正常安装运行）")
-for i in range(0, len(netList)):
-    print(f"{i} .net framework {netList[i][0]}")
-while True:
-    try:
-        choose = input("请输入要选择的 .net framework 版本（输入“exit”退出）：").lower()
-        if choose == "exit":
-            break
-        choose = int(choose)
-    except:
-        print("输入错误，请重新输入")
-        continue
-    if 0 <= choose and choose < len(netList):
-        break
 
-if choose == "exit":
-    exit()
-if len(sys.argv) <= 3:
-    choice = True
-else:
-    choice = (sys.argv[3] == "1")
-print(f"您选择了 .net framework {netList[choose][0]}")
-print(f"如果是 Offline Installer 版本，提示需要连接互联网，其实是不需要的，断网也可以安装")
-print(f"如果 Offline Installer 版本连接网络时安装失败，提示无法连接服务器或连接超时，可以尝试下载完安装包加载过程中断网以便断网安装")
-print(f"一般建议 Offline Installer 版本在下载完 exe 安装程序后在加载过程中断网以便提高安装速度")
-programName = os.path.split(netList[choose][1])[1]
-if os.path.exists(f"{homePath}/.cache/deepin-wine-runner/.netframework/{programName}") and choice:
-    print("已经缓存，使用本地版本")
-    os.system(f"WINEPREFIX={sys.argv[1]} {sys.argv[2]} '{homePath}/.cache/deepin-wine-runner/.netframework/{programName}'")
+def Download(wineBotton: str, id: int, wine: str):
+    programName = os.path.split(netList[id][1])[1]
+    os.system(f"aria2c -x 16 -s 16 -d \"/tmp/deepin-wine-runner-net\" -o \"{programName}\" \"{netList[id][1]}\"")
+    os.system(f"WINEPREFIX='{wineBotton}' '{wine}' '/tmp/deepin-wine-runner-net/{programName}'")
+
+if __name__ == "__main__":
+    if "--help" in sys.argv:
+        print("作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢")
+        print("版本：1.0.0")
+        print("本程序可以更方便的在 wine 容器中安装 .net framework")
+        sys.exit()
+    if len(sys.argv) <= 2 or sys.argv[1] == "" or sys.argv[2] == "":
+        print("您未指定需要安装 .net framework 的容器和使用的 wine，无法继续")
+        print("参数：")
+        print("XXX 参数一 参数二 参数三(可略)")
+        print("参数一为需要安装的容器，参数二为需要使用的wine，参数三为是否缓存（可略），三个参数位置不能颠倒")
+        sys.exit()
+
+    homePath = os.path.expanduser('~')
+    print('''                            
+        mm   m mmmmmmmmmmmmm
+        #"m  # #        #   
+        # #m # #mmmmm   #   
+        #  # # #        #   
+   #    #   ## #mmmmm   #   
+                            
+                            
+''')
+    print("请选择以下的 .net framework 进行安装（不保证能正常安装运行）")
+    for i in range(0, len(netList)):
+        print(f"{i} .net framework {netList[i][0]}")
+    while True:
+        try:
+            choose = input("请输入要选择的 .net framework 版本（输入“exit”退出）：").lower()
+            if choose == "exit":
+                break
+            choose = int(choose)
+        except:
+            print("输入错误，请重新输入")
+            continue
+        if 0 <= choose and choose < len(netList):
+            break
+
+    if choose == "exit":
+        exit()
+    if len(sys.argv) <= 3:
+        choice = True
+    else:
+        choice = (sys.argv[3] == "1")
+    print(f"您选择了 .net framework {netList[choose][0]}")
+    print(f"如果是 Offline Installer 版本，提示需要连接互联网，其实是不需要的，断网也可以安装")
+    print(f"如果 Offline Installer 版本连接网络时安装失败，提示无法连接服务器或连接超时，可以尝试下载完安装包加载过程中断网以便断网安装")
+    print(f"一般建议 Offline Installer 版本在下载完 exe 安装程序后在加载过程中断网以便提高安装速度")
+    programName = os.path.split(netList[choose][1])[1]
+    if os.path.exists(f"{homePath}/.cache/deepin-wine-runner/.netframework/{programName}") and choice:
+        print("已经缓存，使用本地版本")
+        os.system(f"WINEPREFIX='{sys.argv[1]}' '{sys.argv[2]}' '{homePath}/.cache/deepin-wine-runner/.netframework/{programName}'")
+        input("安装结束，按回车键退出")
+        exit()
+    print("开始下载")
+    os.system(f"rm -rf '{homePath}/.cache/deepin-wine-runner/.netframework/{programName}'")
+    os.system(f"mkdir -p '{homePath}/.cache/deepin-wine-runner/.netframework'")
+    os.system(f"aria2c -x 16 -s 16 -d \"{homePath}/.cache/deepin-wine-runner/.netframework\" -o \"{programName}\" \"{netList[choose][1]}\"")
+    os.system(f"WINEPREFIX='{sys.argv[1]}' '{sys.argv[2]}' '{homePath}/.cache/deepin-wine-runner/.netframework/{programName}'")
     input("安装结束，按回车键退出")
-    exit()
-print("开始下载")
-os.system(f"rm -rf '{homePath}/.cache/deepin-wine-runner/.netframework/{programName}'")
-os.system(f"mkdir -p '{homePath}/.cache/deepin-wine-runner/.netframework'")
-os.system(f"aria2c -x 16 -s 16 -d \"{homePath}/.cache/deepin-wine-runner/.netframework\" -o \"{programName}\" \"{netList[choose][1]}\"")
-os.system(f"WINEPREFIX={sys.argv[1]} {sys.argv[2]} '{homePath}/.cache/deepin-wine-runner/.netframework/{programName}'")
-input("安装结束，按回车键退出")

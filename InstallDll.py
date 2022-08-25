@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
-# 版本：1.8.0
-# 更新时间：2022年08月24日
+# 版本：2.1.0
+# 更新时间：2022年08月25日
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 构建
 ###########################################################################################
@@ -32,12 +32,17 @@ def GetUrlByNumber(dllID: int) -> str:
 def GetNameByNumber(dllID: int) -> str:
     return lists[dllID][0]
 
+def GetUrlByName(dllName: str):
+    for i in range(0, len(lists)):
+        if dllName == lists[i][0]:
+            return f"{url}/{lists[i][1]}/{lists[i][2]}/{lists[i][0]}"
+
 def Download(wineBotton, dllName, urlPart) -> bool:
     try:
         os.remove(f"{wineBotton}/drive_c/windows/system32/{dllName}")
     except:
         pass
-    return not os.system(f"aria2c -x 16 -s 16 -d '{wineBotton}/drive_c/windows/system32' -o '{dllName}' '{urlPart}'")
+    return os.system(f"aria2c -x 16 -s 16 -d '{wineBotton}/drive_c/windows/system32' -o '{dllName}' '{urlPart}'")
 
 def exit():
     input("按回车键退出")

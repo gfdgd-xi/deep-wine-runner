@@ -653,7 +653,15 @@ def ThankWindow():
     about_this_program()
 
 def InstallWineFont():
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C 'echo 这些字体来自星火应用商店 && sudo ss-apt-fast install ms-core-fonts winfonts -y' --keep-open"]).start()
+    # 筛选 apt
+    if not os.system("which aptss"):
+        threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C 'echo 这些字体来自星火应用商店 && sudo aptss install ms-core-fonts -y' --keep-open"]).start()
+    elif not os.system("which ss-apt-fast"):
+        threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C 'echo 这些字体来自星火应用商店 && sudo ss-apt-fast update && sudo ss-apt-fast install ms-core-fonts  -y' --keep-open"]).start()
+    elif not os.system("which apt-fast"):
+        threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C 'echo 这些字体来自星火应用商店 && sudo apt-fast install ms-core-fonts -y' --keep-open"]).start()
+    else:
+        threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C 'echo 这些字体来自星火应用商店 && sudo apt install ms-core-fonts -y' --keep-open"]).start()
 
 def WineRunnerBugUpload():
     threading.Thread(target=os.system, args=[f"'{programPath}/deepin-wine-runner-update-bug'"]).start()
@@ -1346,7 +1354,8 @@ exe路径\' 参数 \'
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>'''
 updateThingsString = '''<b>※1、新增新的 Wine 安装器，并支持将安装的 Wine 打包到 Wine 程序 deb 包中
 ※2、Wine 打包器打包 Windows 应用支持将 Wine 打包入 deb 内，可以不依赖 Wine（一般不推荐把 Wine 打包入内，推荐用依赖的形式），并支持设置自定义依赖和生成模板
-※3、开始初步多语言支持</b>
+※3、开始初步多语言支持
+※4、修复了在没有安装任何 Wine 的情况下使用高级功能导致程序闪退的问题</b>
 4、修改错别字（图形话=>图形化）
 5、修复评分功能名称为空也可以上传评分的问题
 6、去除 toilet 依赖，使在 Deepin 23 Preview 上运行更佳
@@ -1806,6 +1815,10 @@ if len(sys.argv) > 1 and sys.argv[1]:
     e2.setEditText(sys.argv[1])
 if not os.path.exists("/opt/durapps/spark-dwine-helper/spark-dwine-helper-settings/settings.sh"):
     sparkWineSetting.setEnabled(False)
-#ProgramRunStatusShow.ShowWindow()
-#ProgramRunStatusUpload.ShowWindow()
+if o1.currentText() == "":
+    # 一个 Wine 都没有却用 Wine 的功能
+    # 还是要处理的，至少不会闪退
+    wine["没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用"] = "没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用"
+    canUseWine.append("没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用")
+    o1.addItem("没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用")
 sys.exit(app.exec_())
