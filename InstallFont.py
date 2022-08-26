@@ -86,5 +86,8 @@ if __name__ == "__main__":
         os.system(f"aria2c -x 16 -s 16 -d '{homePath}/.cache/deepin-wine-runner/font' -o '{fontList[choose][0]}' \"{fontList[choose][1]}\"")
         if os.path.exists(f"{sys.argv[1]}/drive_c/windows/Fonts/{fontList[choose][2]}"):
             print("字体已存在，覆盖")
-        shutil.copy(f"{homePath}/.cache/deepin-wine-runner/font/{fontList[choose][0]}", f"{sys.argv[1]}/drive_c/windows/Fonts/{fontList[choose][2]}")
+        try:
+            shutil.copy(f"{homePath}/.cache/deepin-wine-runner/font/{fontList[choose][0]}", f"{sys.argv[1]}/drive_c/windows/Fonts/{fontList[choose][2]}")
+        except:
+            print("拷贝失败！")
         input("安装结束，按回车键继续")

@@ -17,6 +17,7 @@ import traceback
 import requests
 import PyQt5.QtWidgets as QtWidgets
 from UI.AutoConfig import *
+from Model import *
 
 urlSources = "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/auto"
 lists = []
@@ -60,18 +61,20 @@ class Connect:
             QtWidgets.QMessageBox.critical(window, "错误", "无法获取配置文件")
             return
         # 执行脚本
-        process = QtCore.QProcess()
-        process.start(f"{programPath}/launch.sh", ["deepin-terminal", "-e", "env", f"WINE={wine}", f"WINEPREFIX={wineprefix}", f"{programPath}/ConfigLanguareRunner.py", "/tmp/wine-runner-auto-config.wsh", "--system"])
-        process.waitForFinished()
+        OpenTerminal(f"env WINE='{wine}' WINEPREFIX='{wineprefix}' '{programPath}/ConfigLanguareRunner.py' '/tmp/wine-runner-auto-config.wsh' --system")
+        #process = QtCore.QProcess()
+        #process.start(f"{programPath}/launch.sh", ["deepin-terminal", "-e", "env", f"WINE={wine}", f"WINEPREFIX={wineprefix}", f"{programPath}/ConfigLanguareRunner.py", "/tmp/wine-runner-auto-config.wsh", "--system"])
+        #process.waitForFinished()
         
     def OpenFile_Triggered():
         path = QtWidgets.QFileDialog.getOpenFileName(window, "提示", homePath, "配置文件(*.sh *.wsh);;全部文件(*.*)")
         if path[0] == "":
             return
         # 执行脚本
-        process = QtCore.QProcess()
-        process.start(f"{programPath}/launch.sh", ["deepin-terminal", "-e", "env", f"WINE={wine}", f"WINEPREFIX={wineprefix}", f"{programPath}/ConfigLanguareRunner.py", path[0], "--system"])
-        process.waitForFinished()
+        OpenTerminal(f"env WINE='{wine}' WINEPREFIX='{wineprefix}' '{programPath}/ConfigLanguareRunner.py' '{path[0]}' --system")
+        #process = QtCore.QProcess()
+        #process.start(f"{programPath}/launch.sh", ["deepin-terminal", "-e", "env", f"WINE={wine}", f"WINEPREFIX={wineprefix}", f"{programPath}/ConfigLanguareRunner.py", path[0], "--system"])
+        #process.waitForFinished()
 
 # 读取文本文档
 def readtxt(path):
