@@ -10,6 +10,7 @@ if [ `arch` != "x86_64" ]; then
 	rm -rf /usr/share/applications/spark-deepin-wine-runner-start-vm.desktop
 	# 删除安装 wine 功能
 	rm -rf "/opt/apps/deepin-wine-runner/wine install"
+	rm -rf "/opt/apps/deepin-wine-runner/wine"
 	rm -rf /usr/bin/deepin-wine-runner-wine-installer
 	rm -rf /usr/bin/deepin-wine-runner-wine-install-deepin23
 	rm -rf /usr/bin/deepin-wine-runner-wine-install
@@ -22,4 +23,4 @@ fi
 # 设置目录权限，让用户可读可写，方便后续删除组件
 chmod 777 -R /opt/apps/deepin-wine-runner
 # 向服务器返回安装数加1（不显示内容且忽略错误）
-curl http://120.25.153.144/spark-deepin-wine-runner/Install.php?Version=2.0.0-1 -s > /dev/null | true
+curl http://120.25.153.144/spark-deepin-wine-runner/Install.php?Version=2.1.0 -s > /dev/null | true

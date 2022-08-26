@@ -8,12 +8,9 @@ build:
 	cp -rv VM-source/Windows7X64Auto.iso          VM
 	cp -rv VM-source/Windows7X86Auto.iso          VM
 	cp -rv VM-source/run.py                       VM
-	cp -rv wine/installwine                       deb/opt/apps/deepin-wine-runner/wine
+	cp -rv wine/                       deb/opt/apps/deepin-wine-runner/
 	zip -v -q -r package-script.zip package-script
 	cp -rv VM                                     deb/opt/apps/deepin-wine-runner
-	mkdir -p deb/opt/apps/deepin-wine-runner/wine
-	cp -rv wine/installwine  					deb/opt/apps/deepin-wine-runner/wine
-	echo "[]" > deb/opt/apps/deepin-wine-runner/wine/winelist.json
 	cp -rv AllInstall.py                          deb/opt/apps/deepin-wine-runner
 	cp -rv BeCyIconGrabber.exe                    deb/opt/apps/deepin-wine-runner
 	cp -rv deepin-wine-packager-with-script.py    deb/opt/apps/deepin-wine-runner
@@ -54,6 +51,11 @@ build:
 	cp -rv Icon                                      deb/opt/apps/deepin-wine-runner
 	cp -rv gtkGetFileNameDlg                         deb/opt/apps/deepin-wine-runner
 	cp -rv LANG/*.qm                                      deb/opt/apps/deepin-wine-runner/LANG
+	cp -rv InstallDll.py                                      deb/opt/apps/deepin-wine-runner/LANG
+	cp -rv ConfigLanguareRunner.py                      deb/opt/apps/deepin-wine-runner
+	cp -rv AutoConfig.py                      deb/opt/apps/deepin-wine-runner
+	cp -rv UI/*.py                    deb/opt/apps/deepin-wine-runner/UI
+	cp -rv InstallDll.py              deb/opt/apps/deepin-wine-runner
 	dpkg -b deb spark-deepin-wine-runner.deb
 	
 

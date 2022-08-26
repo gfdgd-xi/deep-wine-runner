@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器</h1>
+<h1 align="center">Wine 运行器 2.1.0</h1>
 <hr>
 
 ## 介绍
@@ -11,7 +11,7 @@ env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 是使用 Python3 的 tkinter 构建的    
 （自己美术功底太差，图标只能在网络上找了）    
 （测试平台：deepin 20.6；UOS 家庭版 21.3.1；Ubuntu 22.04）    
-![image.png](https://storage.deepin.org/thread/202208131811324016_image.png)  
+![截图_选择区域_20220826143213.png](https://storage.deepin.org/thread/202208261437088825_截图_选择区域_20220826143213.png)  
 而打包器可以方便的把您的 wine 容器打包成 deb 包供他人使用，程序创建的 deb 构建临时文件夹目录树如下：  
 ```bash
 /XXX
@@ -85,6 +85,27 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志
+### 2.1.0（2022年08月26日）
+**※1、新增新的 Wine 安装器，并支持将安装的 Wine 打包到 Wine 程序 deb 包中**   
+**※2、Wine 打包器打包 Windows 应用支持将 Wine 打包入 deb 内，可以不依赖 Wine（一般不推荐把 Wine 打包入内，推荐用依赖的形式），并支持设置自定义依赖和生成模板**  
+**※3、开始初步多语言支持**  
+**※4、修复了在没有安装任何 Wine 的情况下使用高级功能导致程序闪退的问题**  
+**※5、支持云端自动获取数据配置 Wine 容器**  
+**※6、支持手动导入配置文件自动配置 Wine 容器**  
+**※7、新增从云端下载 Dll 的功能**  
+**※8、修复了 Dll 提取工具不会在 winecfg 中添加原装的问题**  
+9、修改错别字（图形话=>图形化）  
+10、修复评分功能名称为空也可以上传评分的问题  
+11、去除 toilet 依赖，使在 Deepin 23 Preview 上运行更佳  
+12、支持删除所有由 Wine 创建的启动器快捷方式  
+![截图_选择区域_20220826143213.png](https://storage.deepin.org/thread/202208261437088825_截图_选择区域_20220826143213.png)
+
+### 2.0.0-2（2022年08月16日）
+修复了在 deepin 23 安装缺少`toilet`依赖导致无法安装的问题，更多更新内容请见 2.0.0    
+
+### 2.0.0-1（2022年08月15日）
+修复了缺失`python3-psutil`依赖的问题，更多更新内容请见 2.0.0  
+
 ### 2.0.0（2022年08月13日）
 **※1、修复了重复路径一直自动重复增加的问题**  
 **※2、修复了两个打包器打包错误的问题（非基于生态活动脚本的为 wine 导入错误，基于生态活动脚本的为架构有误导致打包出的 deb 无法打包）**  
