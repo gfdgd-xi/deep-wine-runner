@@ -50,21 +50,48 @@ class Connect:
             return
         # 执行脚本
         process = QtCore.QProcess()
-        process.start(f"{programPath}/launch.sh", ["deepin-terminal", "-e", "env", "WINE=deepin-wine6-stable", "WINEPREFIX=/home/gfdgd_xi/.deepinwine", f"{programPath}/ConfigLanguareRunner.py", "/tmp/wine-runner-auto-config.wsh"])
+        process.start(f"{programPath}/launch.sh", ["deepin-terminal", "-e", "env", f"WINE={wine}", f"WINEPREFIX={wineprefix}", f"{programPath}/ConfigLanguareRunner.py", "/tmp/wine-runner-auto-config.wsh"])
         process.waitForFinished()
         
+    def OpenFile_Triggered():
+        path = QtWidgets.QFileDialog.getOpenFileName(window, "提示", homePath, "配置文件(*.sh *.wsh);;全部文件(*.*)")
+        if path[0] == "":
+            return
+        # 执行脚本
+        process = QtCore.QProcess()
+        process.start(f"{programPath}/launch.sh", ["deepin-terminal", "-e", "env", f"WINE={wine}", f"WINEPREFIX={wineprefix}", f"{programPath}/ConfigLanguareRunner.py", path[0]])
+        process.waitForFinished()
 
+# 读取文本文档
+def readtxt(path):
+    f = open(path, "r") # 设置文件对象
+    str = f.read()  # 获取内容
+    f.close()  # 关闭文本对象
+    return str  # 返回结果
 
 if __name__ == "__main__":
+    homePath = os.path.expanduser('~')
     programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
+    information = json.loads(readtxt(f"{programPath}/information.json"))
+    version = information["Version"]
+    wine = "deepin-wine6-stable"
+    wineprefix = f"{homePath}/.wine"
+    try:
+        wine = sys.argv[1]
+        wineprefix = sys.argv[2]
+    except:
+        pass
     app = QtWidgets.QApplication(sys.argv)
     window = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(window)
+    window.setWindowTitle(f"Wine 运行器 {version}——容器自动配置部署脚本")
     window.show()
     # 连接信号和槽
     ui.saerchBotton.clicked.connect(Connect.SearchBotton_Clicked)
     ui.runBotton.clicked.connect(Connect.RunBotton_Clicked)
+    ui.openFile.triggered.connect(Connect.OpenFile_Triggered)
+    ui.exitProgram.triggered.connect(window.close)
     # 解析云列表
     try:
         # 获取列表

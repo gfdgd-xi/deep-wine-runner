@@ -562,7 +562,7 @@ def InstallDXVK():
         wineBottonPath = e1.currentText()
     process = QtCore.QProcess()
     process.startDetached(f"{programPath}/launch.sh", ["deepin-terminal", "-e", 
-            "env", f"WINE={wine[o1.currentText()]}", f"WINE64={wine[o1.currentText()]}", f"WINEPREFIX={wineBottonPath}",
+            "env", f"WINE={wine[o1.currentText()]}", f"WINE64={wine[o1.currentText()]}", f"WINEPREFIX={wineBottonPath}", "bash",
             f"{programPath}/dxvk/setup_dxvk.sh", "install"])
 
 def UninstallDXVK():

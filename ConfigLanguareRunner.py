@@ -37,14 +37,17 @@ programEnv = [
     ["($THANK)", thankText],
     ["($MAKER)", "gfdgd xi、为什么您不喜欢熊出没和阿布呢"],
     ["($COPYRIGHT)", f"©2020~{time.strftime('%Y')} gfdgd xi、为什么您不喜欢熊出没和阿布呢"],
-    ["($?)", 0]
+    ["($?)", "0"]
 ]
 readOnlyEnv = [
     "($DANGER)",
     "($HOME)",
     "($PROGRAMPATH)",
     "($VERSION)",
-    "($THANK)"
+    "($THANK)",
+    "($MAKER)",
+    "($COPYRIGHT)",
+    "($?)"
 ]
 
 class Command():
@@ -52,7 +55,8 @@ class Command():
     dangerCommand = [
         "bash",
         "bat",
-        "download"
+        "download",
+        "reg"
     ]
     # 可以被使用的命令
     commandList = [
@@ -74,7 +78,12 @@ class Command():
         "version",
         "thank",
         "pause",
-        "download"
+        "download",
+        "installdxvk",
+        "createbotton",
+        "reg",
+        "enabledopengl",
+        "disbledopengl"
     ]
 
     def __init__(self, commandString: str) -> None:
@@ -141,6 +150,14 @@ class Command():
                 return InstallDll.Download(self.wineBottonPath, InstallDll.GetNameByNumber(int(self.command[1])), InstallDll.GetUrlByNumber(int(self.command[1])))
             return InstallDll.Download(self.wineBottonPath, self.command[1], InstallDll.GetUrlByName(self.command[1]))
 
+        def InstallDxvk(self):
+            if not os.path.exists(f"{programPath}/dxvk"):
+                if os.system(f"7z x \"{programPath}/dxvk.7z\" -o\"{programPath}\""):
+                    print("错误：无法解压资源")
+                    return 1
+                os.remove(f"{programPath}/dxvk.7z")
+            return os.system(f"env 'WINE={self.wine}' 'WINE64={self.wine}' 'WINEPREFIX={self.wineBottonPath}' bash '{programPath}/dxvk/auto.sh' install")
+
         def Thank(self) -> int:
             for i in information["Thank"]:
                 print(i)
@@ -170,6 +187,11 @@ class Command():
 
         def Info(self) -> int:
             QtWidgets.QMessageBox.information(None, self.command[1], self.command[2])
+            return 0
+
+        def CreateBotton(self):
+            self.command = ["bat", "exit"]
+            self.Bat()
             return 0
 
         def InstallSparkCoreFont(self):
@@ -208,8 +230,8 @@ class Command():
                 command += f"'{i}' "
             return os.system(command)
 
-        def Bat(self):
-            command = ["WINEPREFIX='$WINEPREFIX'", "$WINE"]
+        def Bat(self) -> int:
+            command = ["WINEPREFIX='($WINEPREFIX)'", "($WINE)"]
             for i in programEnv:
                 for k in range(len(command)):
                     command[k] = command[k].replace(i[0], i[1])
@@ -218,7 +240,6 @@ class Command():
             commandStr = command[0] + " "
             for i in command[1:]:
                 commandStr += f"{i} "
-            print(commandStr)
             return os.system(commandStr)
 
         def Version(self):
@@ -238,6 +259,18 @@ class Command():
             except:
                 pass
             return os.system(command)
+
+        def Reg(self) -> int:
+            self.command = ["bat", "regedit", "/s", self.command[1]]
+            return self.Bat()
+
+        def EnabledOpenGl(self) -> int:
+            self.command = ["reg", f"{programPath}/EnabledOpengl.reg"]
+            return self.Reg()
+
+        def DisbledOpenGl(self) -> int:
+            self.command = ["reg", f"{programPath}/DisabledOpengl.reg"]
+            return self.Reg()
 
         # 可以运行的命令的映射关系
         # 可以被使用的命令的映射
@@ -260,7 +293,12 @@ class Command():
             "version": Version,
             "thank": Thank,
             "pause": Pause,
-            "download": Download
+            "download": Download,
+            "installdxvk": InstallDxvk,
+            "createbotton": CreateBotton,
+            "reg": Reg,
+            "enabledopengl": EnabledOpenGl,
+            "disbledopengl": DisbledOpenGl
         }
 
         # 参数数列表
@@ -283,7 +321,12 @@ class Command():
             "version": [0],
             "thank": [0],
             "pause": [0],
-            "download": [1]
+            "download": [1],
+            "installdxvk": [0],
+            "createbotton": [0],
+            "reg": [1],
+            "enabledopengl": [0],
+            "disbledopengl": [0]
         }
 
         # 解析
@@ -315,6 +358,7 @@ class Command():
                 # 正常命令解析
                 if len(i) -1 < self.commandInfo[i[0]][0]:
                     print("参数不足")
+                    programEnv[9][1] = "-3"
                     continue
                 # 替换环境变量
                 for a in range(1, len(i)):
