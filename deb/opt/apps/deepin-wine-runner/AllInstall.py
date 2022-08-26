@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # 使用系统默认的 python3 运行
 ###########################################################################################
-# 作者：gfdgd xi
-# 版本：1.5.1
-# 更新时间：2022年07月03日
+# 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
+# 版本：2.1.0
+# 更新时间：2022年08月25日
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
-# 基于 Python3 的 tkinter 构建
+# 基于 Python3 构建
 ###########################################################################################
 #################
 # 引入所需的库
@@ -26,8 +26,16 @@ def InstallSparkWine(wine):
         #os.system("sudo apt install apt-fast -y")
         #os.system(f"sudo ss-apt-fast install \"{wine}\" -y")
         #return
-    os.system("sudo ss-apt-fast update")
-    os.system(f"sudo ss-apt-fast install \"{wine}\" -y")
+    #os.system("sudo ss-apt-fast update")
+    if not os.system("which aptss"):
+        os.system(f"sudo aptss install \"{wine}\" -y")
+    elif not os.system("which ss-apt-fast"):
+        os.system("sudo ss-apt-fast update")
+        os.system(f"sudo ss-apt-fast install \"{wine}\" -y")
+    elif not os.system("which apt-fast"):
+        os.system(f"sudo apt-fast install \"{wine}\" -y")
+    else:
+        os.system(f"sudo apt install \"{wine}\" -y")
 
 ###################
 # 程序功能
