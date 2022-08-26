@@ -37,12 +37,14 @@ def GetUrlByName(dllName: str):
         if dllName == lists[i][0]:
             return f"{url}/{lists[i][1]}/{lists[i][2]}/{lists[i][0]}"
 
-def Download(wineBotton, dllName, urlPart) -> bool:
+def Download(wineBotton, dllName, urlPart, wine: str) -> bool:
     try:
         os.remove(f"{wineBotton}/drive_c/windows/system32/{dllName}")
     except:
         pass
-    return os.system(f"aria2c -x 16 -s 16 -d '{wineBotton}/drive_c/windows/system32' -o '{dllName}' '{urlPart}'")
+    os.system(f"aria2c -x 16 -s 16 -d '{wineBotton}/drive_c/windows/system32' -o '{dllName}' '{urlPart}'")
+    os.system(f"WINEPREFIX='{wineBotton}' '{wine}' reg add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v {os.path.splitext(dllName)[0]} /d native /f")
+    return 0
 
 def exit():
     input("按回车键退出")
@@ -70,6 +72,7 @@ if __name__ == "__main__":
                      
 ''')
     wineBotton = sys.argv[1]
+    wine = sys.argv[2]
     if not os.path.exists(f"{wineBotton}/drive_c/windows/Fonts"):
         input("您选择的不是 Wine 容器")
         exit()
@@ -120,5 +123,5 @@ if __name__ == "__main__":
         # 下载 DLL
         print(f"正在下载{dllName}，请稍后")
         print(f"下载链接：{urlPart}")
-        if not Download(wineBotton, dllName, urlPart):
+        if Download(wineBotton, dllName, urlPart, wine):
             print("下载失败！请重试")
