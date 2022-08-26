@@ -19,6 +19,15 @@ import urllib.parse as parse
 
 def CleanTerminal():
     os.system("clear")
+    print('''                                                        
+   mm                  mmmm    m                        
+   ##   mmmm   mmmm   #"   " mm#mm   mmm    m mm   mmm  
+  #  #  #" "#  #" "#  "#mmm    #    #" "#   #"  " #"  # 
+  #mm#  #   #  #   #      "#   #    #   #   #     #"""" 
+ #    # ##m#"  ##m#"  "mmm#"   "mm  "#m#"   #     "#mm" 
+        #      #                                        
+        "      "                                        
+''')
     print("本软件源来自腾讯软件管家，只会下载文件后缀为“.exe”的文件")
     print("请输入要搜索的内容，如果要结束，请输入“exit”或点击右上角“×”关闭")
     print("无法保证从这里下载的安装包能正常安装/运行")
@@ -37,15 +46,6 @@ if __name__ == "__main__":
         sys.exit()
 
     CleanTerminal()
-    print('''                                                        
-   mm                  mmmm    m                        
-   ##   mmmm   mmmm   #"   " mm#mm   mmm    m mm   mmm  
-  #  #  #" "#  #" "#  "#mmm    #    #" "#   #"  " #"  # 
-  #mm#  #   #  #   #      "#   #    #   #   #     #"""" 
- #    # ##m#"  ##m#"  "mmm#"   "mm  "#m#"   #     "#mm" 
-        #      #                                        
-        "      "                                        
-''')
     while True:
         search = input(">")
         if search.replace(" ", "").replace("\n", "") == "":
@@ -54,7 +54,12 @@ if __name__ == "__main__":
             break  # 结束程序
 
         # 获取初步 API
-        apiReturn = json.loads(requests.get(f"https://s.pcmgr.qq.com/tapi/web/searchcgi.php?type=search&callback=searchCallback&keyword={parse.quote(search)}&page=1&pernum=30").text[:-2][15:])
+        try:
+            apiReturn = json.loads(requests.get(f"https://s.pcmgr.qq.com/tapi/web/searchcgi.php?type=search&callback=searchCallback&keyword={parse.quote(search)}&page=1&pernum=30").text[:-2][15:])
+        except:
+            input("无法连接服务器，按回车键继续")
+            CleanTerminal()
+            continue
         option = 0
         downloadUrl = []
         if not "list" in apiReturn:

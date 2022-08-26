@@ -98,7 +98,11 @@ def ReadLocalInformation():
 def ReadInternetInformation():
     global internetJsonList
     # C++ 版本是用 curl 的，考虑到 Python 用 requests 反而方便，于是不用 curl
-    internetJsonList = json.loads(requests.get(f"{internetWineSource}/information.json").text)
+    try:
+        internetJsonList = json.loads(requests.get(f"{internetWineSource}/information.json").text)
+    except:
+        QtWidgets.QMessageBox.critical(window, "错误", "无法连接服务器！")
+        return
     nmodel = QtGui.QStandardItemModel(window)
     for i in internetJsonList:
         item = QtGui.QStandardItem(i[0])
