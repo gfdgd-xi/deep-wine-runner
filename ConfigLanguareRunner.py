@@ -7,7 +7,6 @@
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 构建
 ###########################################################################################
-from inspect import trace
 import os
 import sys
 import time
@@ -83,7 +82,11 @@ class Command():
         "createbotton",
         "reg",
         "enabledopengl",
-        "disbledopengl"
+        "disbledopengl",
+        "winecfg",
+        "winver",
+        "changeversion",
+        "stopdll"
     ]
 
     def __init__(self, commandString: str) -> None:
@@ -147,8 +150,8 @@ class Command():
             except:
                 pass
             if number:
-                return InstallDll.Download(self.wineBottonPath, InstallDll.GetNameByNumber(int(self.command[1])), InstallDll.GetUrlByNumber(int(self.command[1])))
-            return InstallDll.Download(self.wineBottonPath, self.command[1], InstallDll.GetUrlByName(self.command[1]))
+                return InstallDll.Download(self.wineBottonPath, InstallDll.GetNameByNumber(int(self.command[1])), InstallDll.GetUrlByNumber(int(self.command[1])), self.wine)
+            return InstallDll.Download(self.wineBottonPath, self.command[1], InstallDll.GetUrlByName(self.command[1]), self.wine)
 
         def InstallDxvk(self):
             if not os.path.exists(f"{programPath}/dxvk"):
@@ -188,6 +191,9 @@ class Command():
         def Info(self) -> int:
             QtWidgets.QMessageBox.information(None, self.command[1], self.command[2])
             return 0
+
+        def StopDll(self) -> int:
+            os.system(f"WINEPREFIX='{self.wineBottonPath}' '{self.wine}' reg add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v {os.path.splitext(self.command[1])[0]}  /f")
 
         def CreateBotton(self):
             self.command = ["bat", "exit"]
@@ -239,7 +245,8 @@ class Command():
                 command.append(i)
             commandStr = command[0] + " "
             for i in command[1:]:
-                commandStr += f"{i} "
+                commandStr += f"'{i}' "
+            print(commandStr)
             return os.system(commandStr)
 
         def Version(self):
@@ -265,11 +272,30 @@ class Command():
             return self.Bat()
 
         def EnabledOpenGl(self) -> int:
-            self.command = ["reg", f"{programPath}/EnabledOpengl.reg"]
+            self.command = ["reg", f"z:{programPath}/EnabledOpengl.reg"]
             return self.Reg()
 
         def DisbledOpenGl(self) -> int:
-            self.command = ["reg", f"{programPath}/DisabledOpengl.reg"]
+            self.command = ["reg", f"z:{programPath}/DisabledOpengl.reg"]
+            return self.Reg()
+
+        def Winver(self):
+            self.command = ["bat", "winver"]
+            return self.Bat()
+
+        def Winecfg(self):
+            self.command = ["bat", "winecfg"]
+            return self.Bat()
+
+        def ChangeVersion(self):
+            # 判断是否为正确的版本
+            if not os.path.exists(f"{programPath}/ChangeWineBottonVersion/{self.command[1]}.reg"):
+                print("错误：您选择的版本错误，目前只支持以下版本")
+                for i in os.listdir(f"{programPath}/ChangeWineBottonVersion"):
+                    print(i.replace(".reg", ""), end=" ")
+                print()
+                return 1
+            self.command = ["reg", f"z:/{programPath}/ChangeWineBottonVersion/{self.command[1]}.reg"]
             return self.Reg()
 
         # 可以运行的命令的映射关系
@@ -298,7 +324,11 @@ class Command():
             "createbotton": CreateBotton,
             "reg": Reg,
             "enabledopengl": EnabledOpenGl,
-            "disbledopengl": DisbledOpenGl
+            "disbledopengl": DisbledOpenGl,
+            "winecfg": Winecfg,
+            "winver": Winver,
+            "changeversion": ChangeVersion,
+            "stopdll": StopDll
         }
 
         # 参数数列表
@@ -326,7 +356,11 @@ class Command():
             "createbotton": [0],
             "reg": [1],
             "enabledopengl": [0],
-            "disbledopengl": [0]
+            "disbledopengl": [0],
+            "winecfg": [0],
+            "winver": [0],
+            "changeversion": [1],
+            "stopdll": [1]
         }
 
         # 解析

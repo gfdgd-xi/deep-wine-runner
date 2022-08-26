@@ -520,7 +520,14 @@ def GetDllFromInternet():
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"WINE='{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallDll.py' '{wineBottonPath}' {int(setting['RuntimeCache'])}")
+    os.system(f"WINE='{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallDll.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
+
+def WineBottonAutoConfig():
+    if e1.currentText() == "":
+        wineBottonPath = setting["DefultBotton"]
+    else:
+        wineBottonPath = e1.currentText()
+    os.system(f"'{programPath}/AutoConfig.py' '{wine[o1.currentText()]}' '{wineBottonPath}'")
 
 def InstallMonoGecko(program):
     if e1.currentText() == "":
@@ -946,6 +953,7 @@ class GetDllFromWindowsISO:
                 return
         try:
             shutil.copy(f"/tmp/wine-runner-getdll/i386/{choose[:-1]}_", f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}")
+            os.system(f"WINEPREFIX='{GetDllFromWindowsISO.wineBottonPath}' '{wine[o1.currentText()]}' reg add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v {os.path.splitext(choose)[0]} /d native /f")
             QtWidgets.QMessageBox.information(GetDllFromWindowsISO.message, "提示", "提取成功！")
         except:
             traceback.print_exc()
@@ -1355,12 +1363,15 @@ exe路径\' 参数 \'
 updateThingsString = '''<b>※1、新增新的 Wine 安装器，并支持将安装的 Wine 打包到 Wine 程序 deb 包中
 ※2、Wine 打包器打包 Windows 应用支持将 Wine 打包入 deb 内，可以不依赖 Wine（一般不推荐把 Wine 打包入内，推荐用依赖的形式），并支持设置自定义依赖和生成模板
 ※3、开始初步多语言支持
-※4、修复了在没有安装任何 Wine 的情况下使用高级功能导致程序闪退的问题</b>
-4、修改错别字（图形话=>图形化）
-5、修复评分功能名称为空也可以上传评分的问题
-6、去除 toilet 依赖，使在 Deepin 23 Preview 上运行更佳
-7、支持删除所有由 Wine 创建的启动器快捷方式
-8、支持从云端获取 Dll 并添加
+※4、修复了在没有安装任何 Wine 的情况下使用高级功能导致程序闪退的问题
+※5、支持云端自动获取数据配置 Wine 容器
+※6、支持手动导入配置文件自动配置 Wine 容器
+※7、新增从云端下载 Dll 的功能
+※8、修复了 Dll 提取工具不会在 winecfg 中添加原装的问题</b>
+9、修改错别字（图形话=>图形化）
+10、修复评分功能名称为空也可以上传评分的问题
+11、去除 toilet 依赖，使在 Deepin 23 Preview 上运行更佳
+12、支持删除所有由 Wine 创建的启动器快捷方式
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
@@ -1510,6 +1521,9 @@ programManager.addWidget(button_r_6, 3, 4, 1, 1)
 sparkWineSetting = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "星火wine配置"))
 sparkWineSetting.clicked.connect(lambda: threading.Thread(target=os.system, args=["/opt/durapps/spark-dwine-helper/spark-dwine-helper-settings/settings.sh"]).start())
 programManager.addWidget(sparkWineSetting, 3, 6, 1, 1)
+wineAutoConfig = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "自动/手动配置 Wine 容器"))
+wineAutoConfig.clicked.connect(WineBottonAutoConfig)
+programManager.addWidget(wineAutoConfig, 3, 8, 1, 1)
 # 权重
 button5.setSizePolicy(size)
 saveDesktopFileOnLauncher.setSizePolicy(size)
