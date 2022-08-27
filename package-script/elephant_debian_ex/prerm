@@ -1,0 +1,12 @@
+#!/bin/sh
+
+PACK_NAME="@deb_package_name@"
+BOTTLE_NAME="@public_bottle_name@"
+ACTIVEX_NAME="@activex_name@"
+MAKE_AUTOSTART="@make_autostart@"
+SEND_TO_DESKTOP="@send_to_desktop@"
+
+# Make sure the script returns 0
+true
+
+#DEBHELPER#

@@ -1,0 +1,11 @@
+[version]
+APP_VERSION="@app_version@"
+WINE_VERSION="@wine_version@"
+PATCH_VERSION="@patch_version@"
+[version]
+
+[update]
+CHECK_UPDATE="@check_update@"
+FORCE_FULL_UPGRADE="@force_full_upgrade@"
+MIN_VER_SUPPORT="@min_version_support@"
+[update]

@@ -1,0 +1,6 @@
+#!/bin/sh
+# 删除软件残留，简单粗暴一点直接全部删掉，防止出现警告
+# 加判断是为了怕 reinstall 后程序就再也打不开了（除非卸载后重新安装）
+if [ "$1" = "remove" ] || [ "$1" = "purge" ];then
+	rm -rf /opt/apps/deepin-wine-runner/
+fi

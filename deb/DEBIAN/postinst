@@ -1,0 +1,26 @@
+#!/bin/sh
+# 如果为非 X86 PC，可以删除掉一些无用组件（主要是用不了）
+if [ `arch` != "x86_64" ]; then
+	echo 非X86架构，删除对非X86架构无用的组件
+	# 删除虚拟机功能
+	rm -rf /opt/apps/deepin-wine-runner/StartVM.sh
+	rm -rf /opt/apps/deepin-wine-runner/RunVM.sh
+	rm -rf /opt/apps/deepin-wine-runner/VM
+	rm -rf /usr/share/applications/spark-deepin-wine-runner-control-vm.desktop
+	rm -rf /usr/share/applications/spark-deepin-wine-runner-start-vm.desktop
+	# 删除安装 wine 功能
+	rm -rf "/opt/apps/deepin-wine-runner/wine install"
+	rm -rf "/opt/apps/deepin-wine-runner/wine"
+	rm -rf /usr/bin/deepin-wine-runner-wine-installer
+	rm -rf /usr/bin/deepin-wine-runner-wine-install-deepin23
+	rm -rf /usr/bin/deepin-wine-runner-wine-install
+	rm -rf /usr/bin/deepin-wine-runner-winehq-install
+	rm -rf /opt/apps/deepin-wine-runner/InstallWineOnDeepin23.py
+	rm -rf /opt/apps/deepin-wine-runner/sparkstore.list
+	rm -rf /opt/apps/deepin-wine-runner/AllInstall.py
+	rm -rf /opt/apps/deepin-wine-runner/InstallNewWineHQ.sh
+fi
+# 设置目录权限，让用户可读可写，方便后续删除组件
+chmod 777 -R /opt/apps/deepin-wine-runner
+# 向服务器返回安装数加1（不显示内容且忽略错误）
+curl http://120.25.153.144/spark-deepin-wine-runner/Install.php?Version=2.1.0 -s > /dev/null | true
