@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 2.1.0</h1>
+<h1 align="center">Wine 运行器 2.1.0-1</h1>
 <hr>
 
 ## 介绍
@@ -85,6 +85,12 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志
+### 2.1.0-1（2022年09月03日）
+**※1、删除多余图标**  
+**※2、修复将打包文件生成目录设置为 / 等重要目录导致删库的问题**  
+3、修复了打包器浏览按钮闪退、生成的 postrm 有误的问题  
+4、支持在输入信息时自动生成 deb 保存路径  
+
 ### 2.1.0（2022年08月26日）
 **※1、新增新的 Wine 安装器，并支持将安装的 Wine 打包到 Wine 程序 deb 包中**   
 **※2、Wine 打包器打包 Windows 应用支持将 Wine 打包入 deb 内，可以不依赖 Wine（一般不推荐把 Wine 打包入内，推荐用依赖的形式），并支持设置自定义依赖和生成模板**  
