@@ -735,7 +735,7 @@ class UpdateWindow():
         cancel = QtWidgets.QPushButton("取消")
         cancel.clicked.connect(UpdateWindow.update.close)
         try:
-            UpdateWindow.data = json.loads(requests.get(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci91cGRhdGUuanNvbg==").decode("utf-8")).text)
+            UpdateWindow.data = json.loads(requests.get(base64.b64decode("aHR0cHM6Ly8zMDQ2MjZwOTI3LmdvaG8uY28vc3BhcmstZGVlcGluLXdpbmUtcnVubmVyL3VwZGF0ZS5qc29u").decode("utf-8")).text)
             versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：{UpdateWindow.data['Version']}\n更新内容：")
             if UpdateWindow.data["Version"] == version:
                 updateText.setText(QtCore.QCoreApplication.translate("U", "此为最新版本，无需更新"))
@@ -979,8 +979,8 @@ class ProgramRunStatusShow():
             return
         try:
             sha = ProgramRunStatusUpload.GetSHA1(e2.currentText())
-            lists = json.loads(requests.get(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9hcHAv").decode("utf-8") + sha + base64.b64decode("L2FsbC5qc29u").decode("utf-8")).text)
-            r = requests.get(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9hcHAv").decode("utf-8") + sha + base64.b64decode("L3RpdGxlLnR4dA==").decode("utf-8"))
+            lists = json.loads(requests.get(base64.b64decode("aHR0cHM6Ly8zMDQ2MjZwOTI3LmdvaG8uY28vc3BhcmstZGVlcGluLXdpbmUtcnVubmVyL2FwcC8=").decode("utf-8") + sha + base64.b64decode("L2FsbC5qc29u").decode("utf-8")).text)
+            r = requests.get(base64.b64decode("aHR0cHM6Ly8zMDQ2MjZwOTI3LmdvaG8uY28vc3BhcmstZGVlcGluLXdpbmUtcnVubmVyL2FwcC8=").decode("utf-8") + sha + base64.b64decode("L3RpdGxlLnR4dA==").decode("utf-8"))
             r.encoding = "utf-8"
             title = r.text
         except:
@@ -1097,7 +1097,7 @@ class ProgramRunStatusUpload():
         try:
             if ProgramRunStatusUpload.sha1Value == "":
                 ProgramRunStatusUpload.sha1Value = ProgramRunStatusUpload.GetSHA1(e2.currentText())
-            QtWidgets.QMessageBox.information(None, QtCore.QCoreApplication.translate("U", "提示"), json.loads(requests.post(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0OjMwMjUw").decode("utf-8"), {
+            QtWidgets.QMessageBox.information(None, QtCore.QCoreApplication.translate("U", "提示"), json.loads(requests.post(base64.b64decode("aHR0cDovL2dmZGdkeGkucWljcC52aXA6Mjc1MDI=").decode("utf-8"), {
             "SHA1": ProgramRunStatusUpload.sha1Value,
             "Name": ProgramRunStatusUpload.programName.text(),
             "Fen": ProgramRunStatusUpload.fen.currentIndex(),
@@ -1420,7 +1420,7 @@ Qt 版本：{QtCore.qVersion()}
 title = "Wine 运行器 {}".format(version)
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 try:
-    threading.Thread(target=requests.get, args=[parse.unquote(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9vcGVuL0luc3RhbGwucGhw").decode("utf-8")) + "?Version=" + version]).start()
+    threading.Thread(target=requests.get, args=[parse.unquote(base64.b64decode("aHR0cHM6Ly8zMDQ2MjZwOTI3LmdvaG8uY28vc3BhcmstZGVlcGluLXdpbmUtcnVubmVyL29wZW4vSW5zdGFsbC5waHA=").decode("utf-8")) + "?Version=" + version]).start()
 except:
     pass
 
