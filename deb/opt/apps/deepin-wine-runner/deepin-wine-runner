@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # 使用系统默认的 python3 运行
-###########################################################################################
+#################################################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
 # 版本：2.0.0
 # 更新时间：2022年08月12日
 # 感谢：感谢 wine、deepin-wine 以及星火团队，提供了 wine、deepin-wine、spark-wine-devel 给大家使用，让我能做这个程序
 # 基于 Python3 的 PyQt5 构建
-###########################################################################################
+#################################################################################################################
 #################
 # 引入所需的库
 #################
@@ -26,6 +26,7 @@ import urllib.parse as parse
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
+from Model import *
 ###################
 # 程序所需事件
 ###################
@@ -158,18 +159,21 @@ class Runexebutton_threading(QtCore.QThread):
                     return
                 os.remove(f"{programPath}/dlls-arm.7z")
         if setting["TerminalOpen"]:
-            res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"] + "\" --keep-open" + wineUsingOption], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            res = ""
+            OpenTerminal("env WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"])
+            #res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"] + "\" --keep-open" + wineUsingOption], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         else:
             res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         # 实时读取程序返回
         #
-        while res.poll() is None:
-            try:
-                text = res.stdout.readline().decode("utf8")
-            except:
-                text = ""
-            self.signal.emit(text)
-            print(text, end="")
+        if not setting["TerminalOpen"]:
+            while res.poll() is None:
+                try:
+                    text = res.stdout.readline().decode("utf8")
+                except:
+                    text = ""
+                self.signal.emit(text)
+                print(text, end="")
         if len(findExeHistory) == 0 or findExeHistory[-1] != wineBottonPath:
             findExeHistory.append(wineBottonPath)  # 将记录写进数组
             write_txt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json", str(json.dumps(ListToDictionary(findExeHistory))))  # 将历史记录的数组转换为字典并写入
@@ -352,13 +356,13 @@ def KillProgram():
     os.system("killall winedbg -9")
 
 def InstallWine():
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e \"{programPath}/AllInstall.py\""]).start()
+    threading.Thread(target=OpenTerminal, args=[f"'{programPath}/AllInstall.py'"]).start()
 
 def InstallWineOnDeepin23():
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e \"{programPath}/InstallWineOnDeepin23.py\""]).start()
+    threading.Thread(target=OpenTerminal, args=[f"'{programPath}/InstallWineOnDeepin23.py'"]).start()
 
 def InstallWineHQ():
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -e \"{programPath}/InstallNewWineHQ.sh\""]).start()
+    threading.Thread(target=OpenTerminal, args=[f"{programPath}/InstallNewWineHQ.sh"]).start()
 
 def OpenWineBotton():
     if e1.currentText() == "":
@@ -408,17 +412,20 @@ class RunWineProgramThread(QtCore.QThread):
                     return
                 os.remove(f"{programPath}/dlls-arm.7z")
         if setting["TerminalOpen"]:
-            res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + self.wineProgram + "' " + setting["WineOption"] + " " + wineUsingOption + "\" --keep-open"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            res = ""
+            OpenTerminal(f"env WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + self.wineProgram + "' " + setting["WineOption"] + " " + wineUsingOption)
+            #res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + self.wineProgram + "' " + setting["WineOption"] + " " + wineUsingOption + "\" --keep-open"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         else:
             res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + self.wineProgram + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         # 实时读取程序返回
-        while res.poll() is None:
-            try:
-                text = res.stdout.readline().decode("utf8")
-            except:
-                text = ""
-            self.signal.emit(text)
-            print(text, end="")
+        if not setting["TerminalOpen"]:
+            while res.poll() is None:
+                try:
+                    text = res.stdout.readline().decode("utf8")
+                except:
+                    text = ""
+                self.signal.emit(text)
+                print(text, end="")
         if self.history:
             if len(findExeHistory) == 0 or findExeHistory[-1] != wineBottonPath:
                 findExeHistory.append(wineBottonPath)  # 将记录写进数组
@@ -469,7 +476,10 @@ class RunWinetricksThread(QtCore.QThread):
                     return
                 os.remove(f"{programPath}/dlls-arm.7z")
         if setting["TerminalOpen"]:
-            res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='{wineBottonPath}' {option} WINE=" + subprocess.getoutput(f"which {wine[o1.currentText()]}").replace(" ", "").replace("\n", "") + f" winetricks --gui {wineUsingOption}\" --keep-open"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            res = ""
+            # 用终端开应该不用返回输出内容了
+            OpenTerminal(f"WINEPREFIX='{wineBottonPath}' {option} WINE=" + subprocess.getoutput(f"which {wine[o1.currentText()]}").replace(" ", "").replace("\n", "") + f" winetricks --gui {wineUsingOption}")
+            #res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='{wineBottonPath}' {option} WINE=" + subprocess.getoutput(f"which {wine[o1.currentText()]}").replace(" ", "").replace("\n", "") + f" winetricks --gui {wineUsingOption}\" --keep-open"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         else:    
             res = subprocess.Popen([f"WINEPREFIX='{wineBottonPath}' {option} WINE='" + subprocess.getoutput(f"which {wine[o1.currentText()]}").replace(" ", "").replace("\n", "") + "' winetricks --gui"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         # 实时读取程序返回
@@ -506,21 +516,21 @@ def CleanWineBottonByUOS():
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"'{programPath}/launch.sh' deepin-terminal -C \"WINE='{wine[o1.currentText()]}' '{programPath}/cleanbottle.sh' '{wineBottonPath}'; echo 按回车退出; read; read; exit;\"")
+    OpenTerminal(f"env WINE='{wine[o1.currentText()]}' '{programPath}/cleanbottle.sh' '{wineBottonPath}'")
 
 def FontAppStore():
     if e1.currentText() == "":
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"WINE='{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallFont.py' '{wineBottonPath}' {int(setting['RuntimeCache'])}")
+    OpenTerminal(f"env WINE='{programPath}/launch.sh' '{programPath}/InstallFont.py' '{wineBottonPath}' {int(setting['RuntimeCache'])}")
 
 def GetDllFromInternet():
     if e1.currentText() == "":
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"WINE='{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallDll.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
+    OpenTerminal(f"env WINE='{programPath}/launch.sh' '{programPath}/InstallDll.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
 
 def WineBottonAutoConfig():
     if e1.currentText() == "":
@@ -534,28 +544,28 @@ def InstallMonoGecko(program):
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallMono.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {program} {int(setting['RuntimeCache'])}")
+    OpenTerminal(f"'{programPath}/InstallMono.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {program} {int(setting['RuntimeCache'])}")
 
 def InstallNetFramework():
     if e1.currentText() == "":
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallNetFramework.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
+    OpenTerminal(f"'{programPath}/InstallNetFramework.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
 
 def InstallVisualStudioCPlusPlus():
     if e1.currentText() == "":
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallVisualCPlusPlus.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
+    OpenTerminal(f"'{programPath}/InstallVisualCPlusPlus.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
 
 def InstallMSXML():
     if e1.currentText() == "":
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallMsxml.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
+    OpenTerminal(f"'{programPath}/InstallMsxml.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
 
 def InstallDXVK():
     if not os.path.exists(f"{programPath}/dxvk"):
@@ -567,10 +577,11 @@ def InstallDXVK():
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    process = QtCore.QProcess()
-    process.startDetached(f"{programPath}/launch.sh", ["deepin-terminal", "-e", 
-            "env", f"WINE={wine[o1.currentText()]}", f"WINE64={wine[o1.currentText()]}", f"WINEPREFIX={wineBottonPath}", "bash",
-            f"{programPath}/dxvk/setup_dxvk.sh", "install"])
+    OpenTerminal(f"env WINE='{wine[o1.currentText()]}' WINE64='{wine[o1.currentText()]}' WINEPREFIX='{wineBottonPath}' '{programPath}/dxvk/setup_dxvk.sh' install")
+    #process = QtCore.QProcess()
+    #process.startDetached(f"{programPath}/launch.sh", ["deepin-terminal", "-e", 
+            #"env", f"WINE={wine[o1.currentText()]}", f"WINE64={wine[o1.currentText()]}", f"WINEPREFIX={wineBottonPath}", "bash",
+            #f"{programPath}/dxvk/setup_dxvk.sh", "install"])
 
 def UninstallDXVK():
     if not os.path.exists(f"{programPath}/dxvk"):
@@ -582,24 +593,25 @@ def UninstallDXVK():
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    process = QtCore.QProcess()
-    process.startDetached(f"{programPath}/launch.sh", ["deepin-terminal", "-e", 
-            "env", f"WINE={wine[o1.currentText()]}", f"WINE64={wine[o1.currentText()]}", f"WINEPREFIX={wineBottonPath}",
-            f"{programPath}/dxvk/setup_dxvk.sh", "uninstall"])
+    OpenTerminal(f"env WINE='{wine[o1.currentText()]}' WINE64='{wine[o1.currentText()]}' WINEPREFIX='{wineBottonPath}' '{programPath}/dxvk/setup_dxvk.sh' uninstall")
+    #process = QtCore.QProcess()
+    #process.startDetached(f"{programPath}/launch.sh", ["deepin-terminal", "-e", 
+            #"env", f"WINE={wine[o1.currentText()]}", f"WINE64={wine[o1.currentText()]}", f"WINEPREFIX={wineBottonPath}",
+            #f"{programPath}/dxvk/setup_dxvk.sh", "uninstall"])
 
 def MiniAppStore():
     if e1.currentText()== "":
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/AppStore.py' '{wineBottonPath}' '{wine[o1.currentText()]}'")
+    OpenTerminal(f"'{programPath}/AppStore.py' '{wineBottonPath}' '{wine[o1.currentText()]}'")
 
 def InstallOther():
     if e1.currentText()== "":
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"'{programPath}/launch.sh' deepin-terminal -e '{programPath}/InstallOther.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
+    OpenTerminal(f"'{programPath}/InstallOther.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
 
 def BuildExeDeb():
     if e1.currentText() == "":
@@ -629,7 +641,7 @@ def SetDeepinFileDialogDefult():
     QtWidgets.QMessageBox.information(widget, "提示", "设置完成！")
 
 def SetDeepinFileDialogRecovery():
-    threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C 'pkexec \"{programPath}/deepin-wine-venturi-setter.py\" recovery' --keep-open"]).start()
+    threading.Thread(target=OpenTerminal, args=[f"pkexec '{programPath}/deepin-wine-venturi-setter.py' recovery"]).start()
 
 def DeleteDesktopIcon():
     if os.path.exists(f"{get_home()}/.local/share/applications/wine"):
@@ -662,13 +674,13 @@ def ThankWindow():
 def InstallWineFont():
     # 筛选 apt
     if not os.system("which aptss"):
-        threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C 'echo 这些字体来自星火应用商店 && sudo aptss install ms-core-fonts -y' --keep-open"]).start()
+        threading.Thread(target=OpenTerminal, args=[f"sudo aptss install ms-core-fonts -y"]).start()
     elif not os.system("which ss-apt-fast"):
-        threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C 'echo 这些字体来自星火应用商店 && sudo ss-apt-fast update && sudo ss-apt-fast install ms-core-fonts  -y' --keep-open"]).start()
+        threading.Thread(target=OpenTerminal, args=[f"sudo ss-apt-fast install ms-core-fonts -y"]).start()
     elif not os.system("which apt-fast"):
-        threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C 'echo 这些字体来自星火应用商店 && sudo apt-fast install ms-core-fonts -y' --keep-open"]).start()
+        threading.Thread(target=OpenTerminal, args=[f"sudo apt-fast install ms-core-fonts -y"]).start()
     else:
-        threading.Thread(target=os.system, args=[f"'{programPath}/launch.sh' deepin-terminal -C 'echo 这些字体来自星火应用商店 && sudo apt install ms-core-fonts -y' --keep-open"]).start()
+        threading.Thread(target=OpenTerminal, args=[f"sudo apt install ms-core-fonts -y"]).start()
 
 def WineRunnerBugUpload():
     threading.Thread(target=os.system, args=[f"'{programPath}/deepin-wine-runner-update-bug'"]).start()
@@ -707,7 +719,7 @@ def RunVM():
     threading.Thread(target=os.system, args=[f"bash '{programPath}/RunVM.sh'"]).start()
 
 def CleanProgram():
-    os.system(f"'{programPath}/launch.sh' deepin-terminal -e \"{programPath}/clean-unuse-program.py\"")
+    OpenTerminal(f"{programPath}/clean-unuse-program.py")
 
 class UpdateWindow():
     data = {}
@@ -723,7 +735,7 @@ class UpdateWindow():
         cancel = QtWidgets.QPushButton("取消")
         cancel.clicked.connect(UpdateWindow.update.close)
         try:
-            UpdateWindow.data = json.loads(requests.get(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci91cGRhdGUuanNvbg==").decode("utf-8")).text)
+            UpdateWindow.data = json.loads(requests.get(base64.b64decode("aHR0cHM6Ly8zMDQ2MjZwOTI3LmdvaG8uY28vc3BhcmstZGVlcGluLXdpbmUtcnVubmVyL3VwZGF0ZS5qc29u").decode("utf-8")).text)
             versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：{UpdateWindow.data['Version']}\n更新内容：")
             if UpdateWindow.data["Version"] == version:
                 updateText.setText(QtCore.QCoreApplication.translate("U", "此为最新版本，无需更新"))
@@ -766,7 +778,7 @@ zenity --info --text=\"更新完毕！\" --ellipsize
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(None, "出现错误，无法继续更新", traceback.format_exc())
-        os.system(f"'{programPath}/launch.sh' deepin-terminal -e pkexec bash /tmp/spark-deepin-wine-runner/update.sh")
+        OpenTerminal("pkexec bash /tmp/spark-deepin-wine-runner/update.sh")
 
 class GetDllFromWindowsISO:
     wineBottonPath = get_home() + "/.wine"
@@ -967,8 +979,8 @@ class ProgramRunStatusShow():
             return
         try:
             sha = ProgramRunStatusUpload.GetSHA1(e2.currentText())
-            lists = json.loads(requests.get(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9hcHAv").decode("utf-8") + sha + base64.b64decode("L2FsbC5qc29u").decode("utf-8")).text)
-            r = requests.get(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9hcHAv").decode("utf-8") + sha + base64.b64decode("L3RpdGxlLnR4dA==").decode("utf-8"))
+            lists = json.loads(requests.get(base64.b64decode("aHR0cHM6Ly8zMDQ2MjZwOTI3LmdvaG8uY28vc3BhcmstZGVlcGluLXdpbmUtcnVubmVyL2FwcC8=").decode("utf-8") + sha + base64.b64decode("L2FsbC5qc29u").decode("utf-8")).text)
+            r = requests.get(base64.b64decode("aHR0cHM6Ly8zMDQ2MjZwOTI3LmdvaG8uY28vc3BhcmstZGVlcGluLXdpbmUtcnVubmVyL2FwcC8=").decode("utf-8") + sha + base64.b64decode("L3RpdGxlLnR4dA==").decode("utf-8"))
             r.encoding = "utf-8"
             title = r.text
         except:
@@ -1085,7 +1097,7 @@ class ProgramRunStatusUpload():
         try:
             if ProgramRunStatusUpload.sha1Value == "":
                 ProgramRunStatusUpload.sha1Value = ProgramRunStatusUpload.GetSHA1(e2.currentText())
-            QtWidgets.QMessageBox.information(None, QtCore.QCoreApplication.translate("U", "提示"), json.loads(requests.post(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0OjMwMjUw").decode("utf-8"), {
+            QtWidgets.QMessageBox.information(None, QtCore.QCoreApplication.translate("U", "提示"), json.loads(requests.post(base64.b64decode("aHR0cDovL2dmZGdkeGkucWljcC52aXA6Mjc1MDI=").decode("utf-8"), {
             "SHA1": ProgramRunStatusUpload.sha1Value,
             "Name": ProgramRunStatusUpload.programName.text(),
             "Fen": ProgramRunStatusUpload.fen.currentIndex(),
@@ -1209,6 +1221,8 @@ class ProgramSetting():
             QtWidgets.QMessageBox.critical(ProgramSetting.message, "错误", traceback.format_exc())
             return
         QtWidgets.QMessageBox.information(ProgramSetting.message, "提示", "保存完毕！")
+
+
 
 ###########################
 # 加载配置
@@ -1360,7 +1374,13 @@ exe路径\' 参数 \'
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>'''
-updateThingsString = '''<b>※1、新增新的 Wine 安装器，并支持将安装的 Wine 打包到 Wine 程序 deb 包中
+updateThingsString = '''<h3>2.1.0-1 更新内容：</h3>
+※1、删除多余图标
+※2、修复将打包文件生成目录设置为 / 等重要目录导致删库的问题
+3、修复了打包器浏览按钮闪退、生成的 postrm 有误的问题
+4、支持在输入信息时自动生成 deb 保存路径
+<h3>2.1.0 更新内容：</h3>
+<b>※1、新增新的 Wine 安装器，并支持将安装的 Wine 打包到 Wine 程序 deb 包中
 ※2、Wine 打包器打包 Windows 应用支持将 Wine 打包入 deb 内，可以不依赖 Wine（一般不推荐把 Wine 打包入内，推荐用依赖的形式），并支持设置自定义依赖和生成模板
 ※3、开始初步多语言支持
 ※4、修复了在没有安装任何 Wine 的情况下使用高级功能导致程序闪退的问题
@@ -1375,7 +1395,7 @@ updateThingsString = '''<b>※1、新增新的 Wine 安装器，并支持将安�
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年08月26日"
+updateTime = "2022年09月03日"
 about = f'''<h1>关于</h1>
 <p>一个能让Linux用户更加方便运行Windows应用的程序，内置了对wine图形化的支持和各种Wine工具和自制Wine程序打包器、运行库安装工具等等</p>
 <p>同时也内置了基于VirtualBox制作的小白Windows虚拟机安装工具，可以做到只需要用户下载系统镜像并点击安装即可，无需顾及虚拟机安装、创建、虚拟机的分区等等</p>
@@ -1406,9 +1426,10 @@ Qt 版本：{QtCore.qVersion()}
 title = "Wine 运行器 {}".format(version)
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 try:
-    threading.Thread(target=requests.get, args=[parse.unquote(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9vcGVuL0luc3RhbGwucGhw").decode("utf-8")) + "?Version=" + version]).start()
+    threading.Thread(target=requests.get, args=[parse.unquote(base64.b64decode("aHR0cHM6Ly8zMDQ2MjZwOTI3LmdvaG8uY28vc3BhcmstZGVlcGluLXdpbmUtcnVubmVyL29wZW4vSW5zdGFsbC5waHA=").decode("utf-8")) + "?Version=" + version]).start()
 except:
     pass
+
 
 
 ###########################
@@ -1728,6 +1749,7 @@ s2.triggered.connect(lambda: webbrowser.open_new_tab("https://s.threatbook.cn/")
 s3.triggered.connect(lambda: webbrowser.open_new_tab("https://www.virustotal.com/"))
 
 help = menu.addMenu(QtCore.QCoreApplication.translate("U", "帮助(&H)"))
+runStatusWebSize = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "查询程序在 Wine 的运行情况"))
 h1 = help.addMenu(QtCore.QCoreApplication.translate("U", "程序官网"))
 h2 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "小提示"))
 h3 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "更新内容"))
@@ -1748,6 +1770,8 @@ h1.addAction(github)
 h1.addAction(gitlink)
 h1.addAction(gitlab)
 h1.addAction(jihu)
+help.addSeparator()
+help.addAction(runStatusWebSize)
 help.addSeparator()
 help.addAction(h2)
 help.addAction(h3)
@@ -1773,6 +1797,7 @@ github.triggered.connect(lambda: webbrowser.open_new_tab("https://github.com/gfd
 gitlink.triggered.connect(lambda: webbrowser.open_new_tab("https://gitlink.org.cn/gfdgd_xi/deep-wine-runner"))
 gitlab.triggered.connect(lambda: webbrowser.open_new_tab("https://gitlab.com/gfdgd-xi/deep-wine-runner"))
 jihu.triggered.connect(lambda: webbrowser.open_new_tab("https://jihulab.com//gfdgd-xi/deep-wine-runner"))
+runStatusWebSize.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io/wine-runner-info"))
 h2.triggered.connect(helps)
 h3.triggered.connect(UpdateThings)
 h4.triggered.connect(ThankWindow)

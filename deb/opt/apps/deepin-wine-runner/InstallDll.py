@@ -15,6 +15,11 @@ import sys
 import json
 import traceback
 import requests
+def exit():
+    if __name__ == "__main__":
+        input("按回车键退出")
+        sys.exit()
+    sys.exit()
 # 获取云列表
 url = "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/dlls"
 print("获取列表中……", end="")
