@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # 使用系统默认的 python3 运行
-###########################################################################################
+#################################################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
 # 版本：2.0.0
 # 更新时间：2022年08月12日
 # 感谢：感谢 wine、deepin-wine 以及星火团队，提供了 wine、deepin-wine、spark-wine-devel 给大家使用，让我能做这个程序
 # 基于 Python3 的 PyQt5 构建
-###########################################################################################
+#################################################################################################################
 #################
 # 引入所需的库
 #################
@@ -17,6 +17,7 @@ import json
 import base64
 import shutil
 import hashlib
+import platform
 import requests
 import threading
 import traceback
@@ -27,6 +28,19 @@ import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
 from Model import *
+
+def PythonLower():
+    app = QtWidgets.QApplication(sys.argv)
+    QtWidgets.QMessageBox.critical(None, "错误", "Python 至少需要 3.6 及以上版本，目前版本：" + platform.python_version() + "")
+    sys.exit(1)
+
+# Python 版本检测，因为 f-string 格式化要至少 Python 3.6 及以上的版本，所以需要检测
+# 判断主版本号
+if sys.version_info[0] > 3:
+    PythonLower()
+if sys.version_info[1] < 6:
+    PythonLower()
+
 ###################
 # 程序所需事件
 ###################
@@ -1374,7 +1388,13 @@ exe路径\' 参数 \'
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>'''
-updateThingsString = '''<b>※1、新增新的 Wine 安装器，并支持将安装的 Wine 打包到 Wine 程序 deb 包中
+updateThingsString = '''<h3>2.1.0-1 更新内容：</h3>
+※1、删除多余图标
+※2、修复将打包文件生成目录设置为 / 等重要目录导致删库的问题
+3、修复了打包器浏览按钮闪退、生成的 postrm 有误的问题
+4、支持在输入信息时自动生成 deb 保存路径
+<h3>2.1.0 更新内容：</h3>
+<b>※1、新增新的 Wine 安装器，并支持将安装的 Wine 打包到 Wine 程序 deb 包中
 ※2、Wine 打包器打包 Windows 应用支持将 Wine 打包入 deb 内，可以不依赖 Wine（一般不推荐把 Wine 打包入内，推荐用依赖的形式），并支持设置自定义依赖和生成模板
 ※3、开始初步多语言支持
 ※4、修复了在没有安装任何 Wine 的情况下使用高级功能导致程序闪退的问题
@@ -1389,7 +1409,7 @@ updateThingsString = '''<b>※1、新增新的 Wine 安装器，并支持将安�
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年08月26日"
+updateTime = "2022年09月03日"
 about = f'''<h1>关于</h1>
 <p>一个能让Linux用户更加方便运行Windows应用的程序，内置了对wine图形化的支持和各种Wine工具和自制Wine程序打包器、运行库安装工具等等</p>
 <p>同时也内置了基于VirtualBox制作的小白Windows虚拟机安装工具，可以做到只需要用户下载系统镜像并点击安装即可，无需顾及虚拟机安装、创建、虚拟机的分区等等</p>
@@ -1743,6 +1763,7 @@ s2.triggered.connect(lambda: webbrowser.open_new_tab("https://s.threatbook.cn/")
 s3.triggered.connect(lambda: webbrowser.open_new_tab("https://www.virustotal.com/"))
 
 help = menu.addMenu(QtCore.QCoreApplication.translate("U", "帮助(&H)"))
+runStatusWebSize = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "查询程序在 Wine 的运行情况"))
 h1 = help.addMenu(QtCore.QCoreApplication.translate("U", "程序官网"))
 h2 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "小提示"))
 h3 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "更新内容"))
@@ -1763,6 +1784,8 @@ h1.addAction(github)
 h1.addAction(gitlink)
 h1.addAction(gitlab)
 h1.addAction(jihu)
+help.addSeparator()
+help.addAction(runStatusWebSize)
 help.addSeparator()
 help.addAction(h2)
 help.addAction(h3)
@@ -1788,6 +1811,7 @@ github.triggered.connect(lambda: webbrowser.open_new_tab("https://github.com/gfd
 gitlink.triggered.connect(lambda: webbrowser.open_new_tab("https://gitlink.org.cn/gfdgd_xi/deep-wine-runner"))
 gitlab.triggered.connect(lambda: webbrowser.open_new_tab("https://gitlab.com/gfdgd-xi/deep-wine-runner"))
 jihu.triggered.connect(lambda: webbrowser.open_new_tab("https://jihulab.com//gfdgd-xi/deep-wine-runner"))
+runStatusWebSize.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io/wine-runner-info"))
 h2.triggered.connect(helps)
 h3.triggered.connect(UpdateThings)
 h4.triggered.connect(ThankWindow)

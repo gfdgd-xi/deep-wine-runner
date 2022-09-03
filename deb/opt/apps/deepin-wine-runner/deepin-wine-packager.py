@@ -27,7 +27,7 @@ import PyQt5.QtWidgets as QtWidgets
 #################
 
 def button1_cl():
-    path = QtWidgets.QFileDialog.getExistingDirectory(QtCore.QCoreApplication.translate("U", "选择 wine 容器"), f"{get_home()}/.deepinwine")
+    path = QtWidgets.QFileDialog.getExistingDirectory(widget, QtCore.QCoreApplication.translate("U", "选择 wine 容器"), f"{get_home()}/.deepinwine")
     if path != "":
         e6_text.setText(path)
 
@@ -207,7 +207,7 @@ class make_deb_threading(QtCore.QThread):
                         f"{wine[wineVersion.currentText()]}, spark-dwine-helper (>= 1.6.2), fonts-wqy-microhei, fonts-wqy-zenhei"
                         ][int(chooseWineHelperValue.isChecked())],
                     "postinst": "",
-                    "postrm": ["", f"""#!/bin/bash..
+                    "postrm": ["", f"""#!/bin/bash
 
 if [ "$1" = "remove" ] || [ "$1" = "purge" ];then
 
@@ -345,12 +345,12 @@ fi
 
 ##############<<<<<<<<<屏蔽mono和gecko安装器开始
 ##默认屏蔽mono和gecko安装器
-if [ "$APPRUN_CMD" = "spark-wine7-devel" ];then
+#if [ "$APPRUN_CMD" = "spark-wine7-devel" ];then
 
-export WINEDLLOVERRIDES="mscoree,mshtml="
-echo "为了降低打包体积，默认关闭gecko和momo，如有需要，注释此行（仅对spark-wine7-devel有效）"
+#export WINEDLLOVERRIDES="mscoree,mshtml="
+#echo "为了降低打包体积，默认关闭gecko和momo，如有需要，注释此行（仅对spark-wine7-devel有效）"
 
-fi
+#fi
 ##############>>>>>>>>>屏蔽mono和gecko安装器结束
 
 #########################执行段
@@ -781,7 +781,11 @@ fi
                 debPackagePath = f"/tmp/{random.randint(0, 9999)}"
             #self.run_command(f"rm -rfv /tmp/{debPackagePath}")
             print("f")
-            self.run_command(f"rm -rfv '{debPackagePath}'")
+            # 为了避免删库，必须保证是 deb 文件构建目录才进行清空
+            if os.path.exists(f"{debPackagePath}/DEBIAN/control"):
+                self.run_command(f"rm -rfv '{debPackagePath}/usr'")
+                self.run_command(f"rm -rfv '{debPackagePath}/opt'")
+                self.run_command(f"rm -rfv '{debPackagePath}/DEBIAN'")
             print("d")
             ###############
             # 创建目录
@@ -928,6 +932,8 @@ Description: {e3_text.text()}
             self.label.emit("完成构建！")
             self.disabled_or_NORMAL_all.emit(True)
             self.infoMsg.emit("打包完毕！")
+            global change
+            change = False
         except:
             traceback.print_exc()
             self.errorMsg.emit("程序出现错误，错误信息：\n{}".format(traceback.format_exc()))
@@ -1018,6 +1024,37 @@ def ChangeWine():
             debDepends.setText("libasound2 (>= 1.0.16), libc6 (>= 2.28), libglib2.0-0 (>= 2.12.0), libgphoto2-6 (>= 2.5.10), libgphoto2-port12 (>= 2.5.10), libgstreamer-plugins-base1.0-0 (>= 1.0.0), libgstreamer1.0-0 (>= 1.4.0), liblcms2-2 (>= 2.2+git20110628), libldap-2.4-2 (>= 2.4.7), libmpg123-0 (>= 1.13.7), libopenal1 (>= 1.14), libpcap0.8 (>= 0.9.8), libpulse0 (>= 0.99.1), libudev1 (>= 183), libvkd3d1 (>= 1.0), libx11-6, libxext6, libxml2 (>= 2.9.0), ocl-icd-libopencl1 | libopencl1, udis86, zlib1g (>= 1:1.1.4), libasound2-plugins, libncurses6 | libncurses5 | libncurses, deepin-wine-plugin-virtual")
             debRecommend.setText("libcapi20-3, libcups2, libdbus-1-3, libfontconfig1, libfreetype6, libglu1-mesa | libglu1, libgnutls30 | libgnutls28 | libgnutls26, libgsm1, libgssapi-krb5-2, libjpeg62-turbo | libjpeg8, libkrb5-3, libodbc1, libosmesa6, libpng16-16 | libpng12-0, libsane | libsane1, libsdl2-2.0-0, libtiff5, libv4l-0, libxcomposite1, libxcursor1, libxfixes3, libxi6, libxinerama1, libxrandr2, libxrender1, libxslt1.1, libxxf86vm1")
 
+# 获取用户桌面目录
+def get_desktop_path():
+    for line in open(get_home() + "/.config/user-dirs.dirs"):  # 以行来读取配置文件
+        desktop_index = line.find("XDG_DESKTOP_DIR=\"")  # 寻找是否有对应项，有返回 0，没有返回 -1
+        if desktop_index != -1:  # 如果有对应项
+            break  # 结束循环
+    if desktop_index == -1:  # 如果是提前结束，值一定≠-1，如果是没有提前结束，值一定＝-1
+        return -1
+    else:
+        get = line[17:-2]  # 截取桌面目录路径
+        get_index = get.find("$HOME")  # 寻找是否有对应的项，需要替换内容
+        if get != -1:  # 如果有
+            get = get.replace("$HOME", get_home())  # 则把其替换为用户目录（～）
+        return get  # 返回目录
+
+change = False
+autoChange = True  # 有第一次的路径自动设置
+def AutoPathSet():
+    global autoChange
+    autoChange = True
+    architecture = ["i386", "arm64", "arm64"]
+    if not change:
+        e12_text.setText(f"{get_desktop_path()}/{e1_text.text()}_{e2_text.text()}_{architecture[debArch.currentIndex()]}.deb")
+
+def UserPathSet():
+    global change
+    global autoChange
+    if autoChange:
+        autoChange = False
+        return
+    change = True
 
 ###############
 # 程序信息
@@ -1107,7 +1144,6 @@ button5.clicked.connect(make_deb)
 buildDebDir.clicked.connect(lambda: make_deb(True))
 installDeb.clicked.connect(InstallDeb)
 wineFrame.addWidget(wineVersion)
-debArch.currentIndexChanged.connect(ChangeArchCombobox)
 # 创建控件
 widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要打包的 deb 包的包名（※必填）：")), 0, 0, 1, 1)
 widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要打包的 deb 包的版本号（※必填）：")), 1, 0, 1, 1)
@@ -1173,6 +1209,11 @@ widgetLayout.addWidget(buildDebDir, 16, 3)
 useInstallWineArch.setDisabled(True)
 wineVersion.currentTextChanged.connect(ChangeWine)
 chooseWineHelperValue.stateChanged.connect(ChangeWine)
+e1_text.textChanged.connect(AutoPathSet)
+e2_text.textChanged.connect(AutoPathSet)
+debArch.currentIndexChanged.connect(AutoPathSet)
+debArch.currentIndexChanged.connect(ChangeArchCombobox)
+e12_text.textChanged.connect(UserPathSet)
 # 菜单栏
 menu = window.menuBar()
 programmenu = menu.addMenu(QtCore.QCoreApplication.translate("U", "程序"))
@@ -1190,6 +1231,7 @@ try:
     wineVersion.setCurrentText(sys.argv[2])
 except:
     pass
+e12_text.setText(f"{get_desktop_path()}/demo_1.0.0_i386.deb")
 widget.setLayout(widgetLayout)
 window.setCentralWidget(widget)
 window.setWindowTitle(f"wine 应用打包器 {version}")

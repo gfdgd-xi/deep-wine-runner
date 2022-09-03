@@ -781,7 +781,11 @@ fi
                 debPackagePath = f"/tmp/{random.randint(0, 9999)}"
             #self.run_command(f"rm -rfv /tmp/{debPackagePath}")
             print("f")
-            self.run_command(f"rm -rfv '{debPackagePath}'")
+            # 为了避免删库，必须保证是 deb 文件构建目录才进行清空
+            if os.path.exists(f"{debPackagePath}/DEBIAN/control"):
+                self.run_command(f"rm -rfv '{debPackagePath}/usr'")
+                self.run_command(f"rm -rfv '{debPackagePath}/opt'")
+                self.run_command(f"rm -rfv '{debPackagePath}/DEBIAN'")
             print("d")
             ###############
             # 创建目录

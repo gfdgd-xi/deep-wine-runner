@@ -11,4 +11,5 @@ Comment=Wine Package Builder
 Comment[zh]=Wine 打包器
 Terminal=false
 StartupNotify=true
+NoDisplay=true
 MimeType=application/vnd.microsoft.portable-executable;application/x-dosexec;application/x-msi;application-x-executable;application/application-x-ms-dos-executable;application/application-x-msdownload;application/octet-stream

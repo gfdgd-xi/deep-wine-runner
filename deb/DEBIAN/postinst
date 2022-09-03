@@ -23,4 +23,4 @@ fi
 # 设置目录权限，让用户可读可写，方便后续删除组件
 chmod 777 -R /opt/apps/deepin-wine-runner
 # 向服务器返回安装数加1（不显示内容且忽略错误）
-curl https://304626p927.goho.co/spark-deepin-wine-runner/Install.php?Version=2.1.0 -s > /dev/null | true
+curl https://304626p927.goho.co/spark-deepin-wine-runner/Install.php?Version=2.1.0-1 -s > /dev/null | true

@@ -9,5 +9,6 @@ Name=Setting VirtualMachine
 Name[zh]=设置 Windows 虚拟机
 Comment=Setting VirtualMachine
 Comment[zh]=设置虚拟机
+NoDisplay=true
 Terminal=false
 StartupNotify=true

@@ -11,6 +11,7 @@ import os
 import sys
 import time
 import json
+import platform
 import traceback
 import PyQt5.QtWidgets as QtWidgets
 # 读取文本文档
@@ -36,7 +37,9 @@ programEnv = [
     ["($THANK)", thankText],
     ["($MAKER)", "gfdgd xi、为什么您不喜欢熊出没和阿布呢"],
     ["($COPYRIGHT)", f"©2020~{time.strftime('%Y')} gfdgd xi、为什么您不喜欢熊出没和阿布呢"],
-    ["($?)", "0"]
+    ["($?)", "0"],
+    ["($PLATFORM)", platform.system()],
+    ["($DEBUG)", str(int("--debug" in sys.argv))]
 ]
 readOnlyEnv = [
     "($DANGER)",
@@ -46,8 +49,13 @@ readOnlyEnv = [
     "($THANK)",
     "($MAKER)",
     "($COPYRIGHT)",
-    "($?)"
+    "($?)",
+    "($SYSTEM)",
+    "($DEBUG)"
 ]
+def Debug():
+    if "--debug" in sys.argv:
+        traceback.print_exc()
 
 class Command():
     # 有风险的命令
@@ -86,7 +94,8 @@ class Command():
         "winecfg",
         "winver",
         "changeversion",
-        "stopdll"
+        "stopdll",
+        "cat"
     ]
 
     def __init__(self, commandString: str) -> None:
@@ -237,6 +246,10 @@ class Command():
             return os.system(command)
 
         def Bat(self) -> int:
+            # Windows 直接转换为以 cmd 运行
+            if platform.system() == "Windows":
+                # 直接调用 Bash 函数
+                return self.Bash()
             command = ["WINEPREFIX='($WINEPREFIX)'", "($WINE)"]
             for i in programEnv:
                 for k in range(len(command)):
@@ -298,6 +311,15 @@ class Command():
             self.command = ["reg", f"z:/{programPath}/ChangeWineBottonVersion/{self.command[1]}.reg"]
             return self.Reg()
 
+        def Cat(self):
+            try:
+                file = open(self.command[1], "r")
+                print(file.read())
+                file.close()
+            except:
+                print("文件读取错误")
+                Debug()
+
         # 可以运行的命令的映射关系
         # 可以被使用的命令的映射
         commandList = {
@@ -328,7 +350,8 @@ class Command():
             "winecfg": Winecfg,
             "winver": Winver,
             "changeversion": ChangeVersion,
-            "stopdll": StopDll
+            "stopdll": StopDll,
+            "cat": Cat
         }
 
         # 参数数列表
@@ -360,9 +383,23 @@ class Command():
             "winecfg": [0],
             "winver": [0],
             "changeversion": [1],
-            "stopdll": [1]
+            "stopdll": [1],
+            "cat": [1]
         }
-
+        windowsUnrun = [
+            "createbotton",
+            "installdll",
+            "installmono",
+            "installgecko",
+            "winecfg",
+            "stopdll",
+            "changeversion",
+            "enabledopengl",
+            "disbledopengl",
+            "installdxvk",
+            "installfont",
+            "installsparkcorefont"
+        ]
         # 解析
         def __init__(self, command: list, wineBottonPath: str, wine: str) -> int:
             self.wineBottonPath = wineBottonPath
@@ -389,6 +426,11 @@ class Command():
                         # 添加变量
                         programEnv.append([f"{env}", value])
                     continue
+                # 解析命令是否可以在 Windows 使用（只限在 Windows 系统时）
+                if platform.system() == "Windows" and i[0] in self.windowsUnrun:
+                    print("此命令不支持在 Windows 上运行")
+                    programEnv[9][1] = "-5"
+                    continue
                 # 正常命令解析
                 if len(i) -1 < self.commandInfo[i[0]][0]:
                     print("参数不足")
@@ -409,6 +451,8 @@ class Command():
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     optionAll = 0
+    if "--debug" in sys.argv:
+        optionAll += 1
     if "--system" in sys.argv:
         programEnv[2][1] = "1"
         optionAll += 1

@@ -56,6 +56,7 @@ build:
 	cp -rv AutoConfig.py                      deb/opt/apps/deepin-wine-runner
 	cp -rv UI/*.py                    deb/opt/apps/deepin-wine-runner/UI
 	cp -rv InstallDll.py              deb/opt/apps/deepin-wine-runner
+	cp -rv Model              deb/opt/apps/deepin-wine-runner
 	dpkg -b deb spark-deepin-wine-runner.deb
 	
 
