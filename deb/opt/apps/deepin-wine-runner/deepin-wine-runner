@@ -17,6 +17,7 @@ import json
 import base64
 import shutil
 import hashlib
+import platform
 import requests
 import threading
 import traceback
@@ -27,6 +28,19 @@ import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
 from Model import *
+
+def PythonLower():
+    app = QtWidgets.QApplication(sys.argv)
+    QtWidgets.QMessageBox.critical(None, "错误", "Python 至少需要 3.6 及以上版本，目前版本：" + platform.python_version() + "")
+    sys.exit(1)
+
+# Python 版本检测，因为 f-string 格式化要至少 Python 3.6 及以上的版本，所以需要检测
+# 判断主版本号
+if sys.version_info[0] > 3:
+    PythonLower()
+if sys.version_info[1] < 6:
+    PythonLower()
+
 ###################
 # 程序所需事件
 ###################
@@ -1374,7 +1388,9 @@ exe路径\' 参数 \'
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>'''
-updateThingsString = '''<h3>2.1.0-1 更新内容：</h3>
+updateThingsString = '''<h3>2.1.0-2 更新内容：</h3>
+※1、修复终端调用问题
+<h3>2.1.0-1 更新内容：</h3>
 ※1、删除多余图标
 ※2、修复将打包文件生成目录设置为 / 等重要目录导致删库的问题
 3、修复了打包器浏览按钮闪退、生成的 postrm 有误的问题

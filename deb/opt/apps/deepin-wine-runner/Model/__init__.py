@@ -10,19 +10,19 @@ programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 # 优先为深度终端
 terminal = ""
 terminalList = [
-    "deepin-terminal1",
-    "mate-terminal1",
+    "deepin-terminal",
+    "mate-terminal",
     "gnome-terminal"
 ]
 terminalEnd = {
-    f"{programPath}/launch.sh\" \"deepin-terminal": ["-e", 0],
+    f"{programPath}/../launch.sh\" \"deepin-terminal": ["-e", 0],
     "mate-terminal": ["-e", 1],
     "gnome-terminal": ["--", 0]
 }
 for i in terminalList:
     if not os.system(f"which {i}"):
         if i == "deepin-terminal":
-            i = f"{programPath}/launch.sh\" \"deepin-terminal"
+            i = f"{programPath}/../launch.sh\" \"deepin-terminal"
         terminal = i
         break
 if terminal == "":
