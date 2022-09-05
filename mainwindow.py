@@ -1388,7 +1388,9 @@ exe路径\' 参数 \'
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>'''
-updateThingsString = '''<h3>2.1.0-1 更新内容：</h3>
+updateThingsString = '''<h3>2.1.0-2 更新内容：</h3>
+※1、修复终端调用问题
+<h3>2.1.0-1 更新内容：</h3>
 ※1、删除多余图标
 ※2、修复将打包文件生成目录设置为 / 等重要目录导致删库的问题
 3、修复了打包器浏览按钮闪退、生成的 postrm 有误的问题
