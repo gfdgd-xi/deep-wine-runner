@@ -161,6 +161,8 @@ class Runexebutton_threading(QtCore.QThread):
             option += f"WINEDLLOVERRIDES=\"mscoree,mshtml=\" "
         if not setting["Debug"]:
             option += "WINEDEBUG=-all "
+        else:
+            option += "WINEDEBUG=FIXME,ERR,WARN,TRACE,Message "
         wineUsingOption = ""
         if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
             wineUsingOption = "--disable-gpu"
@@ -261,6 +263,8 @@ def make_desktop_on_launcher():
                 option += f"WINEARCH={setting['Architecture']} "
             if not setting["Debug"]:
                 option += "WINEDEBUG=-all "
+            else:
+                option += "WINEDEBUG=FIXME,ERR,WARN,TRACE,Message "
             wineUsingOption = ""
             if o1.currentText() == "基于 box86 的 deepin-wine6-stable":
                 if not os.path.exists(f"{programPath}/dlls-arm"):
