@@ -1111,7 +1111,7 @@ class ProgramRunStatusUpload():
         try:
             if ProgramRunStatusUpload.sha1Value == "":
                 ProgramRunStatusUpload.sha1Value = ProgramRunStatusUpload.GetSHA1(e2.currentText())
-            QtWidgets.QMessageBox.information(None, QtCore.QCoreApplication.translate("U", "提示"), json.loads(requests.post(base64.b64decode("aHR0cDovL2dmZGdkeGkucWljcC52aXA6Mjc1MDI=").decode("utf-8"), {
+            QtWidgets.QMessageBox.information(None, QtCore.QCoreApplication.translate("U", "提示"), json.loads(requests.post(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0OjMwMjUw").decode("utf-8"), {
             "SHA1": ProgramRunStatusUpload.sha1Value,
             "Name": ProgramRunStatusUpload.programName.text(),
             "Fen": ProgramRunStatusUpload.fen.currentIndex(),
@@ -1236,7 +1236,103 @@ class ProgramSetting():
             return
         QtWidgets.QMessageBox.information(ProgramSetting.message, "提示", "保存完毕！")
 
+class ValueCheck():
+    def __init__(self):
+        pass
+        
+    def BASE64(self, filePath):
+        src = ""
+        with open(filePath, "rb") as f:
+            base64Byte = base64.b64encode(f.read())
+            src += base64Byte.decode("utf-8")
+        return src
 
+    def SHA1(self, filePath):
+        sha1 = hashlib.sha1()
+        file = open(filePath, "rb")
+        while True:
+            readByte = file.read(1024 * 1024)
+            sha1.update(readByte)
+            if not readByte:
+                break
+        file.close()
+        return sha1.hexdigest()
+
+    def MD5(self, filePath):
+        md5 = hashlib.md5()
+        file = open(filePath, "rb")
+        while True:
+            readByte = file.read(1024 * 1024)
+            md5.update(readByte)
+            if not readByte:
+                break
+        file.close()
+        return md5.hexdigest()
+
+    def SHA256(self, filePath):
+        value = hashlib.sha256()
+        file = open(filePath, "rb")
+        while True:
+            readByte = file.read(1024 * 1024)
+            value.update(readByte)
+            if not readByte:
+                break
+        file.close()
+        return value.hexdigest()
+
+    def SHA384(self, filePath):
+        value = hashlib.sha384()
+        file = open(filePath, "rb")
+        while True:
+            readByte = file.read(1024 * 1024)
+            value.update(readByte)
+            if not readByte:
+                break
+        file.close()
+        return value.hexdigest()
+
+    def SHA224(self, filePath):
+        value = hashlib.sha224()
+        file = open(filePath, "rb")
+        while True:
+            readByte = file.read(1024 * 1024)
+            value.update(readByte)
+            if not readByte:
+                break
+        file.close()
+        return value.hexdigest()
+
+    def SHA512(self, filePath):
+        value = hashlib.sha512()
+        file = open(filePath, "rb")
+        while True:
+            readByte = file.read(1024 * 1024)
+            value.update(readByte)
+            if not readByte:
+                break
+        file.close()
+        return value.hexdigest()
+
+    link = {
+        "SHA1": SHA1,
+        "MD5": MD5,
+        "SHA256": SHA256,
+        "SHA512": SHA512,
+        "SHA224": SHA224,
+        "SHA384": SHA384,
+        "BASE64": BASE64
+    }
+
+    def Get(self, types):
+        QtWidgets.QMessageBox.information(window, "提示", "在计算过程中，程序可能会出现无响应的问题，请稍后\n请在接下来的打开对话框中选择要计算的文件")
+        file = QtWidgets.QFileDialog.getOpenFileName(window, "打开")[0]
+        if file == "":
+            return
+        try:
+            QtWidgets.QInputDialog.getMultiLineText(window, "值", "计算得到的值", self.link[types](self, file))
+        except:
+            traceback.print_exc()
+            QtWidgets.QMessageBox.critical(window, "错误", traceback.format_exc())
 
 ###########################
 # 加载配置
@@ -1753,6 +1849,24 @@ v1 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用 Virtualbox
 virtualMachine.addAction(v1)
 v1.triggered.connect(RunVM)
 
+checkValue = menu.addMenu(QtCore.QCoreApplication.translate("U", "校验值计算(&S)"))
+md5Value = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "MD5(&M)"))
+sha1Value = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "SHA1(&M)"))
+base64Value = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "Base64(建议小文件)(&B)"))
+sha256Value = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "SHA256(&S)"))
+sha512Value = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "SHA512(&S)"))
+md5Value.triggered.connect(lambda: ValueCheck().Get("MD5"))
+sha1Value.triggered.connect(lambda: ValueCheck().Get("SHA1"))
+base64Value.triggered.connect(lambda: ValueCheck().Get("BASE64"))
+sha256Value.triggered.connect(lambda: ValueCheck().Get("SHA256"))
+sha512Value.triggered.connect(lambda: ValueCheck().Get("SHA512"))
+checkValue.addAction(md5Value)
+checkValue.addAction(sha1Value)
+checkValue.addAction(base64Value)
+checkValue.addAction(sha256Value)
+checkValue.addAction(sha512Value)
+
+
 safeWebsize = menu.addMenu(QtCore.QCoreApplication.translate("U", "云沙箱(&C)"))
 s1 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "360 沙箱云"))
 s2 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "微步云沙箱"))
@@ -1876,4 +1990,6 @@ if o1.currentText() == "":
     wine["没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用"] = "没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用"
     canUseWine.append("没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用")
     o1.addItem("没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用")
+
+
 sys.exit(app.exec_())

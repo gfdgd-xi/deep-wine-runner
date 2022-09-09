@@ -102,6 +102,17 @@ def make_deb(build=False):
     if QtWidgets.QMessageBox.question(widget, QtCore.QCoreApplication.translate("U", "提示"), QtCore.QCoreApplication.translate("U", "打包将会改动现在选择的容器，是否继续？")) == QtWidgets.QMessageBox.No:
         disabled_or_NORMAL_all(True)
         return
+    # 警告信息
+    if os.path.exists(e7_text.text()):
+        if QtWidgets.QMessageBox.warning(window, "警告", "输入的路径似乎是一个绝对路径\n不建议打包绝对路径，建议是 Wine 容器内路径\n是否继续打包？", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No) == QtWidgets.QMessageBox.No:
+            disabled_or_NORMAL_all(True)
+            return
+    if e7_text.text()[:2].lower() == "c:" and not os.path.exists("{}/drive_c/{}".format(
+        e6_text.text(), 
+        e7_text.text()[3:].replace("\\", '/'))):
+        if QtWidgets.QMessageBox.warning(window, "警告", "输入的路径似乎在 Wine 容器不存在（如果只是大小写错误导致的误判，请忽略）\n是否继续打包？", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No) == QtWidgets.QMessageBox.No:
+            disabled_or_NORMAL_all(True)
+            return
     #thread = threading.Thread(target=make_deb_threading)
     QT.thread = make_deb_threading(build)
     QT.thread.signal.connect(chang_textbox1_things)
