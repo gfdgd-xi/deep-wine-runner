@@ -1,4 +1,6 @@
 import os
+import sys
+import PyQt5.QtWidgets as QtWidgets
 def OpenTerminal(command):
     if terminalEnd[terminal][1]:
         os.system(f"\"{terminal}\" \"{terminalEnd[terminal][0]}\" \"{command}\"")
@@ -12,12 +14,14 @@ terminal = ""
 terminalList = [
     "deepin-terminal",
     "mate-terminal",
-    "gnome-terminal"
+    "gnome-terminal",
+    "xfce4-terminal"
 ]
 terminalEnd = {
     f"{programPath}/../launch.sh\" \"deepin-terminal": ["-e", 0],
     "mate-terminal": ["-e", 1],
-    "gnome-terminal": ["--", 0]
+    "gnome-terminal": ["--", 0],
+    "xfce4-terminal": ["-e", 1]
 }
 for i in terminalList:
     if not os.system(f"which {i}"):
@@ -28,4 +32,6 @@ for i in terminalList:
 if terminal == "":
     print("无法识别到以下的任意一个终端")
     print(" ".join(terminalList))
+    app = QtWidgets.QApplication(sys.argv)
+    QtWidgets.QMessageBox.critical(None, "错误", "无法识别到以下的任意一个终端\n" + " ".join(terminalList))
     exit()
