@@ -1633,6 +1633,7 @@ updateThingsString = '''※1、Dll 提取工具支持 NT 6.X 及以上版本的 
 ※5、修复无法正常评分的问题
 ※6、修复 QQ、TIM 安装后无法正常生成快捷方式的问题
 7、更新组件安装的离线列表
+8、不再强制依赖深度终端，只做推荐安装
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
