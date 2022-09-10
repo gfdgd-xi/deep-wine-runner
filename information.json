@@ -1,5 +1,5 @@
 {
-    "Version": "2.1.0-2",
+    "Version": "2.2.0",
     "Thank": [
         "感谢 @a2035274 @虚幻的早晨 https://bbs.deepin.org/post/238301",
         "感谢 @zhangs https://bbs.deepin.org/post/227948",
@@ -7,7 +7,7 @@
         "感谢 @统信UCARE服务 https://mp.weixin.qq.com/s/iOdfNv6phc8F4inackFFTw",
         "感谢 @星火应用商店 提供部分安装包的源以及本程序的下载地址",
         "感谢 @delsin 和 @神末shenmo 在 deepin 论坛提供打包器打包的 deb 包自动删除容器的建议",
-	"感谢 @shenmo 反馈的 2.1.0 打包器问题和 2.1.0-1 终端调用问题",
+	    "感谢 @shenmo 反馈的 2.1.0 打包器问题和 2.1.0-1 终端调用问题",
         "感谢 @GershonWang 在 https://github.com/gfdgd-xi/deep-wine-runner/issues/1 提供窗口居中的建议",
         "感谢 @134******28 和 @sgb76 提供的新程序 GUI 布局和实现代码",
         "感谢 @sgb76 为 Wine 打包器（非生态适配脚本）打包的 i386 deb 提供建议",
