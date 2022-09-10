@@ -207,13 +207,17 @@ class Runexebutton_threading(QtCore.QThread):
         # 判断是否安装了 QQ/TIM
         for i in iconListUnBuild:
             if os.path.exists(i[1].replace("wineBottonPath", wineBottonPath)):
-                if not os.path.exists(f"{get_home()}/.local/share/applications/{i[0]}-{os.path.basename(wineBottonPath)}.desktop"):
+                if not os.path.exists(f"{get_home()}/.local/share/applications/wine/{i[0]}-{os.path.basename(wineBottonPath)}.desktop"):
                     print("图标不存在，创建图标")
                     # 图标不存在
                     # 写入 .desktop 文件
                     try:
-                        write_txt(f"{get_home()}/.local/share/applications/{i[0]}-{os.path.basename(wineBottonPath)}.desktop", f'''[Desktop Entry]
-Name={i[0]}
+                        os.system(f"mkdir -p '{get_home()}/.local/share/applications/wine'")
+                        name = i[0]
+                        if setting["BuildByBottleName"]:
+                            name = f"{i[0]}——{os.path.basename(wineBottonPath)}"
+                        write_txt(f"{get_home()}/.local/share/applications/wine/{i[0]}-{os.path.basename(wineBottonPath)}.desktop", f'''[Desktop Entry]
+Name={name}
 Exec=env WINEPREFIX='{wineBottonPath}' {option} {wine[o1.currentText()]} '{i[1].replace("wineBottonPath", wineBottonPath)}' {setting["WineOption"]} {wineUsingOption}
 Icon={programPath}/Icon/{i[0]}.svg
 Type=Application
@@ -298,7 +302,8 @@ def make_desktop_on_launcher():
                     iconPath = f"{programPath}/Icon/{i[0]}.svg"
                     # 读到了就不需要再读取了
                     break
-            write_txt(get_home() + "/.local/share/applications/" + combobox1.currentText() + ".desktop", f'''[Desktop Entry]
+            os.system(f"mkdir -p '{get_home()}/.local/share/applications/wine'")
+            write_txt(get_home() + "/.local/share/applications/wine/" + combobox1.currentText() + ".desktop", f'''[Desktop Entry]
 Name={combobox1.currentText()}
 Exec=env WINEPREFIX='{wineBottonPath}' {option} {wine[o1.currentText()]} '{e2.currentText()}' {setting["WineOption"]} {wineUsingOption}
 Icon={iconPath}
@@ -359,6 +364,7 @@ def make_desktop_on_desktop():
                     iconPath = f"{programPath}/Icon/{i[0]}.svg"
                     # 读到了就不需要再读取了
                     break
+            os.system(f"mkdir -p '{get_home()}/.local/share/applications/wine'")
             write_txt(get_desktop_path() + "/" + combobox1.currentText() + ".desktop", f'''[Desktop Entry]
 Name={combobox1.currentText()}
 Exec=env WINEPREFIX='{wineBottonPath}' {option} {wine[o1.currentText()]} '{e2.currentText()}' {setting["WineOption"]} {wineUsingOption}
@@ -1274,6 +1280,7 @@ class ProgramSetting():
     monogeckoInstaller = None
     autoWine = None
     runtimeCache = None
+    buildByBottleName = None
     def ShowWindow():
         ProgramSetting.message = QtWidgets.QMainWindow()
         widget = QtWidgets.QWidget()
@@ -1288,6 +1295,7 @@ class ProgramSetting():
         widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "Wine 默认 Mono 和 Gecko 安装器：")), 7, 0, 1, 1)
         widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "忽略未安装的 Wine：")), 8, 0, 1, 1)
         widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "下载缓存：")), 9, 0, 1, 1)
+        widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "图标生成：")), 10, 0, 1, 1)
         ProgramSetting.wineBottonA = QtWidgets.QComboBox()
         ProgramSetting.wineDebug = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "开启 DEBUG 输出"))
         ProgramSetting.defultWine = QtWidgets.QComboBox()
@@ -1306,6 +1314,7 @@ class ProgramSetting():
         ProgramSetting.monogeckoInstaller = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "屏蔽 Wine 默认 Mono 和 Gecko 安装器"))
         ProgramSetting.autoWine = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "不显示未检测到的 Wine"))
         ProgramSetting.runtimeCache = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "开启下载缓存"))
+        ProgramSetting.buildByBottleName = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "本软件构建的图标后面添加容器名"))
         ProgramSetting.wineBottonA.addItems(["Auto", "win32", "win64"])
         ProgramSetting.wineBottonA.setCurrentText(setting["Architecture"])
         ProgramSetting.wineDebug.setChecked(setting["Debug"])
@@ -1317,6 +1326,7 @@ class ProgramSetting():
         ProgramSetting.monogeckoInstaller.setChecked(setting["MonoGeckoInstaller"])
         ProgramSetting.autoWine.setChecked(setting["AutoWine"])
         ProgramSetting.runtimeCache.setChecked(setting["RuntimeCache"])
+        ProgramSetting.buildByBottleName.setChecked(setting["BuildByBottleName"])
         widgetLayout.addWidget(ProgramSetting.wineBottonA, 0, 1, 1, 1)
         widgetLayout.addWidget(ProgramSetting.wineDebug, 1, 1, 1, 1)
         widgetLayout.addWidget(ProgramSetting.defultWine, 2, 1, 1, 1)
@@ -1329,7 +1339,8 @@ class ProgramSetting():
         widgetLayout.addWidget(ProgramSetting.monogeckoInstaller, 7, 1, 1, 1)
         widgetLayout.addWidget(ProgramSetting.autoWine, 8, 1, 1, 1)
         widgetLayout.addWidget(ProgramSetting.runtimeCache, 9, 1, 1, 1)
-        widgetLayout.addWidget(save, 10, 2, 1, 1)
+        widgetLayout.addWidget(ProgramSetting.buildByBottleName, 10, 1, 1, 1)
+        widgetLayout.addWidget(save, 11, 2, 1, 1)
         widget.setLayout(widgetLayout)
         ProgramSetting.message.setCentralWidget(widget)
         ProgramSetting.message.setWindowIcon(QtGui.QIcon(iconPath))
@@ -1357,6 +1368,7 @@ class ProgramSetting():
         setting["MonoGeckoInstaller"] = ProgramSetting.monogeckoInstaller.isChecked()
         setting["AutoWine"] = ProgramSetting.autoWine.isChecked()
         setting["RuntimeCache"] = ProgramSetting.runtimeCache.isChecked()
+        setting["BuildByBottleName"] = ProgramSetting.buildByBottleName.isChecked()
         try:
             write_txt(get_home() + "/.config/deepin-wine-runner/WineSetting.json", json.dumps(setting))
         except:
@@ -1479,7 +1491,8 @@ defultProgramList = {
     "MonoGeckoInstaller": True,
     "AutoWine": True,
     "RuntimeCache": True,
-    "MustRead": False
+    "MustRead": False,
+    "BuildByBottleName": False
 }
 if not os.path.exists(get_home() + "/.config/deepin-wine-runner"):  # 如果没有配置文件夹
     os.mkdir(get_home() + "/.config/deepin-wine-runner")  # 创建配置文件夹
