@@ -827,7 +827,7 @@ class GetDllFromWindowsISO:
         if not e1.currentText() == "":
             GetDllFromWindowsISO.wineBottonPath = e1.currentText()
         widgetLayout.addWidget(QtWidgets.QLabel(f"""提示：
-    目前本提取功能不支持 Windows 95 以及 Windows 98 等基于 DOS 老系统的官方安装镜像，只支持读取 i386 和 wim 安装方法的安装镜像，不支持读取 ghost 安装方式
+    目前本提取功能暂只支持 NT 内核系统的官方安装镜像，不支持读取 ghost 等第三方封装方式的安装镜像
     以及不要拷贝/替换太多的 dll，否则可能会导致 wine 容器异常，以及不要替换 Wine 的核心 dll
     最后，拷贝/替换 dll 后，建议点击下面“设置 wine 容器”按钮==》函数库 进行设置
 当前选择的 Wine 容器：{GetDllFromWindowsISO.wineBottonPath}"""), 0, 0, 1, 5)
