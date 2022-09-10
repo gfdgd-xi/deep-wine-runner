@@ -818,6 +818,7 @@ class GetDllFromWindowsISO:
     mount = False
     mountButton = None
     dllListModel = None
+    arch = 0
     def ShowWindow():
         #DisableButton(True)
         GetDllFromWindowsISO.message = QtWidgets.QMainWindow()
@@ -826,8 +827,8 @@ class GetDllFromWindowsISO:
         if not e1.currentText() == "":
             GetDllFromWindowsISO.wineBottonPath = e1.currentText()
         widgetLayout.addWidget(QtWidgets.QLabel(f"""提示：
-    目前本提取功能只支持 Windows XP 以及 Windows Server 2003 等老系统的官方安装镜像，只支持读取 i386 安装方法的安装镜像，不支持读取 wim、ghost 安装方式
-    以及不要拷贝/替换太多的 dll，否则可能会导致 wine 容器异常
+    目前本提取功能不支持 Windows 95 以及 Windows 98 等基于 DOS 老系统的官方安装镜像，只支持读取 i386 和 wim 安装方法的安装镜像，不支持读取 ghost 安装方式
+    以及不要拷贝/替换太多的 dll，否则可能会导致 wine 容器异常，以及不要替换 Wine 的核心 dll
     最后，拷贝/替换 dll 后，建议点击下面“设置 wine 容器”按钮==》函数库 进行设置
 当前选择的 Wine 容器：{GetDllFromWindowsISO.wineBottonPath}"""), 0, 0, 1, 5)
         isoLabel = QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "ISO镜像："))
@@ -913,16 +914,38 @@ class GetDllFromWindowsISO:
         findList = []
         try:
             if found == "":
-                for i in os.listdir("/tmp/wine-runner-getdll/i386"):
-                    if i[-3:] == "dl_":
-                        findList.append(i[:-1] + "l")    
+                # 显示所有内容
+                # 下面内容需要分类讨论
+                if GetDllFromWindowsISO.arch == 0:
+                    for i in os.listdir("/tmp/wine-runner-getdll/i386"):
+                        if i[-3:] == "dl_":
+                            findList.append(i[:-1] + "l")    
+                elif GetDllFromWindowsISO.arch == 32:
+                    for i in os.listdir("/tmp/wine-runner-getdll-wim/Windows/SysWOW64"):
+                        if i[-3:] == "dll":
+                            findList.append(i[:-1] + "l")  
+                elif GetDllFromWindowsISO.arch == 64:
+                    for i in os.listdir("/tmp/wine-runner-getdll-wim/Windows/System32"):
+                        if i[-3:] == "dll":
+                            findList.append(i[:-1] + "l")  
+                GetDllFromWindowsISO.dllListModel.setStringList(findList)
                 return
-            for i in os.listdir("/tmp/wine-runner-getdll/i386"):
-                if found in i[:-1] + "l":
-                    findList.append(i[:-1] + "l")  
-            if len(isoPath) == 0 or isoPathFound[-1] != found:
-                isoPathFound.append(found)  # 将记录写进数组
-                write_txt(get_home() + "/.config/deepin-wine-runner/ISOPathFound.json", str(json.dumps(ListToDictionary(isoPathFound))))  # 将历史记录的数组转换为字典并写入
+            if GetDllFromWindowsISO.arch == 0:
+                for i in os.listdir("/tmp/wine-runner-getdll/i386"):
+                    if found in i[:-1] + "l":
+                        findList.append(i[:-1] + "l")  
+            elif GetDllFromWindowsISO.arch == 32:
+                for i in os.listdir("/tmp/wine-runner-getdll-wim/Windows/SysWOW64"):
+                    if found in i[:-1] + "l":
+                        findList.append(i[:-1] + "l")  
+            elif GetDllFromWindowsISO.arch == 64:
+                for i in os.listdir("/tmp/wine-runner-getdll-wim/Windows/System32"):
+                    if found in i[:-1] + "l":
+                        findList.append(i[:-1] + "l")  
+            if len(isoPath) == 0:
+                if isoPathFound[-1] != found:
+                    isoPathFound.append(found)  # 将记录写进数组
+                    write_txt(get_home() + "/.config/deepin-wine-runner/ISOPathFound.json", str(json.dumps(ListToDictionary(isoPathFound))))  # 将历史记录的数组转换为字典并写入
             GetDllFromWindowsISO.dllFound.clear()
             GetDllFromWindowsISO.dllFound.addItems(isoPathFound)
             GetDllFromWindowsISO.dllListModel.setStringList(findList)
@@ -938,11 +961,15 @@ class GetDllFromWindowsISO:
         if os.path.exists("/tmp/wine-runner-getdll"):
             try:
                 os.rmdir("/tmp/wine-runner-getdll")
+                os.rmdir("/tmp/wine-runner-getdll-wim")
             except:
                 # 如果无法删除可能是挂载了文件
+                os.system("wimunmount /tmp/wine-runner-getdll-wim")
                 os.system("pkexec umount /tmp/wine-runner-getdll")
+                
                 try:
                     os.rmdir("/tmp/wine-runner-getdll")
+                    os.rmdir("/tmp/wine-runner-getdll-wim")
                 except:
                     traceback.print_exc()
                     QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", traceback.format_exc())
@@ -950,15 +977,60 @@ class GetDllFromWindowsISO:
         os.makedirs("/tmp/wine-runner-getdll")
         os.system(f"pkexec mount '{GetDllFromWindowsISO.isoPath.currentText()}' /tmp/wine-runner-getdll")
         findList = []
-        try:
-            for i in os.listdir("/tmp/wine-runner-getdll/i386"):
-                if i[-3:] == "dl_":
-                    findList.append(i[:-1] + "l")     
-        except:
-            traceback.print_exc()
-            QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", f"镜像内容读取/挂载失败，报错如下：\n{traceback.format_exc()}")
-            return
-        GetDllFromWindowsISO.dllListModel.setStringList(findList)
+        # 判断是新版的 Windows ISO（Windows Vista 及以上版本）
+        if os.path.exists("/tmp/wine-runner-getdll/sources/install.wim"):
+            # 是新版，挂载 wim
+            # 需要让用户选择挂载内容
+            QtWidgets.QInputDialog.getMultiLineText(GetDllFromWindowsISO.message, "提示", "挂载文件需要用户记住并在下一个对话框输入 Index 以挂载正确的镜像，按下下方任意按钮即可继续", subprocess.getoutput("wiminfo '/tmp/wine-runner-getdll/sources/install.wim'"))
+            choose = QtWidgets.QInputDialog.getInt(GetDllFromWindowsISO.message, "提示", "请输入 Index")
+            if not choose[1]:
+                return
+            os.makedirs("/tmp/wine-runner-getdll-wim")
+            os.system(f"wimmount /tmp/wine-runner-getdll/sources/install.wim {choose[0]} /tmp/wine-runner-getdll-wim")
+            if os.path.exists("/tmp/wine-runner-getdll-wim/Windows/SysWOW64"):
+                # 如果是 64 位镜像
+                if QtWidgets.QInputDialog.getItem(GetDllFromWindowsISO.message, "选择位数", "选择位数（如果没有选择，默认为 64 位）", ["32", "64"], 1, False) == "32":
+                    # 64 位镜像的 32 位是存在 SysWOW64 的                
+                    try:
+                        for i in os.listdir("/tmp/wine-runner-getdll-wim/Windows/SysWOW64"):
+                            if i[-3:] == "dll":
+                                findList.append(i[:-1] + "l")     
+                        GetDllFromWindowsISO.dllListModel.setStringList(findList)
+                        GetDllFromWindowsISO.arch = 32
+                        GetDllFromWindowsISO.DisbledDown(False)  
+                        GetDllFromWindowsISO.DisbledUp(True)
+                        GetDllFromWindowsISO.mount = True
+                        if len(isoPath) == 0 or isoPath[-1] != GetDllFromWindowsISO.isoPath.currentText():
+                            isoPath.append(GetDllFromWindowsISO.isoPath.currentText())  # 将记录写进数组
+                        write_txt(get_home() + "/.config/deepin-wine-runner/ISOPath.json", str(json.dumps(ListToDictionary(isoPath))))  # 将历史记录的数组转换为字典并写入
+                        GetDllFromWindowsISO.isoPath.clear()
+                        GetDllFromWindowsISO.isoPath.addItems(isoPath)
+                        return
+                    except:
+                        traceback.print_exc()
+                        QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", f"镜像内容读取/挂载失败，报错如下：\n{traceback.format_exc()}")
+                        return
+            try:
+                for i in os.listdir("/tmp/wine-runner-getdll-wim/Windows/System32"):
+                    if i[-3:] == "dll":
+                        findList.append(i[:-1] + "l")    
+                GetDllFromWindowsISO.arch = 64 
+            except:
+                traceback.print_exc()
+                QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", f"镜像内容读取/挂载失败，报错如下：\n{traceback.format_exc()}")
+                return
+            GetDllFromWindowsISO.dllListModel.setStringList(findList)
+        else:
+            try:
+                for i in os.listdir("/tmp/wine-runner-getdll/i386"):
+                    if i[-3:] == "dl_":
+                        findList.append(i[:-1] + "l")     
+                GetDllFromWindowsISO.arch = 0
+            except:
+                traceback.print_exc()
+                QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", f"镜像内容读取/挂载失败，报错如下：\n{traceback.format_exc()}")
+                return
+            GetDllFromWindowsISO.dllListModel.setStringList(findList)
         GetDllFromWindowsISO.DisbledDown(False)  
         GetDllFromWindowsISO.DisbledUp(True)
         GetDllFromWindowsISO.mount = True
@@ -970,9 +1042,11 @@ class GetDllFromWindowsISO:
         #GetDllFromWindowsISO.isoPath['value'] = isoPath
 
     def UmountDisk():
+        os.system("wimunmount /tmp/wine-runner-getdll-wim")
         os.system("pkexec umount /tmp/wine-runner-getdll")
         try:
             shutil.rmtree("/tmp/wine-runner-getdll")
+            os.system("rm -rf /tmp/wine-runner-getdll-wim")
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, QtCore.QCoreApplication.translate("U", "错误"), f"关闭/卸载镜像失败，报错如下：\n{traceback.format_exc()}")
@@ -985,11 +1059,23 @@ class GetDllFromWindowsISO:
     def CopyDll():
         choose = GetDllFromWindowsISO.dllList.selectionModel().selectedIndexes()[0].data()
         if os.path.exists(f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}"):
-            if QtWidgets.QMessageBox.question(widget, "提示", f"DLL {choose} 已经存在，是否覆盖？") == QtWidgets.QMessageBox.No:
+            if QtWidgets.QMessageBox.question(GetDllFromWindowsISO.message, "提示", f"DLL {choose} 已经存在，是否覆盖？") == QtWidgets.QMessageBox.No:
                 return
         try:
-            shutil.copy(f"/tmp/wine-runner-getdll/i386/{choose[:-1]}_", f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}")
-            os.system(f"WINEPREFIX='{GetDllFromWindowsISO.wineBottonPath}' '{wine[o1.currentText()]}' reg add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v {os.path.splitext(choose)[0]} /d native /f")
+            # 要分类讨论
+            if GetDllFromWindowsISO.arch == 0:
+                shutil.copy(f"/tmp/wine-runner-getdll/i386/{choose[:-1]}_", f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}")
+            elif GetDllFromWindowsISO.arch == 32:
+                shutil.copy(f"/tmp/wine-runner-getdll-wim/Windows/SysWOW64/{choose[:-1]}l", f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}")
+            elif GetDllFromWindowsISO.arch == 64:
+                shutil.copy(f"/tmp/wine-runner-getdll-wim/Windows/System32/{choose[:-1]}l", f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}")
+            # 选择原装或优于内建
+            if QtWidgets.QInputDialog.getItem(GetDllFromWindowsISO.message, "选择", "选择模式", ["原装先于内建", "原装"], 0, False) == "原装先于内建":
+                # 原装先于内建
+                os.system(f"WINEPREFIX='{GetDllFromWindowsISO.wineBottonPath}' '{wine[o1.currentText()]}' reg add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v {os.path.splitext(choose)[0]} /d native,builtin /f")
+            else:
+                # 原装
+                os.system(f"WINEPREFIX='{GetDllFromWindowsISO.wineBottonPath}' '{wine[o1.currentText()]}' reg add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v {os.path.splitext(choose)[0]} /d native /f")
             QtWidgets.QMessageBox.information(GetDllFromWindowsISO.message, "提示", "提取成功！")
         except:
             traceback.print_exc()
@@ -1128,6 +1214,7 @@ class ProgramRunStatusUpload():
             "Wine": o1.currentText()
             }).text)["Error"])
         except:
+            traceback.print_exc()
             QtWidgets.QMessageBox.critical(None, QtCore.QCoreApplication.translate("U", "错误"), QtCore.QCoreApplication.translate("U", "数据上传失败！"))
 
     def GetSHA1(filePath):
@@ -1749,7 +1836,7 @@ cleanBottonUOS = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "清�
 w5 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "打包 wine 应用"))
 w6 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用官方 Wine 适配活动的脚本进行打包"))
 getDllOnInternet = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从互联网获取DLL"))
-w7 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从镜像获取DLL（只支持Windows XP、Windows Server 2003官方安装镜像）"))
+w7 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从镜像获取DLL（只支持官方安装镜像，DOS内核如 Windows 95 暂不支持）"))
 updateGeek = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从 Geek Uninstaller 官网升级程序"))
 deleteDesktopIcon = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "删除所有 Wine 程序在启动器的快捷方式"))
 wineOption.addAction(w1)
