@@ -203,6 +203,24 @@ class Runexebutton_threading(QtCore.QThread):
             wineBottonHistory.append(e2.currentText())  # 将记录写进数组        
             write_txt(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json", str(json.dumps(ListToDictionary(wineBottonHistory))))  # 将历史记录的数组转换为字典并写入
         self.showHistory.emit("")
+        # 针对 QQ、TIM 安装后不会生成 lnk 的问题，由程序读取以及自动创建
+        # 判断是否安装了 QQ/TIM
+        for i in iconListUnBuild:
+            if os.path.exists(i[1].replace("wineBottonPath", wineBottonPath)):
+                if not os.path.exists(f"{get_home()}/.local/share/applications/{i[0]}-{os.path.basename(wineBottonPath)}.desktop"):
+                    print("图标不存在，创建图标")
+                    # 图标不存在
+                    # 写入 .desktop 文件
+                    try:
+                        write_txt(f"{get_home()}/.local/share/applications/{i[0]}-{os.path.basename(wineBottonPath)}.desktop", f'''[Desktop Entry]
+Name={i[0]}
+Exec=env WINEPREFIX='{wineBottonPath}' {option} {wine[o1.currentText()]} '{i[1].replace("wineBottonPath", wineBottonPath)}' {setting["WineOption"]} {wineUsingOption}
+Icon={programPath}/Icon/{i[0]}.svg
+Type=Application
+StartupNotify=true''')
+                    except:
+                        # 写入不进去就别写入了，当什么事情都没发生就行
+                        traceback.print_exc()
         DisableButton(False)
   
 
@@ -274,6 +292,12 @@ def make_desktop_on_launcher():
                     os.remove(f"{programPath}/dlls-arm.7z")
             if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
                 wineUsingOption = "--disable-gpu"
+            for i in iconList:
+                if i[1].replace("wineBottonPath", wineBottonPath) == e2.currentText():
+                    # 如果路径相同，即可以用程序对应的图标
+                    iconPath = f"{programPath}/Icon/{i[0]}.svg"
+                    # 读到了就不需要再读取了
+                    break
             write_txt(get_home() + "/.local/share/applications/" + combobox1.currentText() + ".desktop", f'''[Desktop Entry]
 Name={combobox1.currentText()}
 Exec=env WINEPREFIX='{wineBottonPath}' {option} {wine[o1.currentText()]} '{e2.currentText()}' {setting["WineOption"]} {wineUsingOption}
@@ -329,6 +353,12 @@ def make_desktop_on_desktop():
                 option += f"WINEARCH={setting['Architecture']} "
             if not setting["Debug"]:
                 option += "WINEDEBUG=-all "
+            for i in iconList:
+                if i[1].replace("wineBottonPath", wineBottonPath) == e2.currentText():
+                    # 如果路径相同，即可以用程序对应的图标
+                    iconPath = f"{programPath}/Icon/{i[0]}.svg"
+                    # 读到了就不需要再读取了
+                    break
             write_txt(get_desktop_path() + "/" + combobox1.currentText() + ".desktop", f'''[Desktop Entry]
 Name={combobox1.currentText()}
 Exec=env WINEPREFIX='{wineBottonPath}' {option} {wine[o1.currentText()]} '{e2.currentText()}' {setting["WineOption"]} {wineUsingOption}
@@ -514,6 +544,8 @@ class RunWinetricksThread(QtCore.QThread):
                 text = ""
             self.signal.emit(text)
             print(text, end="")
+        
+        
         DisableButton(False)
 
 runWinetricks = None
@@ -1586,7 +1618,8 @@ updateThingsString = '''※1、Dll 提取工具支持 NT 6.X 及以上版本的 
 ※3、DEBUG 模式输出更多信息以方便调试（原本只输出 pid、Err）
 ※4、支持安装 msi 文件
 ※5、修复无法正常评分的问题
-6、更新组件安装的离线列表
+※6、修复 QQ、TIM 安装后无法正常生成快捷方式的问题
+7、更新组件安装的离线列表
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
@@ -1624,8 +1657,19 @@ try:
     threading.Thread(target=requests.get, args=[parse.unquote(base64.b64decode("aHR0cHM6Ly8zMDQ2MjZwOTI3LmdvaG8uY28vc3BhcmstZGVlcGluLXdpbmUtcnVubmVyL29wZW4vSW5zdGFsbC5waHA=").decode("utf-8")) + "?Version=" + version]).start()
 except:
     pass
-
-
+iconListUnBuild = [
+    ["QQ", "wineBottonPath/drive_c/Program Files/Tencent/QQ/Bin/QQ.exe"],
+    ["QQ", "wineBottonPath/drive_c/Program Files (x86)/Tencent/QQ/Bin/QQ.exe"],
+    ["TIM", "wineBottonPath/drive_c/Program Files/Tencent/TIM/Bin/TIM.exe"],
+    ["TIM", "wineBottonPath/drive_c/Program Files (x86)/Tencent/TIM/Bin/TIM.exe"]
+]
+iconList = [
+    ["微信", "wineBottonPath/drive_c/Program Files/Tencent/WeChat/WeChat.exe"],
+    ["微信", "wineBottonPath/drive_c/Program Files (x86)/Tencent/WeChat/WeChat.exe"]
+]
+for i in iconListUnBuild:
+    iconList.append(i)
+print(iconList)
 
 ###########################
 # 窗口创建
