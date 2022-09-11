@@ -314,6 +314,8 @@ if [ -n "$desktop_file_categories" ]; then
     find -iname "$desktop_file_icon" -exec cp "{}" "$outentries/icons/{}" \;
 
 fi
+# 写入 postrm 自动删除卸载残留脚本
+$dstdir/DEBIAN/postrm
 systemVersion=`cat /etc/os-version`
 systemVersion=${systemVersion,,}  # 获取系统版本
 # 判断系统是否为 UOS

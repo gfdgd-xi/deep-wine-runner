@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [ "$1" = "remove" ] || [ "$1" = "purge" ];then
+
+echo "清理卸载残留"
+for username in `ls /home`
+    do
+        echo /home/$username
+        if [ -d "/home/$username/.deepinwine/@deb_package_name@" ]
+            then
+                rm -rf "/home/$username/.deepinwine/@deb_package_name@"
+            fi
+    done
+else
+    echo "非卸载，跳过清理"
+fi
