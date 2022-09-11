@@ -1632,12 +1632,13 @@ updateThingsString = '''※1、Dll 提取工具支持 NT 6.X 及以上版本的 
 ※4、支持安装 msi 文件
 ※5、修复无法正常评分的问题
 ※6、修复 QQ、TIM 安装后无法正常生成快捷方式的问题
-7、更新组件安装的离线列表
-8、不再强制依赖深度终端，只做推荐安装
+※7、基于生态适配活动的打包器更换为 spark-wine-helper 以及添加自动删除残留脚本
+8、更新组件安装的离线列表
+9、不再强制依赖深度终端，只做推荐安装
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年09月03日"
+updateTime = "2022年09月11日"
 about = f'''<h1>关于</h1>
 <p>一个能让Linux用户更加方便运行Windows应用的程序，内置了对wine图形化的支持和各种Wine工具和自制Wine程序打包器、运行库安装工具等等</p>
 <p>同时也内置了基于VirtualBox制作的小白Windows虚拟机安装工具，可以做到只需要用户下载系统镜像并点击安装即可，无需顾及虚拟机安装、创建、虚拟机的分区等等</p>
@@ -1679,7 +1680,9 @@ iconListUnBuild = [
 ]
 iconList = [
     ["微信", "wineBottonPath/drive_c/Program Files/Tencent/WeChat/WeChat.exe"],
-    ["微信", "wineBottonPath/drive_c/Program Files (x86)/Tencent/WeChat/WeChat.exe"]
+    ["微信", "wineBottonPath/drive_c/Program Files (x86)/Tencent/WeChat/WeChat.exe"],
+    ["UltraISO", "wineBottonPath/drive_c/Program Files/UltraISO/UltraISO.exe"],
+    ["UltraISO", "wineBottonPath/drive_c/Program Files (x86)/UltraISO/UltraISO.exe"]
 ]
 for i in iconListUnBuild:
     iconList.append(i)
