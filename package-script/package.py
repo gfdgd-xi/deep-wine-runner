@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
-# 版本：1.7.1
-# 更新时间：2022年07月19日
+# 版本：2.2.0
+# 更新时间：2022年09月11日
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 的 tkinter 构建
 ###########################################################################################
@@ -75,9 +75,9 @@ export deb_package_name="{packageName.text()}"
 #最终生成的包的版本号，版本号命名规则：应用版本号+deepin+数字
 export deb_version_string="{versionName.text()}"
 
-export package_depends="deepin-wine6-stable:amd64 (>= 6.0.0.12-1), deepin-wine-helper (>= 5.1.25-1)"
+export package_depends="deepin-wine6-stable:amd64 (>= 6.0.0.12-1), spark-dwine-helper | store.spark-app.spark-dwine-helper"
 export apprun_cmd="deepin-wine6-stable"
-#export package_depends="deepin-wine5-stable:amd64 (>= 5.0.29-1), deepin-wine-helper (>= 5.1.25-1)"
+#export package_depends="deepin-wine5-stable:amd64 (>= 5.0.29-1), spark-dwine-helper | store.spark-app.spark-dwine-helper"
 #export apprun_cmd="deepin-wine5-stable"
 
 # rm -fr final.dir/
