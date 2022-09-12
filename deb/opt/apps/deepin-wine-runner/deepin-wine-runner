@@ -161,9 +161,11 @@ class Runexebutton_threading(QtCore.QThread):
             option += f"WINEDLLOVERRIDES=\"mscoree,mshtml=\" "
         if not setting["Debug"]:
             option += "WINEDEBUG=-all "
+        else:
+            option += "WINEDEBUG=FIXME,ERR,WARN,TRACE,Message "
         wineUsingOption = ""
         if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
-            wineUsingOption = "--disable-gpu"
+            wineUsingOption = ""
         if o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
             os.system(f"'{programPath}/deepin-wine-runner-create-botton.py' '{wineBottonPath}'")
         if o1.currentText() == "基于 box86 的 deepin-wine6-stable":
@@ -174,10 +176,16 @@ class Runexebutton_threading(QtCore.QThread):
                 os.remove(f"{programPath}/dlls-arm.7z")
         if setting["TerminalOpen"]:
             res = ""
-            OpenTerminal("env WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"])
+            if e2.currentText()[-4:] == ".msi" and os.path.exists(e2.currentText()):
+                OpenTerminal("env WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " msiexec /i '" + e2.currentText() + "' " + setting["WineOption"])
+            else:
+                OpenTerminal("env WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"])
             #res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"] + "\" --keep-open" + wineUsingOption], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         else:
-            res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            if e2.currentText()[-4:] == ".msi" and os.path.exists(e2.currentText()):
+                res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " msiexec /i '" + e2.currentText() + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            else:
+                res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         # 实时读取程序返回
         #
         if not setting["TerminalOpen"]:
@@ -195,6 +203,28 @@ class Runexebutton_threading(QtCore.QThread):
             wineBottonHistory.append(e2.currentText())  # 将记录写进数组        
             write_txt(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json", str(json.dumps(ListToDictionary(wineBottonHistory))))  # 将历史记录的数组转换为字典并写入
         self.showHistory.emit("")
+        # 针对 QQ、TIM 安装后不会生成 lnk 的问题，由程序读取以及自动创建
+        # 判断是否安装了 QQ/TIM
+        for i in iconListUnBuild:
+            if os.path.exists(i[1].replace("wineBottonPath", wineBottonPath)):
+                if not os.path.exists(f"{get_home()}/.local/share/applications/wine/{i[0]}-{os.path.basename(wineBottonPath)}.desktop"):
+                    print("图标不存在，创建图标")
+                    # 图标不存在
+                    # 写入 .desktop 文件
+                    try:
+                        os.system(f"mkdir -p '{get_home()}/.local/share/applications/wine'")
+                        name = i[0]
+                        if setting["BuildByBottleName"]:
+                            name = f"{i[0]}——{os.path.basename(wineBottonPath)}"
+                        write_txt(f"{get_home()}/.local/share/applications/wine/{i[0]}-{os.path.basename(wineBottonPath)}.desktop", f'''[Desktop Entry]
+Name={name}
+Exec=env WINEPREFIX='{wineBottonPath}' {option} {wine[o1.currentText()]} '{i[1].replace("wineBottonPath", wineBottonPath)}' {setting["WineOption"]} {wineUsingOption}
+Icon={programPath}/Icon/{i[0]}.svg
+Type=Application
+StartupNotify=true''')
+                    except:
+                        # 写入不进去就别写入了，当什么事情都没发生就行
+                        traceback.print_exc()
         DisableButton(False)
   
 
@@ -255,6 +285,8 @@ def make_desktop_on_launcher():
                 option += f"WINEARCH={setting['Architecture']} "
             if not setting["Debug"]:
                 option += "WINEDEBUG=-all "
+            else:
+                option += "WINEDEBUG=FIXME,ERR,WARN,TRACE,Message "
             wineUsingOption = ""
             if o1.currentText() == "基于 box86 的 deepin-wine6-stable":
                 if not os.path.exists(f"{programPath}/dlls-arm"):
@@ -263,11 +295,24 @@ def make_desktop_on_launcher():
                         return
                     os.remove(f"{programPath}/dlls-arm.7z")
             if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
-                wineUsingOption = "--disable-gpu"
-            write_txt(get_home() + "/.local/share/applications/" + combobox1.currentText() + ".desktop", f'''[Desktop Entry]
+                wineUsingOption = ""
+            value = ""
+            if e2.currentText()[:2].upper() == "C:":
+                value = f"{wineBottonPath}/drive_c/{e2.currentText()[2:]}".replace("\\", "/").replace("//", "/")
+            print(value)
+            iconPaths = iconPath
+            for i in iconList:
+                listValue = i[1].replace("wineBottonPath", wineBottonPath)
+                if listValue == e2.currentText() or listValue == value:
+                    # 如果路径相同，即可以用程序对应的图标
+                    iconPaths = f"{programPath}/Icon/{i[0]}.svg"
+                    # 读到了就不需要再读取了
+                    break
+            os.system(f"mkdir -p '{get_home()}/.local/share/applications/wine'")
+            write_txt(get_home() + "/.local/share/applications/wine/" + combobox1.currentText() + ".desktop", f'''[Desktop Entry]
 Name={combobox1.currentText()}
 Exec=env WINEPREFIX='{wineBottonPath}' {option} {wine[o1.currentText()]} '{e2.currentText()}' {setting["WineOption"]} {wineUsingOption}
-Icon={iconPath}
+Icon={iconPaths}
 Type=Application
 StartupNotify=true''') # 写入文本文档
             if len(shellHistory) == 0 or shellHistory[-1] != combobox1.currentText():
@@ -304,7 +349,7 @@ def make_desktop_on_desktop():
                 wineBottonPath = e1.currentText()
             wineUsingOption = ""
             if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
-                wineUsingOption = "--disable-gpu"
+                wineUsingOption = ""
             if o1.currentText() == "基于 box86 的 deepin-wine6-stable":
                 if not os.path.exists(f"{programPath}/dlls-arm"):
                     if os.system(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
@@ -319,10 +364,23 @@ def make_desktop_on_desktop():
                 option += f"WINEARCH={setting['Architecture']} "
             if not setting["Debug"]:
                 option += "WINEDEBUG=-all "
+            value = ""
+            if e2.currentText()[:2].upper() == "C:":
+                value = f"{wineBottonPath}/drive_c/{e2.currentText()[2:]}".replace("\\", "/").replace("//", "/")
+            print(value)
+            iconPaths = iconPath
+            for i in iconList:
+                listValue = i[1].replace("wineBottonPath", wineBottonPath)
+                if listValue == e2.currentText() or listValue == value:
+                    # 如果路径相同，即可以用程序对应的图标
+                    iconPaths = f"{programPath}/Icon/{i[0]}.svg"
+                    # 读到了就不需要再读取了
+                    break
+            os.system(f"mkdir -p '{get_home()}/.local/share/applications/wine'")
             write_txt(get_desktop_path() + "/" + combobox1.currentText() + ".desktop", f'''[Desktop Entry]
 Name={combobox1.currentText()}
 Exec=env WINEPREFIX='{wineBottonPath}' {option} {wine[o1.currentText()]} '{e2.currentText()}' {setting["WineOption"]} {wineUsingOption}
-Icon={iconPath}
+Icon={iconPaths}
 Type=Application
 StartupNotify=true''') # 写入文本文档
             if len(shellHistory) == 0 or shellHistory[-1] != combobox1.currentText():
@@ -418,7 +476,7 @@ class RunWineProgramThread(QtCore.QThread):
         if o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
             os.system(f"'{programPath}/deepin-wine-runner-create-botton.py' '{wineBottonPath}'")
         if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
-            wineUsingOption = "--disable-gpu"
+            wineUsingOption = ""
         if o1.currentText() == "基于 box86 的 deepin-wine6-stable":
             if not os.path.exists(f"{programPath}/dlls-arm"):
                 if os.system(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
@@ -482,7 +540,7 @@ class RunWinetricksThread(QtCore.QThread):
             option += "WINEDEBUG=-all "
         wineUsingOption = ""
         if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
-            wineUsingOption = "--disable-gpu"
+            wineUsingOption = ""
         if o1.currentText() == "基于 box86 的 deepin-wine6-stable":
             if not os.path.exists(f"{programPath}/dlls-arm"):
                 if os.system(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
@@ -504,6 +562,8 @@ class RunWinetricksThread(QtCore.QThread):
                 text = ""
             self.signal.emit(text)
             print(text, end="")
+        
+        
         DisableButton(False)
 
 runWinetricks = None
@@ -808,6 +868,7 @@ class GetDllFromWindowsISO:
     mount = False
     mountButton = None
     dllListModel = None
+    arch = 0
     def ShowWindow():
         #DisableButton(True)
         GetDllFromWindowsISO.message = QtWidgets.QMainWindow()
@@ -816,8 +877,8 @@ class GetDllFromWindowsISO:
         if not e1.currentText() == "":
             GetDllFromWindowsISO.wineBottonPath = e1.currentText()
         widgetLayout.addWidget(QtWidgets.QLabel(f"""提示：
-    目前本提取功能只支持 Windows XP 以及 Windows Server 2003 等老系统的官方安装镜像，只支持读取 i386 安装方法的安装镜像，不支持读取 wim、ghost 安装方式
-    以及不要拷贝/替换太多的 dll，否则可能会导致 wine 容器异常
+    目前本提取功能暂只支持 NT 内核系统的官方安装镜像，不支持读取 ghost 等第三方封装方式的安装镜像
+    以及不要拷贝/替换太多的 dll，否则可能会导致 wine 容器异常，以及不要替换 Wine 的核心 dll
     最后，拷贝/替换 dll 后，建议点击下面“设置 wine 容器”按钮==》函数库 进行设置
 当前选择的 Wine 容器：{GetDllFromWindowsISO.wineBottonPath}"""), 0, 0, 1, 5)
         isoLabel = QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "ISO镜像："))
@@ -903,16 +964,38 @@ class GetDllFromWindowsISO:
         findList = []
         try:
             if found == "":
-                for i in os.listdir("/tmp/wine-runner-getdll/i386"):
-                    if i[-3:] == "dl_":
-                        findList.append(i[:-1] + "l")    
+                # 显示所有内容
+                # 下面内容需要分类讨论
+                if GetDllFromWindowsISO.arch == 0:
+                    for i in os.listdir("/tmp/wine-runner-getdll/i386"):
+                        if i[-3:] == "dl_":
+                            findList.append(i[:-1] + "l")    
+                elif GetDllFromWindowsISO.arch == 32:
+                    for i in os.listdir("/tmp/wine-runner-getdll-wim/Windows/SysWOW64"):
+                        if i[-3:] == "dll":
+                            findList.append(i[:-1] + "l")  
+                elif GetDllFromWindowsISO.arch == 64:
+                    for i in os.listdir("/tmp/wine-runner-getdll-wim/Windows/System32"):
+                        if i[-3:] == "dll":
+                            findList.append(i[:-1] + "l")  
+                GetDllFromWindowsISO.dllListModel.setStringList(findList)
                 return
-            for i in os.listdir("/tmp/wine-runner-getdll/i386"):
-                if found in i[:-1] + "l":
-                    findList.append(i[:-1] + "l")  
-            if len(isoPath) == 0 or isoPathFound[-1] != found:
-                isoPathFound.append(found)  # 将记录写进数组
-                write_txt(get_home() + "/.config/deepin-wine-runner/ISOPathFound.json", str(json.dumps(ListToDictionary(isoPathFound))))  # 将历史记录的数组转换为字典并写入
+            if GetDllFromWindowsISO.arch == 0:
+                for i in os.listdir("/tmp/wine-runner-getdll/i386"):
+                    if found in i[:-1] + "l":
+                        findList.append(i[:-1] + "l")  
+            elif GetDllFromWindowsISO.arch == 32:
+                for i in os.listdir("/tmp/wine-runner-getdll-wim/Windows/SysWOW64"):
+                    if found in i[:-1] + "l":
+                        findList.append(i[:-1] + "l")  
+            elif GetDllFromWindowsISO.arch == 64:
+                for i in os.listdir("/tmp/wine-runner-getdll-wim/Windows/System32"):
+                    if found in i[:-1] + "l":
+                        findList.append(i[:-1] + "l")  
+            if len(isoPath) == 0:
+                if isoPathFound[-1] != found:
+                    isoPathFound.append(found)  # 将记录写进数组
+                    write_txt(get_home() + "/.config/deepin-wine-runner/ISOPathFound.json", str(json.dumps(ListToDictionary(isoPathFound))))  # 将历史记录的数组转换为字典并写入
             GetDllFromWindowsISO.dllFound.clear()
             GetDllFromWindowsISO.dllFound.addItems(isoPathFound)
             GetDllFromWindowsISO.dllListModel.setStringList(findList)
@@ -928,11 +1011,15 @@ class GetDllFromWindowsISO:
         if os.path.exists("/tmp/wine-runner-getdll"):
             try:
                 os.rmdir("/tmp/wine-runner-getdll")
+                os.rmdir("/tmp/wine-runner-getdll-wim")
             except:
                 # 如果无法删除可能是挂载了文件
+                os.system("wimunmount /tmp/wine-runner-getdll-wim")
                 os.system("pkexec umount /tmp/wine-runner-getdll")
+                
                 try:
                     os.rmdir("/tmp/wine-runner-getdll")
+                    os.rmdir("/tmp/wine-runner-getdll-wim")
                 except:
                     traceback.print_exc()
                     QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", traceback.format_exc())
@@ -940,15 +1027,60 @@ class GetDllFromWindowsISO:
         os.makedirs("/tmp/wine-runner-getdll")
         os.system(f"pkexec mount '{GetDllFromWindowsISO.isoPath.currentText()}' /tmp/wine-runner-getdll")
         findList = []
-        try:
-            for i in os.listdir("/tmp/wine-runner-getdll/i386"):
-                if i[-3:] == "dl_":
-                    findList.append(i[:-1] + "l")     
-        except:
-            traceback.print_exc()
-            QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", f"镜像内容读取/挂载失败，报错如下：\n{traceback.format_exc()}")
-            return
-        GetDllFromWindowsISO.dllListModel.setStringList(findList)
+        # 判断是新版的 Windows ISO（Windows Vista 及以上版本）
+        if os.path.exists("/tmp/wine-runner-getdll/sources/install.wim"):
+            # 是新版，挂载 wim
+            # 需要让用户选择挂载内容
+            QtWidgets.QInputDialog.getMultiLineText(GetDllFromWindowsISO.message, "提示", "挂载文件需要用户记住并在下一个对话框输入 Index 以挂载正确的镜像，按下下方任意按钮即可继续", subprocess.getoutput("wiminfo '/tmp/wine-runner-getdll/sources/install.wim'"))
+            choose = QtWidgets.QInputDialog.getInt(GetDllFromWindowsISO.message, "提示", "请输入 Index")
+            if not choose[1]:
+                return
+            os.makedirs("/tmp/wine-runner-getdll-wim")
+            os.system(f"wimmount /tmp/wine-runner-getdll/sources/install.wim {choose[0]} /tmp/wine-runner-getdll-wim")
+            if os.path.exists("/tmp/wine-runner-getdll-wim/Windows/SysWOW64"):
+                # 如果是 64 位镜像
+                if QtWidgets.QInputDialog.getItem(GetDllFromWindowsISO.message, "选择位数", "选择位数（如果没有选择，默认为 64 位）", ["32", "64"], 1, False) == "32":
+                    # 64 位镜像的 32 位是存在 SysWOW64 的                
+                    try:
+                        for i in os.listdir("/tmp/wine-runner-getdll-wim/Windows/SysWOW64"):
+                            if i[-3:] == "dll":
+                                findList.append(i[:-1] + "l")     
+                        GetDllFromWindowsISO.dllListModel.setStringList(findList)
+                        GetDllFromWindowsISO.arch = 32
+                        GetDllFromWindowsISO.DisbledDown(False)  
+                        GetDllFromWindowsISO.DisbledUp(True)
+                        GetDllFromWindowsISO.mount = True
+                        if len(isoPath) == 0 or isoPath[-1] != GetDllFromWindowsISO.isoPath.currentText():
+                            isoPath.append(GetDllFromWindowsISO.isoPath.currentText())  # 将记录写进数组
+                        write_txt(get_home() + "/.config/deepin-wine-runner/ISOPath.json", str(json.dumps(ListToDictionary(isoPath))))  # 将历史记录的数组转换为字典并写入
+                        GetDllFromWindowsISO.isoPath.clear()
+                        GetDllFromWindowsISO.isoPath.addItems(isoPath)
+                        return
+                    except:
+                        traceback.print_exc()
+                        QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", f"镜像内容读取/挂载失败，报错如下：\n{traceback.format_exc()}")
+                        return
+            try:
+                for i in os.listdir("/tmp/wine-runner-getdll-wim/Windows/System32"):
+                    if i[-3:] == "dll":
+                        findList.append(i[:-1] + "l")    
+                GetDllFromWindowsISO.arch = 64 
+            except:
+                traceback.print_exc()
+                QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", f"镜像内容读取/挂载失败，报错如下：\n{traceback.format_exc()}")
+                return
+            GetDllFromWindowsISO.dllListModel.setStringList(findList)
+        else:
+            try:
+                for i in os.listdir("/tmp/wine-runner-getdll/i386"):
+                    if i[-3:] == "dl_":
+                        findList.append(i[:-1] + "l")     
+                GetDllFromWindowsISO.arch = 0
+            except:
+                traceback.print_exc()
+                QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", f"镜像内容读取/挂载失败，报错如下：\n{traceback.format_exc()}")
+                return
+            GetDllFromWindowsISO.dllListModel.setStringList(findList)
         GetDllFromWindowsISO.DisbledDown(False)  
         GetDllFromWindowsISO.DisbledUp(True)
         GetDllFromWindowsISO.mount = True
@@ -960,9 +1092,11 @@ class GetDllFromWindowsISO:
         #GetDllFromWindowsISO.isoPath['value'] = isoPath
 
     def UmountDisk():
+        os.system("wimunmount /tmp/wine-runner-getdll-wim")
         os.system("pkexec umount /tmp/wine-runner-getdll")
         try:
             shutil.rmtree("/tmp/wine-runner-getdll")
+            os.system("rm -rf /tmp/wine-runner-getdll-wim")
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, QtCore.QCoreApplication.translate("U", "错误"), f"关闭/卸载镜像失败，报错如下：\n{traceback.format_exc()}")
@@ -975,11 +1109,23 @@ class GetDllFromWindowsISO:
     def CopyDll():
         choose = GetDllFromWindowsISO.dllList.selectionModel().selectedIndexes()[0].data()
         if os.path.exists(f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}"):
-            if QtWidgets.QMessageBox.question(widget, "提示", f"DLL {choose} 已经存在，是否覆盖？") == QtWidgets.QMessageBox.No:
+            if QtWidgets.QMessageBox.question(GetDllFromWindowsISO.message, "提示", f"DLL {choose} 已经存在，是否覆盖？") == QtWidgets.QMessageBox.No:
                 return
         try:
-            shutil.copy(f"/tmp/wine-runner-getdll/i386/{choose[:-1]}_", f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}")
-            os.system(f"WINEPREFIX='{GetDllFromWindowsISO.wineBottonPath}' '{wine[o1.currentText()]}' reg add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v {os.path.splitext(choose)[0]} /d native /f")
+            # 要分类讨论
+            if GetDllFromWindowsISO.arch == 0:
+                shutil.copy(f"/tmp/wine-runner-getdll/i386/{choose[:-1]}_", f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}")
+            elif GetDllFromWindowsISO.arch == 32:
+                shutil.copy(f"/tmp/wine-runner-getdll-wim/Windows/SysWOW64/{choose[:-1]}l", f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}")
+            elif GetDllFromWindowsISO.arch == 64:
+                shutil.copy(f"/tmp/wine-runner-getdll-wim/Windows/System32/{choose[:-1]}l", f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}")
+            # 选择原装或优于内建
+            if QtWidgets.QInputDialog.getItem(GetDllFromWindowsISO.message, "选择", "选择模式", ["原装先于内建", "原装"], 0, False) == "原装先于内建":
+                # 原装先于内建
+                os.system(f"WINEPREFIX='{GetDllFromWindowsISO.wineBottonPath}' '{wine[o1.currentText()]}' reg add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v {os.path.splitext(choose)[0]} /d native,builtin /f")
+            else:
+                # 原装
+                os.system(f"WINEPREFIX='{GetDllFromWindowsISO.wineBottonPath}' '{wine[o1.currentText()]}' reg add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v {os.path.splitext(choose)[0]} /d native /f")
             QtWidgets.QMessageBox.information(GetDllFromWindowsISO.message, "提示", "提取成功！")
         except:
             traceback.print_exc()
@@ -1111,13 +1257,14 @@ class ProgramRunStatusUpload():
         try:
             if ProgramRunStatusUpload.sha1Value == "":
                 ProgramRunStatusUpload.sha1Value = ProgramRunStatusUpload.GetSHA1(e2.currentText())
-            QtWidgets.QMessageBox.information(None, QtCore.QCoreApplication.translate("U", "提示"), json.loads(requests.post(base64.b64decode("aHR0cDovL2dmZGdkeGkucWljcC52aXA6Mjc1MDI=").decode("utf-8"), {
+            QtWidgets.QMessageBox.information(None, QtCore.QCoreApplication.translate("U", "提示"), json.loads(requests.post(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0OjMwMjUw").decode("utf-8"), {
             "SHA1": ProgramRunStatusUpload.sha1Value,
             "Name": ProgramRunStatusUpload.programName.text(),
             "Fen": ProgramRunStatusUpload.fen.currentIndex(),
             "Wine": o1.currentText()
             }).text)["Error"])
         except:
+            traceback.print_exc()
             QtWidgets.QMessageBox.critical(None, QtCore.QCoreApplication.translate("U", "错误"), QtCore.QCoreApplication.translate("U", "数据上传失败！"))
 
     def GetSHA1(filePath):
@@ -1145,6 +1292,7 @@ class ProgramSetting():
     monogeckoInstaller = None
     autoWine = None
     runtimeCache = None
+    buildByBottleName = None
     def ShowWindow():
         ProgramSetting.message = QtWidgets.QMainWindow()
         widget = QtWidgets.QWidget()
@@ -1159,6 +1307,7 @@ class ProgramSetting():
         widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "Wine 默认 Mono 和 Gecko 安装器：")), 7, 0, 1, 1)
         widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "忽略未安装的 Wine：")), 8, 0, 1, 1)
         widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "下载缓存：")), 9, 0, 1, 1)
+        widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "图标生成：")), 10, 0, 1, 1)
         ProgramSetting.wineBottonA = QtWidgets.QComboBox()
         ProgramSetting.wineDebug = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "开启 DEBUG 输出"))
         ProgramSetting.defultWine = QtWidgets.QComboBox()
@@ -1177,6 +1326,7 @@ class ProgramSetting():
         ProgramSetting.monogeckoInstaller = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "屏蔽 Wine 默认 Mono 和 Gecko 安装器"))
         ProgramSetting.autoWine = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "不显示未检测到的 Wine"))
         ProgramSetting.runtimeCache = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "开启下载缓存"))
+        ProgramSetting.buildByBottleName = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "本软件构建的图标后面添加容器名"))
         ProgramSetting.wineBottonA.addItems(["Auto", "win32", "win64"])
         ProgramSetting.wineBottonA.setCurrentText(setting["Architecture"])
         ProgramSetting.wineDebug.setChecked(setting["Debug"])
@@ -1188,6 +1338,7 @@ class ProgramSetting():
         ProgramSetting.monogeckoInstaller.setChecked(setting["MonoGeckoInstaller"])
         ProgramSetting.autoWine.setChecked(setting["AutoWine"])
         ProgramSetting.runtimeCache.setChecked(setting["RuntimeCache"])
+        ProgramSetting.buildByBottleName.setChecked(setting["BuildByBottleName"])
         widgetLayout.addWidget(ProgramSetting.wineBottonA, 0, 1, 1, 1)
         widgetLayout.addWidget(ProgramSetting.wineDebug, 1, 1, 1, 1)
         widgetLayout.addWidget(ProgramSetting.defultWine, 2, 1, 1, 1)
@@ -1200,7 +1351,8 @@ class ProgramSetting():
         widgetLayout.addWidget(ProgramSetting.monogeckoInstaller, 7, 1, 1, 1)
         widgetLayout.addWidget(ProgramSetting.autoWine, 8, 1, 1, 1)
         widgetLayout.addWidget(ProgramSetting.runtimeCache, 9, 1, 1, 1)
-        widgetLayout.addWidget(save, 10, 2, 1, 1)
+        widgetLayout.addWidget(ProgramSetting.buildByBottleName, 10, 1, 1, 1)
+        widgetLayout.addWidget(save, 11, 2, 1, 1)
         widget.setLayout(widgetLayout)
         ProgramSetting.message.setCentralWidget(widget)
         ProgramSetting.message.setWindowIcon(QtGui.QIcon(iconPath))
@@ -1228,6 +1380,7 @@ class ProgramSetting():
         setting["MonoGeckoInstaller"] = ProgramSetting.monogeckoInstaller.isChecked()
         setting["AutoWine"] = ProgramSetting.autoWine.isChecked()
         setting["RuntimeCache"] = ProgramSetting.runtimeCache.isChecked()
+        setting["BuildByBottleName"] = ProgramSetting.buildByBottleName.isChecked()
         try:
             write_txt(get_home() + "/.config/deepin-wine-runner/WineSetting.json", json.dumps(setting))
         except:
@@ -1236,7 +1389,103 @@ class ProgramSetting():
             return
         QtWidgets.QMessageBox.information(ProgramSetting.message, "提示", "保存完毕！")
 
+class ValueCheck():
+    def __init__(self):
+        pass
+        
+    def BASE64(self, filePath):
+        src = ""
+        with open(filePath, "rb") as f:
+            base64Byte = base64.b64encode(f.read())
+            src += base64Byte.decode("utf-8")
+        return src
 
+    def SHA1(self, filePath):
+        sha1 = hashlib.sha1()
+        file = open(filePath, "rb")
+        while True:
+            readByte = file.read(1024 * 1024)
+            sha1.update(readByte)
+            if not readByte:
+                break
+        file.close()
+        return sha1.hexdigest()
+
+    def MD5(self, filePath):
+        md5 = hashlib.md5()
+        file = open(filePath, "rb")
+        while True:
+            readByte = file.read(1024 * 1024)
+            md5.update(readByte)
+            if not readByte:
+                break
+        file.close()
+        return md5.hexdigest()
+
+    def SHA256(self, filePath):
+        value = hashlib.sha256()
+        file = open(filePath, "rb")
+        while True:
+            readByte = file.read(1024 * 1024)
+            value.update(readByte)
+            if not readByte:
+                break
+        file.close()
+        return value.hexdigest()
+
+    def SHA384(self, filePath):
+        value = hashlib.sha384()
+        file = open(filePath, "rb")
+        while True:
+            readByte = file.read(1024 * 1024)
+            value.update(readByte)
+            if not readByte:
+                break
+        file.close()
+        return value.hexdigest()
+
+    def SHA224(self, filePath):
+        value = hashlib.sha224()
+        file = open(filePath, "rb")
+        while True:
+            readByte = file.read(1024 * 1024)
+            value.update(readByte)
+            if not readByte:
+                break
+        file.close()
+        return value.hexdigest()
+
+    def SHA512(self, filePath):
+        value = hashlib.sha512()
+        file = open(filePath, "rb")
+        while True:
+            readByte = file.read(1024 * 1024)
+            value.update(readByte)
+            if not readByte:
+                break
+        file.close()
+        return value.hexdigest()
+
+    link = {
+        "SHA1": SHA1,
+        "MD5": MD5,
+        "SHA256": SHA256,
+        "SHA512": SHA512,
+        "SHA224": SHA224,
+        "SHA384": SHA384,
+        "BASE64": BASE64
+    }
+
+    def Get(self, types):
+        QtWidgets.QMessageBox.information(window, "提示", "在计算过程中，程序可能会出现无响应的问题，请稍后\n请在接下来的打开对话框中选择要计算的文件")
+        file = QtWidgets.QFileDialog.getOpenFileName(window, "打开")[0]
+        if file == "":
+            return
+        try:
+            QtWidgets.QInputDialog.getMultiLineText(window, "值", "计算得到的值", self.link[types](self, file))
+        except:
+            traceback.print_exc()
+            QtWidgets.QMessageBox.critical(window, "错误", traceback.format_exc())
 
 ###########################
 # 加载配置
@@ -1254,7 +1503,8 @@ defultProgramList = {
     "MonoGeckoInstaller": True,
     "AutoWine": True,
     "RuntimeCache": True,
-    "MustRead": False
+    "MustRead": False,
+    "BuildByBottleName": False
 }
 if not os.path.exists(get_home() + "/.config/deepin-wine-runner"):  # 如果没有配置文件夹
     os.mkdir(get_home() + "/.config/deepin-wine-runner")  # 创建配置文件夹
@@ -1285,7 +1535,7 @@ programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 try:
     wine = {
         "基于 box86 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86 /opt/deepin-wine6-stable/bin/wine ",
-        "基于 exagear 的 deepin-wine6-stable": f"/opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al -- /opt/deepin-wine6-stable/bin/wine ",
+        "基于 exagear 的 deepin-wine6-stable": f"WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al -- /opt/deepin-wine6-stable/bin/wine ",
         "deepin-wine6 stable": "deepin-wine6-stable", 
         "deepin-wine5 stable": "deepin-wine5-stable", 
         "spark-wine7-devel": "spark-wine7-devel", 
@@ -1388,30 +1638,23 @@ exe路径\' 参数 \'
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>'''
-updateThingsString = '''<h3>2.1.0-2 更新内容：</h3>
-※1、修复终端调用问题
-<h3>2.1.0-1 更新内容：</h3>
-※1、删除多余图标
-※2、修复将打包文件生成目录设置为 / 等重要目录导致删库的问题
-3、修复了打包器浏览按钮闪退、生成的 postrm 有误的问题
-4、支持在输入信息时自动生成 deb 保存路径
-<h3>2.1.0 更新内容：</h3>
-<b>※1、新增新的 Wine 安装器，并支持将安装的 Wine 打包到 Wine 程序 deb 包中
-※2、Wine 打包器打包 Windows 应用支持将 Wine 打包入 deb 内，可以不依赖 Wine（一般不推荐把 Wine 打包入内，推荐用依赖的形式），并支持设置自定义依赖和生成模板
-※3、开始初步多语言支持
-※4、修复了在没有安装任何 Wine 的情况下使用高级功能导致程序闪退的问题
-※5、支持云端自动获取数据配置 Wine 容器
-※6、支持手动导入配置文件自动配置 Wine 容器
-※7、新增从云端下载 Dll 的功能
-※8、修复了 Dll 提取工具不会在 winecfg 中添加原装的问题</b>
-9、修改错别字（图形话=>图形化）
-10、修复评分功能名称为空也可以上传评分的问题
-11、去除 toilet 依赖，使在 Deepin 23 Preview 上运行更佳
-12、支持删除所有由 Wine 创建的启动器快捷方式
+updateThingsString = '''※1、Dll 提取工具支持 NT 6.X 及以上版本的 Dll 提取并优化了提示文本
+※2、支持卸载后自动删除缓存/配置文件（删除配置文件只限 purge 参数删除）
+※3、DEBUG 模式输出更多信息以方便调试（原本只输出 pid、Err）
+※4、支持安装 msi 文件
+※5、修复无法正常评分的问题
+※6、修复 QQ、TIM 安装后无法正常生成快捷方式的问题
+※7、基于生态适配活动的打包器更换为 spark-wine-helper 以及添加自动删除残留脚本
+8、更新组件安装的离线列表
+9、不再强制依赖深度终端，只做推荐安装
+<b>以下更新内容旧版本也适用（只限 2.1.0 及以上版本）</b>
+※1、在“安装更多Wine”的Wine安装工具中上 wine-staging 7.17、wine-staging 6.7、spark-wine7-devel 7.17
+※2、云 Dll 工具上新 Dll
+※3、VCPP 运行库安装工具新增 VC6 运行库
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年09月03日"
+updateTime = "2022年09月11日"
 about = f'''<h1>关于</h1>
 <p>一个能让Linux用户更加方便运行Windows应用的程序，内置了对wine图形化的支持和各种Wine工具和自制Wine程序打包器、运行库安装工具等等</p>
 <p>同时也内置了基于VirtualBox制作的小白Windows虚拟机安装工具，可以做到只需要用户下载系统镜像并点击安装即可，无需顾及虚拟机安装、创建、虚拟机的分区等等</p>
@@ -1445,8 +1688,21 @@ try:
     threading.Thread(target=requests.get, args=[parse.unquote(base64.b64decode("aHR0cHM6Ly8zMDQ2MjZwOTI3LmdvaG8uY28vc3BhcmstZGVlcGluLXdpbmUtcnVubmVyL29wZW4vSW5zdGFsbC5waHA=").decode("utf-8")) + "?Version=" + version]).start()
 except:
     pass
-
-
+iconListUnBuild = [
+    ["QQ", "wineBottonPath/drive_c/Program Files/Tencent/QQ/Bin/QQ.exe"],
+    ["QQ", "wineBottonPath/drive_c/Program Files (x86)/Tencent/QQ/Bin/QQ.exe"],
+    ["TIM", "wineBottonPath/drive_c/Program Files/Tencent/TIM/Bin/TIM.exe"],
+    ["TIM", "wineBottonPath/drive_c/Program Files (x86)/Tencent/TIM/Bin/TIM.exe"]
+]
+iconList = [
+    ["微信", "wineBottonPath/drive_c/Program Files/Tencent/WeChat/WeChat.exe"],
+    ["微信", "wineBottonPath/drive_c/Program Files (x86)/Tencent/WeChat/WeChat.exe"],
+    ["UltraISO", "wineBottonPath/drive_c/Program Files/UltraISO/UltraISO.exe"],
+    ["UltraISO", "wineBottonPath/drive_c/Program Files (x86)/UltraISO/UltraISO.exe"]
+]
+for i in iconListUnBuild:
+    iconList.append(i)
+print(iconList)
 
 ###########################
 # 窗口创建
@@ -1526,7 +1782,7 @@ programManager = QtWidgets.QGridLayout()
 leftDownLayout.addLayout(programManager)
 programManager.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "程序管理：")), 0, 0, 1, 1)
 getProgramIcon = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "提取图标"))
-getProgramIcon.clicked.connect(lambda: RunWineProgram(f"{programPath}/BeCyIconGrabber.exe' 'z:/{e2.currentText()}"))
+getProgramIcon.clicked.connect(lambda: RunWineProgram(f"{programPath}/BeCyIconGrabber.exe' '{e2.currentText()}" if e2.currentText()[:2].upper() == "C:" else f"{programPath}/BeCyIconGrabber.exe' 'z:/{e2.currentText()}"))
 programManager.addWidget(getProgramIcon, 1, 0, 1, 1)
 programManager.addWidget(QtWidgets.QLabel(" "*5), 1, 1, 1, 1)
 trasButton = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "窗口透明工具"))
@@ -1643,7 +1899,7 @@ cleanBottonUOS = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "清�
 w5 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "打包 wine 应用"))
 w6 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用官方 Wine 适配活动的脚本进行打包"))
 getDllOnInternet = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从互联网获取DLL"))
-w7 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从镜像获取DLL（只支持Windows XP、Windows Server 2003官方安装镜像）"))
+w7 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从镜像获取DLL（只支持官方安装镜像，DOS内核如 Windows 95 暂不支持）"))
 updateGeek = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从 Geek Uninstaller 官网升级程序"))
 deleteDesktopIcon = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "删除所有 Wine 程序在启动器的快捷方式"))
 wineOption.addAction(w1)
@@ -1752,6 +2008,24 @@ virtualMachine = menu.addMenu(QtCore.QCoreApplication.translate("U", "虚拟机(
 v1 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用 Virtualbox 虚拟机运行 Windows 应用"))
 virtualMachine.addAction(v1)
 v1.triggered.connect(RunVM)
+
+checkValue = menu.addMenu(QtCore.QCoreApplication.translate("U", "校验值计算(&S)"))
+md5Value = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "MD5(&M)"))
+sha1Value = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "SHA1(&M)"))
+base64Value = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "Base64(建议小文件)(&B)"))
+sha256Value = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "SHA256(&S)"))
+sha512Value = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "SHA512(&S)"))
+md5Value.triggered.connect(lambda: ValueCheck().Get("MD5"))
+sha1Value.triggered.connect(lambda: ValueCheck().Get("SHA1"))
+base64Value.triggered.connect(lambda: ValueCheck().Get("BASE64"))
+sha256Value.triggered.connect(lambda: ValueCheck().Get("SHA256"))
+sha512Value.triggered.connect(lambda: ValueCheck().Get("SHA512"))
+checkValue.addAction(md5Value)
+checkValue.addAction(sha1Value)
+checkValue.addAction(base64Value)
+checkValue.addAction(sha256Value)
+checkValue.addAction(sha512Value)
+
 
 safeWebsize = menu.addMenu(QtCore.QCoreApplication.translate("U", "云沙箱(&C)"))
 s1 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "360 沙箱云"))
@@ -1876,4 +2150,6 @@ if o1.currentText() == "":
     wine["没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用"] = "没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用"
     canUseWine.append("没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用")
     o1.addItem("没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用")
+
+
 sys.exit(app.exec_())

@@ -165,7 +165,7 @@ class Runexebutton_threading(QtCore.QThread):
             option += "WINEDEBUG=FIXME,ERR,WARN,TRACE,Message "
         wineUsingOption = ""
         if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
-            wineUsingOption = "--disable-gpu"
+            wineUsingOption = ""
         if o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
             os.system(f"'{programPath}/deepin-wine-runner-create-botton.py' '{wineBottonPath}'")
         if o1.currentText() == "基于 box86 的 deepin-wine6-stable":
@@ -295,18 +295,24 @@ def make_desktop_on_launcher():
                         return
                     os.remove(f"{programPath}/dlls-arm.7z")
             if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
-                wineUsingOption = "--disable-gpu"
+                wineUsingOption = ""
+            value = ""
+            if e2.currentText()[:2].upper() == "C:":
+                value = f"{wineBottonPath}/drive_c/{e2.currentText()[2:]}".replace("\\", "/").replace("//", "/")
+            print(value)
+            iconPaths = iconPath
             for i in iconList:
-                if i[1].replace("wineBottonPath", wineBottonPath) == e2.currentText():
+                listValue = i[1].replace("wineBottonPath", wineBottonPath)
+                if listValue == e2.currentText() or listValue == value:
                     # 如果路径相同，即可以用程序对应的图标
-                    iconPath = f"{programPath}/Icon/{i[0]}.svg"
+                    iconPaths = f"{programPath}/Icon/{i[0]}.svg"
                     # 读到了就不需要再读取了
                     break
             os.system(f"mkdir -p '{get_home()}/.local/share/applications/wine'")
             write_txt(get_home() + "/.local/share/applications/wine/" + combobox1.currentText() + ".desktop", f'''[Desktop Entry]
 Name={combobox1.currentText()}
 Exec=env WINEPREFIX='{wineBottonPath}' {option} {wine[o1.currentText()]} '{e2.currentText()}' {setting["WineOption"]} {wineUsingOption}
-Icon={iconPath}
+Icon={iconPaths}
 Type=Application
 StartupNotify=true''') # 写入文本文档
             if len(shellHistory) == 0 or shellHistory[-1] != combobox1.currentText():
@@ -343,7 +349,7 @@ def make_desktop_on_desktop():
                 wineBottonPath = e1.currentText()
             wineUsingOption = ""
             if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
-                wineUsingOption = "--disable-gpu"
+                wineUsingOption = ""
             if o1.currentText() == "基于 box86 的 deepin-wine6-stable":
                 if not os.path.exists(f"{programPath}/dlls-arm"):
                     if os.system(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
@@ -358,17 +364,23 @@ def make_desktop_on_desktop():
                 option += f"WINEARCH={setting['Architecture']} "
             if not setting["Debug"]:
                 option += "WINEDEBUG=-all "
+            value = ""
+            if e2.currentText()[:2].upper() == "C:":
+                value = f"{wineBottonPath}/drive_c/{e2.currentText()[2:]}".replace("\\", "/").replace("//", "/")
+            print(value)
+            iconPaths = iconPath
             for i in iconList:
-                if i[1].replace("wineBottonPath", wineBottonPath) == e2.currentText():
+                listValue = i[1].replace("wineBottonPath", wineBottonPath)
+                if listValue == e2.currentText() or listValue == value:
                     # 如果路径相同，即可以用程序对应的图标
-                    iconPath = f"{programPath}/Icon/{i[0]}.svg"
+                    iconPaths = f"{programPath}/Icon/{i[0]}.svg"
                     # 读到了就不需要再读取了
                     break
             os.system(f"mkdir -p '{get_home()}/.local/share/applications/wine'")
             write_txt(get_desktop_path() + "/" + combobox1.currentText() + ".desktop", f'''[Desktop Entry]
 Name={combobox1.currentText()}
 Exec=env WINEPREFIX='{wineBottonPath}' {option} {wine[o1.currentText()]} '{e2.currentText()}' {setting["WineOption"]} {wineUsingOption}
-Icon={iconPath}
+Icon={iconPaths}
 Type=Application
 StartupNotify=true''') # 写入文本文档
             if len(shellHistory) == 0 or shellHistory[-1] != combobox1.currentText():
@@ -464,7 +476,7 @@ class RunWineProgramThread(QtCore.QThread):
         if o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
             os.system(f"'{programPath}/deepin-wine-runner-create-botton.py' '{wineBottonPath}'")
         if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
-            wineUsingOption = "--disable-gpu"
+            wineUsingOption = ""
         if o1.currentText() == "基于 box86 的 deepin-wine6-stable":
             if not os.path.exists(f"{programPath}/dlls-arm"):
                 if os.system(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
@@ -528,7 +540,7 @@ class RunWinetricksThread(QtCore.QThread):
             option += "WINEDEBUG=-all "
         wineUsingOption = ""
         if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
-            wineUsingOption = "--disable-gpu"
+            wineUsingOption = ""
         if o1.currentText() == "基于 box86 的 deepin-wine6-stable":
             if not os.path.exists(f"{programPath}/dlls-arm"):
                 if os.system(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
@@ -1523,7 +1535,7 @@ programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 try:
     wine = {
         "基于 box86 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86 /opt/deepin-wine6-stable/bin/wine ",
-        "基于 exagear 的 deepin-wine6-stable": f"/opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al -- /opt/deepin-wine6-stable/bin/wine ",
+        "基于 exagear 的 deepin-wine6-stable": f"WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al -- /opt/deepin-wine6-stable/bin/wine ",
         "deepin-wine6 stable": "deepin-wine6-stable", 
         "deepin-wine5 stable": "deepin-wine5-stable", 
         "spark-wine7-devel": "spark-wine7-devel", 
@@ -1635,6 +1647,10 @@ updateThingsString = '''※1、Dll 提取工具支持 NT 6.X 及以上版本的 
 ※7、基于生态适配活动的打包器更换为 spark-wine-helper 以及添加自动删除残留脚本
 8、更新组件安装的离线列表
 9、不再强制依赖深度终端，只做推荐安装
+<b>以下更新内容旧版本也适用（只限 2.1.0 及以上版本）</b>
+※1、在“安装更多Wine”的Wine安装工具中上 wine-staging 7.17、wine-staging 6.7、spark-wine7-devel 7.17
+※2、云 Dll 工具上新 Dll
+※3、VCPP 运行库安装工具新增 VC6 运行库
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
@@ -1682,7 +1698,11 @@ iconList = [
     ["微信", "wineBottonPath/drive_c/Program Files/Tencent/WeChat/WeChat.exe"],
     ["微信", "wineBottonPath/drive_c/Program Files (x86)/Tencent/WeChat/WeChat.exe"],
     ["UltraISO", "wineBottonPath/drive_c/Program Files/UltraISO/UltraISO.exe"],
-    ["UltraISO", "wineBottonPath/drive_c/Program Files (x86)/UltraISO/UltraISO.exe"]
+    ["UltraISO", "wineBottonPath/drive_c/Program Files (x86)/UltraISO/UltraISO.exe"],
+    ["迅雷", "wineBottonPath/drive_c/Program Files/Thunder Network/MiniThunder/Bin/ThunderMini.exe"],
+    ["迅雷", "wineBottonPath/drive_c/Program Files (x86)/Thunder Network/MiniThunder/Bin/ThunderMini.exe"],
+    ["Microsoft Office Word", "wineBottonPath/drive_c/Program Files/Microsoft Office/Office12/WINWORD.EXE"],
+    ["Microsoft Office Word", "wineBottonPath/drive_c/Program Files (x86)/Microsoft Office/Office12/WINWORD.EXE"]
 ]
 for i in iconListUnBuild:
     iconList.append(i)
@@ -1766,7 +1786,7 @@ programManager = QtWidgets.QGridLayout()
 leftDownLayout.addLayout(programManager)
 programManager.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "程序管理：")), 0, 0, 1, 1)
 getProgramIcon = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "提取图标"))
-getProgramIcon.clicked.connect(lambda: RunWineProgram(f"{programPath}/BeCyIconGrabber.exe' 'z:/{e2.currentText()}"))
+getProgramIcon.clicked.connect(lambda: RunWineProgram(f"{programPath}/BeCyIconGrabber.exe' '{e2.currentText()}" if e2.currentText()[:2].upper() == "C:" else f"{programPath}/BeCyIconGrabber.exe' 'z:/{e2.currentText()}"))
 programManager.addWidget(getProgramIcon, 1, 0, 1, 1)
 programManager.addWidget(QtWidgets.QLabel(" "*5), 1, 1, 1, 1)
 trasButton = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "窗口透明工具"))
