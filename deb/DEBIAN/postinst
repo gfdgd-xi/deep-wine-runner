@@ -10,7 +10,8 @@ if [ `arch` != "x86_64" ]; then
 	rm -rf /usr/share/applications/spark-deepin-wine-runner-start-vm.desktop
 	# 删除安装 wine 功能
 	rm -rf "/opt/apps/deepin-wine-runner/wine install"
-	rm -rf "/opt/apps/deepin-wine-runner/wine"
+	# 这个注释掉的理论可用，不移除
+	#rm -rf "/opt/apps/deepin-wine-runner/wine"
 	rm -rf /usr/bin/deepin-wine-runner-wine-installer
 	rm -rf /usr/bin/deepin-wine-runner-wine-install-deepin23
 	rm -rf /usr/bin/deepin-wine-runner-wine-install

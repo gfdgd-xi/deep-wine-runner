@@ -168,6 +168,12 @@ class Runexebutton_threading(QtCore.QThread):
             wineUsingOption = ""
         if o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
             os.system(f"'{programPath}/deepin-wine-runner-create-botton.py' '{wineBottonPath}'")
+            if not os.path.exists(f"{programPath}/exagear"):
+                #self.run_command(f"aria2c -x 16 -s 16 -d \"{programPath}\" -o \"exagear.7z\" https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/other/exagear.7z")
+                if os.system(f"7z x \"{programPath}/exagear.7z\" -o\"{programPath}\""):
+                    QtWidgets.QMessageBox(widget, "错误", "无法解压资源")
+                    return
+                os.remove(f"{programPath}/exagear.7z")
         if o1.currentText() == "基于 box86 的 deepin-wine6-stable":
             if not os.path.exists(f"{programPath}/dlls-arm"):
                 if os.system(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
@@ -185,6 +191,7 @@ class Runexebutton_threading(QtCore.QThread):
             if e2.currentText()[-4:] == ".msi" and os.path.exists(e2.currentText()):
                 res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " msiexec /i '" + e2.currentText() + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             else:
+                print(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"]])
                 res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         # 实时读取程序返回
         #
@@ -1535,7 +1542,7 @@ programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 try:
     wine = {
         "基于 box86 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86 /opt/deepin-wine6-stable/bin/wine ",
-        "基于 exagear 的 deepin-wine6-stable": f"WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al -- /opt/deepin-wine6-stable/bin/wine ",
+        "基于 exagear 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/exagear' WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al -- /opt/deepin-wine6-stable/bin/wine ",
         "deepin-wine6 stable": "deepin-wine6-stable", 
         "deepin-wine5 stable": "deepin-wine5-stable", 
         "spark-wine7-devel": "spark-wine7-devel", 
@@ -1570,12 +1577,25 @@ try:
     try:
         for i in json.loads(readtxt(f"{programPath}/wine/winelist.json")):
             if os.path.exists(f"{programPath}/wine/{i}"):
+                name = ""
+                value = ""
+                try:
+                    if os.path.exists("/opt/deepin-box86/box86"):
+                        name = "基于 box86 的 "
+                        value = f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86  "
+                    if os.path.exists("/opt/exagear/bin/ubt_x64a64_al"):
+                        name = "基于 exagear 的 "
+                        value = f"WINEPREDLL='{programPath}/exagear' WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al --  "
+                except:
+                    pass
                 if os.path.exists(f"{programPath}/wine/{i}/bin/wine"):
-                    wine[f"{programPath}/wine/{i}/bin/wine"] = f"{programPath}/wine/{i}/bin/wine"
-                    canUseWine.append(f"{programPath}/wine/{i}/bin/wine")
+                    wine[f"{name}{programPath}/wine/{i}/bin/wine"] = f"{value}{programPath}/wine/{i}/bin/wine"
+                    canUseWine.append(f"{name}{programPath}/wine/{i}/bin/wine")
+                    untipsWine.append(f"{name}{programPath}/wine/{i}/bin/wine")
                 if os.path.exists(f"{programPath}/wine/{i}/bin/wine64"):
-                    wine[f"{programPath}/wine/{i}/bin/wine64"] = f"{programPath}/wine/{i}/bin/wine64"
-                    canUseWine.append(f"{programPath}/wine/{i}/bin/wine64")
+                    wine[f"{name}{programPath}/wine/{i}/bin/wine64"] = f"{value}{programPath}/wine/{i}/bin/wine64"
+                    canUseWine.append(f"{name}{programPath}/wine/{i}/bin/wine64")
+                    untipsWine.append(f"{name}{programPath}/wine/{i}/bin/wine64")
     except:
         pass
     try:
@@ -1610,7 +1630,7 @@ except:
 # 获取当前语言
 def get_now_lang()->"获取当前语言":
     return os.getenv('LANG')
-
+print(wine)
 ###########################
 # 程序信息
 ###########################
@@ -1698,7 +1718,11 @@ iconList = [
     ["微信", "wineBottonPath/drive_c/Program Files/Tencent/WeChat/WeChat.exe"],
     ["微信", "wineBottonPath/drive_c/Program Files (x86)/Tencent/WeChat/WeChat.exe"],
     ["UltraISO", "wineBottonPath/drive_c/Program Files/UltraISO/UltraISO.exe"],
-    ["UltraISO", "wineBottonPath/drive_c/Program Files (x86)/UltraISO/UltraISO.exe"]
+    ["UltraISO", "wineBottonPath/drive_c/Program Files (x86)/UltraISO/UltraISO.exe"],
+    ["迅雷", "wineBottonPath/drive_c/Program Files/Thunder Network/MiniThunder/Bin/ThunderMini.exe"],
+    ["迅雷", "wineBottonPath/drive_c/Program Files (x86)/Thunder Network/MiniThunder/Bin/ThunderMini.exe"],
+    ["Microsoft Office Word", "wineBottonPath/drive_c/Program Files/Microsoft Office/Office12/WINWORD.EXE"],
+    ["Microsoft Office Word", "wineBottonPath/drive_c/Program Files (x86)/Microsoft Office/Office12/WINWORD.EXE"]
 ]
 for i in iconListUnBuild:
     iconList.append(i)
@@ -2131,7 +2155,7 @@ for i in [
 if subprocess.getoutput("arch").lower() != "x86_64":
     p1.setDisabled(True)
     installWineOnDeepin23.setDisabled(True)
-    installMoreWine.setDisabled(True)
+    installMoreWine.setEnabled(True)
     virtualMachine.setDisabled(True)
     v1.setDisabled(True)
     installWineHQ.setDisabled(True)

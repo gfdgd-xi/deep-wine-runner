@@ -875,7 +875,7 @@ fi
                 self.run_command(f"cp -rv '{programPath}/wined3d.dll.so' {debPackagePath}/opt/apps/{e1_text.text()}/files/")
             elif debArch.currentIndex() == 2:
                 if not os.path.exists(f"{programPath}/exagear"):
-                    self.run_command(f"aria2c -x 16 -s 16 -d \"{programPath}\" -o \"exagear.7z\" https://gitlink.org.cn/api/attachments/392441")
+                    self.run_command(f"aria2c -x 16 -s 16 -d \"{programPath}\" -o \"exagear.7z\" https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/other/exagear.7z")
                     self.run_command(f"7z x \"{programPath}/exagear.7z\" -o\"{programPath}\"")
                     os.remove(f"{programPath}/exagear.7z")
                 self.run_command(f"cp -rv '{programPath}/exagear/*' {debPackagePath}/opt/apps/{e1_text.text()}/files/")
