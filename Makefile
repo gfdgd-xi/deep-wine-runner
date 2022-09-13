@@ -40,6 +40,7 @@ build:
 	cp -rv InstallWineOnDeepin23.py                  deb/opt/apps/deepin-wine-runner
 	cp -rv dxvk.7z                                   deb/opt/apps/deepin-wine-runner
 	cp -rv InstallFont.py                            deb/opt/apps/deepin-wine-runner
+	#cp -rv exagear.7z                               deb/opt/apps/deepin-wine-runner
 	cp -rv dlls-arm.7z                               deb/opt/apps/deepin-wine-runner
 	cp -rv deepin.list                               deb/opt/apps/deepin-wine-runner
 	cp -rv sparkstore.list                           deb/opt/apps/deepin-wine-runner
