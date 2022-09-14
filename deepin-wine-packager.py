@@ -1085,7 +1085,9 @@ def ReadDeb(unzip = False):
         "Package": e1_text,
         "Version": e2_text,
         "Description": e3_text,
-        "Maintainer": e4_text
+        "Maintainer": e4_text,
+        "Recommends": debRecommend,
+        "Depends": debDepends
     }
     for i in lists:
         # 遍历文件
@@ -1094,7 +1096,7 @@ def ReadDeb(unzip = False):
             lnkMap[items[:items.index(":")]].setText(items[items.index(":") + 1:].strip())
         except:
             # 报错忽略
-            print(f"{items}项忽略")
+            print(f"“{items}”项忽略")
     # 判断 postrm 文件是不是自动移除脚本
     # 解包主文件
     if not unzip:
