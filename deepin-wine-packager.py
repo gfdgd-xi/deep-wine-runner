@@ -1067,6 +1067,43 @@ def UserPathSet():
         return
     change = True
 
+def ReadDeb(unzip = False):
+    # 获取路径
+    debPath = QtWidgets.QFileDialog.getOpenFileName(window, "读取 deb 包", get_home(), "deb包(*.deb);;所有文件(*.*)")[0]
+    print(debPath)
+    # 分类讨论
+    path = f"/tmp/deb-unzip-{random.randint(0, 1000)}"
+    # 新建文件夹
+    os.system(f"mkdir -p '{path}'")
+    # 解包 control 文件
+    os.system(f"dpkg -e '{debPath}' '{path}/DEBIAN'")
+    # 读取 control 文件
+    file = open(f"{path}/DEBIAN/control", "r")
+    lists = file.read().splitlines()
+    # 控件映射表
+    lnkMap = {
+        "Package": e1_text,
+        "Version": e2_text,
+        "Description": e3_text,
+        "Maintainer": e4_text
+    }
+    for i in lists:
+        # 遍历文件
+        items = i.strip()
+        try:
+            lnkMap[items[:items.index(":")]].setText(items[items.index(":") + 1:].strip())
+        except:
+            # 报错忽略
+            print(f"{items}项忽略")
+    # 判断 postrm 文件是不是自动移除脚本
+    # 解包主文件
+    if not unzip:
+        # 只解压 control 文件的话，结束
+        return
+    os.system(f"dpkg -x '{debPath}' '{path}'")
+    # 读取文件
+
+
 ###############
 # 程序信息
 ###############
@@ -1228,12 +1265,18 @@ e12_text.textChanged.connect(UserPathSet)
 # 菜单栏
 menu = window.menuBar()
 programmenu = menu.addMenu(QtCore.QCoreApplication.translate("U", "程序"))
+debMenu = menu.addMenu(QtCore.QCoreApplication.translate("U", "deb 包"))
 help = menu.addMenu(QtCore.QCoreApplication.translate("U", "帮助"))
 exit = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "退出程序"))
+debE = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "只读取 Control 信息"))
+debX = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "读取所有（需解包，时间较久）"))
 tip = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "小提示"))
 exit.triggered.connect(window.close)
 tip.triggered.connect(helps)
 programmenu.addAction(exit)
+debMenu.addAction(debE)
+debMenu.addAction(debX)
+debE.triggered.connect(lambda: ReadDeb(False))
 help.addAction(tip)
 # 控件配置
 try:
@@ -1250,3 +1293,4 @@ window.setWindowIcon(QtGui.QIcon(iconPath))
 window.resize(int(window.frameSize().width() * 2.1), window.frameSize().height())
 window.show()
 sys.exit(app.exec_())
+# Flag：解包只读control和解包全部读取
