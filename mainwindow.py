@@ -168,12 +168,12 @@ class Runexebutton_threading(QtCore.QThread):
             wineUsingOption = ""
         if o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
             os.system(f"'{programPath}/deepin-wine-runner-create-botton.py' '{wineBottonPath}'")
-            #if not os.path.exists(f"{programPath}/exagear"):
-                #self.run_command(f"aria2c -x 16 -s 16 -d \"{programPath}\" -o \"exagear.7z\" https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/other/exagear.7z")
-                #if os.system(f"7z x \"{programPath}/exagear.7z\" -o\"{programPath}\""):
-                #    QtWidgets.QMessageBox(widget, "错误", "无法解压资源")
-                #    return
-                #os.remove(f"{programPath}/exagear.7z")
+            if not os.path.exists(f"{programPath}/exagear"):
+                self.run_command(f"aria2c -x 16 -s 16 -d \"{programPath}\" -o \"exagear.7z\" https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/other/exagear.7z")
+                if os.system(f"7z x \"{programPath}/exagear.7z\" -o\"{programPath}\""):
+                    QtWidgets.QMessageBox(widget, "错误", "无法解压资源")
+                    return
+                os.remove(f"{programPath}/exagear.7z")
         if o1.currentText() == "基于 box86 的 deepin-wine6-stable":
             if not os.path.exists(f"{programPath}/dlls-arm"):
                 if os.system(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
