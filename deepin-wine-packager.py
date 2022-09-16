@@ -1080,6 +1080,7 @@ def ReadDeb(unzip = False):
     # 读取 control 文件
     file = open(f"{path}/DEBIAN/control", "r")
     lists = file.read().splitlines()
+
     # 控件映射表
     lnkMap = {
         "Package": e1_text,
@@ -1089,21 +1090,146 @@ def ReadDeb(unzip = False):
         "Recommends": debRecommend,
         "Depends": debDepends
     }
+
     for i in lists:
         # 遍历文件
         items = i.strip()
         try:
             lnkMap[items[:items.index(":")]].setText(items[items.index(":") + 1:].strip())
+            if unzip:
+                # 解压全部文件将不在 control 分析 wine 版本以提升运行效率
+                continue
+            print(items[:items.index(":")])
+            if items[:items.index(":")] == "Depends":
+                # 以下可以通过依赖判断使用什么 wine
+                depends = items[items.index(":") + 1:].strip().split(",")
+                for i in depends:
+                    print(i)
+                    # 读取
+                    if "(" in i:
+                        # 如果有括号（即版本号限制的情况）
+                        temp = i.strip()
+                        dependsItem = temp[:temp.index("(")]
+                    else:
+                        dependsItem = i.strip()
+                    try:
+                        # 这个 wine 是理论上用于运行的 wine
+                        print(wineValue[dependsItem])
+                        wineVersion.setCurrentText(wineValue[dependsItem])
+                        break
+                    except:
+                        print("此 Wine 不存在")
         except:
             # 报错忽略
             print(f"“{items}”项忽略")
+
     # 判断 postrm 文件是不是自动移除脚本
+    # postrm 文件不存在就不需要考虑
+    # 三个特征：
+    # 1、/home/$username/.deepinwine
+    # 2、非卸载，跳过清理
+    # 3、清理卸载残留
+    # 都符合才算
+    rmBash.setChecked(False)
+    if os.path.exists(f"{path}/DEBIAN/postrm"):
+        # 读取文件进行特征筛查
+        file = open(f"{path}/DEBIAN/postrm", "r")
+        postrm = file.read()
+        if "/home/$username/.deepinwine" in postrm and "非卸载，跳过清理" in postrm and "清理卸载残留" in postrm:
+            rmBash.setChecked(True)
+        file.close()
     # 解包主文件
     if not unzip:
         # 只解压 control 文件的话，结束
+        # 顺便删除临时文件
+        os.system(f"rm -rfv '{path}'")
         return
     os.system(f"dpkg -x '{debPath}' '{path}'")
     # 读取文件
+    # 目前只能实现读取 Wine 运行器（生态适配脚本的也可以读取）打包的 deb
+    # opt/apps/XXX/files/run.sh 的文件读取识别
+    if not os.path.exists(f"{path}/opt/apps/"):
+        return
+    # 取默认第一个
+    package = os.listdir(f"{path}/opt/apps/")[0]
+    # 读 7z（基本不读取）
+    if os.path.exists(f"{path}/opt/apps/{package}/files/files.7z"):
+        e6_text.setText(f"{path}/opt/apps/{package}/files/files.7z")
+    lnkMap = {
+        "Icon": e9_text,
+        "Name": e8_text,
+        "MimeType": e10_text
+    }
+    # 读 desktop 文件
+    if os.path.exists(f"{path}/opt/apps/{package}/entries/applications"):
+        filePath = f"{path}/opt/apps/{package}/entries/applications/{os.listdir(f'{path}/opt/apps/{package}/entries/applications')[0]}"
+        file = open(filePath, "r")
+        items = file.read().splitlines()
+        file.close()
+        for i in items:
+            # 按行解析
+            if i.replace(" ", "").replace("\n", "") == "":
+                # 空行，忽略
+                continue
+            # 忽略注释
+            line = i
+            if "#" in line:
+                line = line[:line.index("#")]
+            # 判断是否合法
+            try:
+                name = line[:line.index("=")].strip()
+                value = line[line.index("=") + 1:]#.replace("\"", "").strip()
+                if name in lnkMap:
+                    lnkMap[name].setText(value)
+                    continue
+                # 其它的特殊情况判断
+                if name == "Exec":
+                    value = value[value.index(".sh") + 3:].strip()
+                    if value[0] == "\"":
+                        value = value[1:].strip()
+                    # helper
+                    e15_text.setText(value)
+                if name == "Categories":
+                    option1_text.setCurrentText(value)
+            except:
+                print(f"忽略行：{i}")
+    lnkMap = {
+        "BOTTLENAME": e5_text,
+        "EXEC_PATH": e7_text
+        #"APPRUN_CMD"
+    }
+    # 读 run.sh
+    if os.path.exists(f"{path}/opt/apps/{package}/files/run.sh"):
+        file = open(f"{path}/opt/apps/{package}/files/run.sh", "r")
+        items = file.read().splitlines()
+        file.close()
+        for i in items:
+            # 按行解析
+            if i.replace(" ", "").replace("\n", "") == "":
+                # 空行，忽略
+                continue
+            # 忽略 export
+            line = i.replace("export ", "")
+            # 忽略注释
+            if "#" in line:
+                line = line[:line.index("#")]
+            # 判断是否合法
+            try:
+                name = line[:line.index("=")].strip()
+                value = line[line.index("=") + 1:].replace("\"", "").strip()
+                #lnkMap[name].setText(value)
+                if name in lnkMap:
+                    lnkMap[name].setText(value)
+                    continue
+                # 其它的特殊情况判断
+                if name == "START_SHELL_PATH" and value == "/opt/deepinwine/tools/spark_run_v4.sh":
+                    # helper
+                    chooseWineHelperValue.setChecked(True)
+                if name == "APPRUN_CMD" and value in wineValue:
+                    wineVersion.setCurrentText(wineValue[dependsItem])
+            except:
+                print(f"忽略行：{i}")
+
 
 
 ###############
@@ -1112,6 +1238,7 @@ def ReadDeb(unzip = False):
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 # 如果要添加其他 wine，请在字典添加其名称和执行路径
 wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable": "deepin-wine6-stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine"}
+wineValue = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5-stable": "deepin-wine5 stable", "deepin-wine6-stable": "deepin-wine6 stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine"}
 # 读取 wine 本地列表
 for i in ["/opt/wine-staging", "/opt/wine-dev", "/opt/wine-stable", "/opt/spark-wine7-devel"]:
     if os.path.exists(i):
@@ -1279,6 +1406,7 @@ programmenu.addAction(exit)
 debMenu.addAction(debE)
 debMenu.addAction(debX)
 debE.triggered.connect(lambda: ReadDeb(False))
+debX.triggered.connect(lambda: ReadDeb(True))
 help.addAction(tip)
 # 控件配置
 try:
