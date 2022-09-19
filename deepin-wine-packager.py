@@ -849,6 +849,7 @@ fi
             if os.path.exists(wine[wineVersion.currentText()]):
                 shutil.copy(f"{programPath}/gtkGetFileNameDlg", f"{debPackagePath}/opt/apps/{e1_text.text()}/files/gtkGetFileNameDlg")
                 if wine[wineVersion.currentText()][-3:] == ".7z":
+                    # 都有了为什么要打包呢？
                     shutil.copy(wine[wineVersion.currentText()], f"{debPackagePath}/opt/apps/{e1_text.text()}/files/wine_archive.7z")
                 else:
                     self.run_command(f"7z a '{debPackagePath}/opt/apps/{e1_text.text()}/files/wine_archive.7z' '{wine[wineVersion.currentText()]}/*'")
@@ -856,7 +857,11 @@ fi
             # 压缩容器
             ###############
             self.label.emit("正在打包 wine 容器")
-            self.run_command("7z a {}/opt/apps/{}/files/files.7z {}/*".format(debPackagePath, e1_text.text(), b))
+            # 都有 7z 了为什么要打包呢？
+            if e1_text.text()[-3: ] == ".7z":
+                shutil.copy(e1_text.text(), f"{debPackagePath}/opt/apps/{e1_text.text()}/files/files.7z")
+            else:
+                self.run_command("7z a {}/opt/apps/{}/files/files.7z {}/*".format(debPackagePath, e1_text.text(), b))
             ###############
             # 复制文件
             ###############
