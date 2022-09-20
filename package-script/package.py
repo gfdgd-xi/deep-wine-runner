@@ -51,6 +51,7 @@ def DisbledOrEnabled(choose: bool):
 
 class PackageDebThread(QtCore.QThread):
     signal = QtCore.pyqtSignal(str)
+    info = QtCore.pyqtSignal(str)
     def __init__(self) -> None:
         super().__init__()
 
@@ -96,11 +97,14 @@ export apprun_cmd="deepin-wine6-stable"
                 text = ""
             self.signal.emit(text)
             print(text, end="")
-        
+        self.info.emit("打包完成！")
         DisbledOrEnabled(False)
 
 class QT:
     run = None
+
+def MessageBoxInformation(text):
+    QtWidgets.QMessageBox.information(window, "提示", text)
 
 def PackageDeb():
     DisbledOrEnabled(True)
@@ -112,6 +116,7 @@ def PackageDeb():
     commandReturn.setText("")
     QT.run = PackageDebThread()
     QT.run.signal.connect(RunCommand)
+    QT.run.signal.connect(MessageBoxInformation)
     QT.run.start()
 
 def RunCommand(command):
@@ -189,7 +194,7 @@ buildDeb.clicked.connect(PackageDeb)
 debPath.clicked.connect(OpenPackageFolder)
 widget.setLayout(widgetLayout)
 window.setCentralWidget(widget)
-window.resize(window.frameGeometry().width() * 1.5, window.frameGeometry().height())
+window.resize(int(window.frameGeometry().width() * 1.5), int(window.frameGeometry().height()))
 window.setWindowIcon(QtGui.QIcon(iconPath))
 menu = window.menuBar()
 programMenu = menu.addMenu("程序")

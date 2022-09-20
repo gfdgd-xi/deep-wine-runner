@@ -1130,9 +1130,13 @@ class GetDllFromWindowsISO:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", traceback.format_exc())
 
+choose = None
 class ProgramRunStatusShow():
     msgWindow = None
     def ShowWindow():
+        global choose
+        choose = None
+        dateVersion = ""
         if not os.path.exists(e2.currentText()):
             QtWidgets.QMessageBox.information(widget, "提示", "您输入的 exe 不存在")
             return
@@ -1143,9 +1147,34 @@ class ProgramRunStatusShow():
             r.encoding = "utf-8"
             title = r.text
         except:
-            if QtWidgets.QMessageBox.question(widget, QtCore.QCoreApplication.translate("U", "提示"), QtCore.QCoreApplication.translate("U", "暂时还没有该软件的运行情况信息\n是否自己上传该软件的运行情况？")) == QtWidgets.QMessageBox.Yes:
+            choosemsg = QtWidgets.QMessageBox()
+            choosemsg.setText("""暂时还没有该软件的运行情况信息，请问需要？""")
+            choosemsg.setWindowTitle("提示")
+            def Choose(choices):
+                global choose
+                choose = choices
+            choosemsg.addButton("取消", QtWidgets.QMessageBox.ActionRole).clicked.connect(lambda: Choose(0))
+            choosemsg.addButton("提交评分", QtWidgets.QMessageBox.ActionRole).clicked.connect(lambda: Choose(1))
+            choosemsg.addButton("预测评分（不准确）", QtWidgets.QMessageBox.ActionRole).clicked.connect(lambda: Choose(2))
+            choosemsg.exec_()
+            if choose == None or choose == 0:
+                return
+            if choose == 1:
                 ProgramRunStatusUpload.ShowWindow(sha)
-            return
+            if choose == 2:
+                try:
+                    lists = [0, 0, 0, 0, 0, 0, 0, 0]
+                    info = json.loads(requests.get(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0OjMwMjUwL0FJP1NIQTE9").decode("utf-8") + sha).text)
+                    lists[int(info["Fen"])] = 1
+                    dateVersion = info["Version"]
+                    title = "null"
+                except:
+                    traceback.print_exc()
+                    QtWidgets.QMessageBox.critical(window, "错误", "无法获取预测数值")
+        #        QtWidgets.QMessageBox.information(None, "提示", "必须选择一个选项！否则无法进入程序！")
+        #        sys.exit()            
+            
+            
         informationList = [
             "0分：无法运行并且也没有报错，自己无法解决",
             "1分：无法运行但有报错，自己无法解决",
@@ -1156,8 +1185,10 @@ class ProgramRunStatusShow():
             "含有不良内容，不宜安装",
             "含有病毒、木马等对计算机有害的软件"
         ]
+        
         if title.lower() == "null":
             title = "未知应用"
+        
         maxHead = lists.index(max(lists))
         ProgramRunStatusShow.msgWindow = QtWidgets.QMainWindow()
         msgWidget = QtWidgets.QWidget()
@@ -1168,7 +1199,8 @@ class ProgramRunStatusShow():
         msgWidgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "综合评价：")), 0, 0)
         msgWidgetLayout.addLayout(starLayout, 0, 1)
         msgWidgetLayout.addWidget(QtWidgets.QLabel(informationList[maxHead]), 1, 0, 1, 2)
-        msgWidgetLayout.addWidget(uploadButton, 2, 0, 1, 2)
+        msgWidgetLayout.addWidget(QtWidgets.QLabel("" if dateVersion == "" else f"数据版本：{dateVersion}"), 2, 0, 1, 2)
+        msgWidgetLayout.addWidget(uploadButton, 3, 0, 1, 2)
         end = 5
         if maxHead > 5:
             for i in range(end):
@@ -1619,6 +1651,26 @@ except:
     QtWidgets.QMessageBox.critical(None, "错误", f"无法读取配置，无法继续\n{traceback.format_exc()}")
     sys.exit(1)
 
+def getFileFolderSize(fileOrFolderPath):
+    """get size for file or folder"""
+    totalSize = 0
+    if not os.path.exists(fileOrFolderPath):
+        return totalSize
+    if os.path.isfile(fileOrFolderPath):
+        totalSize = os.path.getsize(fileOrFolderPath)  # 5041481
+        return totalSize
+    if os.path.isdir(fileOrFolderPath):
+        with os.scandir(fileOrFolderPath) as dirEntryList:
+            for curSubEntry in dirEntryList:
+                curSubEntryFullPath = os.path.join(fileOrFolderPath, curSubEntry.name)
+                if curSubEntry.is_dir():
+                    curSubFolderSize = getFileFolderSize(curSubEntryFullPath)  # 5800007
+                    totalSize += curSubFolderSize
+                elif curSubEntry.is_file():
+                    curSubFileSize = os.path.getsize(curSubEntryFullPath)  # 1891
+                    totalSize += curSubFileSize
+            return totalSize
+
 # 获取当前语言
 def get_now_lang()->"获取当前语言":
     return os.getenv('LANG')
@@ -1631,8 +1683,8 @@ def GetVersion():
     # 编译版本：无版本号
     # Gitee/Github……：正常版本
     programVersionTypeLnk = {
-        "~spark": "星火应用商店版本",
-        "~uos": "deepin/UOS 应用商店版本<带签名>"
+        "spark": "星火应用商店版本",
+        "uos": "deepin/UOS 应用商店版本<带签名>"
     }
     programVersionType = "从源码运行的版本"
     try:
@@ -1647,21 +1699,36 @@ def GetVersion():
                 continue
             if not package:
                 continue
+            if fileName[i].replace(" ", "").replace("\n", "") == "":
+                # 空行，不再考虑
+                break
             # 搜索版本号
             try:
                 if fileName[i][:fileName[i].index(":")] == "Version":
                     version = fileName[i][fileName[i].index(":") + 1:].strip()
                     print(f"版本号为：{version}")
-                    if not "~" in version:
+                    if not "-" in version:
                         programVersionType = "从Gitee/Github/Gitlink等平台获取的版本"
                         break
-                    programVersionType = programVersionTypeLnk[version[version.index("~"):]]
+                    programVersionType = version[version.index("-") + 1:]
+                    print(programVersionType)
+                    if "-" in programVersionType:
+                        # 考虑到如 2.1.0-2-spark 的情况
+                        programVersionType = programVersionType[programVersionType.index("-") + 1:]
+                    try:
+                        programVersionType = programVersionTypeLnk[programVersionType]    
+                    except:
+                        programVersionType = "从Gitee/Github/Gitlink等平台获取的版本"
                     break
             except:
+                traceback.print_exc()
                 continue
     except:
         print("无法读取，当没有处理")
+    print(programVersionType)
     about = about.replace("@VersionForType@", programVersionType)
+    # 获取程序体积
+    about = about.replace("@programSize@", str(int(getFileFolderSize(programPath) / 1024 / 1024)))
 
 
 print(wine)
@@ -1701,8 +1768,12 @@ updateThingsString = '''※1、Dll 提取工具支持 NT 6.X 及以上版本的 
 ※7、基于生态适配活动的打包器更换为 spark-wine-helper 以及添加自动删除残留脚本
 ※8、打包器支持从 deb 文件读取信息
 ※9、修复在 UOS 专业版（鲲鹏）无法正常运行的问题
-10、更新组件安装的离线列表
-11、不再强制依赖深度终端，只做推荐安装
+※10、修复出现星火应用商店和官方应用商店反复提示更新死循环的问题
+※11、新增评分分数预测功能（不准）
+12、更新组件安装的离线列表
+13、不再强制依赖深度终端，只做推荐安装
+14、基于生态活动适配脚本的打包器在打包完成后会弹出对话框提示打包完成
+15、优化打包器的 spark wine helper 依赖设置方式
 <b>以下更新内容旧版本也适用（只限 2.1.0 及以上版本）</b>
 ※1、在“安装更多Wine”的Wine安装工具中上新 Wine
 ※2、云 Dll 工具上新 Dll
@@ -1724,7 +1795,8 @@ about = f'''<h1>关于</h1>
 版本：{version}
 适用平台：{goodRunSystem}（@VersionForType@）
 Qt 版本：{QtCore.qVersion()}
-程序官网：{programUrl}</pre>
+程序官网：{programUrl}
+程序占用体积：@programSize@MB</pre>
 <hr>
 <h1>谢明名单</h1>
 <pre>{thankText}</pre>
