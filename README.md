@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 2.1.0-1</h1>
+<h1 align="center">Wine 运行器 2.1.0-2</h1>
 <hr>
 
 ## 介绍
@@ -85,6 +85,9 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志
+### 2.1.0-2（2022年09月05日）
+**※1、修复终端调用问题**  
+
 ### 2.1.0-1（2022年09月03日）
 **※1、删除多余图标**  
 **※2、修复将打包文件生成目录设置为 / 等重要目录导致删库的问题**  
