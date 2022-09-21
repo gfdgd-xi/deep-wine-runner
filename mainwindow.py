@@ -807,17 +807,30 @@ class UpdateWindow():
         ok.clicked.connect(UpdateWindow.Update)
         cancel = QtWidgets.QPushButton("取消")
         cancel.clicked.connect(UpdateWindow.update.close)
-        try:
-            UpdateWindow.data = json.loads(requests.get(base64.b64decode("aHR0cHM6Ly8zMDQ2MjZwOTI3LmdvaG8uY28vc3BhcmstZGVlcGluLXdpbmUtcnVubmVyL3VwZGF0ZS5qc29u").decode("utf-8")).text)
-            versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：{UpdateWindow.data['Version']}\n更新内容：")
-            if UpdateWindow.data["Version"] == version:
-                updateText.setText(QtCore.QCoreApplication.translate("U", "此为最新版本，无需更新"))
+        if "从源码运行的版本" == programVersionType:
+            versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：未知（从源码运行不提供更新）\n更新内容：")
+            updateText.setText("从源码运行不提供更新")
+            ok.setDisabled(True)
+        else:
+            if "deepin/UOS 应用商店版本<带签名>" == programVersionType:
+                url = "aHR0cHM6Ly8zMDQ2MjZwOTI3LmdvaG8uY28vc3BhcmstZGVlcGluLXdpbmUtcnVubmVyL3VwZGF0ZS11b3MuanNvbg=="
+            elif "星火应用商店版本" == programVersionType:
+                url = "aHR0cHM6Ly8zMDQ2MjZwOTI3LmdvaG8uY28vc3BhcmstZGVlcGluLXdpbmUtcnVubmVyL3VwZGF0ZS1zcGFyay5qc29u"
+            else: 
+                url = "aHR0cHM6Ly8zMDQ2MjZwOTI3LmdvaG8uY28vc3BhcmstZGVlcGluLXdpbmUtcnVubmVyL3VwZGF0ZS5qc29u"
+            try:
+                UpdateWindow.data = json.loads(requests.get(base64.b64decode(url).decode("utf-8")).text)
+                versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：{UpdateWindow.data['Version']}\n更新内容：")
+                if UpdateWindow.data["Version"] == version:
+                    updateText.setText(QtCore.QCoreApplication.translate("U", "此为最新版本，无需更新"))
+                    ok.setDisabled(True)
+                else:
+                    updateText.setText(UpdateWindow.data["New"].replace("\\n", "\n"))
+            except:
+                traceback.print_exc()
+                QtWidgets.QMessageBox.critical(updateWidget, QtCore.QCoreApplication.translate("U", "错误"), QtCore.QCoreApplication.translate("U", "无法连接服务器！"))
+                updateText.setText("无法连接服务器，无法更新")
                 ok.setDisabled(True)
-            else:
-                updateText.setText(UpdateWindow.data["New"].replace("\\n", "\n"))
-        except:
-            traceback.print_exc()
-            QtWidgets.QMessageBox.critical(updateWidget, QtCore.QCoreApplication.translate("U", "错误"), QtCore.QCoreApplication.translate("U", "无法连接服务器！"))
         updateWidgetLayout.addWidget(versionLabel, 0, 0, 1, 1)
         updateWidgetLayout.addWidget(updateText, 1, 0, 1, 3)
         updateWidgetLayout.addWidget(ok, 2, 2, 1, 1)
@@ -1677,6 +1690,7 @@ def get_now_lang()->"获取当前语言":
 
 def GetVersion():
     global about
+    global programVersionType
     # 目前分为几个版本（在 control 文件区分）：
     # 星火版本：~spark
     # 商店版本：~uos
@@ -1730,7 +1744,7 @@ def GetVersion():
     # 获取程序体积
     about = about.replace("@programSize@", str(int(getFileFolderSize(programPath) / 1024 / 1024)))
 
-
+programVersionType = ""
 print(wine)
 ###########################
 # 程序信息
