@@ -38,7 +38,7 @@ def Download(wineBotton: str, id: int, wine: str) -> int:
     except:
         pass
     os.system(f"aria2c -x 16 -s 16 -d '/tmp/deepin-wine-runner-vcpp' -o '{netList[id][2]}' \"{netList[id][1]}\"")
-    os.system(f"WINEPREFIX='{wineBotton}' '{wine}' '/tmp/deepin-wine-runner-vcpp/{netList[id][2]}'")
+    os.system(f"WINEPREFIX='{wineBotton}' {wine} '/tmp/deepin-wine-runner-vcpp/{netList[id][2]}'")
 
 if __name__ == "__main__":
     if "--help" in sys.argv:
@@ -83,12 +83,12 @@ if __name__ == "__main__":
     print(f"您选择了 Visual Studio C++ {netList[choose][0]}")
     if os.path.exists(f"{homePath}/.cache/deepin-wine-runner/vcpp/{netList[choose][2]}"):
         print("已经缓存，使用本地版本")
-        os.system(f"WINEPREFIX='{sys.argv[1]}' '{sys.argv[2]}' '{homePath}/.cache/deepin-wine-runner/vcpp/{netList[choose][2]}'")
+        os.system(f"WINEPREFIX='{sys.argv[1]}' {sys.argv[2]} '{homePath}/.cache/deepin-wine-runner/vcpp/{netList[choose][2]}'")
         input("安装结束，按回车键退出")
         exit()
     print("开始下载")
     os.system(f"rm -rf '{homePath}/.cache/deepin-wine-runner/vcpp/{netList[choose][2]}'")
     os.system(f"mkdir -p '{homePath}/.cache/deepin-wine-runner/vcpp'")
     os.system(f"aria2c -x 16 -s 16 -d '{homePath}/.cache/deepin-wine-runner/vcpp' -o '{netList[choose][2]}' \"{netList[choose][1]}\"")
-    os.system(f"WINEPREFIX='{sys.argv[1]}' '{sys.argv[2]}' '{homePath}/.cache/deepin-wine-runner/vcpp/{netList[choose][2]}'")
+    os.system(f"WINEPREFIX='{sys.argv[1]}' {sys.argv[2]} '{homePath}/.cache/deepin-wine-runner/vcpp/{netList[choose][2]}'")
     input("安装结束，按回车键退出")

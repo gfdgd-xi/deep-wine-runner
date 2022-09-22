@@ -25,7 +25,7 @@ except:
 
 def Download(wineBotton: str, id: int, wine: str):
     os.system(f"aria2c -x 16 -s 16 -d \"/tmp/deepin-wine-runner-msxml/\" -o \"{msxmlList[id][2]}\" \"{msxmlList[id][1]}\"")
-    os.system(f"WINEPREFIX='{wineBotton}' '{wine}' msiexec /i \"/tmp/deepin-wine-runner-msxml/{msxmlList[id][2]}\"")
+    os.system(f"WINEPREFIX='{wineBotton}' {wine} msiexec /i \"/tmp/deepin-wine-runner-msxml/{msxmlList[id][2]}\"")
 
 if __name__ == "__main__":
     if "--help" in sys.argv:
@@ -77,7 +77,7 @@ if __name__ == "__main__":
         choice = (sys.argv[3] == "1")
     if os.path.exists(f"{homePath}/.config/deepin-wine-runner/MSXML/{msxmlList[choose][2]}") and choice:
         print("已经缓存，使用本地版本")
-        os.system(f"WINEPREFIX='{sys.argv[1]}' '{sys.argv[2]}' msiexec /i \"{homePath}/.config/deepin-wine-runner/MSXML/{msxmlList[choose][2]}\"")
+        os.system(f"WINEPREFIX='{sys.argv[1]}' {sys.argv[2]} msiexec /i \"{homePath}/.config/deepin-wine-runner/MSXML/{msxmlList[choose][2]}\"")
         input("安装结束，按回车键退出")
         exit()
     print("开始下载")
@@ -85,5 +85,5 @@ if __name__ == "__main__":
     os.system(f"mkdir -p \"{homePath}/.config/deepin-wine-runner/MSXML/\"")
     os.system(f"aria2c -x 16 -s 16 -d \"{homePath}/.config/deepin-wine-runner/MSXML\" -o \"{msxmlList[choose][2]}\" \"{msxmlList[choose][1]}\"")
     print("开始安装")
-    os.system(f"WINEPREFIX='{sys.argv[1]}' '{sys.argv[2]}' msiexec /i \"{homePath}/.config/deepin-wine-runner/MSXML/{msxmlList[choose][2]}\"")
+    os.system(f"WINEPREFIX='{sys.argv[1]}' {sys.argv[2]} msiexec /i \"{homePath}/.config/deepin-wine-runner/MSXML/{msxmlList[choose][2]}\"")
     input("安装结束，按回车键退出")
