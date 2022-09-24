@@ -57,6 +57,7 @@ if __name__ == "__main__":
         try:
             apiReturn = json.loads(requests.get(f"https://s.pcmgr.qq.com/tapi/web/searchcgi.php?type=search&callback=searchCallback&keyword={parse.quote(search)}&page=1&pernum=30").text[:-2][15:])
         except:
+            #traceback.print_exc()
             input("无法连接服务器，按回车键继续")
             CleanTerminal()
             continue

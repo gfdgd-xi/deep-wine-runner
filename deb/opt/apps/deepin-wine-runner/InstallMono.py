@@ -65,7 +65,7 @@ except:
     file = open(f"{homePath}/.cache/deepin-wine-runner/{sys.argv[3]}/information.txt", "r")
     version = file.read().replace("\n", "")    
     print("安装版本:", version)
-    os.system(f"WINEPREFIX='{sys.argv[1]}' '{sys.argv[2]}' msiexec /i \"{homePath}/.cache/deepin-wine-runner/{sys.argv[3]}/install.msi\"")
+    os.system(f"WINEPREFIX='{sys.argv[1]}' {sys.argv[2]} msiexec /i \"{homePath}/.cache/deepin-wine-runner/{sys.argv[3]}/install.msi\"")
     if exitInputShow:
         input("安装结束，按回车键退出")
     exit()
@@ -98,7 +98,7 @@ if os.path.exists(f"{homePath}/.cache/deepin-wine-runner/{sys.argv[3]}/install.m
         print("缓存版本:", version.replace("/", ""))
         print("已经缓存，使用本地版本")
         file.close()
-        os.system(f"WINEPREFIX='{sys.argv[1]}' '{sys.argv[2]}' msiexec /i \"{homePath}/.cache/deepin-wine-runner/{sys.argv[3]}/install.msi\"")
+        os.system(f"WINEPREFIX='{sys.argv[1]}' {sys.argv[2]} msiexec /i \"{homePath}/.cache/deepin-wine-runner/{sys.argv[3]}/install.msi\"")
         if exitInputShow:
             input("安装结束，按回车键退出")
         exit()
@@ -109,7 +109,7 @@ os.system(f"rm -rf \"{homePath}/.cache/deepin-wine-runner/{sys.argv[3]}/install.
 os.system("mkdir -p /tmp/winegeckomonoinstall")
 os.system(f"aria2c -x 16 -s 16 -d \"{homePath}/.cache/deepin-wine-runner/{sys.argv[3]}\" -o install.msi \"{programDownloadUrl}\"")
 print("开始安装")
-os.system(f"WINEPREFIX='{sys.argv[1]}' '{sys.argv[2]}' msiexec /i \"{homePath}/.cache/deepin-wine-runner/{sys.argv[3]}/install.msi\"")
+os.system(f"WINEPREFIX='{sys.argv[1]}' {sys.argv[2]} msiexec /i \"{homePath}/.cache/deepin-wine-runner/{sys.argv[3]}/install.msi\"")
 try:
     if sys.argv[4] == "1":
         print("写入缓存")

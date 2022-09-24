@@ -48,7 +48,7 @@ except:
 def Download(wineBotton: str, id: int, wine: str):
     programName = os.path.split(netList[id][1])[1]
     os.system(f"aria2c -x 16 -s 16 -d \"/tmp/deepin-wine-runner-net\" -o \"{programName}\" \"{netList[id][1]}\"")
-    os.system(f"WINEPREFIX='{wineBotton}' '{wine}' '/tmp/deepin-wine-runner-net/{programName}'")
+    os.system(f"WINEPREFIX='{wineBotton}' {wine} '/tmp/deepin-wine-runner-net/{programName}'")
 
 if __name__ == "__main__":
     if "--help" in sys.argv:
@@ -101,12 +101,12 @@ if __name__ == "__main__":
     programName = os.path.split(netList[choose][1])[1]
     if os.path.exists(f"{homePath}/.cache/deepin-wine-runner/.netframework/{programName}") and choice:
         print("已经缓存，使用本地版本")
-        os.system(f"WINEPREFIX='{sys.argv[1]}' '{sys.argv[2]}' '{homePath}/.cache/deepin-wine-runner/.netframework/{programName}'")
+        os.system(f"WINEPREFIX='{sys.argv[1]}' {sys.argv[2]} '{homePath}/.cache/deepin-wine-runner/.netframework/{programName}'")
         input("安装结束，按回车键退出")
         exit()
     print("开始下载")
     os.system(f"rm -rf '{homePath}/.cache/deepin-wine-runner/.netframework/{programName}'")
     os.system(f"mkdir -p '{homePath}/.cache/deepin-wine-runner/.netframework'")
     os.system(f"aria2c -x 16 -s 16 -d \"{homePath}/.cache/deepin-wine-runner/.netframework\" -o \"{programName}\" \"{netList[choose][1]}\"")
-    os.system(f"WINEPREFIX='{sys.argv[1]}' '{sys.argv[2]}' '{homePath}/.cache/deepin-wine-runner/.netframework/{programName}'")
+    os.system(f"WINEPREFIX='{sys.argv[1]}' {sys.argv[2]} '{homePath}/.cache/deepin-wine-runner/.netframework/{programName}'")
     input("安装结束，按回车键退出")

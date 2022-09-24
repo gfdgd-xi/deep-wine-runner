@@ -215,7 +215,7 @@ class make_deb_threading(QtCore.QThread):
                     "Architecture": "i386",
                     "Depends": [
                         f"{wine[wineVersion.currentText()]}, deepin-wine-helper (>= 5.1.30-1), fonts-wqy-microhei, fonts-wqy-zenhei",
-                        f"{wine[wineVersion.currentText()]}, spark-dwine-helper (>= 1.6.2), fonts-wqy-microhei, fonts-wqy-zenhei"
+                        f"{wine[wineVersion.currentText()]}, spark-dwine-helper | store.spark-app.spark-dwine-helper, fonts-wqy-microhei, fonts-wqy-zenhei"
                         ][int(chooseWineHelperValue.isChecked())],
                     "postinst": "",
                     "postrm": ["", f"""#!/bin/bash
@@ -695,7 +695,7 @@ WINEPREFIX=$BOTTLE $EMU $EMU_ARGS $WINE "$EXE" --disable-gpu &""",
             print("c")
             if os.path.exists(wine[wineVersion.currentText()]):
                 debInformation[0]["Depends"] = ["deepin-wine-helper (>= 5.1.30-1)",
-                        "spark-dwine-helper (>= 1.6.2)"
+                        "spark-dwine-helper | store.spark-app.spark-dwine-helper"
                         ][int(chooseWineHelperValue.isChecked())] #+ ["", "libasound2 (>= 1.0.16), libc6 (>= 2.28), libglib2.0-0 (>= 2.12.0), libgphoto2-6 (>= 2.5.10), libgphoto2-port12 (>= 2.5.10), libgstreamer-plugins-base1.0-0 (>= 1.0.0), libgstreamer1.0-0 (>= 1.4.0), liblcms2-2 (>= 2.2+git20110628), libldap-2.4-2 (>= 2.4.7), libmpg123-0 (>= 1.13.7), libopenal1 (>= 1.14), libpcap0.8 (>= 0.9.8), libpulse0 (>= 0.99.1), libudev1 (>= 183), libvkd3d1 (>= 1.0), libx11-6, libxext6, libxml2 (>= 2.9.0), ocl-icd-libopencl1 | libopencl1, udis86, zlib1g (>= 1:1.1.4), libasound2-plugins, libncurses6 | libncurses5 | libncurses, deepin-wine-plugin-virtual\nRecommends: libcapi20-3, libcups2, libdbus-1-3, libfontconfig1, libfreetype6, libglu1-mesa | libglu1, libgnutls30 | libgnutls28 | libgnutls26, libgsm1, libgssapi-krb5-2, libjpeg62-turbo | libjpeg8, libkrb5-3, libodbc1, libosmesa6, libpng16-16 | libpng12-0, libsane | libsane1, libsdl2-2.0-0, libtiff5, libv4l-0, libxcomposite1, libxcursor1, libxfixes3, libxi6, libxinerama1, libxrandr2, libxrender1, libxslt1.1, libxxf86vm1"][]
                 print("d")
                 debInformation[0]["run.sh"] = f'''#!/bin/sh
@@ -849,6 +849,7 @@ fi
             if os.path.exists(wine[wineVersion.currentText()]):
                 shutil.copy(f"{programPath}/gtkGetFileNameDlg", f"{debPackagePath}/opt/apps/{e1_text.text()}/files/gtkGetFileNameDlg")
                 if wine[wineVersion.currentText()][-3:] == ".7z":
+                    # 都有了为什么要打包呢？
                     shutil.copy(wine[wineVersion.currentText()], f"{debPackagePath}/opt/apps/{e1_text.text()}/files/wine_archive.7z")
                 else:
                     self.run_command(f"7z a '{debPackagePath}/opt/apps/{e1_text.text()}/files/wine_archive.7z' '{wine[wineVersion.currentText()]}/*'")
@@ -856,7 +857,11 @@ fi
             # 压缩容器
             ###############
             self.label.emit("正在打包 wine 容器")
-            self.run_command("7z a {}/opt/apps/{}/files/files.7z {}/*".format(debPackagePath, e1_text.text(), b))
+            # 都有 7z 了为什么要打包呢？
+            if e1_text.text()[-3: ] == ".7z":
+                shutil.copy(e1_text.text(), f"{debPackagePath}/opt/apps/{e1_text.text()}/files/files.7z")
+            else:
+                self.run_command("7z a {}/opt/apps/{}/files/files.7z {}/*".format(debPackagePath, e1_text.text(), b))
             ###############
             # 复制文件
             ###############
@@ -1024,12 +1029,12 @@ def InstallDeb():
 def ChangeWine():
     useInstallWineArch.setEnabled(os.path.exists(wine[wineVersion.currentText()]))
     debDepends.setText([f"{wine[wineVersion.currentText()]}, deepin-wine-helper (>= 5.1.30-1), fonts-wqy-microhei, fonts-wqy-zenhei",
-                        f"{wine[wineVersion.currentText()]}, spark-dwine-helper (>= 1.6.2), fonts-wqy-microhei, fonts-wqy-zenhei"
+                        f"{wine[wineVersion.currentText()]}, spark-dwine-helper | store.spark-app.spark-dwine-helper, fonts-wqy-microhei, fonts-wqy-zenhei"
                         ][int(chooseWineHelperValue.isChecked())])
     debRecommend.setText("")
     if os.path.exists(wine[wineVersion.currentText()]):
         debDepends.setText(["deepin-wine-helper (>= 5.1.30-1)",
-                        "spark-dwine-helper (>= 1.6.2)"
+                        "spark-dwine-helper | store.spark-app.spark-dwine-helper"
                         ][int(chooseWineHelperValue.isChecked())])
         if "deepin-wine5-stable" in wine[wineVersion.currentText()]:
             debDepends.setText("libasound2 (>= 1.0.16), libc6 (>= 2.28), libglib2.0-0 (>= 2.12.0), libgphoto2-6 (>= 2.5.10), libgphoto2-port12 (>= 2.5.10), libgstreamer-plugins-base1.0-0 (>= 1.0.0), libgstreamer1.0-0 (>= 1.4.0), liblcms2-2 (>= 2.2+git20110628), libldap-2.4-2 (>= 2.4.7), libmpg123-0 (>= 1.13.7), libopenal1 (>= 1.14), libpcap0.8 (>= 0.9.8), libpulse0 (>= 0.99.1), libudev1 (>= 183), libvkd3d1 (>= 1.0), libx11-6, libxext6, libxml2 (>= 2.9.0), ocl-icd-libopencl1 | libopencl1, udis86, zlib1g (>= 1:1.1.4), libasound2-plugins, libncurses6 | libncurses5 | libncurses, deepin-wine-plugin-virtual")
@@ -1067,12 +1072,178 @@ def UserPathSet():
         return
     change = True
 
+def ReadDeb(unzip = False):
+    # 获取路径
+    debPath = QtWidgets.QFileDialog.getOpenFileName(window, "读取 deb 包", get_home(), "deb包(*.deb);;所有文件(*.*)")[0]
+    print(debPath)
+    # 分类讨论
+    path = f"/tmp/deb-unzip-{random.randint(0, 1000)}"
+    # 新建文件夹
+    os.system(f"mkdir -p '{path}'")
+    # 解包 control 文件
+    os.system(f"dpkg -e '{debPath}' '{path}/DEBIAN'")
+    # 读取 control 文件
+    file = open(f"{path}/DEBIAN/control", "r")
+    lists = file.read().splitlines()
+
+    # 控件映射表
+    lnkMap = {
+        "Package": e1_text,
+        "Version": e2_text,
+        "Description": e3_text,
+        "Maintainer": e4_text,
+        "Recommends": debRecommend,
+        "Depends": debDepends
+    }
+
+    for i in lists:
+        # 遍历文件
+        items = i.strip()
+        try:
+            lnkMap[items[:items.index(":")]].setText(items[items.index(":") + 1:].strip())
+            if unzip:
+                # 解压全部文件将不在 control 分析 wine 版本以提升运行效率
+                continue
+            print(items[:items.index(":")])
+            if items[:items.index(":")] == "Depends":
+                # 以下可以通过依赖判断使用什么 wine
+                depends = items[items.index(":") + 1:].strip().split(",")
+                for i in depends:
+                    print(i)
+                    # 读取
+                    if "(" in i:
+                        # 如果有括号（即版本号限制的情况）
+                        temp = i.strip()
+                        dependsItem = temp[:temp.index("(")]
+                    else:
+                        dependsItem = i.strip()
+                    try:
+                        # 这个 wine 是理论上用于运行的 wine
+                        print(wineValue[dependsItem])
+                        wineVersion.setCurrentText(wineValue[dependsItem])
+                        break
+                    except:
+                        print("此 Wine 不存在")
+        except:
+            # 报错忽略
+            print(f"“{items}”项忽略")
+
+    # 判断 postrm 文件是不是自动移除脚本
+    # postrm 文件不存在就不需要考虑
+    # 三个特征：
+    # 1、/home/$username/.deepinwine
+    # 2、非卸载，跳过清理
+    # 3、清理卸载残留
+    # 都符合才算
+    rmBash.setChecked(False)
+    if os.path.exists(f"{path}/DEBIAN/postrm"):
+        # 读取文件进行特征筛查
+        file = open(f"{path}/DEBIAN/postrm", "r")
+        postrm = file.read()
+        if "/home/$username/.deepinwine" in postrm and "非卸载，跳过清理" in postrm and "清理卸载残留" in postrm:
+            rmBash.setChecked(True)
+        file.close()
+    # 解包主文件
+    if not unzip:
+        # 只解压 control 文件的话，结束
+        # 顺便删除临时文件
+        os.system(f"rm -rfv '{path}'")
+        return
+    os.system(f"dpkg -x '{debPath}' '{path}'")
+    # 读取文件
+    # 目前只能实现读取 Wine 运行器（生态适配脚本的也可以读取）打包的 deb
+    # opt/apps/XXX/files/run.sh 的文件读取识别
+    if not os.path.exists(f"{path}/opt/apps/"):
+        return
+    # 取默认第一个
+    package = os.listdir(f"{path}/opt/apps/")[0]
+    # 读 7z（基本不读取）
+    if os.path.exists(f"{path}/opt/apps/{package}/files/files.7z"):
+        e6_text.setText(f"{path}/opt/apps/{package}/files/files.7z")
+    lnkMap = {
+        "Icon": e9_text,
+        "Name": e8_text,
+        "MimeType": e10_text
+    }
+    # 读 desktop 文件
+    if os.path.exists(f"{path}/opt/apps/{package}/entries/applications"):
+        filePath = f"{path}/opt/apps/{package}/entries/applications/{os.listdir(f'{path}/opt/apps/{package}/entries/applications')[0]}"
+        file = open(filePath, "r")
+        items = file.read().splitlines()
+        file.close()
+        for i in items:
+            # 按行解析
+            if i.replace(" ", "").replace("\n", "") == "":
+                # 空行，忽略
+                continue
+            # 忽略注释
+            line = i
+            if "#" in line:
+                line = line[:line.index("#")]
+            # 判断是否合法
+            try:
+                name = line[:line.index("=")].strip()
+                value = line[line.index("=") + 1:]#.replace("\"", "").strip()
+                if name in lnkMap:
+                    lnkMap[name].setText(value)
+                    continue
+                # 其它的特殊情况判断
+                if name == "Exec":
+                    value = value[value.index(".sh") + 3:].strip()
+                    if value[0] == "\"":
+                        value = value[1:].strip()
+                    # helper
+                    e15_text.setText(value)
+                if name == "Categories":
+                    option1_text.setCurrentText(value)
+            except:
+                print(f"忽略行：{i}")
+    lnkMap = {
+        "BOTTLENAME": e5_text,
+        "EXEC_PATH": e7_text
+        #"APPRUN_CMD"
+    }
+    # 读 run.sh
+    if os.path.exists(f"{path}/opt/apps/{package}/files/run.sh"):
+        file = open(f"{path}/opt/apps/{package}/files/run.sh", "r")
+        items = file.read().splitlines()
+        file.close()
+        for i in items:
+            # 按行解析
+            if i.replace(" ", "").replace("\n", "") == "":
+                # 空行，忽略
+                continue
+            # 忽略 export
+            line = i.replace("export ", "")
+            # 忽略注释
+            if "#" in line:
+                line = line[:line.index("#")]
+            # 判断是否合法
+            try:
+                name = line[:line.index("=")].strip()
+                value = line[line.index("=") + 1:].replace("\"", "").strip()
+                #lnkMap[name].setText(value)
+                if name in lnkMap:
+                    lnkMap[name].setText(value)
+                    continue
+                # 其它的特殊情况判断
+                if name == "START_SHELL_PATH" and value == "/opt/deepinwine/tools/spark_run_v4.sh":
+                    # helper
+                    chooseWineHelperValue.setChecked(True)
+                if name == "APPRUN_CMD" and value in wineValue:
+                    wineVersion.setCurrentText(wineValue[dependsItem])
+            except:
+                print(f"忽略行：{i}")
+
+
+
 ###############
 # 程序信息
 ###############
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 # 如果要添加其他 wine，请在字典添加其名称和执行路径
 wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable": "deepin-wine6-stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine"}
+wineValue = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5-stable": "deepin-wine5 stable", "deepin-wine6-stable": "deepin-wine6 stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine"}
 # 读取 wine 本地列表
 for i in ["/opt/wine-staging", "/opt/wine-dev", "/opt/wine-stable", "/opt/spark-wine7-devel"]:
     if os.path.exists(i):
@@ -1228,12 +1399,19 @@ e12_text.textChanged.connect(UserPathSet)
 # 菜单栏
 menu = window.menuBar()
 programmenu = menu.addMenu(QtCore.QCoreApplication.translate("U", "程序"))
+debMenu = menu.addMenu(QtCore.QCoreApplication.translate("U", "deb 包"))
 help = menu.addMenu(QtCore.QCoreApplication.translate("U", "帮助"))
 exit = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "退出程序"))
+debE = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "只读取 Control 信息"))
+debX = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "读取所有（需解包，时间较久）"))
 tip = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "小提示"))
 exit.triggered.connect(window.close)
 tip.triggered.connect(helps)
 programmenu.addAction(exit)
+debMenu.addAction(debE)
+debMenu.addAction(debX)
+debE.triggered.connect(lambda: ReadDeb(False))
+debX.triggered.connect(lambda: ReadDeb(True))
 help.addAction(tip)
 # 控件配置
 try:
@@ -1250,3 +1428,4 @@ window.setWindowIcon(QtGui.QIcon(iconPath))
 window.resize(int(window.frameSize().width() * 2.1), window.frameSize().height())
 window.show()
 sys.exit(app.exec_())
+# Flag：解包只读control和解包全部读取
