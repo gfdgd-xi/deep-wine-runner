@@ -128,6 +128,7 @@ class QT:
         e1.setEditText(findExeHistory[-1])
 
 def DisableButton(things):
+    button_r_6.setDisabled(things)
     button1.setDisabled(things)
     button2.setDisabled(things)
     button3.setDisabled(things)
@@ -813,11 +814,11 @@ class UpdateWindow():
             ok.setDisabled(True)
         else:
             if "deepin/UOS 应用商店版本<带签名>" == programVersionType:
-                url = "aHR0cHM6Ly8zMDQ2MjZwOTI3LmdvaG8uY28vc3BhcmstZGVlcGluLXdpbmUtcnVubmVyL3VwZGF0ZS11b3MuanNvbg=="
+                url = "aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci91cGRhdGUtdW9zLmpzb24="
             elif "星火应用商店版本" == programVersionType:
-                url = "aHR0cHM6Ly8zMDQ2MjZwOTI3LmdvaG8uY28vc3BhcmstZGVlcGluLXdpbmUtcnVubmVyL3VwZGF0ZS1zcGFyay5qc29u"
+                url = "aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci91cGRhdGUtc3BhcmsuanNvbg=="
             else: 
-                url = "aHR0cHM6Ly8zMDQ2MjZwOTI3LmdvaG8uY28vc3BhcmstZGVlcGluLXdpbmUtcnVubmVyL3VwZGF0ZS5qc29u"
+                url = "aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci91cGRhdGUuanNvbg=="
             try:
                 UpdateWindow.data = json.loads(requests.get(base64.b64decode(url).decode("utf-8")).text)
                 versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：{UpdateWindow.data['Version']}\n更新内容：")
@@ -1155,8 +1156,8 @@ class ProgramRunStatusShow():
             return
         try:
             sha = ProgramRunStatusUpload.GetSHA1(e2.currentText())
-            lists = json.loads(requests.get(base64.b64decode("aHR0cHM6Ly8zMDQ2MjZwOTI3LmdvaG8uY28vc3BhcmstZGVlcGluLXdpbmUtcnVubmVyL2FwcC8=").decode("utf-8") + sha + base64.b64decode("L2FsbC5qc29u").decode("utf-8")).text)
-            r = requests.get(base64.b64decode("aHR0cHM6Ly8zMDQ2MjZwOTI3LmdvaG8uY28vc3BhcmstZGVlcGluLXdpbmUtcnVubmVyL2FwcC8=").decode("utf-8") + sha + base64.b64decode("L3RpdGxlLnR4dA==").decode("utf-8"))
+            lists = json.loads(requests.get(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9hcHAv").decode("utf-8") + sha + base64.b64decode("L2FsbC5qc29u").decode("utf-8")).text)
+            r = requests.get(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9hcHAv").decode("utf-8") + sha + base64.b64decode("L3RpdGxlLnR4dA==").decode("utf-8"))
             r.encoding = "utf-8"
             title = r.text
         except:
@@ -1793,6 +1794,7 @@ updateThingsString = '''※1、Dll 提取工具支持 NT 6.X 及以上版本的 
 13、不再强制依赖深度终端，只做推荐安装
 14、基于生态活动适配脚本的打包器在打包完成后会弹出对话框提示打包完成
 15、优化打包器的 spark wine helper 依赖设置方式
+16、新增 RegShot（注册表比对工具）
 <b>以下更新内容旧版本也适用（只限 2.1.0 及以上版本）</b>
 ※1、在“安装更多Wine”的Wine安装工具中上新 Wine
 ※2、云 Dll 工具上新 Dll
@@ -1832,7 +1834,7 @@ Qt 版本：{QtCore.qVersion()}
 title = "Wine 运行器 {}".format(version)
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 try:
-    threading.Thread(target=requests.get, args=[parse.unquote(base64.b64decode("aHR0cHM6Ly8zMDQ2MjZwOTI3LmdvaG8uY28vc3BhcmstZGVlcGluLXdpbmUtcnVubmVyL29wZW4vSW5zdGFsbC5waHA=").decode("utf-8")) + "?Version=" + version]).start()
+    threading.Thread(target=requests.get, args=[parse.unquote(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9vcGVuL0luc3RhbGwucGhw").decode("utf-8")) + "?Version=" + version]).start()
 except:
     pass
 iconListUnBuild = [
@@ -1962,8 +1964,8 @@ programManager.addWidget(wineConfig, 3, 0, 1, 1)
 fontAppStore = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "字体商店"))
 fontAppStore.clicked.connect(FontAppStore)
 programManager.addWidget(fontAppStore, 3, 2, 1, 1)
-button_r_6 = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "安装自定义字体"))
-button_r_6.clicked.connect(OpenWineFontPath)
+button_r_6 = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "RegShot"))
+button_r_6.clicked.connect(lambda: RunWineProgram(f"{programPath}/RegShot/regshot.exe"))
 programManager.addWidget(button_r_6, 3, 4, 1, 1)
 sparkWineSetting = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "星火wine配置"))
 sparkWineSetting.clicked.connect(lambda: threading.Thread(target=os.system, args=["/opt/durapps/spark-dwine-helper/spark-dwine-helper-settings/settings.sh"]).start())

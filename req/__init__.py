@@ -1,5 +1,5 @@
 # 此库用于实现 52 版不连接程序服务器
-import req as requests
+import requests
 
 unConnect = False
 with open("/var/lib/dpkg/status", "r") as i:

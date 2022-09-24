@@ -14,7 +14,7 @@ import shutil
 import sys
 import json
 import traceback
-import req as requests
+import requests
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 # UI 布局（自动生成）
