@@ -1,0 +1,66 @@
+CMake allows to create project and make files for many different compilers from
+a single source. This text will tell you how to create project files for RegShot.
+If your compiler is not explained here then check out CMake's good documentation
+at http://www.cmake.org/cmake/help/documentation.html
+
+First get CMake from http://www.cmake.org/ (Resources -> Download).
+On Windows either use the installer, or extract the zip to a folder which will
+contain the CMake folder and then add CMake's bin folder to your path.
+
+It is recommended to build out-of-source and not inside the source directory.
+
+The following commands use shell variables to allow re-using them via a script.
+
+
+Preparation for different compilers:
+====================================
+* set TDIR=vc6 & set CMGEN="Visual Studio 6"
+  "%ProgramFiles%\Microsoft Visual Studio\VC98\Bin\vcvars32.bat"
+
+* set TDIR=vc2002 & set CMGEN="Visual Studio 7"
+  "%ProgramFiles%\Microsoft Visual Studio .NET\VC7\bin\vcvars32.bat"
+
+* set TDIR=vc2003 & set CMGEN="Visual Studio 7 .NET 2003"
+  "%ProgramFiles%\Microsoft Visual Studio .NET 2003\VC7\bin\vcvars32.bat"
+
+* set TDIR=vc2005 & set CMGEN="Visual Studio 8 2005"
+  "%ProgramFiles%\Microsoft Visual Studio 8\VC\vcvarsall.bat"
+
+* set TDIR=vc2005-x64 & set CMGEN="Visual Studio 8 2005 Win64"
+  "%ProgramFiles%\Microsoft Visual Studio 8\VC\vcvarsall.bat"
+
+* set TDIR=vc2008 & set CMGEN="Visual Studio 9 2008"
+  "%ProgramFiles%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"
+
+* set TDIR=vc2008-x64 & set CMGEN="Visual Studio 9 2008 Win64"
+  "%ProgramFiles%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"
+
+* set TDIR=vc2010 & set CMGEN="Visual Studio 10"
+  "%ProgramFiles%\Microsoft Visual Studio 10.0\VC\vcvarsall.bat"
+
+* set TDIR=vc2010-x64 & set CMGEN="Visual Studio 10 Win64"
+  "%ProgramFiles%\Microsoft Visual Studio 10.0\VC\vcvarsall.bat"
+
+
+Creating project files:
+=======================
+* cd /d C:\Coding\Regshot\trunk
+* set CMOPTS=
+  Here you can set options to modify the resulting project files.
+  All options are listed in CMakeLists.txt and are normally self-explaining.
+  * Some important ones are:
+  -DMSVC_SHARED_RT=ON - link with shared runtime libs on MSVC
+  * Example:
+    set CMOPTS=-DMSVC_SHARED_RT=ON
+
+* mkdir bin\%TDIR%
+* cd bin\%TDIR%
+* del /s /q * & rmdir /s /q .
+* cmake %CMOPTS% -G %CMGEN% ..\..\build
+
+
+Tested compilers:
+=================
+VS 6 (32-Bit, Maddes, just remove DS_SHELLFONT from src/regshot.rc)
+VS 2002 (32-Bit, Maddes)
+VS 2008 (32-Bit & 64-Bit, Maddes)
