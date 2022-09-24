@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 2.1.0-2</h1>
+<h1 align="center">Wine 运行器 2.2.0</h1>
 <hr>
 
 ## 介绍
@@ -10,8 +10,8 @@ env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 让你可以简易方便的使用 wine  
 是使用 Python3 的 tkinter 构建的    
 （自己美术功底太差，图标只能在网络上找了）    
-（测试平台：deepin 20.6；UOS 家庭版 21.3.1；Ubuntu 22.04）    
-![截图_选择区域_20220826143213.png](https://storage.deepin.org/thread/202208261437088825_截图_选择区域_20220826143213.png)  
+（测试平台：deepin 20.7；UOS 家庭版 21.3.1；Ubuntu 22.04；UOS 专业版 1050）    
+![image.png](https://storage.deepin.org/thread/202209242126366137_image.png)  
 而打包器可以方便的把您的 wine 容器打包成 deb 包供他人使用，程序创建的 deb 构建临时文件夹目录树如下：  
 ```bash
 /XXX
@@ -85,6 +85,27 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志
+### 2.2.0（2022年09月24日）
+**※1、Dll 提取工具支持 NT 6.X 及以上版本的 Dll 提取并优化了提示文本**  
+**※2、支持卸载后自动删除缓存/配置文件（删除配置文件只限 purge 参数删除）**  
+**※3、DEBUG 模式输出更多信息以方便调试（原本只输出 pid、Err）**  
+**※4、支持安装 msi 文件**  
+**※5、修复无法正常评分的问题**  
+**※6、修复 QQ、TIM 安装后无法正常生成快捷方式的问题**  
+**※7、基于生态适配活动的打包器更换为 spark-wine-helper 以及添加自动删除残留脚本**  
+**※8、打包器支持从 deb 文件读取信息**  
+**※9、修复在 UOS 专业版（鲲鹏）无法正常运行的问题以及组件安装功能无法正常执行安装命令的问题**  
+**※10、修复出现星火应用商店和官方应用商店反复提示更新死循环的问题**  
+**※11、新增评分分数预测功能（不准）**  
+**※12、更换程序接口**  
+13、更新组件安装的离线列表  
+14、不再强制依赖深度终端，只做推荐安装  
+15、基于生态活动适配脚本的打包器在打包完成后会弹出对话框提示打包完成  
+16、优化打包器的 spark wine helper 依赖设置方式  
+17、新增 RegShot（注册表比对工具）  
+18、添加 Wine 运行器评分数据的搜索功能  
+![image.png](https://storage.deepin.org/thread/202209242126366137_image.png)  
+
 ### 2.1.0-2（2022年09月05日）
 **※1、修复终端调用问题**  
 
