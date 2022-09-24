@@ -18,11 +18,11 @@ import base64
 import shutil
 import hashlib
 import platform
-import requests
 import threading
 import traceback
 import webbrowser
 import subprocess
+import req as requests
 import urllib.parse as parse
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
@@ -1174,6 +1174,7 @@ class ProgramRunStatusShow():
                 return
             if choose == 1:
                 ProgramRunStatusUpload.ShowWindow(sha)
+                return
             if choose == 2:
                 try:
                     lists = [0, 0, 0, 0, 0, 0, 0, 0]
@@ -1184,8 +1185,7 @@ class ProgramRunStatusShow():
                 except:
                     traceback.print_exc()
                     QtWidgets.QMessageBox.critical(window, "错误", "无法获取预测数值")
-        #        QtWidgets.QMessageBox.information(None, "提示", "必须选择一个选项！否则无法进入程序！")
-        #        sys.exit()            
+                    return        
             
             
         informationList = [
@@ -1198,10 +1198,11 @@ class ProgramRunStatusShow():
             "含有不良内容，不宜安装",
             "含有病毒、木马等对计算机有害的软件"
         ]
-        
-        if title.lower() == "null":
+        try:
+            if title.lower() == "null":
+                title = "未知应用"
+        except:
             title = "未知应用"
-        
         maxHead = lists.index(max(lists))
         ProgramRunStatusShow.msgWindow = QtWidgets.QMainWindow()
         msgWidget = QtWidgets.QWidget()
@@ -1594,7 +1595,7 @@ try:
     canUseWine = []
     if os.path.exists("/opt/deepin-box86/box86"):
         canUseWine.append("基于 box86 的 deepin-wine6-stable")
-    if not os.path.exists("/opt/exagear/bin/ubt_x64a64_al"):
+    if os.path.exists("/opt/exagear/bin/ubt_x64a64_al"):
         canUseWine.append("基于 exagear 的 deepin-wine6-stable")
     for i in wine.keys():
         if not os.system(f"which '{wine[i]}'"):
@@ -1708,6 +1709,10 @@ def GetVersion():
         fileName = file.read().splitlines()
         package = False
         for i in range(0, len(fileName)):
+            if fileName[i] == "Package: spark-deepin-wine-runner-52":
+                programVersionType = "吾爱专版"
+                window.setWindowTitle(f"{title} 吾爱专版")
+                break
             if fileName[i] == "Package: spark-deepin-wine-runner":
                 package = True
                 continue
@@ -1795,7 +1800,7 @@ updateThingsString = '''※1、Dll 提取工具支持 NT 6.X 及以上版本的 
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年09月11日"
+updateTime = "2022年09月22日"
 about = f'''<h1>关于</h1>
 <p>一个能让Linux用户更加方便运行Windows应用的程序，内置了对wine图形化的支持和各种Wine工具和自制Wine程序打包器、运行库安装工具等等</p>
 <p>同时也内置了基于VirtualBox制作的小白Windows虚拟机安装工具，可以做到只需要用户下载系统镜像并点击安装即可，无需顾及虚拟机安装、创建、虚拟机的分区等等</p>
@@ -1849,8 +1854,6 @@ iconList = [
 for i in iconListUnBuild:
     iconList.append(i)
 print(iconList)
-# 异同步获取信息
-threading.Thread(target=GetVersion).start()
 
 ###########################
 # 窗口创建
@@ -1864,6 +1867,9 @@ if not get_now_lang() == "zh_CN.UTF-8":
     trans.load(f"{programPath}/LANG/deepin-wine-runner-en_US.qm")
     app.installTranslator(trans)
 window = QtWidgets.QMainWindow()
+window.setWindowTitle(title)
+# 异同步获取信息
+threading.Thread(target=GetVersion).start()
 widget = QtWidgets.QWidget()
 window.setCentralWidget(widget)
 mainLayout = QtWidgets.QGridLayout()
@@ -2250,7 +2256,6 @@ hm1_1.triggered.connect(lambda: webbrowser.open_new_tab("https://gitee.com/gfdgd
 # 窗口设置
 window.resize(widget.frameGeometry().width() * 2, widget.frameGeometry().height())
 widget.setLayout(mainLayout)
-window.setWindowTitle(title)
 window.setWindowIcon(QtGui.QIcon(f"{programPath}/deepin-wine-runner.svg"))
 widget.show()
 window.show()

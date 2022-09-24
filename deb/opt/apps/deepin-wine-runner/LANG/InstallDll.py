@@ -14,7 +14,7 @@ import os
 import sys
 import json
 import traceback
-import requests
+import req as requests
 def exit():
     if __name__ == "__main__":
         input("按回车键退出")

@@ -13,7 +13,7 @@
 import os
 import sys
 import json
-import requests
+import req as requests
 try:
     netList = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/vscpp/list.json").text)
 except:

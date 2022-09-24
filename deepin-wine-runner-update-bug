@@ -3,7 +3,7 @@ import os
 import sys
 import json
 import base64
-import requests
+import req as requests
 import traceback
 import webbrowser
 import urllib.parse as parse

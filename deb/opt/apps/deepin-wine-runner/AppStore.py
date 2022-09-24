@@ -14,7 +14,7 @@ import os
 import sys
 import json
 import pyquery
-import requests
+import req as requests
 import urllib.parse as parse
 
 def CleanTerminal():

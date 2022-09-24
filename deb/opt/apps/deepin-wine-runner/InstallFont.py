@@ -14,7 +14,7 @@ import os
 import sys
 import json
 import shutil
-import requests
+import req as requests
 homePath = os.path.expanduser('~')
 try:
     fontList = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/fonts/list.json").text)

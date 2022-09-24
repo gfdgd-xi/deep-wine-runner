@@ -13,7 +13,7 @@
 import os
 import sys
 import json
-import requests
+import req as requests
 try:
     msxmlList = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/msxml/list.json").text)
 except:
