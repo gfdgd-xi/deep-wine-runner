@@ -1,14 +1,10 @@
 [Desktop Entry]
 Type=Application
-Encoding=UTF-8
-Categories=System;Wine;
-Version=1.7.0
+X-Categories=System;Wine;
 Exec=/usr/bin/deepin-wine-runner %F
 Icon=/opt/apps/deepin-wine-runner/deepin-wine-runner.svg
 Name=Wine Runner
 Name[zh]=Wine 运行器
-Comment=Wine Runner
-Comment[zh]=Wine 运行器
 Terminal=false
 StartupNotify=true
-MimeType=application/vnd.microsoft.portable-executable;application/x-dosexec;application/x-msi;application-x-executable;application/application-x-ms-dos-executable;application/application-x-msdownload;application/octet-stream
+X-application-x-executable=application/vnd.microsoft.portable-executable;application/x-dosexec;application/x-msi;application-x-executable;application/application-x-ms-dos-executable;application/application-x-msdownload;application/octet-stream
