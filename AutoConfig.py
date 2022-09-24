@@ -14,7 +14,7 @@ import os
 import sys
 import json
 import traceback
-import requests
+import req as requests
 import PyQt5.QtWidgets as QtWidgets
 from UI.AutoConfig import *
 from Model import *

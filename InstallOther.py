@@ -13,7 +13,7 @@
 import os
 import sys
 import json
-import requests
+import req as requests
 
 if "--help" in sys.argv:
     print("作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢")

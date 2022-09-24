@@ -16,7 +16,7 @@ import time
 import json
 import shutil
 import easygui
-import requests
+import req as requests
 import threading
 import traceback
 import ttkthemes
