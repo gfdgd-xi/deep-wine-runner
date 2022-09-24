@@ -1,5 +1,5 @@
 Package: spark-deepin-wine-runner
-Version: 2.2.0-Alpha4
+Version: 2.2.0-spark
 Maintainer: gfdgd xi <3025613752@qq.com>, 为什么您不喜欢熊出没和阿布呢
 Homepage: https://gitee.com/gfdgd-xi/deep-wine-runner, https://github.com/gfdgd-xi/deep-wine-runner, https://gitlink.org.cn/gfdgd_xi/deep-wine-runner
 Architecture: all
@@ -9,25 +9,30 @@ Recommends: winbind
 Section: utils
 Conflicts: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, spark-deepin-wine-runner-52
 Replaces: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, spark-deepin-wine-runner-52
-Installed-Size: 25152
+Installed-Size: 26500
 Description: gfdgd xi、为什么您不喜欢熊出没和阿布呢 制作的 wine 运行器
- 2.1.0-1 更新内容：
- ※1、删除多余图标
- ※2、修复将打包文件生成目录设置为 / 等重要目录导致删库的问题
- 3、修复了打包器浏览按钮闪退、生成的 postrm 有误的问题
- 4、支持在输入信息时自动生成 deb 保存路径
- 2.1.0 更新内容：
- ※1、新增新的 Wine 安装器，并支持将安装的 Wine 打包到 Wine 程序 deb 包中
- ※2、Wine 打包器打包 Windows 应用支持将 Wine 打包入 deb 内，可以不依赖 Wine（一般不推荐把 Wine 打包入内，推荐用依赖的形式），并支持设置自定义依赖和生成模板
- ※3、开始初步多语言支持
- ※4、修复了在没有安装任何 Wine 的情况下使用高级功能导致程序闪退的问题
- ※5、支持云端自动获取数据配置 Wine 容器
- ※6、支持手动导入配置文件自动配置 Wine 容器
- ※7、新增从云端下载 Dll 的功能
- ※8、修复了 Dll 提取工具不会在 winecfg 中添加原装的问题
- 9、修改错别字（图形话=>图形化）
- 10、修复评分功能名称为空也可以上传评分的问题
- 11、去除 toilet 依赖，使在 Deepin 23 Preview 上运行更佳
- 12、支持删除所有由 Wine 创建的启动器快捷方式
- 更新时间：2022年08月26日
+ 2.2.0 更新内容：
+ ※1、Dll 提取工具支持 NT 6.X 及以上版本的 Dll 提取并优化了提示文本
+ ※2、支持卸载后自动删除缓存/配置文件（删除配置文件只限 purge 参数删除）
+ ※3、DEBUG 模式输出更多信息以方便调试（原本只输出 pid、Err）
+ ※4、支持安装 msi 文件
+ ※5、修复无法正常评分的问题
+ ※6、修复 QQ、TIM 安装后无法正常生成快捷方式的问题
+ ※7、基于生态适配活动的打包器更换为 spark-wine-helper 以及添加自动删除残留脚本
+ ※8、打包器支持从 deb 文件读取信息
+ ※9、修复在 UOS 专业版（鲲鹏）无法正常运行的问题以及组件安装功能无法正常执行安装命令的问题
+ ※10、修复出现星火应用商店和官方应用商店反复提示更新死循环的问题
+ ※11、新增评分分数预测功能（不准）
+ ※12、更换程序接口
+ 13、更新组件安装的离线列表
+ 14、不再强制依赖深度终端，只做推荐安装
+ 15、基于生态活动适配脚本的打包器在打包完成后会弹出对话框提示打包完成
+ 16、优化打包器的 spark wine helper 依赖设置方式
+ 17、新增 RegShot（注册表比对工具）
+ 18、添加 Wine 运行器评分数据的搜索功能
+ 以下更新内容旧版本也适用（只限 2.1.0 及以上版本）：
+ ※1、在“安装更多Wine”的Wine安装工具中上新 Wine
+ ※2、云 Dll 工具上新 Dll
+ ※3、VCPP、net 运行库安装工具新增运行库
+ 更新时间：2022年09月24日
  作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢

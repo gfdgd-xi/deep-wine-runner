@@ -1,5 +1,5 @@
 {
-    "Version": "2.2.0-Alpha3",
+    "Version": "2.2.0",
     "Thank": [
         "感谢 @a2035274 @虚幻的早晨 https://bbs.deepin.org/post/238301",
         "感谢 @zhangs https://bbs.deepin.org/post/227948",
@@ -23,6 +23,10 @@
         "感谢 @云的眼泪 @zhengjl 反馈的 2.0.0 发布忘记把安装包传蓝奏云的问题",
         "感谢 @虚幻的早晨 提出的添加 DXVK、VKD3D 的功能（VKD3D 暂未实现）",
         "感谢 @以勒 修改 Dll 提取工具提示文本的建议",
+        "感谢 @历山居士 反馈的获取自动配置容器脚本工具无法正常加载数据的问题",
+        "感谢 @Nick @奋斗ing 反馈的 2.1.0-2 的快捷方式故障",
+        "感谢 @俊生鹏程 反馈的 2.1.0-2 及以前版本在鲲鹏运行 wine 错误的问题并积极测试，以及组件安装工具在 arm 架构的异常",
+        "感谢 @云的眼泪 反馈的 2.1.0-2 更新死循环的问题，可见：https://bbs.deepin.org/post/243241，以及感谢 @神末shenmo @忘记、过去 和 @历山居士 的讨论",
         "感谢统信在 Wine 生态适配活动中提供的打包脚本",
         "也感谢 DXVK 的开发者开发了 DXVK 这个程序，项目链接：https://github.com/doitsujin/dxvk",
         "也感谢 WineHQ 开发团队开发的 WineHQ，项目网址：https://dl.winehq.org/",

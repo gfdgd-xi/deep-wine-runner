@@ -1,0 +1,1012 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="512"
+   height="512"
+   viewBox="0 0 512 512"
+   version="1.1"
+   id="svg256"
+   sodipodi:docname="compressor.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata260">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1600"
+     inkscape:window-height="860"
+     id="namedview258"
+     showgrid="false"
+     inkscape:zoom="0.4609375"
+     inkscape:cx="256"
+     inkscape:cy="256"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg256" />
+  <defs
+     id="defs196">
+    <filter
+       id="deepin-archive-manager-a"
+       width="124%"
+       height="127.8%"
+       x="-12%"
+       y="-13.8%"
+       filterUnits="objectBoundingBox">
+      <feOffset
+         dy="8"
+         in="SourceAlpha"
+         result="shadowOffsetOuter1"
+         id="feOffset2" />
+      <feGaussianBlur
+         in="shadowOffsetOuter1"
+         result="shadowBlurOuter1"
+         stdDeviation="10"
+         id="feGaussianBlur4" />
+      <feComposite
+         in="shadowBlurOuter1"
+         in2="SourceAlpha"
+         operator="out"
+         result="shadowBlurOuter1"
+         id="feComposite6" />
+      <feColorMatrix
+         in="shadowBlurOuter1"
+         result="shadowMatrixOuter1"
+         values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.2 0"
+         id="feColorMatrix8" />
+      <feMerge
+         id="feMerge14">
+        <feMergeNode
+           in="shadowMatrixOuter1"
+           id="feMergeNode10" />
+        <feMergeNode
+           in="SourceGraphic"
+           id="feMergeNode12" />
+      </feMerge>
+    </filter>
+    <linearGradient
+       id="deepin-archive-manager-b"
+       x1="50%"
+       x2="50%"
+       y1="4.032%"
+       y2="61.468%">
+      <stop
+         offset="0%"
+         stop-color="#FF7253"
+         id="stop17" />
+      <stop
+         offset="100%"
+         stop-color="#FD3A80"
+         id="stop19" />
+    </linearGradient>
+    <rect
+       id="deepin-archive-manager-c"
+       width="450"
+       height="130"
+       x="0"
+       y="0"
+       rx="31.36" />
+    <filter
+       id="deepin-archive-manager-d"
+       width="100.9%"
+       height="103.1%"
+       x="-.4%"
+       y="-1.5%"
+       filterUnits="objectBoundingBox">
+      <feOffset
+         dy="4"
+         in="SourceAlpha"
+         result="shadowOffsetInner1"
+         id="feOffset23" />
+      <feComposite
+         in="shadowOffsetInner1"
+         in2="SourceAlpha"
+         k2="-1"
+         k3="1"
+         operator="arithmetic"
+         result="shadowInnerInner1"
+         id="feComposite25" />
+      <feColorMatrix
+         in="shadowInnerInner1"
+         result="shadowMatrixInner1"
+         values="0 0 0 0 1   0 0 0 0 0.818966124   0 0 0 0 0.615720274  0 0 0 0.31678868 0"
+         id="feColorMatrix27" />
+      <feOffset
+         dy="-4"
+         in="SourceAlpha"
+         result="shadowOffsetInner2"
+         id="feOffset29" />
+      <feComposite
+         in="shadowOffsetInner2"
+         in2="SourceAlpha"
+         k2="-1"
+         k3="1"
+         operator="arithmetic"
+         result="shadowInnerInner2"
+         id="feComposite31" />
+      <feColorMatrix
+         in="shadowInnerInner2"
+         result="shadowMatrixInner2"
+         values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.173896416 0"
+         id="feColorMatrix33" />
+      <feMerge
+         id="feMerge39">
+        <feMergeNode
+           in="shadowMatrixInner1"
+           id="feMergeNode35" />
+        <feMergeNode
+           in="shadowMatrixInner2"
+           id="feMergeNode37" />
+      </feMerge>
+    </filter>
+    <linearGradient
+       id="deepin-archive-manager-e"
+       x1="50%"
+       x2="50%"
+       y1=".726%"
+       y2="48.178%">
+      <stop
+         offset="0%"
+         stop-color="#1B85D5"
+         id="stop42" />
+      <stop
+         offset="100%"
+         stop-color="#0762FF"
+         id="stop44" />
+    </linearGradient>
+    <rect
+       id="deepin-archive-manager-f"
+       width="450"
+       height="130"
+       x="0"
+       y="130"
+       rx="31.36" />
+    <filter
+       id="deepin-archive-manager-g"
+       width="100.9%"
+       height="103.1%"
+       x="-.4%"
+       y="-1.5%"
+       filterUnits="objectBoundingBox">
+      <feOffset
+         dy="4"
+         in="SourceAlpha"
+         result="shadowOffsetInner1"
+         id="feOffset48" />
+      <feComposite
+         in="shadowOffsetInner1"
+         in2="SourceAlpha"
+         k2="-1"
+         k3="1"
+         operator="arithmetic"
+         result="shadowInnerInner1"
+         id="feComposite50" />
+      <feColorMatrix
+         in="shadowInnerInner1"
+         result="shadowMatrixInner1"
+         values="0 0 0 0 0.638429995   0 0 0 0 0.734341815   0 0 0 0 0.990036232  0 0 0 0.5 0"
+         id="feColorMatrix52" />
+      <feOffset
+         dy="-4"
+         in="SourceAlpha"
+         result="shadowOffsetInner2"
+         id="feOffset54" />
+      <feComposite
+         in="shadowOffsetInner2"
+         in2="SourceAlpha"
+         k2="-1"
+         k3="1"
+         operator="arithmetic"
+         result="shadowInnerInner2"
+         id="feComposite56" />
+      <feColorMatrix
+         in="shadowInnerInner2"
+         result="shadowMatrixInner2"
+         values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.1 0"
+         id="feColorMatrix58" />
+      <feMerge
+         id="feMerge64">
+        <feMergeNode
+           in="shadowMatrixInner1"
+           id="feMergeNode60" />
+        <feMergeNode
+           in="shadowMatrixInner2"
+           id="feMergeNode62" />
+      </feMerge>
+    </filter>
+    <linearGradient
+       id="deepin-archive-manager-h"
+       x1="50%"
+       x2="50%"
+       y1="0%"
+       y2="65.425%">
+      <stop
+         offset="0%"
+         stop-color="#3BBF8B"
+         id="stop67" />
+      <stop
+         offset="100%"
+         stop-color="#028D76"
+         id="stop69" />
+    </linearGradient>
+    <rect
+       id="deepin-archive-manager-i"
+       width="450"
+       height="130"
+       x="0"
+       y="260"
+       rx="31.36" />
+    <filter
+       id="deepin-archive-manager-j"
+       width="100.9%"
+       height="103.1%"
+       x="-.4%"
+       y="-1.5%"
+       filterUnits="objectBoundingBox">
+      <feOffset
+         dy="4"
+         in="SourceAlpha"
+         result="shadowOffsetInner1"
+         id="feOffset73" />
+      <feComposite
+         in="shadowOffsetInner1"
+         in2="SourceAlpha"
+         k2="-1"
+         k3="1"
+         operator="arithmetic"
+         result="shadowInnerInner1"
+         id="feComposite75" />
+      <feColorMatrix
+         in="shadowInnerInner1"
+         result="shadowMatrixInner1"
+         values="0 0 0 0 0.777637435   0 0 0 0 1   0 0 0 0 0.760918445  0 0 0 0.172694493 0"
+         id="feColorMatrix77" />
+      <feOffset
+         dy="-4"
+         in="SourceAlpha"
+         result="shadowOffsetInner2"
+         id="feOffset79" />
+      <feComposite
+         in="shadowOffsetInner2"
+         in2="SourceAlpha"
+         k2="-1"
+         k3="1"
+         operator="arithmetic"
+         result="shadowInnerInner2"
+         id="feComposite81" />
+      <feColorMatrix
+         in="shadowInnerInner2"
+         result="shadowMatrixInner2"
+         values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.13786604 0"
+         id="feColorMatrix83" />
+      <feMerge
+         id="feMerge89">
+        <feMergeNode
+           in="shadowMatrixInner1"
+           id="feMergeNode85" />
+        <feMergeNode
+           in="shadowMatrixInner2"
+           id="feMergeNode87" />
+      </feMerge>
+    </filter>
+    <linearGradient
+       id="deepin-archive-manager-m"
+       x1="50%"
+       x2="50%"
+       y1="0%"
+       y2="100%">
+      <stop
+         offset="0%"
+         stop-color="#4C4D52"
+         id="stop92" />
+      <stop
+         offset="100%"
+         stop-color="#27282C"
+         id="stop94" />
+    </linearGradient>
+    <path
+       id="deepin-archive-manager-l"
+       d="M356.08,0 C358.244956,-3.97696006e-16 360,1.75504378 360,3.92 L360,388.08 C360,390.244956 358.244956,392 356.08,392 L287.615652,392 C285.450696,392 283.695652,390.244956 283.695652,388.08 L283.695652,3.92 C283.695652,1.75504378 285.450696,1.63849076e-14 287.615652,0 L356.08,0 Z M321.847826,288.689655 C316.58011,288.689655 312.309783,293.012423 312.309783,298.344828 C312.309783,303.677232 316.58011,308 321.847826,308 C327.115542,308 331.38587,303.677232 331.38587,298.344828 C331.38587,293.012423 327.115542,288.689655 321.847826,288.689655 Z M321.847826,201.793103 C316.58011,201.793103 312.309783,206.115871 312.309783,211.448276 C312.309783,216.78068 316.58011,221.103448 321.847826,221.103448 C327.115542,221.103448 331.38587,216.78068 331.38587,211.448276 C331.38587,206.115871 327.115542,201.793103 321.847826,201.793103 Z M321.847826,111.034483 C316.58011,111.034483 312.309783,115.357251 312.309783,120.689655 C312.309783,126.02206 316.58011,130.344828 321.847826,130.344828 C327.115542,130.344828 331.38587,126.02206 331.38587,120.689655 C331.38587,115.357251 327.115542,111.034483 321.847826,111.034483 Z" />
+    <filter
+       id="deepin-archive-manager-k"
+       width="102.6%"
+       height="100.5%"
+       x="-.7%"
+       y="-.1%"
+       filterUnits="objectBoundingBox">
+      <feOffset
+         dx="1"
+         dy="1"
+         in="SourceAlpha"
+         result="shadowOffsetOuter1"
+         id="feOffset98" />
+      <feColorMatrix
+         in="shadowOffsetOuter1"
+         values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.0816761364 0"
+         id="feColorMatrix100" />
+    </filter>
+    <linearGradient
+       id="deepin-archive-manager-n"
+       x1="50%"
+       x2="50%"
+       y1="0%"
+       y2="100%">
+      <stop
+         offset="0%"
+         stop-color="#37393E"
+         id="stop103" />
+      <stop
+         offset="100%"
+         stop-color="#2A2C30"
+         id="stop105" />
+    </linearGradient>
+    <path
+       id="deepin-archive-manager-o"
+       d="M356.08,1.96984925 C358.244956,1.96984925 360,3.72489303 360,5.88984925 L360,386.110151 C360,388.275107 358.244956,390.030151 356.08,390.030151 L287.615652,390.030151 C285.450696,390.030151 283.695652,388.275107 283.695652,386.110151 L283.695652,5.88984925 C283.695652,3.72489303 285.450696,1.96984925 287.615652,1.96984925 L356.08,1.96984925 Z M321.847826,288.671117 C316.58011,288.671117 312.309783,292.99302 312.309783,298.324358 C312.309783,303.655696 316.58011,307.977599 321.847826,307.977599 C327.115542,307.977599 331.38587,303.655696 331.38587,298.324358 C331.38587,292.99302 327.115542,288.671117 321.847826,288.671117 Z M321.847826,201.791945 C316.58011,201.791945 312.309783,206.113848 312.309783,211.445186 C312.309783,216.776524 316.58011,221.098427 321.847826,221.098427 C327.115542,221.098427 331.38587,216.776524 331.38587,211.445186 C331.38587,206.113848 327.115542,201.791945 321.847826,201.791945 Z M321.847826,111.051476 C316.58011,111.051476 312.309783,115.37338 312.309783,120.704718 C312.309783,126.036056 316.58011,130.357959 321.847826,130.357959 C327.115542,130.357959 331.38587,126.036056 331.38587,120.704718 C331.38587,115.37338 327.115542,111.051476 321.847826,111.051476 Z" />
+    <filter
+       id="deepin-archive-manager-p"
+       width="101.3%"
+       height="100.3%"
+       x="-.7%"
+       y="-.1%"
+       filterUnits="objectBoundingBox">
+      <feOffset
+         dy="-1"
+         in="SourceAlpha"
+         result="shadowOffsetInner1"
+         id="feOffset109" />
+      <feComposite
+         in="shadowOffsetInner1"
+         in2="SourceAlpha"
+         k2="-1"
+         k3="1"
+         operator="arithmetic"
+         result="shadowInnerInner1"
+         id="feComposite111" />
+      <feColorMatrix
+         in="shadowInnerInner1"
+         result="shadowMatrixInner1"
+         values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.07 0"
+         id="feColorMatrix113" />
+      <feOffset
+         dy="1"
+         in="SourceAlpha"
+         result="shadowOffsetInner2"
+         id="feOffset115" />
+      <feComposite
+         in="shadowOffsetInner2"
+         in2="SourceAlpha"
+         k2="-1"
+         k3="1"
+         operator="arithmetic"
+         result="shadowInnerInner2"
+         id="feComposite117" />
+      <feColorMatrix
+         in="shadowInnerInner2"
+         result="shadowMatrixInner2"
+         values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.106807255 0"
+         id="feColorMatrix119" />
+      <feMerge
+         id="feMerge125">
+        <feMergeNode
+           in="shadowMatrixInner1"
+           id="feMergeNode121" />
+        <feMergeNode
+           in="shadowMatrixInner2"
+           id="feMergeNode123" />
+      </feMerge>
+    </filter>
+    <linearGradient
+       id="deepin-archive-manager-s"
+       x1="50%"
+       x2="50%"
+       y1="0%"
+       y2="99.52%">
+      <stop
+         offset="0%"
+         stop-color="#EEE"
+         id="stop128" />
+      <stop
+         offset="100%"
+         stop-color="#AFAFAF"
+         id="stop130" />
+    </linearGradient>
+    <path
+       id="deepin-archive-manager-r"
+       d="M365.855652,82.7336683 C370.185565,82.7336683 373.695652,86.2437559 373.695652,90.5736683 L373.695652,163.536884 C373.695652,167.866797 370.185565,171.376884 365.855652,171.376884 L278.818261,171.376884 C274.488348,171.376884 270.978261,167.866797 270.978261,163.536884 L270.978261,90.5736683 C270.978261,86.2437559 274.488348,82.7336683 278.818261,82.7336683 L365.855652,82.7336683 Z M349.802826,102.967446 L294.871087,102.967446 C292.706131,102.967446 290.951087,104.72249 290.951087,106.887446 L290.951087,106.887446 L290.951087,148.18662 C290.951087,150.351576 292.706131,152.10662 294.871087,152.10662 L294.871087,152.10662 L349.802826,152.10662 C351.967782,152.10662 353.722826,150.351576 353.722826,148.18662 L353.722826,148.18662 L353.722826,106.887446 C353.722826,104.72249 351.967782,102.967446 349.802826,102.967446 L349.802826,102.967446 Z" />
+    <filter
+       id="deepin-archive-manager-q"
+       width="107.8%"
+       height="109%"
+       x="-3.9%"
+       y="-2.3%"
+       filterUnits="objectBoundingBox">
+      <feOffset
+         dy="2"
+         in="SourceAlpha"
+         result="shadowOffsetOuter1"
+         id="feOffset134" />
+      <feGaussianBlur
+         in="shadowOffsetOuter1"
+         result="shadowBlurOuter1"
+         stdDeviation="1"
+         id="feGaussianBlur136" />
+      <feColorMatrix
+         in="shadowBlurOuter1"
+         values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.10270979 0"
+         id="feColorMatrix138" />
+    </filter>
+    <filter
+       id="deepin-archive-manager-t"
+       width="105.8%"
+       height="106.8%"
+       x="-2.9%"
+       y="-1.1%"
+       filterUnits="objectBoundingBox">
+      <feOffset
+         dy="2"
+         in="SourceAlpha"
+         result="shadowOffsetInner1"
+         id="feOffset141" />
+      <feComposite
+         in="shadowOffsetInner1"
+         in2="SourceAlpha"
+         k2="-1"
+         k3="1"
+         operator="arithmetic"
+         result="shadowInnerInner1"
+         id="feComposite143" />
+      <feColorMatrix
+         in="shadowInnerInner1"
+         result="shadowMatrixInner1"
+         values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.41482736 0"
+         id="feColorMatrix145" />
+      <feOffset
+         dy="-2"
+         in="SourceAlpha"
+         result="shadowOffsetInner2"
+         id="feOffset147" />
+      <feComposite
+         in="shadowOffsetInner2"
+         in2="SourceAlpha"
+         k2="-1"
+         k3="1"
+         operator="arithmetic"
+         result="shadowInnerInner2"
+         id="feComposite149" />
+      <feColorMatrix
+         in="shadowInnerInner2"
+         result="shadowMatrixInner2"
+         values="0 0 0 0 0.472118433   0 0 0 0 0.472118433   0 0 0 0 0.472118433  0 0 0 0.3105059 0"
+         id="feColorMatrix151" />
+      <feMerge
+         id="feMerge157">
+        <feMergeNode
+           in="shadowMatrixInner1"
+           id="feMergeNode153" />
+        <feMergeNode
+           in="shadowMatrixInner2"
+           id="feMergeNode155" />
+      </feMerge>
+    </filter>
+    <linearGradient
+       id="deepin-archive-manager-w"
+       x1="50%"
+       x2="50%"
+       y1="1.673%"
+       y2="100%">
+      <stop
+         offset="0%"
+         stop-color="#EAEAEA"
+         id="stop160" />
+      <stop
+         offset="31.25%"
+         stop-color="#F3F3F3"
+         id="stop162" />
+      <stop
+         offset="67.742%"
+         stop-color="#D2D2D2"
+         id="stop164" />
+      <stop
+         offset="100%"
+         stop-color="#9F9F9F"
+         id="stop166" />
+    </linearGradient>
+    <path
+       id="deepin-archive-manager-v"
+       d="M325.755652,92.5829146 C327.379369,92.5829146 328.695652,93.8991974 328.695652,95.5229146 L328.695913,127.266518 C326.931352,128.963601 324.514162,130.01005 321.847826,130.01005 C319.181641,130.01005 316.764574,128.96372 315.000039,127.266806 L315,95.5229146 C315,93.8991974 316.316283,92.5829146 317.94,92.5829146 L325.755652,92.5829146 Z" />
+    <filter
+       id="deepin-archive-manager-u"
+       width="129.2%"
+       height="110.7%"
+       x="-14.6%"
+       y="-2.7%"
+       filterUnits="objectBoundingBox">
+      <feOffset
+         dy="1"
+         in="SourceAlpha"
+         result="shadowOffsetOuter1"
+         id="feOffset170" />
+      <feGaussianBlur
+         in="shadowOffsetOuter1"
+         result="shadowBlurOuter1"
+         stdDeviation=".5"
+         id="feGaussianBlur172" />
+      <feColorMatrix
+         in="shadowBlurOuter1"
+         values="0 0 0 0 0.636860281   0 0 0 0 0.636860281   0 0 0 0 0.636860281  0 0 0 0.13633632 0"
+         id="feColorMatrix174" />
+    </filter>
+    <filter
+       id="deepin-archive-manager-x"
+       width="129.2%"
+       height="110.7%"
+       x="-14.6%"
+       y="-2.7%"
+       filterUnits="objectBoundingBox">
+      <feOffset
+         dy="2"
+         in="SourceAlpha"
+         result="shadowOffsetInner1"
+         id="feOffset177" />
+      <feComposite
+         in="shadowOffsetInner1"
+         in2="SourceAlpha"
+         k2="-1"
+         k3="1"
+         operator="arithmetic"
+         result="shadowInnerInner1"
+         id="feComposite179" />
+      <feColorMatrix
+         in="shadowInnerInner1"
+         result="shadowMatrixInner1"
+         values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 1 0"
+         id="feColorMatrix181" />
+      <feOffset
+         dy="-2"
+         in="SourceAlpha"
+         result="shadowOffsetInner2"
+         id="feOffset183" />
+      <feComposite
+         in="shadowOffsetInner2"
+         in2="SourceAlpha"
+         k2="-1"
+         k3="1"
+         operator="arithmetic"
+         result="shadowInnerInner2"
+         id="feComposite185" />
+      <feColorMatrix
+         in="shadowInnerInner2"
+         result="shadowMatrixInner2"
+         values="0 0 0 0 0.255915987   0 0 0 0 0.255915987   0 0 0 0 0.255915987  0 0 0 0.120274257 0"
+         id="feColorMatrix187" />
+      <feMerge
+         id="feMerge193">
+        <feMergeNode
+           in="shadowMatrixInner1"
+           id="feMergeNode189" />
+        <feMergeNode
+           in="shadowMatrixInner2"
+           id="feMergeNode191" />
+      </feMerge>
+    </filter>
+    <clipPath
+       id="clip0">
+      <path
+         id="path262"
+         clip-rule="evenodd"
+         fill-rule="evenodd"
+         d="M858 199 1197 199 1197 538 858 538Z" />
+    </clipPath>
+    <clipPath
+       id="clip1">
+      <path
+         id="path265"
+         clip-rule="evenodd"
+         fill-rule="evenodd"
+         d="M859 199 1196 199 1196 537 859 537Z" />
+    </clipPath>
+    <clipPath
+       id="clip2">
+      <path
+         id="path268"
+         clip-rule="evenodd"
+         fill-rule="evenodd"
+         d="M859 199 1196 199 1196 537 859 537Z" />
+    </clipPath>
+    <clipPath
+       id="clip3">
+      <path
+         id="path271"
+         clip-rule="evenodd"
+         fill-rule="evenodd"
+         d="M859 199 1222 199 1222 544 859 544Z" />
+    </clipPath>
+    <clipPath
+       id="clip4">
+      <path
+         id="path274"
+         clip-rule="evenodd"
+         fill-rule="evenodd"
+         d="M859 199 1222 199 1222 544 859 544Z" />
+    </clipPath>
+    <clipPath
+       id="clip5">
+      <path
+         id="path277"
+         clip-rule="evenodd"
+         fill-rule="evenodd"
+         d="M878.26 224.409 1022 206.466 1059.23 506.391 915.49 524.333Z" />
+    </clipPath>
+    <clipPath
+       id="clip6">
+      <path
+         id="path280"
+         clip-rule="evenodd"
+         fill-rule="evenodd"
+         d="M878.26 224.409 1022 206.466 1059.23 506.391 915.49 524.333Z" />
+    </clipPath>
+    <clipPath
+       id="clip7">
+      <path
+         id="path283"
+         clip-rule="evenodd"
+         fill-rule="evenodd"
+         d="M796.938 234.56 1096.03 197.227 1133.26 497.152 834.166 534.484Z" />
+    </clipPath>
+    <clipPath
+       id="clip8">
+      <path
+         id="path286"
+         clip-rule="evenodd"
+         fill-rule="evenodd"
+         d="M903 225 1223 225 1223 545 903 545Z" />
+    </clipPath>
+    <clipPath
+       id="clip9">
+      <path
+         id="path289"
+         clip-rule="evenodd"
+         fill-rule="evenodd"
+         d="M903 225 1223 225 1223 545 903 545Z" />
+    </clipPath>
+    <image
+       id="img10"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,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"
+       height="159"
+       width="159" />
+    <clipPath
+       id="clip11">
+      <path
+         id="path293"
+         clip-rule="evenodd"
+         fill-rule="evenodd"
+         d="M0 0 319.194 0 319.194 319.194 0 319.194Z" />
+    </clipPath>
+    <clipPath
+       id="clip12">
+      <path
+         id="path296"
+         clip-rule="evenodd"
+         fill-rule="evenodd"
+         d="M949 271 1177 271 1177 499 949 499Z" />
+    </clipPath>
+    <clipPath
+       id="clip13">
+      <path
+         id="path299"
+         clip-rule="evenodd"
+         fill-rule="evenodd"
+         d="M949 271 1177 271 1177 499 949 499Z" />
+    </clipPath>
+    <clipPath
+       id="clip14">
+      <path
+         id="path302"
+         clip-rule="evenodd"
+         fill-rule="evenodd"
+         d="M949 271 1177 271 1177 499 949 499Z" />
+    </clipPath>
+  </defs>
+  <g
+     fill="none"
+     fill-rule="evenodd"
+     filter="url(#deepin-archive-manager-a)"
+     transform="translate(35 60)"
+     id="g254">
+    <use
+       fill="url(#deepin-archive-manager-b)"
+       xlink:href="#deepin-archive-manager-c"
+       id="use198" />
+    <use
+       fill="#000"
+       filter="url(#deepin-archive-manager-d)"
+       xlink:href="#deepin-archive-manager-c"
+       id="use200" />
+    <use
+       fill="url(#deepin-archive-manager-e)"
+       xlink:href="#deepin-archive-manager-f"
+       id="use202" />
+    <use
+       fill="#000"
+       filter="url(#deepin-archive-manager-g)"
+       xlink:href="#deepin-archive-manager-f"
+       id="use204" />
+    <use
+       fill="url(#deepin-archive-manager-h)"
+       xlink:href="#deepin-archive-manager-i"
+       id="use206" />
+    <use
+       fill="#000"
+       filter="url(#deepin-archive-manager-j)"
+       xlink:href="#deepin-archive-manager-i"
+       id="use208" />
+    <use
+       fill="#000"
+       filter="url(#deepin-archive-manager-k)"
+       xlink:href="#deepin-archive-manager-l"
+       id="use210" />
+    <use
+       fill="url(#deepin-archive-manager-m)"
+       xlink:href="#deepin-archive-manager-l"
+       id="use212" />
+    <use
+       fill="url(#deepin-archive-manager-n)"
+       xlink:href="#deepin-archive-manager-o"
+       id="use214" />
+    <use
+       fill="#000"
+       filter="url(#deepin-archive-manager-p)"
+       xlink:href="#deepin-archive-manager-o"
+       id="use216" />
+    <use
+       fill="#000"
+       filter="url(#deepin-archive-manager-q)"
+       xlink:href="#deepin-archive-manager-r"
+       id="use218" />
+    <use
+       fill="url(#deepin-archive-manager-s)"
+       xlink:href="#deepin-archive-manager-r"
+       id="use220" />
+    <use
+       fill="#000"
+       filter="url(#deepin-archive-manager-t)"
+       xlink:href="#deepin-archive-manager-r"
+       id="use222" />
+    <use
+       fill="#000"
+       filter="url(#deepin-archive-manager-u)"
+       xlink:href="#deepin-archive-manager-v"
+       id="use224" />
+    <use
+       fill="url(#deepin-archive-manager-w)"
+       xlink:href="#deepin-archive-manager-v"
+       id="use226" />
+    <use
+       fill="#000"
+       filter="url(#deepin-archive-manager-x)"
+       xlink:href="#deepin-archive-manager-v"
+       id="use228" />
+    <rect
+       width="56.739"
+       height="58.111"
+       x="32.283"
+       y="36.442"
+       fill="#000"
+       fill-opacity=".1"
+       rx="4.9"
+       id="rect230" />
+    <rect
+       width="68.478"
+       height="5.91"
+       x="103"
+       y="92"
+       fill="#000"
+       fill-opacity=".1"
+       rx=".98"
+       id="rect232" />
+    <rect
+       width="68.478"
+       height="5.91"
+       x="102.717"
+       y="218.653"
+       fill="#000"
+       fill-opacity=".1"
+       rx=".98"
+       id="rect234" />
+    <rect
+       width="68.478"
+       height="5.91"
+       x="102.717"
+       y="350.633"
+       fill="#000"
+       fill-opacity=".1"
+       rx=".98"
+       id="rect236" />
+    <rect
+       width="47.935"
+       height="5.91"
+       x="102.717"
+       y="76.824"
+       fill="#000"
+       fill-opacity=".1"
+       rx=".98"
+       id="rect238" />
+    <rect
+       width="47.935"
+       height="5.91"
+       x="102.717"
+       y="207.819"
+       fill="#000"
+       fill-opacity=".1"
+       rx=".98"
+       id="rect240" />
+    <rect
+       width="47.935"
+       height="5.91"
+       x="102.717"
+       y="338.814"
+       fill="#000"
+       fill-opacity=".1"
+       rx=".98"
+       id="rect242" />
+    <rect
+       width="47.935"
+       height="5.91"
+       x="102.717"
+       y="65.99"
+       fill="#000"
+       fill-opacity=".1"
+       rx=".98"
+       id="rect244" />
+    <rect
+       width="47.935"
+       height="5.91"
+       x="102.717"
+       y="196"
+       fill="#000"
+       fill-opacity=".1"
+       rx=".98"
+       id="rect246" />
+    <rect
+       width="47.935"
+       height="5.91"
+       x="102.717"
+       y="326.995"
+       fill="#000"
+       fill-opacity=".1"
+       rx=".98"
+       id="rect248" />
+    <rect
+       width="56.739"
+       height="58.111"
+       x="32.283"
+       y="167.437"
+       fill="#000"
+       fill-opacity=".1"
+       rx="4.9"
+       id="rect250" />
+    <rect
+       width="56.739"
+       height="58.111"
+       x="32.283"
+       y="298.432"
+       fill="#000"
+       fill-opacity=".1"
+       rx="4.9"
+       id="rect252" />
+  </g>
+  <g
+     style="overflow:hidden"
+     id="g396"
+     transform="matrix(0.59524695,0,0,0.59348352,310.80653,311.40257)">
+    <g
+       id="g341"
+       transform="translate(-858,-199)"
+       clip-path="url(#clip0)">
+      <g
+         id="g339"
+         clip-path="url(#clip1)">
+        <g
+           id="g337"
+           clip-path="url(#clip2)">
+          <g
+             id="g335"
+             clip-path="url(#clip3)">
+            <g
+               id="g333"
+               clip-path="url(#clip4)">
+              <path
+                 id="path307"
+                 transform="matrix(1,0,0,1.00279,385.057,5.67096)"
+                 d="m 474.948,249.692 c 0,-30.872 25.025,-55.897 55.897,-55.897 h 223.581 c 30.871,0 55.897,25.025 55.897,55.897 v 223.581 c 0,30.871 -25.026,55.897 -55.897,55.897 H 530.845 c -30.872,0 -55.897,-25.026 -55.897,-55.897 z"
+                 inkscape:connector-curvature="0"
+                 style="fill:#990000;fill-rule:evenodd" />
+              <g
+                 id="g315"
+                 clip-path="url(#clip5)">
+                <g
+                   id="g313"
+                   clip-path="url(#clip6)">
+                  <g
+                     id="g311"
+                     clip-path="url(#clip7)">
+                    <path
+                       id="path309"
+                       transform="matrix(0.992299,-0.123862,0.124196,0.994978,796.938,234.56)"
+                       d="m 193.623,30.1412 c -1.178,-3.2377 -4.121,-5.416 -7.595,-5.416 h -70.643 c -3.533,0 -6.418,2.1783 -7.654,5.416 -5.474,14.7175 -18.2491,51.2756 -18.2491,73.4698 v 2.826 c 0,11.303 0,26.726 16.7191,43.857 3.827,3.944 8.418,7.594 13.246,11.48 11.244,9.007 22.841,18.309 22.841,29.552 v 67.7 c 0,0.648 -0.53,1.178 -1.177,1.178 h -33.615 c -4.651,0 -8.4183,3.709 -8.4183,8.241 0,4.533 3.7673,8.243 8.4183,8.243 h 86.421 c 4.65,0 8.418,-3.71 8.418,-8.243 0,-4.532 -3.768,-8.241 -8.418,-8.241 h -33.615 c -0.647,0 -1.177,-0.53 -1.177,-1.178 v -67.7 c 0,-11.243 11.597,-20.545 22.841,-29.552 4.827,-3.886 9.36,-7.536 13.245,-11.48 16.72,-17.131 16.72,-32.554 16.72,-43.857 v -2.826 c 0,-22.0765 -12.775,-58.7523 -18.308,-73.4698 z m -0.825,60.106 c -0.117,0.1766 -0.412,0.4121 -0.942,0.4121 h -82.299 c -0.471,0 -0.765,-0.2944 -0.942,-0.4121 -0.119,-0.1766 -0.354,-0.4709 -0.236,-1.0008 3.002,-15.365 8.713,-35.0863 12.716,-47.2134 0.176,-0.471 0.647,-0.8242 1.118,-0.8242 h 56.986 c 0.53,0 1.001,0.3532 1.119,0.8242 3.944,12.186 9.655,31.8484 12.715,47.2134 0.119,0.4709 -0.117,0.8242 -0.235,1.0008 z"
+                       inkscape:connector-curvature="0"
+                       style="fill:#ffffff;fill-opacity:0.65097997" />
+                  </g>
+                </g>
+              </g>
+              <g
+                 id="g323"
+                 clip-path="url(#clip8)">
+                <g
+                   id="g321"
+                   clip-path="url(#clip9)">
+                  <g
+                     id="g319"
+                     transform="matrix(1.00036,0,0,1,903.181,225.18)"
+                     clip-path="url(#clip11)">
+                    <use
+                       id="use317"
+                       transform="scale(2.00751)"
+                       xlink:href="#img10"
+                       height="100%"
+                       width="100%"
+                       x="0"
+                       y="0" />
+                  </g>
+                </g>
+              </g>
+              <g
+                 id="g331"
+                 clip-path="url(#clip12)">
+                <g
+                   id="g329"
+                   clip-path="url(#clip13)">
+                  <g
+                     id="g327"
+                     clip-path="url(#clip14)">
+                    <path
+                       id="path325"
+                       transform="matrix(1.00164,0,0,1,949.371,271.498)"
+                       d="m 200.96,104.761 c 0,0 -33.011,7.036 -42.148,9.491 -9.049,2.456 -20.267,-15.3323 -23.276,-15.9739 -1.924,5.5759 -8.141,21.9469 -11.859,33.0549 5.753,-0.177 35.599,8.872 36.683,14.137 1.239,5.333 15.178,63.078 15.178,63.078 0,0 5.907,12.412 -10.864,16.947 -16.792,4.536 -17.545,-9.27 -17.545,-9.27 0,0 -11.725,-44.293 -12.765,-46.97 -0.974,-2.678 -22.833,-7.169 -27.834,-5.819 -5.043,1.371 -15.8406,39.183 -26.5048,41.749 -13.6952,3.318 -53.8074,-21.041 -53.8074,-21.041 0,0 -15.8413,-3.916 -12.6111,-18.783 C 16.9033,150.603 32.28,154.63 32.28,154.63 c 0,0 28.4082,15.62 31.6826,13.784 3.3187,-1.859 5.1994,-12.634 10.0447,-23.077 0.1991,-3.938 11.35,-35.244 11.35,-35.244 0,0 6.1728,-20.8417 3.7169,-22.1471 -3.385,-1.7921 -6.925,2.0355 -8.7834,5.2215 -1.8585,3.1637 -9.2261,16.1956 -21.5496,33.1646 -10.9518,15.111 -30.4879,1.085 -22.3681,-13.031 6.748,-11.749 24.7133,-45.3338 37.6342,-51.6615 13.0094,-6.3719 35.4437,-9.9118 54.5377,-5.4427 19.182,4.3807 32.634,26.1073 36.395,28.9835 3.673,2.7656 29.515,-5.5976 29.515,-5.5976 0,0 14.712,-5.1107 18.363,8.319 C 216.49,101.42 200.96,104.761 200.96,104.761 Z M 140.514,49.4045 C 126.974,53.0773 113.19,45.223 109.562,31.8154 105.955,18.4742 113.854,4.66832 127.395,0.995614 140.913,-2.65497 154.741,5.26569 158.347,18.6069 c 3.651,13.4076 -4.336,27.125 -17.833,30.7976 z"
+                       inkscape:connector-curvature="0"
+                       style="fill:#ffffff" />
+                  </g>
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
