@@ -2,8 +2,8 @@
 # 使用系统默认的 bash 运行
 ###########################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
-# 版本：2.1.0
-# 更新时间：2022年08月25日
+# 版本：2.2.0
+# 更新时间：2022年09月25日
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 构建
 ###########################################################################################
@@ -20,18 +20,19 @@ echo '                                        # '
                                           
 
 ubuntuSource=(
-    "sudo wget -nc -P /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources" 
+    "echo \"deb [arch=amd64,i386 signed-by=/usr/share/keyrings/winehq-archive.key] https://mirrors.tuna.tsinghua.edu.cn/wine-builds/ubuntu/ jammy main\" | sudo tee /etc/apt/sources.list.d/winehq.list | cat > /dev/null"
     "sudo wget -nc -P /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/impish/winehq-impish.sources" 
-    "sudo wget -nc -P /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources" 
-    "sudo wget -nc -P /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/bionic/winehq-bionic.sources"
+    "echo \"deb [arch=amd64,i386 signed-by=/usr/share/keyrings/winehq-archive.key] https://mirrors.tuna.tsinghua.edu.cn/wine-builds/ubuntu/ focal main\" | sudo tee /etc/apt/sources.list.d/winehq.list | cat > /dev/null"
+    "echo \"deb [arch=amd64,i386 signed-by=/usr/share/keyrings/winehq-archive.key] https://mirrors.tuna.tsinghua.edu.cn/wine-builds/ubuntu/ bionic main\" | sudo tee /etc/apt/sources.list.d/winehq.list | cat > /dev/null"
 )
 debianSource=(
-    "sudo wget -nc -P /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/buster/winehq-buster.sources" 
-    "sudo wget -nc -P /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bullseye/winehq-bullseye.sources" 
+    "echo \"deb [arch=amd64,i386 signed-by=/usr/share/keyrings/winehq-archive.key] https://mirrors.tuna.tsinghua.edu.cn/wine-builds/debian/ buster main\" | sudo tee /etc/apt/sources.list.d/winehq.list | cat > /dev/null"
+    "echo \"deb [arch=amd64,i386 signed-by=/usr/share/keyrings/winehq-archive.key] https://mirrors.tuna.tsinghua.edu.cn/wine-builds/debian/ bullseye main\" | sudo tee /etc/apt/sources.list.d/winehq.list | cat > /dev/null"
     "sudo wget -nc -P /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources"
 )
 # 选择发行版
 echo "WineHQ 官网：https://wiki.winehq.org/"
+echo "国内镜像源：https://mirrors-i.tuna.tsinghua.edu.cn/help/wine-builds/"
 echo
 echo "选择发行版："
 echo "0. Debian"
