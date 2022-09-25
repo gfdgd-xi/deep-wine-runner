@@ -38,12 +38,29 @@ env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 ```
 
 ## 软件架构
-i386 和 amd64，deepin-wine、deepin-wine5、wine、wine64、deepin-wine5-stable、deepin-wine6-stable、spark-wine7-devel、ukylin-wine 运行在哪就运行在哪  
-理论上支持全架构，如果 Python 能运行的话
+i386、amd64 和 arm64，deepin-wine、deepin-wine5、wine、wine64、deepin-wine5-stable、deepin-wine6-stable、spark-wine7-devel、ukylin-wine 运行在哪就运行在哪  
+理论上支持全架构，如果 Python 能运行的话  
+非 X86 架构会利用到 `box86`、`exagear`等技术  
 
+## 分支介绍
+### main 分支
+主分支，稳定分支
+### Alpha 分支
+开发版分支，一般不稳定，有许多 bug
+
+## 版本区分
+### 无特殊标识
+普通版本（一般来自 Gitee、Github、Gitlink 等渠道）  
+### 版本号带`-spark`
+星火应用商店版本  
+### 版本号带`-uos`
+深度应用商店版本，一般带免开开发者模式签名  
+### 包名带`-52`
+吾爱论坛专版，只在吾爱论坛发布，功能会阉割（如更新、评分、bug反馈功能等等），一般建议使用上面的三个版本  
+![image.png](https://storage.deepin.org/thread/202209251259142818_image.png)  
+（没人喜欢看到这个无法连接服务器吧）    
 
 ## 使用说明
-
 ### 均在软件的“小提示”里有说明
 ### 运行器
 1、使用终端运行该程序，可以看到 wine 以及程序本身的提示和报错;  
