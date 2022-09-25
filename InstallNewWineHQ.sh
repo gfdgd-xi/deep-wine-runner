@@ -20,14 +20,14 @@ echo '                                        # '
                                           
 
 ubuntuSource=(
-    "echo \"deb [arch=amd64,i386 signed-by=/usr/share/keyrings/winehq-archive.key] https://mirrors.tuna.tsinghua.edu.cn/wine-builds/ubuntu/ jammy main\" | sudo tee /etc/apt/sources.list.d/winehq.list | cat > /dev/null"
+    "echo deb [arch=amd64,i386 signed-by=/usr/share/keyrings/winehq-archive.key] https://mirrors.tuna.tsinghua.edu.cn/wine-builds/ubuntu/ jammy main | sudo tee /etc/apt/sources.list.d/winehq.list"
     "sudo wget -nc -P /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/impish/winehq-impish.sources" 
-    "echo \"deb [arch=amd64,i386 signed-by=/usr/share/keyrings/winehq-archive.key] https://mirrors.tuna.tsinghua.edu.cn/wine-builds/ubuntu/ focal main\" | sudo tee /etc/apt/sources.list.d/winehq.list | cat > /dev/null"
-    "echo \"deb [arch=amd64,i386 signed-by=/usr/share/keyrings/winehq-archive.key] https://mirrors.tuna.tsinghua.edu.cn/wine-builds/ubuntu/ bionic main\" | sudo tee /etc/apt/sources.list.d/winehq.list | cat > /dev/null"
+    "echo deb [arch=amd64,i386 signed-by=/usr/share/keyrings/winehq-archive.key] https://mirrors.tuna.tsinghua.edu.cn/wine-builds/ubuntu/ focal main | sudo tee /etc/apt/sources.list.d/winehq.list"
+    "echo deb [arch=amd64,i386 signed-by=/usr/share/keyrings/winehq-archive.key] https://mirrors.tuna.tsinghua.edu.cn/wine-builds/ubuntu/ bionic main | sudo tee /etc/apt/sources.list.d/winehq.list"
 )
 debianSource=(
-    "echo \"deb [arch=amd64,i386 signed-by=/usr/share/keyrings/winehq-archive.key] https://mirrors.tuna.tsinghua.edu.cn/wine-builds/debian/ buster main\" | sudo tee /etc/apt/sources.list.d/winehq.list | cat > /dev/null"
-    "echo \"deb [arch=amd64,i386 signed-by=/usr/share/keyrings/winehq-archive.key] https://mirrors.tuna.tsinghua.edu.cn/wine-builds/debian/ bullseye main\" | sudo tee /etc/apt/sources.list.d/winehq.list | cat > /dev/null"
+    "echo deb [arch=amd64,i386 signed-by=/usr/share/keyrings/winehq-archive.key] https://mirrors.tuna.tsinghua.edu.cn/wine-builds/debian/ buster main | sudo tee /etc/apt/sources.list.d/winehq.list"
+    "echo deb [arch=amd64,i386 signed-by=/usr/share/keyrings/winehq-archive.key] https://mirrors.tuna.tsinghua.edu.cn/wine-builds/debian/ bullseye main | sudo tee /etc/apt/sources.list.d/winehq.list"
     "sudo wget -nc -P /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources"
 )
 # 选择发行版
@@ -78,13 +78,13 @@ if [ $? == 0 ]; then
 fi
 # 添加源
 if [ $system = "0" ]; then
-    ${debianSource[$systemVersion]}
+    bash -c "${debianSource[$systemVersion]}"
 fi
 if [ $system = "1" ]; then
-    ${ubuntuSource[$systemVersion]}
+    bash -c "${ubuntuSource[$systemVersion]}"
 fi
 sudo $apt update
-# 安装 Wine
+# 安装 Wine 
 wineInstall=("sudo $apt install --install-recommends winehq-stable" "sudo $apt install --install-recommends winehq-devel" "sudo $apt install --install-recommends winehq-staging")
 ${wineInstall[$programVersion]}
 echo "按回车键退出"
