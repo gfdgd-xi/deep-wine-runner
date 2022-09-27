@@ -47,6 +47,7 @@ def DisbledOrEnabled(choose: bool):
     packageName.setDisabled(choose)
     versionName.setDisabled(choose)
     buildDeb.setDisabled(choose)
+    bottonName.setDisabled(choose)
 
 
 class PackageDebThread(QtCore.QThread):
@@ -75,6 +76,8 @@ export exec_path="{exePath.text()}"
 export deb_package_name="{packageName.text()}"
 #最终生成的包的版本号，版本号命名规则：应用版本号+deepin+数字
 export deb_version_string="{versionName.text()}"
+#读取和最终解压的包名
+export bottle_name="{bottonName.text()}"
 
 export package_depends="deepin-wine6-stable:amd64 (>= 6.0.0.12-1), spark-dwine-helper | store.spark-app.spark-dwine-helper"
 export apprun_cmd="deepin-wine6-stable"
@@ -114,9 +117,11 @@ def PackageDeb():
             DisbledOrEnabled(False)
             return
     commandReturn.setText("")
+    global lockB
+    lockB = False
     QT.run = PackageDebThread()
     QT.run.signal.connect(RunCommand)
-    QT.info.signal.connect(MessageBoxInformation)
+    QT.run.info.connect(MessageBoxInformation)
     QT.run.start()
 
 def RunCommand(command):
@@ -128,6 +133,17 @@ def ShowHelp():
 
 def OpenPackageFolder():
     os.system(f"xdg-open '{programPath}/package_save/uos'")
+
+# 自动设置包名/容器名
+lockB = False
+def NameChange(packageOrBotton: int):
+    global lockB
+    # 0 代表包名
+    # 1 代表容器名
+    if packageOrBotton == 0 and not lockB:
+        bottonName.setText(packageName.text())
+    elif packageOrBotton == 1 and bottonName.text() != packageName.text():
+        lockB = True
 
 ###########################
 # 程序信息
@@ -165,6 +181,7 @@ debDescription = QtWidgets.QLineEdit()
 typeName = QtWidgets.QComboBox()
 exePath = QtWidgets.QLineEdit()
 packageName = QtWidgets.QLineEdit()
+bottonName = QtWidgets.QLineEdit()
 versionName = QtWidgets.QLineEdit()
 controlFrame = QtWidgets.QHBoxLayout()
 buildDeb = QtWidgets.QPushButton("打包")
@@ -181,16 +198,20 @@ widgetLayout.addWidget(QtWidgets.QLabel("包描述："), 2, 0, 1, 1)
 widgetLayout.addWidget(QtWidgets.QLabel("程序分类："), 3, 0, 1, 1)
 widgetLayout.addWidget(QtWidgets.QLabel("程序在 Wine 容器的位置："), 4, 0, 1, 1)
 widgetLayout.addWidget(QtWidgets.QLabel("包名："), 5, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel("版本号："), 6, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("容器名："), 6, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("版本号："), 7, 0, 1, 1)
 widgetLayout.addWidget(chineseName, 0, 1, 1, 1)
 widgetLayout.addWidget(englishName, 1, 1, 1, 1)
 widgetLayout.addWidget(debDescription, 2, 1, 1, 1)
 widgetLayout.addWidget(typeName, 3, 1, 1, 1)
 widgetLayout.addWidget(exePath, 4, 1, 1, 1)
 widgetLayout.addWidget(packageName, 5, 1, 1, 1)
-widgetLayout.addWidget(versionName, 6, 1, 1, 1)
-widgetLayout.addLayout(controlFrame, 7, 0, 1, 2)
-widgetLayout.addWidget(commandReturn, 8, 0, 1, 2)
+widgetLayout.addWidget(bottonName, 6, 1, 1, 1)
+widgetLayout.addWidget(versionName, 7, 1, 1, 1)
+widgetLayout.addLayout(controlFrame, 8, 0, 1, 2)
+widgetLayout.addWidget(commandReturn, 9, 0, 1, 2)
+packageName.textChanged.connect(lambda: NameChange(0))
+bottonName.textChanged.connect(lambda: NameChange(1))
 buildDeb.clicked.connect(PackageDeb)
 debPath.clicked.connect(OpenPackageFolder)
 widget.setLayout(widgetLayout)

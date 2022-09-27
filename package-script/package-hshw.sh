@@ -15,6 +15,8 @@ export exec_path="c:/Program Files/plantsvszombies/PlantsVsZombies.exe"
 export deb_package_name="Deepin-plantsvszombies"
 #最终生成的包的版本号，版本号命名规则：应用版本号+deepin+数字
 export deb_version_string="1"
+#读取和最终解压的包名
+export bottle_name="Deepin-plantsvszombies"
 
 export package_depends="deepin-wine6-stable:amd64 (>= 6.0.0.12-1), deepin-wine-helper (>= 5.1.25-1)"
 export apprun_cmd="deepin-wine6-stable"
