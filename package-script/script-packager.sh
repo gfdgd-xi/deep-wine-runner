@@ -13,7 +13,9 @@ if [ -n "$apprun_cmd" ];then
     wine_name=${wine_name##*/}
 fi
 
-export public_bottle_name="$deb_package_name"
+# export public_bottle_name="$deb_package_name"
+# 为了满足用户自定义容器名的需求，更改
+export public_bottle_name="$bottle_name"
 
 CheckTool()
 {
