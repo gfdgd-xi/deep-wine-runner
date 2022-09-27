@@ -1779,7 +1779,10 @@ exe路径\' 参数 \'
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>'''
-updateThingsString = '''※1、Dll 提取工具支持 NT 6.X 及以上版本的 Dll 提取并优化了提示文本
+updateThingsString = '''<h2>2.2.0-1 更新内容</h2>
+※1、修复基于生态适配活动打包器对话框过多并修改了小提示内容
+<h2>2.2.0 更新内容</h2>
+※1、Dll 提取工具支持 NT 6.X 及以上版本的 Dll 提取并优化了提示文本
 ※2、支持卸载后自动删除缓存/配置文件（删除配置文件只限 purge 参数删除）
 ※3、DEBUG 模式输出更多信息以方便调试（原本只输出 pid、Err）
 ※4、支持安装 msi 文件
