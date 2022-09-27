@@ -116,7 +116,7 @@ def PackageDeb():
     commandReturn.setText("")
     QT.run = PackageDebThread()
     QT.run.signal.connect(RunCommand)
-    QT.run.signal.connect(MessageBoxInformation)
+    QT.info.signal.connect(MessageBoxInformation)
     QT.run.start()
 
 def RunCommand(command):
@@ -145,6 +145,7 @@ tips = """第一个文本框是应用程序中文名
 desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与desktop文件相对应。这个值为实际运行的主程序EXE的文件名，wine/crossover在程序运行后会将文件名设置为窗口类名
 第六个输入框是最终生成的包的包名,包名的命名规则以deepin开头，加官网域名（需要前后对调位置），如还不能区分再加上应用名
 最后一个是最终生成的包的版本号，版本号命名规则：应用版本号+deepin+数字
+提示：包名和容器名相同，无法设置为不相同，如果需要设置为不相同，需要用另一个非基于生态适配脚本的打包器
 """
 
 ###########################
