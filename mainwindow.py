@@ -1024,7 +1024,7 @@ class GetDllFromWindowsISO:
         if os.path.exists("/tmp/wine-runner-getdll"):
             try:
                 os.rmdir("/tmp/wine-runner-getdll")
-                os.rmdir("/tmp/wine-runner-getdll-wim")
+                os.system("rm -rf /tmp/wine-runner-getdll-wim")
             except:
                 # 如果无法删除可能是挂载了文件
                 os.system("wimunmount /tmp/wine-runner-getdll-wim")
