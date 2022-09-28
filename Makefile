@@ -51,7 +51,7 @@ build:
 	cp -rv InstallNewWineHQ.sh                       deb/opt/apps/deepin-wine-runner
 	cp -rv cleanbottle.sh                            deb/opt/apps/deepin-wine-runner
 	cp -rv StartVM.sh                                deb/opt/apps/deepin-wine-runner
-	cp -rv deepin-wine-runner-create-botton.py       deb/opt/apps/deepin-wine-runner
+	#cp -rv deepin-wine-runner-create-botton.py       deb/opt/apps/deepin-wine-runner
 	cp -rv Icon                                      deb/opt/apps/deepin-wine-runner
 	cp -rv gtkGetFileNameDlg                         deb/opt/apps/deepin-wine-runner
 	cp -rv LANG/*.qm                                      deb/opt/apps/deepin-wine-runner/LANG
