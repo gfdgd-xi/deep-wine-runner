@@ -1042,6 +1042,10 @@ class GetDllFromWindowsISO:
         findList = []
         # 判断是新版的 Windows ISO（Windows Vista 及以上版本）
         if os.path.exists("/tmp/wine-runner-getdll/sources/install.wim"):
+            # 如果没有安装 wimtools 的话
+            if os.system("which wimmount") != 0:
+                QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", f"镜像内容读取/挂载失败，因为没有安装 wimtools 以至无法读取")
+                return
             # 是新版，挂载 wim
             # 需要让用户选择挂载内容
             QtWidgets.QInputDialog.getMultiLineText(GetDllFromWindowsISO.message, "提示", "挂载文件需要用户记住并在下一个对话框输入 Index 以挂载正确的镜像，按下下方任意按钮即可继续", subprocess.getoutput("wiminfo '/tmp/wine-runner-getdll/sources/install.wim'"))
