@@ -52,7 +52,7 @@ if "--system" in sys.argv:
 if os.getenv("WINE") != None:
     programEnv.append(["WINE", os.getenv("WINE")])
 if os.getenv("WINEPREFIX") != None:
-    programEnv.append(["WINE", os.getenv("WINEPREFIX")])
+    programEnv.append(["WINEPREFIX", os.getenv("WINEPREFIX")])
 # 生成可以使用的参数
 commandEnv = ""
 for i in programEnv:
@@ -68,4 +68,8 @@ if len(sys.argv) - optionAll < 2:
 command = ""
 for i in sys.argv[1:]:
     command += f"\"{i}\" "
+print("Wine 运行器自动配置文件解析器（基于 Bash）")
+print(f"版本：{version}")
+print(f"©2020~{time.strftime('%Y')} gfdgd xi、为什么您不喜欢熊出没和阿布呢")
+print("--------------------------------------------------------------")
 os.system(f"{commandEnv} bash {command}")
