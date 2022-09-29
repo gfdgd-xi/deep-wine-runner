@@ -2,8 +2,8 @@
 # 使用系统默认的 sh 运行
 #################################################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
-# 版本：2.2.0
-# 更新时间：2022年09月24日
+# 版本：2.2.1
+# 更新时间：2022年09月29日
 # 感谢：感谢 wine、deepin-wine 以及星火团队，提供了 wine、deepin-wine、spark-wine-devel 给大家使用，让我能做这个程序
 # 基于 sh
 #################################################################################################################
@@ -32,4 +32,4 @@ fi
 # 设置目录权限，让用户可读可写，方便后续删除组件
 chmod 777 -R /opt/apps/deepin-wine-runner
 # 向服务器返回安装数加1（不显示内容且忽略错误）
-curl https://304626p927.goho.co/spark-deepin-wine-runner/Install.php?Version=2.2.0-1 -s > /dev/null | true
+curl https://304626p927.goho.co/spark-deepin-wine-runner/Install.php?Version=2.2.1 -s > /dev/null | true
