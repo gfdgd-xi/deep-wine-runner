@@ -15,6 +15,7 @@ build:
 	cp -rv req                          deb/opt/apps/deepin-wine-runner
 	cp -rv RegShot                          deb/opt/apps/deepin-wine-runner
 	cp -rv BeCyIconGrabber.exe                    deb/opt/apps/deepin-wine-runner
+	cp -rv AutoShell                              deb/opt/apps/deepin-wine-runner
 	cp -rv deepin-wine-packager-with-script.py    deb/opt/apps/deepin-wine-runner
 	cp -rv deepin-wine-packager.py                deb/opt/apps/deepin-wine-runner
 	cp -rv deepin-wine-runner-update-bug          deb/opt/apps/deepin-wine-runner

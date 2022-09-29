@@ -51,17 +51,25 @@ class Connect:
                 fileName = i[1]
                 break
         # 下载脚本
+        things = ""
         try:
             print(f"{urlSources}/{fileName}")
             file = open("/tmp/wine-runner-auto-config.wsh", "w")
-            file.write(requests.get(f"{urlSources}/{fileName}").text)
+            things = requests.get(f"{urlSources}/{fileName}").text
+            file.write(things)
             file.close()
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(window, "错误", "无法获取配置文件")
             return
+        # 判断版本以启动对应的解释器
+        # 做到新旧兼容
+        if "$(" in things:
+            print("a")
+            OpenTerminal(f"env WINE='{wine}' WINEPREFIX='{wineprefix}' '{programPath}/ConfigLanguareRunner.py' '/tmp/wine-runner-auto-config.wsh' --system")
         # 执行脚本
-        OpenTerminal(f"env WINE='{wine}' WINEPREFIX='{wineprefix}' '{programPath}/ConfigLanguareRunner.py' '/tmp/wine-runner-auto-config.wsh' --system")
+        print(f"env WINE='{wine}' WINEPREFIX='{wineprefix}' '{programPath}/AutoShell/main.py' '/tmp/wine-runner-auto-config.wsh'")
+        OpenTerminal(f"env WINE='{wine}' WINEPREFIX='{wineprefix}' '{programPath}/AutoShell/main.py' '/tmp/wine-runner-auto-config.wsh'")
         #process = QtCore.QProcess()
         #process.start(f"{programPath}/launch.sh", ["deepin-terminal", "-e", "env", f"WINE={wine}", f"WINEPREFIX={wineprefix}", f"{programPath}/ConfigLanguareRunner.py", "/tmp/wine-runner-auto-config.wsh", "--system"])
         #process.waitForFinished()
@@ -70,8 +78,18 @@ class Connect:
         path = QtWidgets.QFileDialog.getOpenFileName(window, "提示", homePath, "配置文件(*.sh *.wsh);;全部文件(*.*)")
         if path[0] == "":
             return
+        try:
+            things = ""
+            with open(path) as file:
+                things = file.read()
+        except:
+            traceback.print_exc()
+        # 判断版本以启动对应的解释器
+        # 做到新旧兼容
+        if "$(" in things:
+            OpenTerminal(f"env WINE='{wine}' WINEPREFIX='{wineprefix}' '{programPath}/ConfigLanguareRunner.py' '{path[0]}' --system")
         # 执行脚本
-        OpenTerminal(f"env WINE='{wine}' WINEPREFIX='{wineprefix}' '{programPath}/ConfigLanguareRunner.py' '{path[0]}' --system")
+        OpenTerminal(f"env WINE='{wine}' WINEPREFIX='{wineprefix}' '{programPath}/AutoShell/main.py' '{path[0]}'")
         #process = QtCore.QProcess()
         #process.start(f"{programPath}/launch.sh", ["deepin-terminal", "-e", "env", f"WINE={wine}", f"WINEPREFIX={wineprefix}", f"{programPath}/ConfigLanguareRunner.py", path[0], "--system"])
         #process.waitForFinished()
@@ -100,6 +118,7 @@ if __name__ == "__main__":
     ui = Ui_MainWindow()
     ui.setupUi(window)
     window.setWindowTitle(f"Wine 运行器 {version}——容器自动配置部署脚本")
+    window.setWindowIcon(QtGui.QIcon(f"{programPath}/deepin-wine-runner.svg"))
     window.show()
     # 连接信号和槽
     ui.saerchBotton.clicked.connect(Connect.SearchBotton_Clicked)

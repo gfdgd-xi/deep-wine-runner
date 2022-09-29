@@ -30,7 +30,8 @@ for i in information["Thank"]:
 programEnv = [
     ["($WINEPREFIX)", f"{os.path.expanduser('~')}/.wine"],
     ["($WINE)", "deepin-wine6-stable"],
-    ["($DANGER)", "0"],
+    #["($DANGER)", "0"],
+    ["($DANGER)", "1"],
     ["($HOME)", os.path.expanduser('~')],
     ["($PROGRAMPATH)", programPath],
     ["($VERSION)", version],
@@ -39,7 +40,8 @@ programEnv = [
     ["($COPYRIGHT)", f"©2020~{time.strftime('%Y')} gfdgd xi、为什么您不喜欢熊出没和阿布呢"],
     ["($?)", "0"],
     ["($PLATFORM)", platform.system()],
-    ["($DEBUG)", str(int("--debug" in sys.argv))]
+    ["($DEBUG)", "1"]
+    #["($DEBUG)", str(int("--debug" in sys.argv))]
 ]
 readOnlyEnv = [
     "($DANGER)",
@@ -259,7 +261,6 @@ class Command():
             commandStr = command[0] + " "
             for i in command[1:]:
                 commandStr += f"'{i}' "
-            print(commandStr)
             return os.system(commandStr)
 
         def Version(self):
@@ -448,8 +449,8 @@ class Command():
                 if self.close: 
                     break
 
+app = QtWidgets.QApplication(sys.argv)
 if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
     optionAll = 0
     if "--debug" in sys.argv:
         optionAll += 1
@@ -480,4 +481,8 @@ if __name__ == "__main__":
     except:
         print("错误：无法读取该文件，无法继续")
         sys.exit(1)
+    print("Wine 运行器自动配置文件解析器")
+    print(f"版本：{version}")
+    print(f"©2020~{time.strftime('%Y')} gfdgd xi、为什么您不喜欢熊出没和阿布呢")
+    print("--------------------------------------------------------------")
     com.Run(com.GetCommandList(), programEnv[0][1], programEnv[1][1])

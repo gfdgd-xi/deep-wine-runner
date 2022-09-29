@@ -48,6 +48,7 @@ def Download(wineBotton, dllName, urlPart, wine: str) -> bool:
     except:
         pass
     os.system(f"aria2c -x 16 -s 16 -d '{wineBotton}/drive_c/windows/system32' -o '{dllName}' '{urlPart}'")
+    #print(f"WINEPREFIX='{wineBotton}' {wine} reg add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v {os.path.splitext(dllName)[0]} /d native /f")
     os.system(f"WINEPREFIX='{wineBotton}' {wine} reg add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v {os.path.splitext(dllName)[0]} /d native /f")
     return 0
 
