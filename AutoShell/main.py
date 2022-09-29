@@ -57,10 +57,15 @@ if os.getenv("WINEPREFIX") != None:
 commandEnv = ""
 for i in programEnv:
     commandEnv += f"{i[0]}=\"{i[1]}\" "
-commandEnv += f"PATH=\"$PATH:{programPath}/command\" "
+commandEnv += f"PATH=\"{programPath}/command:$PATH\" "
 if len(sys.argv) - optionAll < 2:
     print("Wine 运行器自动配置文件解析器交互环境（基于 Bash）")
     print(f"版本：{version}")
     print(f"©2020~{time.strftime('%Y')} gfdgd xi、为什么您不喜欢熊出没和阿布呢")
     print("--------------------------------------------------------------")
-    os.system(f"{commandEnv} bash")
+    os.system(f"{commandEnv} bash ")
+    exit()
+command = ""
+for i in sys.argv[1:]:
+    command += f"\"{i}\" "
+os.system(f"{commandEnv} bash {command}")

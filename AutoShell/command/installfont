@@ -8,6 +8,6 @@ import ConfigLanguareRunner
 # 符号转移
 argv = []
 for i in sys.argv[1:]:
-    argv = i.replace(" ", "\\ ")
-com = ConfigLanguareRunner.Command(f"installfont {''.join(argv)}")
+    argv.append(i.replace(" ", "\\ "))
+com = ConfigLanguareRunner.Command(f"{os.path.basename(sys.argv[0])} {' '.join(argv)}")
 com.Run(com.GetCommandList(), os.getenv("WINEPREFIX"), os.getenv("WINE"))
