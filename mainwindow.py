@@ -169,8 +169,8 @@ class Runexebutton_threading(QtCore.QThread):
             wineUsingOption = ""
         if o1.currentText() == "基于 box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
             if not os.path.exists(f"{programPath}/dlls-arm"):
-                if os.system(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
-                    QtWidgets.QMessageBox(widget, "错误", "无法解压资源")
+                if os.system(f"7z x -y \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
+                    QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
                     return
                 os.remove(f"{programPath}/dlls-arm.7z")
         if setting["TerminalOpen"]:
@@ -290,8 +290,8 @@ def make_desktop_on_launcher():
             wineUsingOption = ""
             if o1.currentText() == "基于 box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
                 if not os.path.exists(f"{programPath}/dlls-arm"):
-                    if os.system(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
-                        QtWidgets.QMessageBox(widget, "错误", "无法解压资源")
+                    if os.system(f"7z x -y \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
+                        QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
                         return
                     os.remove(f"{programPath}/dlls-arm.7z")
             if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
@@ -352,8 +352,8 @@ def make_desktop_on_desktop():
                 wineUsingOption = ""
             if o1.currentText() == "基于 box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
                 if not os.path.exists(f"{programPath}/dlls-arm"):
-                    if os.system(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
-                        QtWidgets.QMessageBox(widget, "错误", "无法解压资源")
+                    if os.system(f"7z x -y \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
+                        QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
                         return
                     os.remove(f"{programPath}/dlls-arm.7z")
             if not os.path.exists(get_desktop_path()):
@@ -479,8 +479,8 @@ class RunWineProgramThread(QtCore.QThread):
             wineUsingOption = ""
         if o1.currentText() == "基于 box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
             if not os.path.exists(f"{programPath}/dlls-arm"):
-                if os.system(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
-                    QtWidgets.QMessageBox(widget, "错误", "无法解压资源")
+                if os.system(f"7z x -y \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
+                    QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
                     return
                 os.remove(f"{programPath}/dlls-arm.7z")
         if setting["TerminalOpen"]:
@@ -543,8 +543,8 @@ class RunWinetricksThread(QtCore.QThread):
             wineUsingOption = ""
         if o1.currentText() == "基于 box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
             if not os.path.exists(f"{programPath}/dlls-arm"):
-                if os.system(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
-                    QtWidgets.QMessageBox(widget, "错误", "无法解压资源")
+                if os.system(f"7z x -y \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
+                    QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
                     return
                 os.remove(f"{programPath}/dlls-arm.7z")
         if setting["TerminalOpen"]:
@@ -576,8 +576,8 @@ def RunWinetricks():
             return
     if o1.currentText() == "基于 box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
         if not os.path.exists(f"{programPath}/dlls-arm"):
-            if os.system(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
-                QtWidgets.QMessageBox(widget, "错误", "无法解压资源")
+            if os.system(f"7z x -y \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
+                QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
                 return
             os.remove(f"{programPath}/dlls-arm.7z")
     returnText.setText("")
@@ -643,8 +643,8 @@ def InstallMSXML():
 
 def InstallDXVK():
     if not os.path.exists(f"{programPath}/dxvk"):
-        if os.system(f"7z x \"{programPath}/dxvk.7z\" -o\"{programPath}\""):
-            QtWidgets.QMessageBox(widget, "错误", "无法解压资源")
+        if os.system(f"7z x -y \"{programPath}/dxvk.7z\" -o\"{programPath}\""):
+            QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
             return
         os.remove(f"{programPath}/dxvk.7z")
     if e1.currentText() == "":
@@ -659,8 +659,8 @@ def InstallDXVK():
 
 def UninstallDXVK():
     if not os.path.exists(f"{programPath}/dxvk"):
-        if os.system(f"7z x \"{programPath}/dxvk.7z\" -o\"{programPath}\""):
-            QtWidgets.QMessageBox(widget, "错误", "无法解压资源")
+        if os.system(f"7z x -y \"{programPath}/dxvk.7z\" -o\"{programPath}\""):
+            QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
             return
         os.remove(f"{programPath}/dxvk.7z")
     if e1.currentText() == "":
