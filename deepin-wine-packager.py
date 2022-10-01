@@ -818,28 +818,29 @@ fi
             # 设置容器
             ###############
             self.label.emit("正在设置 wine 容器")
-            os.chdir(programPath)
-            if cleanBottonByUOS.isChecked():
-                self.run_command(f"WINE='{debInformation[debArch.currentIndex()]['Wine']}' '{programPath}/cleanbottle.sh' '{b}'")
-            os.chdir(b)
-            # 对用户目录进行处理
-            self.run_command("sed -i \"s#$USER#@current_user@#\" ./*.reg")
-            os.chdir(f"{b}/drive_c/users")
-            if os.path.exists(f"{b}/drive_c/users/@current_user@"):
-                self.run_command(f"rm -rfv '{b}/drive_c/users/@current_user@'")
-            self.run_command(f"mv -fv '{os.getlogin()}' @current_user@")
-            # 如果缩放文件 scale.txt 存在，需要移除以便用户自行调节缩放设置
-            if os.path.exists(f"{b}/scale.txt"):
-                os.remove(f"{b}/scale.txt")
-            # 删除因为脚本失误导致用户目录嵌套（如果存在）
-            if os.path.exists(f"{b}{b}/drive_c/users/@current_user@/@current_user@"):
-                shutil.rmtree(f"{b}{b}/drive_c/users/@current_user@/@current_user@")
-            # 删除无用的软链
-            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/我的'*")
-            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/My '*")
-            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Desktop'")
-            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Downloads'")
-            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Templates'")
+            if e6_text.text()[-3: ] != ".7z":
+                os.chdir(programPath)
+                if cleanBottonByUOS.isChecked():
+                    self.run_command(f"WINE='{debInformation[debArch.currentIndex()]['Wine']}' '{programPath}/cleanbottle.sh' '{b}'")
+                os.chdir(b)
+                # 对用户目录进行处理
+                self.run_command("sed -i \"s#$USER#@current_user@#\" ./*.reg")
+                os.chdir(f"{b}/drive_c/users")
+                if os.path.exists(f"{b}/drive_c/users/@current_user@"):
+                    self.run_command(f"rm -rfv '{b}/drive_c/users/@current_user@'")
+                self.run_command(f"mv -fv '{os.getlogin()}' @current_user@")
+                # 如果缩放文件 scale.txt 存在，需要移除以便用户自行调节缩放设置
+                if os.path.exists(f"{b}/scale.txt"):
+                    os.remove(f"{b}/scale.txt")
+                # 删除因为脚本失误导致用户目录嵌套（如果存在）
+                if os.path.exists(f"{b}{b}/drive_c/users/@current_user@/@current_user@"):
+                    shutil.rmtree(f"{b}{b}/drive_c/users/@current_user@/@current_user@")
+                # 删除无用的软链
+                self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/我的'*")
+                self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/My '*")
+                self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Desktop'")
+                self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Downloads'")
+                self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Templates'")
             os.chdir(programPath)
             ###############
             # 压缩 Wine
@@ -858,8 +859,8 @@ fi
             ###############
             self.label.emit("正在打包 wine 容器")
             # 都有 7z 了为什么要打包呢？
-            if e1_text.text()[-3: ] == ".7z":
-                shutil.copy(e1_text.text(), f"{debPackagePath}/opt/apps/{e1_text.text()}/files/files.7z")
+            if e6_text.text()[-3: ] == ".7z":
+                shutil.copy(e6_text.text(), f"{debPackagePath}/opt/apps/{e1_text.text()}/files/files.7z")
             else:
                 self.run_command("7z a {}/opt/apps/{}/files/files.7z {}/*".format(debPackagePath, e1_text.text(), b))
             ###############
@@ -1076,6 +1077,8 @@ def ReadDeb(unzip = False):
     # 获取路径
     debPath = QtWidgets.QFileDialog.getOpenFileName(window, "读取 deb 包", get_home(), "deb包(*.deb);;所有文件(*.*)")[0]
     print(debPath)
+    if debPath == "":
+        return
     # 分类讨论
     path = f"/tmp/deb-unzip-{random.randint(0, 1000)}"
     # 新建文件夹
@@ -1206,6 +1209,66 @@ def ReadDeb(unzip = False):
     # 读 run.sh
     if os.path.exists(f"{path}/opt/apps/{package}/files/run.sh"):
         file = open(f"{path}/opt/apps/{package}/files/run.sh", "r")
+        items = file.read().splitlines()
+        file.close()
+        for i in items:
+            # 按行解析
+            if i.replace(" ", "").replace("\n", "") == "":
+                # 空行，忽略
+                continue
+            # 忽略 export
+            line = i.replace("export ", "")
+            # 忽略注释
+            if "#" in line:
+                line = line[:line.index("#")]
+            # 判断是否合法
+            try:
+                name = line[:line.index("=")].strip()
+                value = line[line.index("=") + 1:].replace("\"", "").strip()
+                #lnkMap[name].setText(value)
+                if name in lnkMap:
+                    lnkMap[name].setText(value)
+                    continue
+                # 其它的特殊情况判断
+                if name == "START_SHELL_PATH" and value == "/opt/deepinwine/tools/spark_run_v4.sh":
+                    # helper
+                    chooseWineHelperValue.setChecked(True)
+                if name == "APPRUN_CMD" and value in wineValue:
+                    wineVersion.setCurrentText(wineValue[dependsItem])
+            except:
+                print(f"忽略行：{i}")
+    elif os.path.exists(f"{path}/opt/apps/{package}/files/run_with_box86.sh"):
+        file = open(f"{path}/opt/apps/{package}/files/run_with_box86.sh", "r")
+        items = file.read().splitlines()
+        file.close()
+        for i in items:
+            # 按行解析
+            if i.replace(" ", "").replace("\n", "") == "":
+                # 空行，忽略
+                continue
+            # 忽略 export
+            line = i.replace("export ", "")
+            # 忽略注释
+            if "#" in line:
+                line = line[:line.index("#")]
+            # 判断是否合法
+            try:
+                name = line[:line.index("=")].strip()
+                value = line[line.index("=") + 1:].replace("\"", "").strip()
+                #lnkMap[name].setText(value)
+                if name in lnkMap:
+                    lnkMap[name].setText(value)
+                    continue
+                # 其它的特殊情况判断
+                if name == "START_SHELL_PATH" and value == "/opt/deepinwine/tools/spark_run_v4.sh":
+                    # helper
+                    chooseWineHelperValue.setChecked(True)
+                if name == "APPRUN_CMD" and value in wineValue:
+                    wineVersion.setCurrentText(wineValue[dependsItem])
+            except:
+                print(f"忽略行：{i}")
+    elif os.path.exists(f"{path}/opt/apps/{package}/files/run_with_exagear.sh"):
+        file = open(f"{path}/opt/apps/{package}/files/run_with_exagear.sh", "r")
         items = file.read().splitlines()
         file.close()
         for i in items:

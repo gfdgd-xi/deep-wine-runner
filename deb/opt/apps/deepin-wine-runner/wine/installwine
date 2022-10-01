@@ -15,8 +15,11 @@ import sys
 import json
 import traceback
 import requests
+programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
+sys.path.append(f"{programPath}/../")
+from Model import *
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 # UI 布局（自动生成）
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -182,10 +185,11 @@ class DownloadThread(QtCore.QThread):
             shellFile = open("/tmp/depein-wine-runner-wine-install.sh", "w")
             shellFile.write(shellCommand)
             shellFile.close()
-            process = QtCore.QProcess()
-            command = ["deepin-terminal", "-e", "bash", "/tmp/depein-wine-runner-wine-install.sh"]
-            process.start(f"{programPath}/../launch.sh", command)
-            process.waitForFinished()
+            #process = QtCore.QProcess()
+            #command = ["deepin-terminal", "-e", "bash", "/tmp/depein-wine-runner-wine-install.sh"]
+            #process.start(f"{programPath}/../launch.sh", command)
+            #process.waitForFinished()
+            OpenTerminal("bash /tmp/depein-wine-runner-wine-install.sh")
             self.Finish.emit()
         except:
             traceback.print_exc()
@@ -274,7 +278,6 @@ if __name__ == "__main__":
     localJsonList = []
     internetJsonList = []
     internetWineSource = "https://code.gitlink.org.cn/gfdgd_xi/wine-mirrors/raw/branch/master/"
-    programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
     app = QtWidgets.QApplication(sys.argv)
     # 读取翻译
     if not get_now_lang() == "zh_CN.UTF-8":
