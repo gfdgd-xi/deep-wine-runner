@@ -64,7 +64,7 @@ class Connect:
             return
         # 判断版本以启动对应的解释器
         # 做到新旧兼容
-        if "$(" in things:
+        if "($" in things:
             print("a")
             OpenTerminal(f"env WINE='{wine}' WINEPREFIX='{wineprefix}' '{programPath}/ConfigLanguareRunner.py' '/tmp/wine-runner-auto-config.wsh' --system")
         # 执行脚本
@@ -86,7 +86,7 @@ class Connect:
             traceback.print_exc()
         # 判断版本以启动对应的解释器
         # 做到新旧兼容
-        if "$(" in things:
+        if "($" in things:
             OpenTerminal(f"env WINE='{wine}' WINEPREFIX='{wineprefix}' '{programPath}/ConfigLanguareRunner.py' '{path[0]}' --system")
         # 执行脚本
         OpenTerminal(f"env WINE='{wine}' WINEPREFIX='{wineprefix}' '{programPath}/AutoShell/main.py' '{path[0]}'")

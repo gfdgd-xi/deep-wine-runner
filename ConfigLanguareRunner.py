@@ -13,6 +13,7 @@ import time
 import json
 import platform
 import traceback
+import subprocess
 import PyQt5.QtWidgets as QtWidgets
 # 读取文本文档
 def readtxt(path):
@@ -25,6 +26,7 @@ programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 information = json.loads(readtxt(f"{programPath}/information.json"))
 version = information["Version"]
 thankText = ""
+helpList = json.loads(readtxt(f"{programPath}/ConfigLanguareRunner-help.json"))
 for i in information["Thank"]:
     thankText += f"{i}\n"
 programEnv = [
@@ -97,7 +99,17 @@ class Command():
         "winver",
         "changeversion",
         "stopdll",
-        "cat"
+        "cat",
+        "taskmgr",
+        "control",
+        "killall",
+        "killallwineserver",
+        "enabledhttpproxy",
+        "disbledhttpproxy",
+        "enabledwinecrashdialog",
+        "disbledwinecrashdialog",
+        "disbledWinebottlecreatelink",
+        "enabledWinebottlecreatelink"
     ]
 
     def __init__(self, commandString: str) -> None:
@@ -321,6 +333,64 @@ class Command():
                 print("文件读取错误")
                 Debug()
 
+        def Taskmgr(self):
+            self.command = ["bat", "taskmgr"]
+            return self.Bat()
+
+        def Control(self):
+            self.command = ["bat", "control"]
+            return self.Bat()
+
+        def Killall(self):
+            os.system(f"killall -9 {self.command[1]}")
+
+        def KillallWineServer(self):
+            command = ["WINEPREFIX='($WINEPREFIX)'", "($WINE)", "-k"]
+            for i in programEnv:
+                for k in range(len(command)):
+                    command[k] = command[k].replace(i[0], i[1])
+            if "box86" in command[1] or "exagear" in command[1] or "box64" in command[1]:
+                print("不支持此 Wine")
+                return 1
+            if os.path.exists(command[1]):
+                # 文件存在
+                command[1] = f"{os.path.dirname(command[1])}/wineserver"
+            else:
+                # 读 which
+                command[1] = f"{os.path.dirname(subprocess.getoutput(f'which {command[1]}').strip())}/wineserver" 
+            commandStr = command[0] + " "
+            for i in command[1:]:
+                commandStr += f"'{i}' "
+            return os.system(commandStr)
+            
+        def EnabledWineBottleCreateLink(self):
+            self.command = ["bat", "reg", "delete", "HKEY_CURRENT_USER\Software\Wine\DllOverrides", "/v", "winemenubuilder.exe", "/f"]
+            self.Bat()
+
+        def DisbledWineBottleCreateLink(self):
+            self.command = ["bat", "reg", "add", "HKEY_CURRENT_USER\Software\Wine\DllOverrides", "/v", "winemenubuilder.exe", "/f"]
+            self.Bat()
+
+        def DisbledWineCrashDialog(self):
+            self.command = ["bat", "reg", "add", "HKEY_CURRENT_USER\Software\Wine\WineDbg", "/v", "ShowCrashDialog", "/t", "REG_DWORD", "/d", "00000000", "/f"]
+            self.Bat()
+
+        def EnabledWineCrashDialog(self):
+            self.command = ["bat", "reg", "add", "HKEY_CURRENT_USER\Software\Wine\WineDbg", "/v", "ShowCrashDialog", "/t", "REG_DWORD", "/d", "00000001", "/f"]
+            self.Bat()
+
+        def EnabledHttpProxy(self):
+            proxyServerAddress = self.command[1]
+            port = self.command[2]
+            self.command = ["bat", "reg", "add", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings", "/v", "ProxyEnable", "/t", "REG_DWORD", "/d", "00000001", "/f"]
+            self.Bat()
+            self.command = ["bat", "reg", "add", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings", "/v", "ProxyServer", "/d", f"{proxyServerAddress}:{port}", "/f"]
+            self.Bat()
+
+        def DisbledHttpProxy(self):
+            self.command = ["bat", "reg", "add", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings", "/v", "ProxyEnable", "/t", "REG_DWORD", "/d", "00000000", "/f"]
+            self.Bat()
+
         # 可以运行的命令的映射关系
         # 可以被使用的命令的映射
         commandList = {
@@ -352,11 +422,21 @@ class Command():
             "winver": Winver,
             "changeversion": ChangeVersion,
             "stopdll": StopDll,
-            "cat": Cat
+            "cat": Cat,
+            "taskmgr": Taskmgr,
+            "control": Control,
+            "killallwineserver": KillallWineServer,
+            "enabledhttpproxy": EnabledHttpProxy,
+            "disbledhttpproxy": DisbledHttpProxy,
+            "enabledwinecrashdialog": EnabledWineCrashDialog,
+            "disbledwinecrashdialog": DisbledWineCrashDialog,
+            "disbledWinebottlecreatelink": DisbledWineBottleCreateLink,
+            "enabledWinebottlecreatelink": EnabledWineBottleCreateLink
         }
 
         # 参数数列表
         commandInfo = {
+            "killall": [1],
             "installdll": [1],
             "installfont": [1],
             "installsparkcorefont": [0],
@@ -385,7 +465,16 @@ class Command():
             "winver": [0],
             "changeversion": [1],
             "stopdll": [1],
-            "cat": [1]
+            "cat": [1],
+            "taskmgr": [0],
+            "control": [0],
+            "killallwineserver": [0],
+            "enabledhttpproxy": [2],
+            "disbledhttpproxy": [0],
+            "enabledwinecrashdialog": [0],
+            "disbledwinecrashdialog": [0],
+            "disbledWinebottlecreatelink": [0],
+            "enabledWinebottlecreatelink": [0]
         }
         windowsUnrun = [
             "createbotton",
@@ -432,6 +521,13 @@ class Command():
                     print("此命令不支持在 Windows 上运行")
                     programEnv[9][1] = "-5"
                     continue
+                # 获取程序帮助信息
+                try:
+                    if i[1] == "--help":
+                        print(helpList[i[0]].replace("\\n", "\n"))
+                        continue
+                except:
+                    pass
                 # 正常命令解析
                 if len(i) -1 < self.commandInfo[i[0]][0]:
                     print("参数不足")
