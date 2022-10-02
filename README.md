@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 2.2.0</h1>
+<h1 align="center">Wine 运行器 2.3.0</h1>
 <hr>
 
 ## 介绍
@@ -8,10 +8,10 @@
 env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 ```
 让你可以简易方便的使用 wine  
-是使用 Python3 的 tkinter 构建的    
+是使用 Python3 的 PyQt5 构建的    
 （自己美术功底太差，图标只能在网络上找了）    
-（测试平台：deepin 20.7；UOS 家庭版 21.3.1；Ubuntu 22.04；UOS 专业版 1050）    
-![image.png](https://storage.deepin.org/thread/202209242126366137_image.png)  
+（测试平台：deepin 20.7；UOS 家庭版 21.3.1；Ubuntu 22.04；Ubuntu 20.04；UOS 专业版 1050）    
+![截图_选择区域_20221002221112.png](https://storage.deepin.org/thread/202210022215217037_截图_选择区域_20221002221112.png)  
 而打包器可以方便的把您的 wine 容器打包成 deb 包供他人使用，程序创建的 deb 构建临时文件夹目录树如下：  
 ```bash
 /XXX
@@ -102,6 +102,19 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志
+### 2.3.0（2022年10月02日）
+**※1、自动配置解释器支持 bash 语法（新版底层调用 bash，旧版任然使用旧版解析引擎）**  
+**※2、修复缺失 wimtools 依赖导致无法正常安装的问题**  
+**※3、修复基于生态适配活动脚本打包器对话框过多影响使用的问题，并支持指定不同的包名和容器名**  
+**※4、7z 文件解压不会自动替换文件然后卡死以及因此导致程序闪退的问题**  
+**※5、修复安装更多 Wine 终端调用问题和图标问题**  
+**※6、支持 openkylin**  
+7、支持通过 exe 路径自动生成 Wine 容器路径  
+8、支持禁用/启用 wine 容器是否生成快捷方式的功能以及启用/禁用程序崩溃提示对话框  
+9、支持设置 wine 容器代理  
+10、自动配置脚本支持使用 `--help` 参数查看帮助  
+![截图_选择区域_20221002221112.png](https://storage.deepin.org/thread/202210022215217037_截图_选择区域_20221002221112.png)  
+
 ### 2.2.0（2022年09月24日）
 **※1、Dll 提取工具支持 NT 6.X 及以上版本的 Dll 提取并优化了提示文本**  
 **※2、支持卸载后自动删除缓存/配置文件（删除配置文件只限 purge 参数删除）**  
