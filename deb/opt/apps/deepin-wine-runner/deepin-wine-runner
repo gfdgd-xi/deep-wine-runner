@@ -165,9 +165,9 @@ class Runexebutton_threading(QtCore.QThread):
         else:
             option += "WINEDEBUG=FIXME,ERR,WARN,TRACE,Message "
         wineUsingOption = ""
-        if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
+        if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable":
             wineUsingOption = ""
-        if o1.currentText() == "基于 box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
+        if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
             if not os.path.exists(f"{programPath}/dlls-arm"):
                 if os.system(f"7z x -y \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
                     QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
@@ -288,13 +288,13 @@ def make_desktop_on_launcher():
             else:
                 option += "WINEDEBUG=FIXME,ERR,WARN,TRACE,Message "
             wineUsingOption = ""
-            if o1.currentText() == "基于 box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
+            if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
                 if not os.path.exists(f"{programPath}/dlls-arm"):
                     if os.system(f"7z x -y \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
                         QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
                         return
                     os.remove(f"{programPath}/dlls-arm.7z")
-            if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
+            if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable":
                 wineUsingOption = ""
             value = ""
             if e2.currentText()[:2].upper() == "C:":
@@ -348,9 +348,9 @@ def make_desktop_on_desktop():
             else:
                 wineBottonPath = e1.currentText()
             wineUsingOption = ""
-            if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
+            if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable":
                 wineUsingOption = ""
-            if o1.currentText() == "基于 box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
+            if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
                 if not os.path.exists(f"{programPath}/dlls-arm"):
                     if os.system(f"7z x -y \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
                         QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
@@ -423,9 +423,14 @@ def ReStartProgram():
     python = sys.executable
     os.execl(python, python, * sys.argv)
 
+def KillAllProgram():
+    pass
+
 def KillProgram():
     os.system(f"killall {wine[o1.currentText()]} -9")
     os.system("killall winedbg -9")
+    exeName = os.path.basename(e2.currentText())
+    os.system(f"killall {exeName} -9")
 
 def InstallWine():
     threading.Thread(target=OpenTerminal, args=[f"'{programPath}/AllInstall.py'"]).start()
@@ -475,9 +480,9 @@ class RunWineProgramThread(QtCore.QThread):
         wineUsingOption = ""
         if o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
             os.system(f"'{programPath}/deepin-wine-runner-create-botton.py' '{wineBottonPath}'")
-        if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
+        if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable":
             wineUsingOption = ""
-        if o1.currentText() == "基于 box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
+        if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
             if not os.path.exists(f"{programPath}/dlls-arm"):
                 if os.system(f"7z x -y \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
                     QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
@@ -514,7 +519,7 @@ runProgram = None
 def RunWineProgram(wineProgram, history = False, Disbled = True):
     global runProgram
     DisableButton(True)
-    if not CheckProgramIsInstall(wine[o1.currentText()]) and o1.currentText() != "基于 linglong 的 deepin-wine6-stable（不推荐）" and o1.currentText() != "基于 exagear 的 deepin-wine6-stable" and o1.currentText() != "基于 box86 的 deepin-wine6-stable":
+    if not CheckProgramIsInstall(wine[o1.currentText()]) and o1.currentText() != "基于 linglong 的 deepin-wine6-stable（不推荐）" and o1.currentText() != "基于 exagear 的 deepin-wine6-stable" and o1.currentText() != "基于 UOS box86 的 deepin-wine6-stable":
         if not CheckProgramIsInstall(wine[o1.currentText()]) and not o1.currentText() in untipsWine:
             DisableButton(False)
             return
@@ -539,9 +544,9 @@ class RunWinetricksThread(QtCore.QThread):
         if not setting["Debug"]:
             option += "WINEDEBUG=-all "
         wineUsingOption = ""
-        if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 box86 的 deepin-wine6-stable":
+        if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable":
             wineUsingOption = ""
-        if o1.currentText() == "基于 box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
+        if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
             if not os.path.exists(f"{programPath}/dlls-arm"):
                 if os.system(f"7z x -y \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
                     QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
@@ -570,11 +575,11 @@ runWinetricks = None
 def RunWinetricks():
     global runWinetricks
     DisableButton(True)
-    if not CheckProgramIsInstall(wine[o1.currentText()]) and o1.currentText() != "基于 linglong 的 deepin-wine6-stable（不推荐）" and o1.currentText() != "基于 exagear 的 deepin-wine6-stable" and o1.currentText() != "基于 box86 的 deepin-wine6-stable":
+    if not CheckProgramIsInstall(wine[o1.currentText()]) and o1.currentText() != "基于 linglong 的 deepin-wine6-stable（不推荐）" and o1.currentText() != "基于 exagear 的 deepin-wine6-stable" and o1.currentText() != "基于 UOS box86 的 deepin-wine6-stable":
         if not CheckProgramIsInstall(wine[o1.currentText()]) and not o1.currentText() in untipsWine:
             DisableButton(False)
             return
-    if o1.currentText() == "基于 box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
+    if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
         if not os.path.exists(f"{programPath}/dlls-arm"):
             if os.system(f"7z x -y \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
                 QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
@@ -758,6 +763,18 @@ def InstallWineFont():
 
 def WineRunnerBugUpload():
     threading.Thread(target=os.system, args=[f"'{programPath}/deepin-wine-runner-update-bug'"]).start()
+
+def SetHttpProxy():
+    QtWidgets.QMessageBox.information(window, "提示", "请在下面的对话框正确输入内容以便设置代理")
+    proxyServerAddress = QtWidgets.QInputDialog.getText(window, "提示", "请输入代理服务器地址")[0]
+    port = QtWidgets.QInputDialog.getText(window, "提示", "请输入代理服务器端口")[0]
+    if proxyServerAddress == "" or port == "":
+        return
+    RunWineProgram("reg' add 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' /v ProxyEnable /t REG_DWORD /d 00000001 '/f")
+    RunWineProgram(f"reg' add 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' /v ProxyServer /d '{proxyServerAddress}:{port}' '/f")
+
+def DisbledHttpProxy():
+    RunWineProgram("reg' add 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' /v ProxyEnable /t REG_DWORD /d 00000000 '/f")
 
 def GetScreenSize():
     screenInformation = []
@@ -1594,7 +1611,7 @@ programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 # 如果要添加其他 wine，请在字典添加其名称和执行路径
 try:
     wine = {
-        "基于 box86 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86 /opt/deepin-wine6-stable/bin/wine ",
+        "基于 UOS box86 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86 /opt/deepin-wine6-stable/bin/wine ",
         "基于 exagear 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al -- /opt/deepin-wine6-stable/bin/wine ",
         "deepin-wine6 stable": "deepin-wine6-stable", 
         "deepin-wine5 stable": "deepin-wine5-stable", 
@@ -1606,10 +1623,10 @@ try:
         "ukylin-wine": "ukylin-wine",
         "基于 linglong 的 deepin-wine6-stable（不推荐）": f"ll-cli run '' --exec '/bin/deepin-wine6-stable'"
     }
-    untipsWine = ["基于 box86 的 deepin-wine6-stable", "基于 exagear 的 deepin-wine6-stable", "基于 linglong 的 deepin-wine6-stable（不推荐）"]
+    untipsWine = ["基于 UOS box86 的 deepin-wine6-stable", "基于 exagear 的 deepin-wine6-stable", "基于 linglong 的 deepin-wine6-stable（不推荐）"]
     canUseWine = []
     if os.path.exists("/opt/deepin-box86/box86"):
-        canUseWine.append("基于 box86 的 deepin-wine6-stable")
+        canUseWine.append("基于 UOS box86 的 deepin-wine6-stable")
     if os.path.exists("/opt/exagear/bin/ubt_x64a64_al"):
         canUseWine.append("基于 exagear 的 deepin-wine6-stable")
     for i in wine.keys():
@@ -1634,8 +1651,14 @@ try:
                 value = ""
                 try:
                     if os.path.exists("/opt/deepin-box86/box86"):
-                        name = "基于 box86 的 "
+                        name = "基于 UOS box86 的 "
                         value = f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86  "
+                    if os.system("which box86") == 0:
+                        name = "基于 box86 的 "
+                        value = f"box86  "
+                    if os.system("which box64") == 0:
+                        name = "基于 box64 的 "
+                        value = f"box64  "
                     if os.path.exists("/opt/exagear/bin/ubt_x64a64_al"):
                         name = "基于 exagear 的 "
                         value = f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al --  "
@@ -1797,8 +1820,11 @@ updateThingsString = '''※1、自动配置解释器支持 bash 语法（新版�
 ※2、修复缺失 wimtools 依赖导致无法正常安装的问题
 ※3、修复基于生态适配活动脚本打包器对话框过多影响使用的问题，并支持指定不同的包名和容器名
 ※4、7z 文件解压不会自动替换文件然后卡死以及因此导致程序闪退的问题
-5、支持通过 exe 路径自动生成 Wine 容器路径
-6、支持禁用/启用 wine 容器是否生成快捷方式的功能
+※5、修复安装更多 Wine 终端调用问题和图标问题
+※6、支持 openkylin
+7、支持通过 exe 路径自动生成 Wine 容器路径
+8、支持禁用/启用 wine 容器是否生成快捷方式的功能以及启用/禁用程序崩溃提示对话框
+9、支持设置 wine 容器代理
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
@@ -2132,6 +2158,16 @@ enabledWineBottleCreateLink = QtWidgets.QAction(QtCore.QCoreApplication.translat
 disbledWineBottleCreateLink = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "禁止指定 wine 容器生成快捷方式"))
 settingWineBottleCreateLink.addAction(enabledWineBottleCreateLink)
 settingWineBottleCreateLink.addAction(disbledWineBottleCreateLink)
+settingWineCrashDialog = wineOption.addMenu(QtCore.QCoreApplication.translate("U", "启用/禁用指定 wine 容器崩溃提示窗口"))
+disbledWineCrashDialog = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "禁用指定 wine 容器崩溃提示窗口"))
+enabledWineCrashDialog = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "启用指定 wine 容器崩溃提示窗口"))
+settingWineCrashDialog.addAction(disbledWineCrashDialog)
+settingWineCrashDialog.addAction(enabledWineCrashDialog)
+settingHttpProxy = wineOption.addMenu(QtCore.QCoreApplication.translate("U", "设置指定 Wine 容器代理"))
+enabledHttpProxy = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "设置指定 wine 容器的代理"))
+disbledHttpProxy = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "禁用指定 wine 容器的代理"))
+settingHttpProxy.addAction(enabledHttpProxy)
+settingHttpProxy.addAction(disbledHttpProxy)
 w1.triggered.connect(OpenWineBotton)
 w2.triggered.connect(InstallWineFont)
 w3.triggered.connect(OpenWineFontPath)
@@ -2167,6 +2203,10 @@ uninstallDxvk.triggered.connect(UninstallDXVK)
 deleteDesktopIcon.triggered.connect(DeleteDesktopIcon)
 enabledWineBottleCreateLink.triggered.connect(lambda: RunWineProgram("reg' delete 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v winemenubuilder.exe '/f"))
 disbledWineBottleCreateLink.triggered.connect(lambda: RunWineProgram("reg' add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v winemenubuilder.exe '/f"))
+disbledWineCrashDialog.triggered.connect(lambda: RunWineProgram("reg' add 'HKEY_CURRENT_USER\Software\Wine\WineDbg' /v ShowCrashDialog /t REG_DWORD /d 00000000 '/f"))
+enabledWineCrashDialog.triggered.connect(lambda: RunWineProgram("reg' add 'HKEY_CURRENT_USER\Software\Wine\WineDbg' /v ShowCrashDialog /t REG_DWORD /d 00000001 '/f"))
+enabledHttpProxy.triggered.connect(SetHttpProxy)
+disbledHttpProxy.triggered.connect(DisbledHttpProxy)
 
 virtualMachine = menu.addMenu(QtCore.QCoreApplication.translate("U", "虚拟机(&V)"))
 v1 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用 Virtualbox 虚拟机运行 Windows 应用"))

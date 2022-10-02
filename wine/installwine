@@ -178,7 +178,7 @@ class DownloadThread(QtCore.QThread):
             if self.downloadUnzip:
                 path = f"{programPath}/{self.fileSaveName.replace('.7z', '')}"
                 shellCommand += f"""mkdir -p \"{path}\"
-7z x \"{savePath}\" -o\"{path}\"
+7z x -y \"{savePath}\" -o\"{path}\"
 """
             if self.downloadDeleteZip:
                 shellCommand += f"rm -rf \"{savePath}\"\n"
@@ -287,6 +287,7 @@ if __name__ == "__main__":
     # 窗口构建
     window = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
+    window.setWindowIcon(QtGui.QIcon(f"{programPath}/../deepin-wine-runner.svg"))
     ui.setupUi(window)
     window.show()
     # 连接信号
