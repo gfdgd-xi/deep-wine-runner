@@ -1,5 +1,5 @@
 Package: spark-deepin-wine-runner
-Version: 2.3.0~alpha1
+Version: 2.3.0
 Maintainer: gfdgd xi <3025613752@qq.com>, 为什么您不喜欢熊出没和阿布呢
 Homepage: https://gitee.com/gfdgd-xi/deep-wine-runner, https://github.com/gfdgd-xi/deep-wine-runner, https://gitlink.org.cn/gfdgd_xi/deep-wine-runner
 Architecture: all
@@ -9,31 +9,18 @@ Recommends: winbind, wimtools
 Section: utils
 Conflicts: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, spark-deepin-wine-runner-52
 Replaces: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, spark-deepin-wine-runner-52
-Installed-Size: 26500
+Installed-Size: 26576
 Description: gfdgd xi、为什么您不喜欢熊出没和阿布呢 制作的 wine 运行器
- 2.2.0 更新内容：
- ※1、Dll 提取工具支持 NT 6.X 及以上版本的 Dll 提取并优化了提示文本
- ※2、支持卸载后自动删除缓存/配置文件（删除配置文件只限 purge 参数删除）
- ※3、DEBUG 模式输出更多信息以方便调试（原本只输出 pid、Err）
- ※4、支持安装 msi 文件
- ※5、修复无法正常评分的问题
- ※6、修复 QQ、TIM 安装后无法正常生成快捷方式的问题
- ※7、基于生态适配活动的打包器更换为 spark-wine-helper 以及添加自动删除残留脚本
- ※8、打包器支持从 deb 文件读取信息
- ※9、修复在 UOS 专业版（鲲鹏）无法正常运行的问题以及组件安装功能无法正常执行安装命令的问题
- ※10、修复出现星火应用商店和官方应用商店反复提示更新死循环的问题
- ※11、新增评分分数预测功能（不准）
- ※12、更换程序接口
- ※13、将 WineHQ 的源换为国内源
- 14、更新组件安装的离线列表
- 15、不再强制依赖深度终端，只做推荐安装
- 16、基于生态活动适配脚本的打包器在打包完成后会弹出对话框提示打包完成
- 17、优化打包器的 spark wine helper 依赖设置方式
- 18、新增 RegShot（注册表比对工具）
- 19、添加 Wine 运行器评分数据的搜索功能
- 以下更新内容旧版本也适用（只限 2.1.0 及以上版本）：
- ※1、在“安装更多Wine”的Wine安装工具中上新 Wine
- ※2、云 Dll 工具上新 Dll
- ※3、VCPP、net 运行库安装工具新增运行库
- 更新时间：2022年09月24日
+ 2.3.0 更新内容：
+ ※1、自动配置解释器支持 bash 语法（新版底层调用 bash，旧版任然使用旧版解析引擎）
+ ※2、修复缺失 wimtools 依赖导致无法正常安装的问题
+ ※3、修复基于生态适配活动脚本打包器对话框过多影响使用的问题，并支持指定不同的包名和容器名
+ ※4、7z 文件解压不会自动替换文件然后卡死以及因此导致程序闪退的问题
+ ※5、修复安装更多 Wine 终端调用问题和图标问题
+ ※6、支持 openkylin
+ 7、支持通过 exe 路径自动生成 Wine 容器路径
+ 8、支持禁用/启用 wine 容器是否生成快捷方式的功能以及启用/禁用程序崩溃提示对话框
+ 9、支持设置 wine 容器代理
+ 10、自动配置脚本支持使用 --help 参数查看帮助
+ 更新时间：2022年10月02日
  作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
