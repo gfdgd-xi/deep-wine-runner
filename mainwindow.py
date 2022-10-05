@@ -632,6 +632,13 @@ def InstallNetFramework():
         wineBottonPath = e1.currentText()
     OpenTerminal(f"'{programPath}/InstallNetFramework.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
 
+def InstallVB():
+    if e1.currentText() == "":
+        wineBottonPath = setting["DefultBotton"]
+    else:
+        wineBottonPath = e1.currentText()
+    OpenTerminal(f"'{programPath}/InstallVisualBasicRuntime.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
+
 def InstallVisualStudioCPlusPlus():
     if e1.currentText() == "":
         wineBottonPath = setting["DefultBotton"]
@@ -1816,16 +1823,7 @@ exe路径\' 参数 \'
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>'''
-updateThingsString = '''※1、自动配置解释器支持 bash 语法（新版底层调用 bash，旧版任然使用旧版解析引擎）
-※2、修复缺失 wimtools 依赖导致无法正常安装的问题
-※3、修复基于生态适配活动脚本打包器对话框过多影响使用的问题，并支持指定不同的包名和容器名
-※4、7z 文件解压不会自动替换文件然后卡死以及因此导致程序闪退的问题
-※5、修复安装更多 Wine 终端调用问题和图标问题
-※6、支持 openkylin
-7、支持通过 exe 路径自动生成 Wine 容器路径
-8、支持禁用/启用 wine 容器是否生成快捷方式的功能以及启用/禁用程序崩溃提示对话框
-9、支持设置 wine 容器代理
-10、自动配置脚本支持使用 --help 参数查看帮助
+updateThingsString = '''※1、新增 VB Runtime 组件安装工具
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
@@ -2107,12 +2105,14 @@ wm1_2 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "在指定wine�
 wm1_3 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "在指定wine、指定容器安装 MSXML"))
 wm1_4 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "在指定wine、指定容器安装 gecko"))
 wm1_5 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "在指定wine、指定容器安装 mono"))
+wm1_7 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "在指定wine、指定容器安装 Visual Basic Runtime"))
 wm1_6 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "在指定wine、指定容器安装其它运行库"))
 wm1.addAction(wm1_1)
 wm1.addAction(wm1_2)
 wm1.addAction(wm1_3)
 wm1.addAction(wm1_4)
 wm1.addAction(wm1_5)
+wm1.addAction(wm1_7)
 wm1.addAction(wm1_6)
 wm2 = wineOption.addMenu(QtCore.QCoreApplication.translate("U", "在指定 Wine、容器运行基础应用"))
 wm2_1 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "打开指定wine、指定容器的控制面板"))
@@ -2188,6 +2188,7 @@ wm1_2.triggered.connect(lambda: threading.Thread(target=InstallVisualStudioCPlus
 wm1_3.triggered.connect(lambda: threading.Thread(target=InstallMSXML).start())
 wm1_4.triggered.connect(lambda: threading.Thread(target=InstallMonoGecko, args=["gecko"]).start())
 wm1_5.triggered.connect(lambda: threading.Thread(target=InstallMonoGecko, args=["mono"]).start())
+wm1_7.triggered.connect(lambda: threading.Thread(target=InstallVB).start())
 wm1_6.triggered.connect(lambda: threading.Thread(target=InstallOther).start())
 wm2_1.triggered.connect(lambda: RunWineProgram("control"))
 wm2_2.triggered.connect(lambda: RunWineProgram("iexplore' 'https://www.deepin.org"))
@@ -2272,6 +2273,8 @@ help.addAction(h2)
 help.addAction(h3)
 help.addAction(h4)
 help.addSeparator()
+wikiHelp = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "程序 Wiki"))
+help.addAction(wikiHelp)
 videoHelp = help.addMenu(QtCore.QCoreApplication.translate("U", "视频教程"))
 easyHelp = QtWidgets.QAction("简易使用教程")
 buildHelp = QtWidgets.QAction("打包教程")
@@ -2296,6 +2299,7 @@ runStatusWebSize.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdg
 h2.triggered.connect(helps)
 h3.triggered.connect(UpdateThings)
 h4.triggered.connect(ThankWindow)
+wikiHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io/wine-runner-wiki"))
 easyHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://www.bilibili.com/video/BV1ma411972Y"))
 buildHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://www.bilibili.com/video/BV1EU4y1k7zr"))
 h5.triggered.connect(UpdateWindow.ShowWindow)

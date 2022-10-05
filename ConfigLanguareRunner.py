@@ -3,7 +3,7 @@
 ###########################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
 # 版本：2.1.0
-# 更新时间：2022年08月25日
+# 更新时间：2022年10月05日
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 构建
 ###########################################################################################
@@ -109,7 +109,8 @@ class Command():
         "enabledwinecrashdialog",
         "disbledwinecrashdialog",
         "disbledWinebottlecreatelink",
-        "enabledWinebottlecreatelink"
+        "enabledWinebottlecreatelink",
+        "installvb"
     ]
 
     def __init__(self, commandString: str) -> None:
@@ -391,6 +392,10 @@ class Command():
             self.command = ["bat", "reg", "add", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings", "/v", "ProxyEnable", "/t", "REG_DWORD", "/d", "00000000", "/f"]
             self.Bat()
 
+        def InstallVB(self):
+            import InstallVisualBasicRuntime
+            return InstallVisualBasicRuntime.Download(self.wineBottonPath, int(self.command[1]), self.wine)
+
         # 可以运行的命令的映射关系
         # 可以被使用的命令的映射
         commandList = {
@@ -431,7 +436,8 @@ class Command():
             "enabledwinecrashdialog": EnabledWineCrashDialog,
             "disbledwinecrashdialog": DisbledWineCrashDialog,
             "disbledWinebottlecreatelink": DisbledWineBottleCreateLink,
-            "enabledWinebottlecreatelink": EnabledWineBottleCreateLink
+            "enabledWinebottlecreatelink": EnabledWineBottleCreateLink,
+            "installvb": InstallVB
         }
 
         # 参数数列表
@@ -474,7 +480,8 @@ class Command():
             "enabledwinecrashdialog": [0],
             "disbledwinecrashdialog": [0],
             "disbledWinebottlecreatelink": [0],
-            "enabledWinebottlecreatelink": [0]
+            "enabledWinebottlecreatelink": [0],
+            "installvb": [1]
         }
         windowsUnrun = [
             "createbotton",
