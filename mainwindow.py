@@ -1824,6 +1824,7 @@ exe路径\' 参数 \'
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>'''
 updateThingsString = '''※1、新增 VB Runtime 组件安装工具
+※2、优化自动配置容器搜索功能，搜索不区分大小写
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
