@@ -10,13 +10,13 @@ keyList = []
 '''keyMap = [
     [keyboard.Key.ctrl, keyboard.Key.alt, "j", "ls"]
 ]'''
+programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 keyChangeMap = [
     ["ctrl", keyboard.Key.ctrl],
     ["alt", keyboard.Key.alt],
     ["esc", keyboard.Key.esc],
-    ["enter", keyboard.Key.enter],
+    ["enter", keyboard.Key.enter]
 ]
-programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 file = open(f"{programPath}/KeyList.json", "r")
 keyMap = json.loads(file.read())
 for i in range(len(keyMap)):
@@ -24,6 +24,12 @@ for i in range(len(keyMap)):
         for j in keyChangeMap:
             if keyMap[i][k] == j[0]:
                 keyMap[i][k] = j[1]
+                continue
+            try:
+                keyMap[i][k] = keyMap[i][k].replace("{programPath}", programPath)
+            except:
+                pass
+            
 
 def on_press(key):
     try:
@@ -48,7 +54,6 @@ def on_release(key):
 
 def ReadKey():
     next = False
-    command = ""
     for i in keyMap:
         for k in range(0, len(i) - 1):
             k = i[k]
@@ -69,11 +74,11 @@ def Read():
         time.sleep(0.01)
 
 # Lock 锁防止多次调用
-if os.path.exists("/tmp/deepin-wine-runner-keyboard-lock"):
+'''if os.path.exists("/tmp/deepin-wine-runner-keyboard-lock"):
     print("不可多次调用")
     print("锁 /tmp/deepin-wine-runner-keyboard-lock 已存在")
     sys.exit(1)
-os.mknod("/tmp/deepin-wine-runner-keyboard-lock")
+os.mknod("/tmp/deepin-wine-runner-keyboard-lock")'''
 threading.Thread(target=Read).start()
 # Collect events until released
 with keyboard.Listener(
