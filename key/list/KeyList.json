@@ -1,0 +1,3 @@
+[
+    ["ctrl", "alt", "j", "'{programPath}/key/sendkeys.sh' a WeChat.exe 3"]
+]

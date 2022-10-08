@@ -7,9 +7,6 @@ import threading
 import traceback
 import pynput.keyboard as keyboard
 keyList = []
-'''keyMap = [
-    [keyboard.Key.ctrl, keyboard.Key.alt, "j", "ls"]
-]'''
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 keyChangeMap = [
     ["ctrl", keyboard.Key.ctrl],
@@ -17,8 +14,16 @@ keyChangeMap = [
     ["esc", keyboard.Key.esc],
     ["enter", keyboard.Key.enter]
 ]
-file = open(f"{programPath}/KeyList.json", "r")
-keyMap = json.loads(file.read())
+keyMap = []
+for i in os.listdir(f"{programPath}/key/list"):
+    try:
+        file = open(f"{programPath}/key/list/{i}", "r")
+        keyMapTemp = json.loads(file.read())
+    except:
+        print(f"{programPath}/key/list/{i} 读取失败！")
+        continue
+    for i in keyMapTemp:
+        keyMap.append(i)
 for i in range(len(keyMap)):
     for k in range(len(keyMap[i])):
         for j in keyChangeMap:
@@ -71,18 +76,27 @@ def ReadKey():
 def Read():
     while True:
         ReadKey()
+        if os.path.exists("/tmp/deepin-wine-runner-keyboard-exit"):
+            # 移除文件
+            try:
+                os.remove("/tmp/deepin-wine-runner-keyboard-exit")
+            except:
+                traceback.print_exc()
+            listener.stop()
+            break
         time.sleep(0.01)
 
 # Lock 锁防止多次调用
-'''if os.path.exists("/tmp/deepin-wine-runner-keyboard-lock"):
+if os.path.exists("/tmp/deepin-wine-runner-keyboard-lock"):
     print("不可多次调用")
     print("锁 /tmp/deepin-wine-runner-keyboard-lock 已存在")
     sys.exit(1)
-os.mknod("/tmp/deepin-wine-runner-keyboard-lock")'''
+os.mknod("/tmp/deepin-wine-runner-keyboard-lock")
 threading.Thread(target=Read).start()
 # Collect events until released
 with keyboard.Listener(
         on_press=on_press,
         on_release=on_release) as listener:
     listener.join()
+    #listener.stop()
 os.remove("/tmp/deepin-wine-runner-keyboard-lock")
