@@ -75,7 +75,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "添加快捷键"))
-        self.addTips.setText(_translate("MainWindow", "暂时只支持特定组合\n"
+        self.addTips.setText(_translate("MainWindow", "暂时只支持 Ctrl+Alt+? 和 Alt+? 的组合\n"
 "文本框内的只能输入单字母"))
         self.exeNameTips.setText(_translate("MainWindow", "可这执行文件名称："))
         self.localTips.setText(_translate("MainWindow", "本地映射："))

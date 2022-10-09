@@ -18,7 +18,7 @@
     <item>
      <widget class="QLabel" name="tips">
       <property name="text">
-       <string>此工具可以用于设置快捷键到 Wine 容器的映射，以便 Wine 程序可以正常的使用快捷键&lt;br&gt;Deepin/UOS将会使用默认的快捷键服务，其它发行版将使用此运行器提供的快捷键服务</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;此工具可以用于设置快捷键到 Wine 容器的映射，以便 Wine 程序可以正常的使用快捷键&lt;br/&gt;Deepin/UOS将会使用默认的快捷键服务，其它发行版将使用此运行器提供的快捷键服务&lt;br&gt;Deepin/UOS将只会提供快捷键添加功能，请在控制中心进行快捷键的修改管理&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
     </item>
@@ -39,6 +39,13 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="addButton">
+        <property name="text">
+         <string>添加</string>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QPushButton" name="editButton">
