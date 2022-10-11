@@ -15,12 +15,13 @@ keyChangeMap = [
     ["enter", keyboard.Key.enter]
 ]
 keyMap = []
-for i in os.listdir(f"{programPath}/key/list"):
+for i in os.listdir(f"{programPath}/list"):
+    print(i)
     try:
-        file = open(f"{programPath}/key/list/{i}", "r")
+        file = open(f"{programPath}/list/{i}", "r")
         keyMapTemp = json.loads(file.read())
     except:
-        print(f"{programPath}/key/list/{i} 读取失败！")
+        print(f"{programPath}/list/{i} 读取失败！")
         continue
     for i in keyMapTemp:
         keyMap.append(i)
@@ -34,8 +35,8 @@ for i in range(len(keyMap)):
                 keyMap[i][k] = keyMap[i][k].replace("{programPath}", programPath)
             except:
                 pass
-            
 
+print(keyList)
 def on_press(key):
     try:
         if key.char in keyList:
@@ -48,7 +49,6 @@ def on_press(key):
         print(f'special key {key} pressed')
 
 def on_release(key):
-    '松开按键时执行。'
     print(f'{key} released')
     try:
         del keyList[keyList.index(key.char)]
@@ -93,10 +93,8 @@ if os.path.exists("/tmp/deepin-wine-runner-keyboard-lock"):
     sys.exit(1)
 os.mknod("/tmp/deepin-wine-runner-keyboard-lock")
 threading.Thread(target=Read).start()
-# Collect events until released
 with keyboard.Listener(
         on_press=on_press,
         on_release=on_release) as listener:
     listener.join()
-    #listener.stop()
 os.remove("/tmp/deepin-wine-runner-keyboard-lock")

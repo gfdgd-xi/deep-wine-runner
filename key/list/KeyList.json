@@ -1,3 +1,1 @@
-[
-    ["ctrl", "alt", "j", "'{programPath}/key/sendkeys.sh' a WeChat.exe 3"]
-]
+[["ctrl", "alt", "c", "'/home/gfdgd_xi/Desktop/deep-wine-runner/key/sendkeys.sh' b 'aa' 4"]]
