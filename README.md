@@ -340,6 +340,21 @@ make run
 ```bash
 make install
 ```
+## Openkylin 如何安装这个 Wine 运行器？
+首先添加作者的源：    
+Gitlink 源（国内推荐）：    
+```bash
+wget https://code.gitlink.org.cn/gfdgd_xi/gfdgd-xi-apt-mirrors/raw/branch/master/sources/gitlink.sh && bash gitlink.sh && rm gitlink.sh
+```
+Github 源（国外推荐）：    
+```bash
+wget https://gfdgd-xi.github.io/gfdgd-xi-apt-mirrors/sources/github.sh && bash github.sh && rm github.sh
+```
+上面二选一，添加完后执行  
+```bash
+sudo apt install spark-deepin-wine-runner
+```
+即可自动补全依赖安装（说实话 openkylin 缺的依赖好多）  
 
 ## 对于 Deepin/UOS（AMD64 平台）小白如何使用该程序？
 下面是送给小白的 wine 运行器简单使用方法，先声明，wine 并***不能完美的运行所有 exe 文件***，利用此 wine 运行器简易安装可执行文件的方法如下：  
