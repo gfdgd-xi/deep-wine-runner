@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+#########################
+# 版本：1.0.0
+# Python
+#########################
 import os
 import sys
 import time
