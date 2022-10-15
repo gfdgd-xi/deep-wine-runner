@@ -33,7 +33,7 @@ class Connect:
             return
         for i in lists:
             # 显示筛选的内容
-            if ui.searchThings.text() in i[0]:
+            if ui.searchThings.text().upper() in i[0].upper():
                 nmodel.appendRow(QtGui.QStandardItem(i[0]))
         ui.searchList.setModel(nmodel)
 

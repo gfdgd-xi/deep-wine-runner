@@ -14,6 +14,7 @@ class Check:
         try:
             bus = dbus.SessionBus()
             bus.get_object("com.deepin.daemon.Keybinding", "/com/deepin/daemon/Keybinding").List()
+            int("a")
             return True
         except:
             print("无法检测到 Deepin/UOS 快捷键服务")
@@ -30,7 +31,9 @@ class Check:
 
 class Click:
     def AddButton():
-        pass
+        os.system(f"'{programPath}/keyboard-add-gui.py'")
+
+    
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
@@ -39,6 +42,10 @@ if __name__ == "__main__":
     ui.setupUi(window)
     # 连接槽
     ui.addButton.clicked.connect(Click.AddButton)
+    ui.startServer.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"nohup '{programPath}/key-get.py' &"]).start())
+    ui.stopServer.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/stop.sh'"]).start())
+    ui.setAutoStart.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/start-auto-server.sh'"]).start())
+    ui.setUnautoStart.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/stop-auto-server.sh'"]).start())
     window.show()
     threading.Thread(target=Check.CheckThreading).start()
     sys.exit(app.exec_())
