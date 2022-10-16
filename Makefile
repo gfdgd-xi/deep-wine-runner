@@ -64,7 +64,7 @@ build:
 	cp -rv InstallDll.py              deb/opt/apps/deepin-wine-runner
 	cp -rv Model              deb/opt/apps/deepin-wine-runner
 	cp -rv API                deb/opt/apps/deepin-wine-runner
-	cp -rv key
+	cp -rv key                deb/opt/apps/deepin-wine-runner
 	dpkg -b deb spark-deepin-wine-runner.deb
 	
 

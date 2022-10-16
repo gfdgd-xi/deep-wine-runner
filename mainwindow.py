@@ -3,7 +3,7 @@
 #################################################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
 # 版本：2.3.0
-# 更新时间：2022年10月02日
+# 更新时间：2022年10月15日
 # 感谢：感谢 wine、deepin-wine 以及星火团队，提供了 wine、deepin-wine、spark-wine-devel 给大家使用，让我能做这个程序
 # 基于 Python3 的 PyQt5 构建
 #################################################################################################################
@@ -715,6 +715,18 @@ def SetDeepinFileDialogDeepin():
         QtWidgets.QMessageBox.critical(widget, "错误", "配置失败")
         return
     QtWidgets.QMessageBox.information(widget, "提示", "设置完成！")
+
+def AddReg():
+    path = QtWidgets.QFileDialog.getOpenFileName(window, "保存路径", get_home(), "reg文件(*.reg);;所有文件(*.*)")
+    if path[0] == "" and not path[1]:
+        return
+    RunWineProgram(f"regedit' /S '{path[0]}' 'HKEY_CURRENT_USER\Software\Wine\DllOverrides")
+
+def SaveDllList():
+    path = QtWidgets.QFileDialog.getSaveFileName(window, "保存路径", get_home(), "reg文件(*.reg);;所有文件(*.*)")
+    if path[0] == "" and not path[1]:
+        return
+    RunWineProgram(f"regedit' /E '{path[0]}' 'HKEY_CURRENT_USER\Software\Wine\DllOverrides")
 
 def SetDeepinFileDialogDefult():
     code = os.system(f"pkexec \"{programPath}/deepin-wine-venturi-setter.py\" defult")
@@ -2170,6 +2182,13 @@ enabledHttpProxy = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "设
 disbledHttpProxy = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "禁用指定 wine 容器的代理"))
 settingHttpProxy.addAction(enabledHttpProxy)
 settingHttpProxy.addAction(disbledHttpProxy)
+dllOver = wineOption.addMenu(QtCore.QCoreApplication.translate("U", "函数顶替库列表"))
+saveDllOver = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "导出函数顶替列表"))
+addDllOver = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "导入函数顶替列表"))
+editDllOver = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "编辑函数顶替库列表"))
+dllOver.addAction(saveDllOver)
+dllOver.addAction(addDllOver)
+dllOver.addAction(editDllOver)
 w1.triggered.connect(OpenWineBotton)
 w2.triggered.connect(InstallWineFont)
 w3.triggered.connect(OpenWineFontPath)
@@ -2192,7 +2211,7 @@ wm1_5.triggered.connect(lambda: threading.Thread(target=InstallMonoGecko, args=[
 wm1_7.triggered.connect(lambda: threading.Thread(target=InstallVB).start())
 wm1_6.triggered.connect(lambda: threading.Thread(target=InstallOther).start())
 wm2_1.triggered.connect(lambda: RunWineProgram("control"))
-wm2_2.triggered.connect(lambda: RunWineProgram("iexplore' 'https://www.deepin.org"))
+wm2_2.triggered.connect(lambda: RunWineProgram("iexplore' 'https://gfdgd-xi.github.io"))
 wm2_3.triggered.connect(lambda: RunWineProgram("regedit"))
 wm2_4.triggered.connect(lambda: RunWineProgram("taskmgr"))
 wm2_5.triggered.connect(lambda: RunWineProgram("explorer"))
@@ -2210,6 +2229,9 @@ disbledWineCrashDialog.triggered.connect(lambda: RunWineProgram("reg' add 'HKEY_
 enabledWineCrashDialog.triggered.connect(lambda: RunWineProgram("reg' add 'HKEY_CURRENT_USER\Software\Wine\WineDbg' /v ShowCrashDialog /t REG_DWORD /d 00000001 '/f"))
 enabledHttpProxy.triggered.connect(SetHttpProxy)
 disbledHttpProxy.triggered.connect(DisbledHttpProxy)
+saveDllOver.triggered.connect(SaveDllList)
+addDllOver.triggered.connect(AddReg)
+editDllOver.triggered.connect(lambda: RunWineProgram("winecfg"))
 
 virtualMachine = menu.addMenu(QtCore.QCoreApplication.translate("U", "虚拟机(&V)"))
 v1 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用 Virtualbox 虚拟机运行 Windows 应用"))

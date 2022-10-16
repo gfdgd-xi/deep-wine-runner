@@ -4,6 +4,9 @@ import sys
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 sys.path.append(f"{programPath}/..")
 
+import os
+import sys
+import json
 import dbus
 import threading
 from UI.KeyAddGui import *
@@ -29,6 +32,17 @@ class Check:
             ui.keyBoardList.setDisabled(True)
             ui.saveButton.setDisabled(True)
 
+def Clear():
+    ui.keyBoardList.model().removeRows(0, ui.keyBoardList.model().rowCount())
+    model = QtCore.QStringListModel(window)
+    with open(f"{programPath}/list/KeyList.json", "r") as file:
+        lists = []
+        for i in json.loads(file.read()):
+            lists.append(f"{i[0]}（{'+'.join(i[1: -1])}），{i[-1]}")
+        model.setStringList(lists)
+    ui.keyBoardList.setModel(model)
+
+
 class Click:
     def AddButton():
         os.system(f"'{programPath}/keyboard-add-gui.py'")
@@ -48,4 +62,5 @@ if __name__ == "__main__":
     ui.setUnautoStart.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/stop-auto-server.sh'"]).start())
     window.show()
     threading.Thread(target=Check.CheckThreading).start()
+    Clear()
     sys.exit(app.exec_())
