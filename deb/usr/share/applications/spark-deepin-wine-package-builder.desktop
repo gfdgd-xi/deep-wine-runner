@@ -9,4 +9,4 @@ Terminal=false
 StartupNotify=true
 NoDisplay=true
 Keywords=exe;scr;
-X-application-x-executable=application/vnd.microsoft.portable-executable;application/x-dosexec;application/x-msi;application-x-executable;application/application-x-ms-dos-executable;application/application-x-msdownload;application/octet-stream
+MimeType=application/x-ms-dos-executable;application/x-msi;application/x-ms-shortcut;

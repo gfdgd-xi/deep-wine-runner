@@ -2,7 +2,7 @@
 # 本来是用C++写的，但在非deepin/UOS编译/运行就是下载不了https文件，只能用python重写
 #########################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布
-# 版本：2.1.0
+# 版本：2.4.0
 # 感谢：感谢 deepin-wine 团队，提供了 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 的 PyQt5 构建
 #########################################################################
@@ -11,6 +11,7 @@
 #################
 import os
 import shutil
+import random
 import sys
 import json
 import traceback
@@ -66,6 +67,8 @@ class Ui_MainWindow(object):
         self.deleteZip.setTristate(False)
         self.deleteZip.setObjectName("deleteZip")
         self.horizontalLayout.addWidget(self.deleteZip)
+        self.addOtherWine = QtWidgets.QPushButton(self.centralWidget)
+        self.horizontalLayout.addWidget(self.addOtherWine)
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem2)
         self.verticalLayout_2.addLayout(self.horizontalLayout)
@@ -81,6 +84,7 @@ class Ui_MainWindow(object):
         self.delButton.setText(_translate("MainWindow", ">>"))
         self.unzip.setText(_translate("MainWindow", "不解压Wine资源文件"))
         self.deleteZip.setText(_translate("MainWindow", "删除下载的资源包，只解压保留（两个选项都选相互抵消）"))
+        self.addOtherWine.setText(_translate("MainWindow", "导入自己的Wine"))
 
 def ReadLocalInformation():
     try:
@@ -96,6 +100,32 @@ def ReadLocalInformation():
     except:
         traceback.print_exc()
         QtWidgets.QMessageBox.critical(window, "错误", traceback.format_exc())
+
+def InstallOtherWine():
+    path = QtWidgets.QFileDialog.getOpenFileName(window, "选择 Wine", os.getenv("~"), "wine(wine);;wine64(wine64);;全部文件(*.*)")
+    if path[0] == "" or not path[1]:
+        return
+    try:
+        # 写入配置文件
+        rfile = open(f"{programPath}/winelist.json", "r")
+        list = json.loads(rfile.read())
+        rfile.close()
+        # 创建映射
+        name = os.path.basename(os.path.dirname(os.path.dirname(path[0])))
+        if name == "" or name == None:
+            name = f"useradd-wine-{random.randint(0, 99999)}"
+        binPath = os.path.dirname(os.path.dirname(path[0]))
+        if os.system(f"ln -s '{binPath}' '{programPath}/{name}'") != 0:
+            QtWidgets.QMessageBox.critical(window, "新建wine映射失败")
+        # C++ 版注释：不直接用 readwrite 是因为不能覆盖写入
+        file = open(f"{programPath}/winelist.json", "w")
+        list.append(name)
+        file.write(json.dumps(list))
+        file.close()
+    except:
+        traceback.print_exc()
+        QtWidgets.QMessageBox.critical(window, "错误", traceback.format_exc())
+    ReadLocalInformation()
 
 # 下面内容均翻译自 C++ 版本
 def ReadInternetInformation():
@@ -293,6 +323,7 @@ if __name__ == "__main__":
     # 连接信号
     ui.addButton.clicked.connect(on_addButton_clicked)
     ui.delButton.clicked.connect(on_delButton_clicked)
+    ui.addOtherWine.clicked.connect(InstallOtherWine)
     ## 加载内容
     # 设置列表双击不会编辑
     ui.localWineList.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
