@@ -55,9 +55,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="saveButton">
+       <widget class="QPushButton" name="delectButton">
         <property name="text">
-         <string>保存</string>
+         <string>删除</string>
         </property>
        </widget>
       </item>

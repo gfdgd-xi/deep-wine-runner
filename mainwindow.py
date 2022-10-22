@@ -1837,10 +1837,13 @@ exe路径\' 参数 \'
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>'''
 updateThingsString = '''※1、新增 VB Runtime 组件安装工具
 ※2、优化自动配置容器搜索功能，搜索不区分大小写
+※3、新增 Wine 容器快捷键映射功能
+※4、修复在 arm 架构运行 Wine 时提示无法解压资源的问题
+※5、修复右键无法找到 Wine 运行器打开方式的问题
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年10月02日"
+updateTime = "2022年10月22日"
 about = f'''<h1>关于</h1>
 <p>一个能让Linux用户更加方便运行Windows应用的程序，内置了对wine图形化的支持和各种Wine工具和自制Wine程序打包器、运行库安装工具等等</p>
 <p>同时也内置了基于VirtualBox制作的小白Windows虚拟机安装工具，可以做到只需要用户下载系统镜像并点击安装即可，无需顾及虚拟机安装、创建、虚拟机的分区等等</p>
@@ -2092,6 +2095,7 @@ w2 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "安装常见字�
 w3 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "安装自定义字体"))
 w4 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "删除选择的 Wine 容器"))
 cleanBottonUOS = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "清理 Wine 容器（基于 Wine 适配活动脚本）"))
+wineKeyboardLnk = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "Wine 快捷键映射"))
 w5 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "打包 wine 应用"))
 w6 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用官方 Wine 适配活动的脚本进行打包"))
 getDllOnInternet = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从互联网获取DLL"))
@@ -2106,6 +2110,8 @@ wineOption.addAction(cleanBottonUOS)
 wineOption.addSeparator()
 wineOption.addAction(w5)
 wineOption.addAction(w6)
+wineOption.addSeparator()
+wineOption.addAction(wineKeyboardLnk)
 wineOption.addSeparator()
 wineOption.addAction(getDllOnInternet)
 wineOption.addAction(w7)
@@ -2196,6 +2202,7 @@ w4.triggered.connect(DeleteWineBotton)
 cleanBottonUOS.triggered.connect(CleanWineBottonByUOS)
 w5.triggered.connect(BuildExeDeb)
 w6.triggered.connect(UOSPackageScript)
+wineKeyboardLnk.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/key/key-add-gui.py'"]).start())
 getDllOnInternet.triggered.connect(GetDllFromInternet)
 w7.triggered.connect(GetDllFromWindowsISO.ShowWindow)
 updateGeek.triggered.connect(lambda: os.system(f"'{programPath}/launch.sh' deepin-terminal -C '\"{programPath}/UpdateGeek.sh\"' --keep-open"))

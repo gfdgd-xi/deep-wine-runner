@@ -69,7 +69,7 @@ class Click:
                 return
         print(keyboardList)
         addList = []
-        addList = keyListDebianMap[ui.wineKeyboardChoose.currentIndex()][:]
+        addList = keyListDebianMap[ui.localKeyboardChoose.currentIndex()][:]
         print(keyListDebianMap)
         print(addList)
         addList.append(ui.localKey.text()[0])
