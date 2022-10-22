@@ -1871,6 +1871,11 @@ Qt 版本：{QtCore.qVersion()}
 <pre>{tips}
 </pre>
 <hr>
+<h1>友谊链接</h1>
+<pre>星火应用商店：https://spark-app.store/
+Deepin 官网：https://www.deepin.org
+Deepin 论坛：https://bbs.deepin.org</pre>
+<hr>
 <h1>©2020~{time.strftime("%Y")} gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
 title = "Wine 运行器 {}".format(version)
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
