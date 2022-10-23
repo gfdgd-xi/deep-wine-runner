@@ -616,7 +616,16 @@ def WineBottonAutoConfig():
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"'{programPath}/AutoConfig.py' '{wine[o1.currentText()]}' '{wineBottonPath}'")
+    option = ""
+    if setting["Architecture"] != "Auto":
+        option += f"WINEARCH={setting['Architecture']} "
+    if setting["MonoGeckoInstaller"]:
+        option += f"WINEDLLOVERRIDES=\"mscoree,mshtml=\" "
+    if not setting["Debug"]:
+        option += "WINEDEBUG=-all "
+    else:
+        option += "WINEDEBUG=FIXME,ERR,WARN,TRACE,Message "
+    os.system(f"env WINEPREFIX='{wineBottonPath}' {option} WINE='{wine[o1.currentText()]}' '{programPath}/AutoConfig.py' '{wine[o1.currentText()]}' '{wineBottonPath}'")
 
 def InstallMonoGecko(program):
     if e1.currentText() == "":
@@ -1840,10 +1849,11 @@ updateThingsString = '''※1、新增 VB Runtime 组件安装工具
 ※3、新增 Wine 容器快捷键映射功能
 ※4、修复在 arm 架构运行 Wine 时提示无法解压资源的问题
 ※5、修复右键无法找到 Wine 运行器打开方式的问题
+※6、修复了容器自动配置脚本 GUI 解析器无法指定 Wine、容器以及位数的功能
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年10月22日"
+updateTime = "2022年10月23日"
 about = f'''<h1>关于</h1>
 <p>一个能让Linux用户更加方便运行Windows应用的程序，内置了对wine图形化的支持和各种Wine工具和自制Wine程序打包器、运行库安装工具等等</p>
 <p>同时也内置了基于VirtualBox制作的小白Windows虚拟机安装工具，可以做到只需要用户下载系统镜像并点击安装即可，无需顾及虚拟机安装、创建、虚拟机的分区等等</p>

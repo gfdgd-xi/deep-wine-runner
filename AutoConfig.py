@@ -89,7 +89,7 @@ class Connect:
         if "($" in things:
             OpenTerminal(f"env WINE='{wine}' WINEPREFIX='{wineprefix}' '{programPath}/ConfigLanguareRunner.py' '{path[0]}' --system")
         # 执行脚本
-        OpenTerminal(f"env WINE='{wine}' WINEPREFIX='{wineprefix}' '{programPath}/AutoShell/main.py' '{path[0]}'")
+        OpenTerminal(f"env WINEARCH='{os.getenv('WINEARCH')}' WINEDEBUG='{os.getenv('WINEDEBUG')}' WINE='{wine}' WINEPREFIX='{wineprefix}' '{programPath}/AutoShell/main.py' '{path[0]}'")
         #process = QtCore.QProcess()
         #process.start(f"{programPath}/launch.sh", ["deepin-terminal", "-e", "env", f"WINE={wine}", f"WINEPREFIX={wineprefix}", f"{programPath}/ConfigLanguareRunner.py", path[0], "--system"])
         #process.waitForFinished()
