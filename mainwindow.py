@@ -1954,7 +1954,7 @@ leftUpLayout.addWidget(e1, 3, 0, 1, 1)
 button1 = QtWidgets.QPushButton("浏览")
 button1.clicked.connect(liulanbutton)
 leftUpLayout.addWidget(button1, 3, 1, 1, 1)
-leftUpLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "请选择要执行的程序：")), 4, 0, 1, 1)
+leftUpLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "请选择要执行的程序（EXE、MSI或者命令）：")), 4, 0, 1, 1)
 e2 = QtWidgets.QComboBox()
 if setting["AutoPath"]:
     e2.editTextChanged.connect(ChangePath)
