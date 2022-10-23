@@ -1850,6 +1850,7 @@ updateThingsString = '''※1、新增 VB Runtime 组件安装工具
 ※4、修复在 arm 架构运行 Wine 时提示无法解压资源的问题
 ※5、修复右键无法找到 Wine 运行器打开方式的问题
 ※6、修复了容器自动配置脚本 GUI 解析器无法指定 Wine、容器以及位数的功能
+※7、容器自动配置脚本支持评分功能
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
