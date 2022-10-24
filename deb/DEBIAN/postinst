@@ -7,6 +7,7 @@
 # 感谢：感谢 wine、deepin-wine 以及星火团队，提供了 wine、deepin-wine、spark-wine-devel 给大家使用，让我能做这个程序
 # 基于 sh
 #################################################################################################################
+python3 -m pip install --upgrade pynput          --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple
 # 如果为非 X86 PC，可以删除掉一些无用组件（主要是用不了）
 if [ `arch` != "x86_64" ]; then
 	echo 非X86架构，删除对非X86架构无用的组件
@@ -32,4 +33,4 @@ fi
 # 设置目录权限，让用户可读可写，方便后续删除组件
 chmod 777 -R /opt/apps/deepin-wine-runner
 # 向服务器返回安装数加1（不显示内容且忽略错误）
-curl https://304626p927.goho.co/spark-deepin-wine-runner/Install.php?Version=2.3.0 -s > /dev/null | true
+curl https://304626p927.goho.co/spark-deepin-wine-runner/Install.php?Version=2.4.0 -s > /dev/null | true

@@ -8,6 +8,7 @@
 # 基于 Bash 制作
 #################################################################################################################
 programPath=$(cd "$(dirname "$0")";pwd)
+cd `dirname $0`
 echo $programPath
 if [[ ! -f "/etc/xdg/autostart/deepin-wine-runner-keyboard.desktop" ]]; then
 	# 判断是否自启动，已经自启动就不再考虑

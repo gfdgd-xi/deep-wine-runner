@@ -616,7 +616,16 @@ def WineBottonAutoConfig():
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    os.system(f"'{programPath}/AutoConfig.py' '{wine[o1.currentText()]}' '{wineBottonPath}'")
+    option = ""
+    if setting["Architecture"] != "Auto":
+        option += f"WINEARCH={setting['Architecture']} "
+    if setting["MonoGeckoInstaller"]:
+        option += f"WINEDLLOVERRIDES=\"mscoree,mshtml=\" "
+    if not setting["Debug"]:
+        option += "WINEDEBUG=-all "
+    else:
+        option += "WINEDEBUG=FIXME,ERR,WARN,TRACE,Message "
+    os.system(f"env WINEPREFIX='{wineBottonPath}' {option} WINE='{wine[o1.currentText()]}' '{programPath}/AutoConfig.py' '{wine[o1.currentText()]}' '{wineBottonPath}'")
 
 def InstallMonoGecko(program):
     if e1.currentText() == "":
@@ -1640,6 +1649,7 @@ try:
         "wine": "wine", 
         "wine64": "wine64", 
         "ukylin-wine": "ukylin-wine",
+        "mono（这不是 wine，但可以实现初步调用运行 .net 应用）": "mono",
         "基于 linglong 的 deepin-wine6-stable（不推荐）": f"ll-cli run '' --exec '/bin/deepin-wine6-stable'"
     }
     untipsWine = ["基于 UOS box86 的 deepin-wine6-stable", "基于 exagear 的 deepin-wine6-stable", "基于 linglong 的 deepin-wine6-stable（不推荐）"]
@@ -1837,10 +1847,15 @@ exe路径\' 参数 \'
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>'''
 updateThingsString = '''※1、新增 VB Runtime 组件安装工具
 ※2、优化自动配置容器搜索功能，搜索不区分大小写
+※3、新增 Wine 容器快捷键映射功能
+※4、修复在 arm 架构运行 Wine 时提示无法解压资源的问题
+※5、修复右键无法找到 Wine 运行器打开方式的问题
+※6、修复了容器自动配置脚本 GUI 解析器无法指定 Wine、容器以及位数的功能
+※7、容器自动配置脚本支持评分功能
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年10月02日"
+updateTime = "2022年10月24日"
 about = f'''<h1>关于</h1>
 <p>一个能让Linux用户更加方便运行Windows应用的程序，内置了对wine图形化的支持和各种Wine工具和自制Wine程序打包器、运行库安装工具等等</p>
 <p>同时也内置了基于VirtualBox制作的小白Windows虚拟机安装工具，可以做到只需要用户下载系统镜像并点击安装即可，无需顾及虚拟机安装、创建、虚拟机的分区等等</p>
@@ -1867,6 +1882,11 @@ Qt 版本：{QtCore.qVersion()}
 <h1>提示</h1>
 <pre>{tips}
 </pre>
+<hr>
+<h1>友谊链接</h1>
+<pre>星火应用商店：https://spark-app.store/
+Deepin 官网：https://www.deepin.org
+Deepin 论坛：https://bbs.deepin.org</pre>
 <hr>
 <h1>©2020~{time.strftime("%Y")} gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
 title = "Wine 运行器 {}".format(version)
@@ -1935,7 +1955,7 @@ leftUpLayout.addWidget(e1, 3, 0, 1, 1)
 button1 = QtWidgets.QPushButton("浏览")
 button1.clicked.connect(liulanbutton)
 leftUpLayout.addWidget(button1, 3, 1, 1, 1)
-leftUpLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "请选择要执行的程序：")), 4, 0, 1, 1)
+leftUpLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "请选择要执行的程序（EXE、MSI或者命令）：")), 4, 0, 1, 1)
 e2 = QtWidgets.QComboBox()
 if setting["AutoPath"]:
     e2.editTextChanged.connect(ChangePath)
@@ -2092,6 +2112,7 @@ w2 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "安装常见字�
 w3 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "安装自定义字体"))
 w4 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "删除选择的 Wine 容器"))
 cleanBottonUOS = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "清理 Wine 容器（基于 Wine 适配活动脚本）"))
+wineKeyboardLnk = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "Wine 快捷键映射"))
 w5 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "打包 wine 应用"))
 w6 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用官方 Wine 适配活动的脚本进行打包"))
 getDllOnInternet = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从互联网获取DLL"))
@@ -2106,6 +2127,8 @@ wineOption.addAction(cleanBottonUOS)
 wineOption.addSeparator()
 wineOption.addAction(w5)
 wineOption.addAction(w6)
+wineOption.addSeparator()
+wineOption.addAction(wineKeyboardLnk)
 wineOption.addSeparator()
 wineOption.addAction(getDllOnInternet)
 wineOption.addAction(w7)
@@ -2196,6 +2219,7 @@ w4.triggered.connect(DeleteWineBotton)
 cleanBottonUOS.triggered.connect(CleanWineBottonByUOS)
 w5.triggered.connect(BuildExeDeb)
 w6.triggered.connect(UOSPackageScript)
+wineKeyboardLnk.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/key/key-add-gui.py'"]).start())
 getDllOnInternet.triggered.connect(GetDllFromInternet)
 w7.triggered.connect(GetDllFromWindowsISO.ShowWindow)
 updateGeek.triggered.connect(lambda: os.system(f"'{programPath}/launch.sh' deepin-terminal -C '\"{programPath}/UpdateGeek.sh\"' --keep-open"))

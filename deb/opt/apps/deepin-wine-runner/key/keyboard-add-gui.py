@@ -22,7 +22,7 @@ class Check:
         try:
             bus = dbus.SessionBus()
             bus.get_object("com.deepin.daemon.Keybinding", "/com/deepin/daemon/Keybinding").List()
-            int("a")
+            #int("a")
             return True
         except:
             print("无法检测到 Deepin/UOS 快捷键服务")
@@ -69,7 +69,7 @@ class Click:
                 return
         print(keyboardList)
         addList = []
-        addList = keyListDebianMap[ui.wineKeyboardChoose.currentIndex()][:]
+        addList = keyListDebianMap[ui.localKeyboardChoose.currentIndex()][:]
         print(keyListDebianMap)
         print(addList)
         addList.append(ui.localKey.text()[0])

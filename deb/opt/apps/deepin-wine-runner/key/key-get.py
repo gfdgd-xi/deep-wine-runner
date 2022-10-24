@@ -91,11 +91,11 @@ def Read():
         time.sleep(0.01)
 
 # Lock 锁防止多次调用
-if os.path.exists("/tmp/deepin-wine-runner-keyboard-lock"):
-    print("不可多次调用")
-    print("锁 /tmp/deepin-wine-runner-keyboard-lock 已存在")
-    sys.exit(1)
-os.mknod("/tmp/deepin-wine-runner-keyboard-lock")
+#if os.path.exists("/tmp/deepin-wine-runner-keyboard-lock"):
+#    print("不可多次调用")
+#    print("锁 /tmp/deepin-wine-runner-keyboard-lock 已存在")
+#    sys.exit(1)
+#os.mknod("/tmp/deepin-wine-runner-keyboard-lock")
 threading.Thread(target=Read).start()
 with keyboard.Listener(
         on_press=on_press,

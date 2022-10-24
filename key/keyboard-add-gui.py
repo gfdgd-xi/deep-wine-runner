@@ -22,7 +22,7 @@ class Check:
         try:
             bus = dbus.SessionBus()
             bus.get_object("com.deepin.daemon.Keybinding", "/com/deepin/daemon/Keybinding").List()
-            int("a")
+            #int("a")
             return True
         except:
             print("无法检测到 Deepin/UOS 快捷键服务")

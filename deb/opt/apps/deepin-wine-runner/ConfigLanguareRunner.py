@@ -553,6 +553,10 @@ class Command():
                     break
 
 app = QtWidgets.QApplication(sys.argv)
+if os.getenv("WINE") != None:
+    programEnv[1][1] = os.getenv("WINE")
+if os.getenv("WINEPREFIX") != None:
+    programEnv[0][1] = os.getenv("WINEPREFIX")
 if __name__ == "__main__":
     optionAll = 0
     if "--debug" in sys.argv:
@@ -560,10 +564,6 @@ if __name__ == "__main__":
     if "--system" in sys.argv:
         programEnv[2][1] = "1"
         optionAll += 1
-    if os.getenv("WINE") != None:
-        programEnv[1][1] = os.getenv("WINE")
-    if os.getenv("WINEPREFIX") != None:
-        programEnv[0][1] = os.getenv("WINEPREFIX")
     if len(sys.argv) - optionAll < 2:
         print("Wine 运行器自动配置文件解析器交互环境")
         print(f"版本：{version}")
@@ -575,7 +575,7 @@ if __name__ == "__main__":
                 break
             com = Command(commandLine)
             com.Run(com.GetCommandList(), programEnv[0][1], programEnv[1][1])
-        exit()
+        sys.exit(int(programEnv[9][1]))
     # 读取文件
     try:
         file = open(sys.argv[1], "r")
@@ -589,3 +589,4 @@ if __name__ == "__main__":
     print(f"©2020~{time.strftime('%Y')} gfdgd xi、为什么您不喜欢熊出没和阿布呢")
     print("--------------------------------------------------------------")
     com.Run(com.GetCommandList(), programEnv[0][1], programEnv[1][1])
+    sys.exit(int(programEnv[9][1]))

@@ -1649,6 +1649,7 @@ try:
         "wine": "wine", 
         "wine64": "wine64", 
         "ukylin-wine": "ukylin-wine",
+        "mono（这不是 wine，但可以实现初步调用运行 .net 应用）": "mono",
         "基于 linglong 的 deepin-wine6-stable（不推荐）": f"ll-cli run '' --exec '/bin/deepin-wine6-stable'"
     }
     untipsWine = ["基于 UOS box86 的 deepin-wine6-stable", "基于 exagear 的 deepin-wine6-stable", "基于 linglong 的 deepin-wine6-stable（不推荐）"]
@@ -1854,7 +1855,7 @@ updateThingsString = '''※1、新增 VB Runtime 组件安装工具
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年10月23日"
+updateTime = "2022年10月24日"
 about = f'''<h1>关于</h1>
 <p>一个能让Linux用户更加方便运行Windows应用的程序，内置了对wine图形化的支持和各种Wine工具和自制Wine程序打包器、运行库安装工具等等</p>
 <p>同时也内置了基于VirtualBox制作的小白Windows虚拟机安装工具，可以做到只需要用户下载系统镜像并点击安装即可，无需顾及虚拟机安装、创建、虚拟机的分区等等</p>

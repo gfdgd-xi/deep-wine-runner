@@ -7,6 +7,7 @@
 # 感谢：感谢 wine、deepin-wine 以及星火团队，提供了 wine、deepin-wine、spark-wine-devel 给大家使用，让我能做这个程序
 # 基于 Bash 制作
 #################################################################################################################
+cd `dirname $0`
 programPath=$(cd "$(dirname "$0")";pwd)
 echo $programPath
 if [[ -f "/etc/xdg/autostart/deepin-wine-runner-keyboard.desktop" ]]; then

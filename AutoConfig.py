@@ -61,12 +61,7 @@ class ProgramRunStatusUpload():
             ProgramRunStatusUpload.starLayout.addWidget(ProgramRunStatusUpload.starList[-1])
         ProgramRunStatusUpload.starLayout.addItem(QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum))
         ProgramRunStatusUpload.programName.setPlaceholderText(QtCore.QCoreApplication.translate("U", "如果这个程序和程序名确实是合法还是检测到敏感词，改为“NULL”即可"))
-        ProgramRunStatusUpload.fen.addItems(["0分",
-    "1分",
-    "2分",
-    "3分",
-    "4分",
-    "5分"])
+        ProgramRunStatusUpload.fen.addItems(["0分", "1分", "2分", "3分", "4分", "5分"])
         ProgramRunStatusUpload.fen.setCurrentIndex(4)
         ProgramRunStatusUpload.fen.currentIndexChanged.connect(ProgramRunStatusUpload.ChangeStar)
         msgWidgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "程序名：")), 0, 0)
@@ -86,7 +81,7 @@ class ProgramRunStatusUpload():
             #if ProgramRunStatusUpload.sha1Value == "":
                 #ProgramRunStatusUpload.sha1Value = ProgramRunStatusUpload.GetSHA1(e2.currentText())
             QtWidgets.QMessageBox.information(None, QtCore.QCoreApplication.translate("U", "提示"), json.loads(requests.post("http://120.25.153.144:30250/bash", {
-            "BashName": ProgramRunStatusUpload.programName.text(),
+            "BashName": ProgramRunStatusUpload.sha1Value,
             "Fen": ProgramRunStatusUpload.fen.currentIndex()
             }).text)["Error"])
         except:
@@ -121,12 +116,21 @@ class ProgramRunStatusShow():
             tipsInfo = "暂时无人提交此脚本运行情况，是否立即提交？"
             
         maxHead = fenlists.index(max(fenlists))
+        allNumber = 0
+        for i in fenlists:
+            allNumber += i
+        try:
+            maxNumber = max(fenlists) / allNumber * 100
+            if tipsInfo == "":
+                tipsInfo = f"有{maxNumber}%的用户选择了这个评分"
+        except:
+            pass
         ProgramRunStatusShow.msgWindow = QtWidgets.QMainWindow()
         msgWidget = QtWidgets.QWidget()
         msgWidgetLayout = QtWidgets.QGridLayout()
         starLayout = QtWidgets.QHBoxLayout()
         uploadButton = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "点此上传运行情况"))
-        uploadButton.clicked.connect(lambda: ProgramRunStatusUpload.ShowWindow(fileName, fileName))
+        uploadButton.clicked.connect(lambda: ProgramRunStatusUpload.ShowWindow(fileName, choose))
         msgWidgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "综合评价：")), 0, 0)
         msgWidgetLayout.addLayout(starLayout, 0, 1)
         msgWidgetLayout.addWidget(QtWidgets.QLabel(tipsInfo), 1, 0, 1, 2)
@@ -145,8 +149,24 @@ class ProgramRunStatusShow():
         msgWidget.setLayout(msgWidgetLayout)
         ProgramRunStatusShow.msgWindow.setCentralWidget(msgWidget)
         ProgramRunStatusShow.msgWindow.setWindowIcon(QtGui.QIcon(iconPath))
-        #ProgramRunStatusShow.msgWindow.setWindowTitle(f"应用“{title}”的运行情况")
+        ProgramRunStatusShow.msgWindow.setWindowTitle(f"脚本“{choose}”运行情况")
         ProgramRunStatusShow.msgWindow.show()
+
+def UploadFen():
+    global lists
+    # 获取选中项
+    try:
+        choose = ui.searchList.selectionModel().selectedIndexes()[0].data()
+    except:
+        QtWidgets.QMessageBox.critical(window, "错误", "您未选择任何配置文件")
+        return
+    fileName = ""
+    for i in lists:
+        print(i)
+        if i[0] == choose:
+            fileName = i[1]
+            break
+    ProgramRunStatusUpload.ShowWindow(fileName, choose)
 
 class Connect:
     def SearchBotton_Clicked():
@@ -249,6 +269,7 @@ if __name__ == "__main__":
     window.show()
     # 连接信号和槽
     ui.saerchBotton.clicked.connect(Connect.SearchBotton_Clicked)
+    ui.uploadFen.clicked.connect(UploadFen)
     ui.runBotton.clicked.connect(Connect.RunBotton_Clicked)
     ui.openFile.triggered.connect(Connect.OpenFile_Triggered)
     ui.exitProgram.triggered.connect(window.close)

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Categories=System
+Exec=deepin-wine-venturi-setter-dtk
+Icon=/opt/apps/deepin-wine-venturi-setter/logo.png
+Name=deepin wine 文管设置器
+StartupNotify=true
+Terminal=false
+Type=Application
