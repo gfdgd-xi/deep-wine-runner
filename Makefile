@@ -48,7 +48,8 @@ build:
 	cp -rv dlls-arm.7z                               deb/opt/apps/deepin-wine-runner
 	cp -rv deepin.list                               deb/opt/apps/deepin-wine-runner
 	cp -rv sparkstore.list                           deb/opt/apps/deepin-wine-runner
-	cp -rv wined3d.dll.so.7z                         deb/opt/apps/deepin-wine-runner
+	cp -rv arm-package.7z                         deb/opt/apps/deepin-wine-runner
+	cp -rv exa.7z                         deb/opt/apps/deepin-wine-runner
 	cp -rv clean-unuse-program.py                    deb/opt/apps/deepin-wine-runner
 	cp -rv InstallNewWineHQ.sh                       deb/opt/apps/deepin-wine-runner
 	cp -rv cleanbottle.sh                            deb/opt/apps/deepin-wine-runner
