@@ -2,17 +2,17 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
-# 版本：2.1.0
-# 更新时间：2022年08月25日
+# 版本：2.4.0
+# 更新时间：2022年10月25日
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 构建
 ###########################################################################################
 #################
 # 引入所需的库
 #################
-from fileinput import filename
 import os
 import sys
+import base64
 import json
 import traceback
 import req as requests
@@ -80,10 +80,10 @@ class ProgramRunStatusUpload():
         try:
             #if ProgramRunStatusUpload.sha1Value == "":
                 #ProgramRunStatusUpload.sha1Value = ProgramRunStatusUpload.GetSHA1(e2.currentText())
-            QtWidgets.QMessageBox.information(None, QtCore.QCoreApplication.translate("U", "提示"), json.loads(requests.post("http://120.25.153.144:30250/bash", {
+            QtWidgets.QMessageBox.information(None, QtCore.QCoreApplication.translate("U", "提示"), requests.post(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0OjMwMjUwL2Jhc2g=").decode("utf-8"), {
             "BashName": ProgramRunStatusUpload.sha1Value,
             "Fen": ProgramRunStatusUpload.fen.currentIndex()
-            }).text)["Error"])
+            }).json()["Error"])
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(None, QtCore.QCoreApplication.translate("U", "错误"), QtCore.QCoreApplication.translate("U", "数据上传失败！"))
@@ -105,7 +105,8 @@ class ProgramRunStatusShow():
                 fileName = i[1]
                 break
         try:
-            fenlists = requests.get(f"http://120.25.153.144/spark-deepin-wine-runner/bashapp/{fileName}/all.json").json()
+            #fenlists = requests.get(f"http://120.25.153.144/spark-deepin-wine-runner/bashapp/{fileName}/all.json").json()
+            fenlists = requests.get(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9iYXNoYXBwLw==").decode("utf-8") + fileName + base64.b64decode("L2FsbC5qc29u").decode("utf-8")).json()
             #r = requests.get(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9hcHAv").decode("utf-8") + sha + base64.b64decode("L3RpdGxlLnR4dA==").decode("utf-8"))
             #r.encoding = "utf-8"
             #title = r.text
