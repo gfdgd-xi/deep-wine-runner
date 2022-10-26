@@ -88,6 +88,78 @@ class ProgramRunStatusUpload():
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(None, QtCore.QCoreApplication.translate("U", "错误"), QtCore.QCoreApplication.translate("U", "数据上传失败！"))
 
+class InformationWindow():
+    def ShowWindow():
+        # 获取选中项
+        try:
+            choose = ui.searchList.selectionModel().selectedIndexes()[0].data()
+        except:
+            QtWidgets.QMessageBox.critical(window, "错误", "您未选择任何配置文件")
+            return
+        fileName = ""
+        for i in lists:
+            print(i)
+            if i[0] == choose:
+                fileName = i[1]
+                break
+        try:
+            get = requests.get(f"{urlSources}/information/{fileName}.txt")
+            if get.status_code / 100 != 2 and get.status_code / 100 != 3:
+                int("Bad")
+            about = get.text
+            if not "<" in about:
+                # 非 Html 标签
+                for i in about.splitlines():
+                    about += f"<p>{i}</p>\n"
+                #about = f"<pre>{about}</pre>"
+            about = f"<h1>关于“{choose}”的介绍</h1>\n{about}"
+        except:
+            traceback.print_exc()
+            about = f"<h1>关于“{choose}”的介绍</h1>\n<p>暂无此程序的介绍</p>"
+        try:
+            import requests as r
+            fenlists = requests.get(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9iYXNoYXBwLw==").decode("utf-8") + fileName + base64.b64decode("L2FsbC5qc29u").decode("utf-8"), timeout=1000).json()
+            tipsInfo = ""
+        except:
+            fenlists = [0, 0, 0, 0, 0]
+            tipsInfo = "暂时无人提交此脚本运行情况，是否立即提交？"
+        maxHead = fenlists.index(max(fenlists))
+        allNumber = 0
+        for i in fenlists:
+            allNumber += i
+        try:
+            maxNumber = max(fenlists) / allNumber * 100
+            if tipsInfo == "":
+                tipsInfo = f"有{maxNumber}%的用户选择了这个评分"
+        except:
+            pass
+        end = 5
+        starHtml = ""
+        if maxHead > 5:
+            for i in range(end):
+                starHtml += f"<img src='{programPath}/Icon/BadStar.svg' width=50>\n"
+        else:
+            for i in range(maxHead):
+                starHtml += f"<img src='{programPath}/Icon/Star.svg' width=50>\n"
+            head = maxHead
+            for i in range(head, end):
+                starHtml += f"<img src='{programPath}/Icon/UnStar.svg' width=50>"
+        about += f"\n<hr/><h1>评分情况</h1>\n<p align='center'>{starHtml}</p>\n<p align='center'>{tipsInfo}</p>"
+        message = QtWidgets.QDialog()
+        messageLayout = QtWidgets.QVBoxLayout()
+        informationText = QtWidgets.QTextBrowser()
+        uploadFen = QtWidgets.QPushButton("提交评分")
+        uploadFen.clicked.connect(lambda: ProgramRunStatusUpload.ShowWindow(fileName, choose))
+        informationText.setHtml(about)
+        messageLayout.addWidget(informationText)
+        messageLayout.addWidget(uploadFen)
+        message.setWindowTitle(f"关于“{choose}”的介绍")
+        message.resize(int(message.frameSize().width() * 1.5), int(message.frameSize().height()))
+        message.setLayout(messageLayout)
+        #message.setWindowModality(ApplicationModal);
+        message.show()
+        message.exec_()
+
 class ProgramRunStatusShow():
     msgWindow = None
     def ShowWindow():
@@ -105,7 +177,6 @@ class ProgramRunStatusShow():
                 fileName = i[1]
                 break
         try:
-            #fenlists = requests.get(f"http://120.25.153.144/spark-deepin-wine-runner/bashapp/{fileName}/all.json").json()
             fenlists = requests.get(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9iYXNoYXBwLw==").decode("utf-8") + fileName + base64.b64decode("L2FsbC5qc29u").decode("utf-8")).json()
             #r = requests.get(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9hcHAv").decode("utf-8") + sha + base64.b64decode("L3RpdGxlLnR4dA==").decode("utf-8"))
             #r.encoding = "utf-8"
@@ -271,6 +342,7 @@ if __name__ == "__main__":
     # 连接信号和槽
     ui.saerchBotton.clicked.connect(Connect.SearchBotton_Clicked)
     ui.uploadFen.clicked.connect(UploadFen)
+    ui.getInfoButton.clicked.connect(InformationWindow.ShowWindow)
     ui.runBotton.clicked.connect(Connect.RunBotton_Clicked)
     ui.openFile.triggered.connect(Connect.OpenFile_Triggered)
     ui.exitProgram.triggered.connect(window.close)

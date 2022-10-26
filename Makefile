@@ -62,7 +62,7 @@ build:
 	cp -rv InstallDll.py                                      deb/opt/apps/deepin-wine-runner/LANG
 	cp -rv ConfigLanguareRunner.py                      deb/opt/apps/deepin-wine-runner
 	cp -rv AutoConfig.py                      deb/opt/apps/deepin-wine-runner
-	cp -rv UI/*.py                    deb/opt/apps/deepin-wine-runner/UI
+	cp -rv UI                    deb/opt/apps/deepin-wine-runner/
 	cp -rv InstallDll.py              deb/opt/apps/deepin-wine-runner
 	cp -rv Model              deb/opt/apps/deepin-wine-runner
 	cp -rv API                deb/opt/apps/deepin-wine-runner

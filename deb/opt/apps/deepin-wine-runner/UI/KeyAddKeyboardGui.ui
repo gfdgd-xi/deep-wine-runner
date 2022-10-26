@@ -22,7 +22,7 @@
     <item>
      <widget class="QLabel" name="addTips">
       <property name="text">
-       <string>暂时只支持 Ctrl+Alt+? 和 Alt+? 的组合
+       <string>暂时只支持特定组合
 文本框内的只能输入单字母</string>
       </property>
      </widget>

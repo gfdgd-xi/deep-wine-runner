@@ -114,8 +114,9 @@ def InstallOtherWine():
         name = os.path.basename(os.path.dirname(os.path.dirname(path[0])))
         if name == "" or name == None:
             name = f"useradd-wine-{random.randint(0, 99999)}"
-        binPath = os.path.dirname(os.path.dirname(path[0]))
-        if os.system(f"ln -s '{binPath}' '{programPath}/{name}'") != 0:
+        #binPath = os.path.dirname(os.path.dirname(path[0]))
+        os.makedirs(f"{programPath}/{name}/bin")
+        if os.system(f"ln -s '{path[0]}' '{programPath}/{name}/bin/wine'") != 0:
             QtWidgets.QMessageBox.critical(window, "新建wine映射失败")
         # C++ 版注释：不直接用 readwrite 是因为不能覆盖写入
         file = open(f"{programPath}/winelist.json", "w")

@@ -1538,7 +1538,7 @@ widget.setLayout(widgetLayout)
 window.setCentralWidget(widget)
 window.setWindowTitle(f"wine 应用打包器 {version}")
 window.setWindowIcon(QtGui.QIcon(iconPath))
-window.resize(int(window.frameSize().width() * 2.1), window.frameSize().height())
+window.resize(int(window.frameSize().width() * 2.1), int(window.frameSize().height()))
 window.show()
 sys.exit(app.exec_())
 # Flag：解包只读control和解包全部读取

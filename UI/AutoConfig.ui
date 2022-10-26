@@ -55,6 +55,13 @@
        </spacer>
       </item>
       <item>
+       <widget class="QPushButton" name="getInfoButton">
+        <property name="text">
+         <string>获取选中项介绍</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="getFen">
         <property name="text">
          <string>获取选中项的评分</string>

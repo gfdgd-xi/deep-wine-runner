@@ -1851,11 +1851,14 @@ updateThingsString = '''※1、新增 VB Runtime 组件安装工具
 ※4、修复在 arm 架构运行 Wine 时提示无法解压资源的问题
 ※5、修复右键无法找到 Wine 运行器打开方式的问题
 ※6、修复了容器自动配置脚本 GUI 解析器无法指定 Wine、容器以及位数的功能
-※7、容器自动配置脚本支持评分功能
+※7、容器自动配置脚本支持评分功能以及脚本内容介绍功能
+※8、支持添加自定义安装的 Wine
+※9、打包器打包的 arm 包支持同时支持 UOS 的 box86 和 exagear
+※10、提供了 Python 的自动配置脚本 API
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年10月24日"
+updateTime = "2022年10月25日"
 about = f'''<h1>关于</h1>
 <p>一个能让Linux用户更加方便运行Windows应用的程序，内置了对wine图形化的支持和各种Wine工具和自制Wine程序打包器、运行库安装工具等等</p>
 <p>同时也内置了基于VirtualBox制作的小白Windows虚拟机安装工具，可以做到只需要用户下载系统镜像并点击安装即可，无需顾及虚拟机安装、创建、虚拟机的分区等等</p>
