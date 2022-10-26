@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 2.3.0</h1>
+<h1 align="center">Wine 运行器 2.4.0</h1>
 <hr>
 
 ## 介绍
@@ -10,7 +10,7 @@ env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 让你可以简易方便的使用 wine  
 是使用 Python3 的 PyQt5 构建的    
 （自己美术功底太差，图标只能在网络上找了）    
-（测试平台：deepin 20.7；UOS 家庭版 21.3.1；Ubuntu 22.04；Ubuntu 20.04；UOS 专业版 1050）    
+（测试平台：deepin 20.7.1；UOS 家庭版 21.3.1；Ubuntu 22.04；Ubuntu 20.04；UOS 专业版 1050；openkylin）    
 ![截图_选择区域_20221002221112.png](https://storage.deepin.org/thread/202210022215217037_截图_选择区域_20221002221112.png)  
 而打包器可以方便的把您的 wine 容器打包成 deb 包供他人使用，程序创建的 deb 构建临时文件夹目录树如下：  
 ```bash
@@ -102,6 +102,21 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志
+### 2.4.0（2022年10月25日）
+**※1、新增 VB Runtime 组件安装工具**  
+**※2、优化自动配置容器搜索功能，搜索不区分大小写**  
+**※3、新增 Wine 容器快捷键映射功能**  
+**※4、修复在 arm 架构运行 Wine 时提示无法解压资源的问题**  
+**※5、修复右键无法找到 Wine 运行器打开方式的问题**  
+**※6、修复了容器自动配置脚本 GUI 解析器无法指定 Wine、容器以及位数的功能**  
+**※7、容器自动配置脚本支持评分功能以及脚本内容介绍功能**  
+**※8、支持添加自定义安装的 Wine**  
+**※9、打包器打包的 arm 包支持同时支持 UOS 的 box86 和 exagear**  
+**※10、提供了 Python 的自动配置脚本 API**  
+![截图_选择区域_20221026213608.png](https://storage.deepin.org/thread/202210262151486316_截图_选择区域_20221026213608.png)
+![截图_选择区域_20221026213546.png](https://storage.deepin.org/thread/202210262151481582_截图_选择区域_20221026213546.png)
+
+
 ### 2.3.0（2022年10月02日）
 **※1、自动配置解释器支持 bash 语法（新版底层调用 bash，旧版任然使用旧版解析引擎）**  
 **※2、修复缺失 wimtools 依赖导致无法正常安装的问题**  
