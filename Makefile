@@ -22,6 +22,7 @@ build:
 	cp -rv deepin-wine-runner-update-bug          deb/opt/apps/deepin-wine-runner
 	cp -rv deepin-wine-runner.svg                 deb/opt/apps/deepin-wine-runner
 	cp -rv deepin-wine-venturi-setter.py          deb/opt/apps/deepin-wine-runner
+	cp -rv InstallVisualBasicRuntime.py           deb/opt/apps/deepin-wine-runner
 	cp -rv DisabledOpengl.reg                     deb/opt/apps/deepin-wine-runner
 	cp -rv EnabledOpengl.reg                      deb/opt/apps/deepin-wine-runner
 	cp -rv geek.exe                               deb/opt/apps/deepin-wine-runner
