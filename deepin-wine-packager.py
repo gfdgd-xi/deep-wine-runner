@@ -1274,6 +1274,7 @@ Description: {e3_text.text()}
             if debArch.currentIndex() == 0:
                 write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/run.sh", debInformation[debArch.currentIndex()]["run.sh"])
             if debArch.currentIndex() == 1:
+                write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/kill.sh", debInformation[debArch.currentIndex()]["kill.sh"])
                 write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/run_with_box86.sh", debInformation[debArch.currentIndex()]["run_with_box86.sh"])
                 write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/run_with_exagear.sh", debInformation[debArch.currentIndex()]["run_with_exagear.sh"])
             write_txt("{}/opt/apps/{}/info".format(debPackagePath, e1_text.text()), debInformation[debArch.currentIndex()]["info"])
@@ -1285,6 +1286,7 @@ Description: {e3_text.text()}
             self.run_command("chmod -Rv 644 {}/opt/apps/{}/info".format(debPackagePath, e1_text.text()))
             self.run_command("chmod -Rv 0755 {}/DEBIAN".format(debPackagePath))
             self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()))
+            self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/kill.sh".format(debPackagePath, e1_text.text()))
             self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/run_with_box86.sh".format(debPackagePath, e1_text.text()))
             self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/run_with_exagear.sh".format(debPackagePath, e1_text.text()))
             self.run_command("chmod -Rv 755 {}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()))
