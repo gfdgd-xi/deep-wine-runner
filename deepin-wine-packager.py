@@ -91,6 +91,94 @@ def ErrorMsg(info):
 def InfoMsg(info):
     QtWidgets.QMessageBox.information(widget, "提示", info)
 
+class build7z_threading(QtCore.QThread):
+    signal = QtCore.pyqtSignal(str)
+    label = QtCore.pyqtSignal(str)
+    getSavePath = QtCore.pyqtSignal(str)
+    errorMsg = QtCore.pyqtSignal(str)
+    infoMsg = QtCore.pyqtSignal(str)
+    disabled_or_NORMAL_all = QtCore.pyqtSignal(bool)
+    build = False
+    def __init__(self, build) -> None:
+        super().__init__()
+        self.build = build
+
+    def run_command(self, command):
+        res = subprocess.Popen([command], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        # 实时读取程序返回
+        while res.poll() is None:
+            try:
+                text = res.stdout.readline().decode("utf8")
+            except:
+                text = ""
+            print(text, end="")
+            self.signal.emit(text)
+
+    def run(self):
+        if e6_text.text() == "/":
+            b = e6_text.text()[:-1]
+        else:
+            b = e6_text.text()
+        debInformation = [
+            {
+                # I386 wine 打包配置文件
+                "Wine": wine[wineVersion.currentText()]
+            },
+            {
+                # ARM64 通用 wine 打包配置文件
+                "Wine": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86 /opt/deepin-wine6-stable/bin/wine ",
+            }
+        ]
+        path = QtWidgets.QFileDialog.getOpenFileName(window)
+        if not path[1] or path[0] == "":
+            return
+        debPackagePath = path[0]
+        Build7z(b, self, debInformation, debPackagePath)
+
+        
+def Build7z(b, self, debInformation, debPackagePath):
+    ###############
+    # 设置容器
+    ###############
+    self.label.emit("正在设置 wine 容器")
+    if e6_text.text()[-3: ] != ".7z":
+        os.chdir(programPath)
+        if cleanBottonByUOS.isChecked():
+            self.run_command(f"WINE='{debInformation[debArch.currentIndex()]['Wine']}' '{programPath}/cleanbottle.sh' '{b}'")
+            os.chdir(b)
+            # 对用户目录进行处理
+            self.run_command("sed -i \"s#$USER#@current_user@#\" ./*.reg")
+            os.chdir(f"{b}/drive_c/users")
+            if os.path.exists(f"{b}/drive_c/users/@current_user@"):
+                self.run_command(f"rm -rfv '{b}/drive_c/users/@current_user@'")
+            self.run_command(f"mv -fv '{os.getlogin()}' @current_user@")
+            # 如果缩放文件 scale.txt 存在，需要移除以便用户自行调节缩放设置
+            if os.path.exists(f"{b}/scale.txt"):
+                os.remove(f"{b}/scale.txt")
+            # 删除因为脚本失误导致用户目录嵌套（如果存在）
+            if os.path.exists(f"{b}{b}/drive_c/users/@current_user@/@current_user@"):
+                shutil.rmtree(f"{b}{b}/drive_c/users/@current_user@/@current_user@")
+            # 删除无用的软链
+            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/我的'*")
+            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/My '*")
+            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Desktop'")
+            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Downloads'")
+            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Templates'")
+    os.chdir(programPath)
+    ###############
+    # 压缩容器
+    ###############
+    self.label.emit("正在打包 wine 容器")
+    # 都有 7z 了为什么要打包呢？
+    if e6_text.text()[-3: ] == ".7z":
+        shutil.copy(e6_text.text(), f"{debPackagePath}/opt/apps/{e1_text.text()}/files/files.7z")
+    else:
+        if debPackagePath[:-3] == ".7z":
+            self.run_command("7z a '{}' {}/*".format(debPackagePath, b))
+        else:
+            self.run_command("7z a {}/opt/apps/{}/files/files.7z {}/*".format(debPackagePath, e1_text.text(), b))
+    
+
 def make_deb(build=False):
     clean_textbox1_things()
     disabled_or_NORMAL_all(False)
@@ -1139,34 +1227,8 @@ fi
             os.mknod("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()))
             #os.mknod("{}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()))
             os.mknod("{}/opt/apps/{}/info".format(debPackagePath, e1_text.text()))
-            ###############
-            # 设置容器
-            ###############
-            self.label.emit("正在设置 wine 容器")
-            if e6_text.text()[-3: ] != ".7z":
-                os.chdir(programPath)
-                if cleanBottonByUOS.isChecked():
-                    self.run_command(f"WINE='{debInformation[debArch.currentIndex()]['Wine']}' '{programPath}/cleanbottle.sh' '{b}'")
-                os.chdir(b)
-                # 对用户目录进行处理
-                self.run_command("sed -i \"s#$USER#@current_user@#\" ./*.reg")
-                os.chdir(f"{b}/drive_c/users")
-                if os.path.exists(f"{b}/drive_c/users/@current_user@"):
-                    self.run_command(f"rm -rfv '{b}/drive_c/users/@current_user@'")
-                self.run_command(f"mv -fv '{os.getlogin()}' @current_user@")
-                # 如果缩放文件 scale.txt 存在，需要移除以便用户自行调节缩放设置
-                if os.path.exists(f"{b}/scale.txt"):
-                    os.remove(f"{b}/scale.txt")
-                # 删除因为脚本失误导致用户目录嵌套（如果存在）
-                if os.path.exists(f"{b}{b}/drive_c/users/@current_user@/@current_user@"):
-                    shutil.rmtree(f"{b}{b}/drive_c/users/@current_user@/@current_user@")
-                # 删除无用的软链
-                self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/我的'*")
-                self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/My '*")
-                self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Desktop'")
-                self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Downloads'")
-                self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Templates'")
-            os.chdir(programPath)
+            #########!!!!!!!
+            Build7z(b, self, debInformation, debPackagePath)
             ###############
             # 压缩 Wine
             ###############
@@ -1179,15 +1241,6 @@ fi
                     shutil.copy(wine[wineVersion.currentText()], f"{debPackagePath}/opt/apps/{e1_text.text()}/files/wine_archive.7z")
                 else:
                     self.run_command(f"7z a '{debPackagePath}/opt/apps/{e1_text.text()}/files/wine_archive.7z' '{wine[wineVersion.currentText()]}/*'")
-            ###############
-            # 压缩容器
-            ###############
-            self.label.emit("正在打包 wine 容器")
-            # 都有 7z 了为什么要打包呢？
-            if e6_text.text()[-3: ] == ".7z":
-                shutil.copy(e6_text.text(), f"{debPackagePath}/opt/apps/{e1_text.text()}/files/files.7z")
-            else:
-                self.run_command("7z a {}/opt/apps/{}/files/files.7z {}/*".format(debPackagePath, e1_text.text(), b))
             ###############
             # 复制文件
             ###############
