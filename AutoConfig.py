@@ -20,11 +20,14 @@ import PyQt5.QtWidgets as QtWidgets
 from UI.AutoConfig import *
 from Model import *
 
-urlSources = [
-    "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/auto",
+urlSourcesList = [
+    "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/auto",  # Gitlink 源
+    "https://gitee.com/gfdgd-xi/deep-wine-runner-auto-configuration-script/raw/master/",  # Gitee 源
+    "https://gfdgd-xi.github.io/deep-wine-runner-auto-configuration-script/",  # Github 源
     "http://gfdgdxi.msns.cn/wine-runner-list/auto/",  # 备用源，纯 IPv6 源
     "http://127.0.0.1/wine-runner-list/auto/"  # 本地测试源
-][0]
+]
+urlSources = urlSourcesList[0]
 lists = []
 class ProgramRunStatusUpload():
     msgWindow = None
@@ -323,6 +326,26 @@ def readtxt(path):
     f.close()  # 关闭文本对象
     return str  # 返回结果
 
+def ChangeSources():
+    global urlSources
+    sources = [ui.actionGitlink, ui.actionGitee, ui.actionGithub, ui.action_IPv6, ui.action]
+    for i in range(0, len(sources)):
+        if sources[i].isChecked():
+            urlSources = urlSourcesList[i]
+            # 解析云列表
+            try:
+                # 获取列表
+                lists = json.loads(requests.get(f"{urlSources}/list.json").text)
+                # 解释列表并显示在 GUI 上
+                nmodel = QtGui.QStandardItemModel(window)
+                for i in lists:
+                    nmodel.appendRow(QtGui.QStandardItem(i[0]))
+                ui.searchList.setModel(nmodel)
+            except:
+                traceback.print_exc()
+                QtWidgets.QMessageBox.critical(window, "提示", "无法连接服务器")
+            break
+
 if __name__ == "__main__":
     homePath = os.path.expanduser('~')
     programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
@@ -343,6 +366,18 @@ if __name__ == "__main__":
     window.setWindowIcon(QtGui.QIcon(f"{programPath}/deepin-wine-runner.svg"))
     iconPath = "{}/deepin-wine-runner.svg".format(programPath)
     window.show()
+    #ui.actionGitlink.setExclusive(True)
+    sourcesGroup = QtWidgets.QActionGroup(window)
+    sourcesGroup.addAction(ui.actionGitlink)
+    sourcesGroup.addAction(ui.actionGitee)
+    sourcesGroup.addAction(ui.actionGithub)
+    sourcesGroup.addAction(ui.action_IPv6)
+    sourcesGroup.addAction(ui.action)
+    sourcesGroup.triggered.connect(ChangeSources)
+    sourcesGroup.setExclusive(True)
+    #for i in [ui.actionGitlink, ui.actionGitee, ui.actionGithub, ui.action_IPv6, ui.action]:
+        #i.triggered.connect(ChangeSources)
+        #pass
     # 连接信号和槽
     ui.saerchBotton.clicked.connect(Connect.SearchBotton_Clicked)
     ui.uploadFen.clicked.connect(UploadFen)
