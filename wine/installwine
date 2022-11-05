@@ -308,7 +308,11 @@ def get_now_lang()->"获取当前语言":
 if __name__ == "__main__":
     localJsonList = []
     internetJsonList = []
-    internetWineSource = "https://code.gitlink.org.cn/gfdgd_xi/wine-mirrors/raw/branch/master/"
+    internetWineSource = [
+        "https://code.gitlink.org.cn/gfdgd_xi/wine-mirrors/raw/branch/master/",
+        "http://gfdgdxi.msns.cn/wine-mirrors/", # 备用源，纯 IPv6 源
+        "http://127.0.0.1/wine-mirrors/"  # 本地测试源
+        ][1]
     app = QtWidgets.QApplication(sys.argv)
     # 读取翻译
     if not get_now_lang() == "zh_CN.UTF-8":

@@ -1295,7 +1295,7 @@ Description: {e3_text.text()}
             ################
             if not self.build:
                 self.label.emit("正在构建 deb 包……")
-                self.run_command("bash -c 'dpkg -b {} {}'".format(debPackagePath, e12_text.text()))
+                self.run_command("bash -c 'dpkg -b \"{}\" \"{}\"'".format(debPackagePath, e12_text.text()))
             ################
             # 完成构建
             ################

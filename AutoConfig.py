@@ -20,7 +20,11 @@ import PyQt5.QtWidgets as QtWidgets
 from UI.AutoConfig import *
 from Model import *
 
-urlSources = "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/auto"
+urlSources = [
+    "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/auto",
+    "http://gfdgdxi.msns.cn/wine-runner-list/auto/",  # 备用源，纯 IPv6 源
+    "http://127.0.0.1/wine-runner-list/auto/"  # 本地测试源
+][0]
 lists = []
 class ProgramRunStatusUpload():
     msgWindow = None
