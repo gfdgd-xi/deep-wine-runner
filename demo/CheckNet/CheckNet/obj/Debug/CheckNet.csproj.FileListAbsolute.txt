@@ -1,0 +1,8 @@
+C:\Users\gfdgd xi\Documents\SharpDevelop Projects\CheckNet\CheckNet\bin\Debug\CheckNet.exe.config
+C:\Users\gfdgd xi\Documents\SharpDevelop Projects\CheckNet\CheckNet\bin\Debug\CheckNet.exe
+C:\Users\gfdgd xi\Documents\SharpDevelop Projects\CheckNet\CheckNet\bin\Debug\CheckNet.pdb
+C:\Users\gfdgd xi\Documents\SharpDevelop Projects\CheckNet\CheckNet\obj\Debug\CheckNet.csprojResolveAssemblyReference.cache
+C:\Users\gfdgd xi\Documents\SharpDevelop Projects\CheckNet\CheckNet\obj\Debug\CheckNet.MainForm.resources
+C:\Users\gfdgd xi\Documents\SharpDevelop Projects\CheckNet\CheckNet\obj\Debug\CheckNet.csproj.GenerateResource.Cache
+C:\Users\gfdgd xi\Documents\SharpDevelop Projects\CheckNet\CheckNet\obj\Debug\CheckNet.exe
+C:\Users\gfdgd xi\Documents\SharpDevelop Projects\CheckNet\CheckNet\obj\Debug\CheckNet.pdb

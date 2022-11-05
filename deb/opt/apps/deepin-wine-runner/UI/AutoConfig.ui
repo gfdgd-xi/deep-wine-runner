@@ -92,7 +92,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>33</height>
+     <height>36</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -103,7 +103,18 @@
     <addaction name="separator"/>
     <addaction name="exitProgram"/>
    </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>切换源</string>
+    </property>
+    <addaction name="actionGitlink"/>
+    <addaction name="actionGitee"/>
+    <addaction name="actionGithub"/>
+    <addaction name="action_IPv6"/>
+    <addaction name="action"/>
+   </widget>
    <addaction name="menu"/>
+   <addaction name="menu_2"/>
   </widget>
   <action name="about">
    <property name="text">
@@ -123,6 +134,49 @@
   <action name="openFile">
    <property name="text">
     <string>打开本地部署脚本</string>
+   </property>
+  </action>
+  <action name="actionGitlink">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Gitlink 源</string>
+   </property>
+  </action>
+  <action name="actionGitee">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Gitee 源</string>
+   </property>
+  </action>
+  <action name="actionGithub">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Github 源</string>
+   </property>
+  </action>
+  <action name="action_IPv6">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>备用源（只限IPv6用户）</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>本地测试源</string>
    </property>
   </action>
  </widget>
