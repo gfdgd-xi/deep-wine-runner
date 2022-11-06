@@ -8,10 +8,10 @@
 # 基于 Python3 的 tkinter 构建
 ###########################################################################################
 cd `dirname $0`
-which VBoxManage
+which VBoxManage1
 if test $? == 0 ; then
     VM/VirtualMachine
     exit
 fi
-echo 未安装 VirtualBox，开始安装，安装结束重新运行即可
-./launch.sh deepin-terminal -C "pkexec apt install virtualbox-6.1 -y && zenity --info --text=\"安装完毕，关闭此对话框和安装终端重新运行程序即可\" --no-wrap" --keep-open
+zenity --info --no-wrap --text="未安装 VirtualBox，请自行安装 VirtualBox 并重新运行"
+#./launch.sh deepin-terminal -C "pkexec apt install virtualbox-6.1 -y && zenity --info --text=\"安装完毕，关闭此对话框和安装终端重新运行程序即可\" --no-wrap" --keep-open
