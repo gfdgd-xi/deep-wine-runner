@@ -13,6 +13,7 @@ build:
 	zip -v -q -r package-script.zip package-script
 	cp -rv VM                                     deb/opt/apps/deepin-wine-runner
 	cp -rv AllInstall.py                          deb/opt/apps/deepin-wine-runner
+	cp -rv kill.sh                          deb/opt/apps/deepin-wine-runner
 	cp -rv req                          deb/opt/apps/deepin-wine-runner
 	cp -rv RegShot                          deb/opt/apps/deepin-wine-runner
 	cp -rv BeCyIconGrabber.exe                    deb/opt/apps/deepin-wine-runner

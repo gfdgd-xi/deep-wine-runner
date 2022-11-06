@@ -7,7 +7,10 @@
 # 感谢：感谢 wine、deepin-wine 以及星火团队，提供了 wine、deepin-wine、spark-wine-devel 给大家使用，让我能做这个程序
 # 基于 sh
 #################################################################################################################
-python3 -m pip install --upgrade pynput          --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple
+# 非强制性的必应组件，所以成功不成功都行
+echo 安装组件
+python3 -m pip install --upgrade pynput          --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple > /dev/null | true
+echo 执行完成
 # 如果为非 X86 PC，可以删除掉一些无用组件（主要是用不了）
 if [ `arch` != "x86_64" ]; then
 	echo 非X86架构，删除对非X86架构无用的组件

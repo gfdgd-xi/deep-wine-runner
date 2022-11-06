@@ -13,6 +13,8 @@
 import os
 import sys
 import json
+import threading
+import webbrowser
 import subprocess
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
@@ -222,6 +224,17 @@ menu = window.menuBar()
 programMenu = menu.addMenu("程序")
 exit = QtWidgets.QAction("退出")
 exit.triggered.connect(window.close)
+uploadSparkStore = menu.addMenu(QtCore.QCoreApplication.translate("U", "投稿到星火应用商店"))
+uploadSparkStoreWebsize = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从网页端投稿"))
+if os.path.exists("/opt/spark-store-submitter/bin/spark-store-submitter"):
+    uploadSparkStoreProgram = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用投稿器投稿（推荐）"))
+else:
+    uploadSparkStoreProgram = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用投稿器投稿（推荐，请先安装投稿器）"))
+    uploadSparkStoreProgram.setDisabled(True)
+uploadSparkStore.addAction(uploadSparkStoreProgram)
+uploadSparkStore.addAction(uploadSparkStoreWebsize)
+uploadSparkStoreWebsize.triggered.connect(lambda: webbrowser.open_new_tab("https://upload.deepinos.org"))
+uploadSparkStoreProgram.triggered.connect(lambda: threading.Thread(target=os.system, args=["/opt/spark-store-submitter/bin/spark-store-submitter"]).start())
 helpMenu = menu.addMenu("帮助")
 help = QtWidgets.QAction("帮助")
 help.triggered.connect(ShowHelp)

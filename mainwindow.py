@@ -1845,20 +1845,15 @@ exe路径\' 参数 \'
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>'''
-updateThingsString = '''※1、新增 VB Runtime 组件安装工具
-※2、优化自动配置容器搜索功能，搜索不区分大小写
-※3、新增 Wine 容器快捷键映射功能
-※4、修复在 arm 架构运行 Wine 时提示无法解压资源的问题
-※5、修复右键无法找到 Wine 运行器打开方式的问题
-※6、修复了容器自动配置脚本 GUI 解析器无法指定 Wine、容器以及位数的功能
-※7、容器自动配置脚本支持评分功能以及脚本内容介绍功能
-※8、支持添加自定义安装的 Wine
-※9、打包器打包的 arm 包支持同时支持 UOS 的 box86 和 exagear
-※10、提供了 Python 的自动配置脚本 API
+updateThingsString = '''※1、不基于生态适配活动脚本的打包器支持只生成制作容器的 7z 包
+※2、两个打包器的容器自动删除脚本添加 kill.sh
+※3、Wine 运行器支持杀死对应容器进程
+4、非生态适配脚本打包器追加运行参数改为 --uri XXX 而非直接 XXX
+5、两个打包器新增星火应用商店投稿入口
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年10月25日"
+updateTime = "2022年11月06日"
 about = f'''<h1>关于</h1>
 <p>一个能让Linux用户更加方便运行Windows应用的程序，内置了对wine图形化的支持和各种Wine工具和自制Wine程序打包器、运行库安装工具等等</p>
 <p>同时也内置了基于VirtualBox制作的小白Windows虚拟机安装工具，可以做到只需要用户下载系统镜像并点击安装即可，无需顾及虚拟机安装、创建、虚拟机的分区等等</p>
@@ -2073,6 +2068,9 @@ programRunLayout.addWidget(button3)
 killProgram = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "终止程序"))
 killProgram.clicked.connect(KillProgram)
 programRunLayout.addWidget(killProgram)
+killBottonProgram = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "终止指定容器的程序"))
+killBottonProgram.clicked.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/kill.sh' '{os.path.basename(e1.currentText())}'"]).start())
+programRunLayout.addWidget(killBottonProgram)
 mainLayout.addWidget(programRun, 2, 1, 1, 1)
 
 # 菜单栏
