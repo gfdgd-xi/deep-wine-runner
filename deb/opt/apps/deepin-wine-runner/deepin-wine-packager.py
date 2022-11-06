@@ -1922,6 +1922,9 @@ try:
     wineVersion.setCurrentText(sys.argv[2])
 except:
     pass
+rmBash.setChecked(True)
+cleanBottonByUOS.setChecked(True)
+chooseWineHelperValue.setChecked(True)
 e12_text.setText(f"{get_desktop_path()}/demo_1.0.0_i386.deb")
 widget.setLayout(widgetLayout)
 window.setCentralWidget(widget)

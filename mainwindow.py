@@ -1856,6 +1856,8 @@ updateThingsString = '''※1、不基于生态适配活动脚本的打包器支�
 9、Geek Uninstaller 版本从 1.5.1.161 升级到 1.5.1.163
 10、容器自动配置脚本添加 installother 命令、修复返回值传递问题
 11、不显示 pip 安装库的提示信息（因为不是很核心的库）
+12、非基于生态适配活动脚本的打包器默认勾选卸载该 deb 后自动删除容器、使用统信活动容器清理脚本、使用星火 wine helper
+13、优化文案
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
@@ -2121,7 +2123,7 @@ w4 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "删除选择的 W
 cleanBottonUOS = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "清理 Wine 容器（基于 Wine 适配活动脚本）"))
 wineKeyboardLnk = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "Wine 快捷键映射"))
 w5 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "打包 wine 应用"))
-w6 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用官方 Wine 适配活动的脚本进行打包"))
+w6 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用官方 Wine 适配活动的脚本进行打包（小白建议使用这个）"))
 getDllOnInternet = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从互联网获取DLL"))
 w7 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从镜像获取DLL（只支持官方安装镜像，DOS内核如 Windows 95 暂不支持）"))
 updateGeek = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从 Geek Uninstaller 官网升级程序"))
