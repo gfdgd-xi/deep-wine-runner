@@ -110,7 +110,8 @@ class Command():
         "disbledwinecrashdialog",
         "disbledWinebottlecreatelink",
         "enabledWinebottlecreatelink",
-        "installvb"
+        "installvb",
+        "installother"
     ]
 
     def __init__(self, commandString: str) -> None:
@@ -396,6 +397,10 @@ class Command():
             import InstallVisualBasicRuntime
             return InstallVisualBasicRuntime.Download(self.wineBottonPath, int(self.command[1]), self.wine)
 
+        def InstallOther(self):
+            import InstallOther
+            return InstallOther.Download(self.wineBottonPath, int(self.command[1]), self.wine)
+
         # 可以运行的命令的映射关系
         # 可以被使用的命令的映射
         commandList = {
@@ -437,7 +442,8 @@ class Command():
             "disbledwinecrashdialog": DisbledWineCrashDialog,
             "disbledWinebottlecreatelink": DisbledWineBottleCreateLink,
             "enabledWinebottlecreatelink": EnabledWineBottleCreateLink,
-            "installvb": InstallVB
+            "installvb": InstallVB,
+            "installother": InstallOther
         }
 
         # 参数数列表
@@ -481,7 +487,8 @@ class Command():
             "disbledwinecrashdialog": [0],
             "disbledWinebottlecreatelink": [0],
             "enabledWinebottlecreatelink": [0],
-            "installvb": [1]
+            "installvb": [1],
+            "installother": [1]
         }
         windowsUnrun = [
             "createbotton",

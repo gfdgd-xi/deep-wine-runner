@@ -21,7 +21,11 @@ def exit():
         sys.exit()
     sys.exit()
 # 获取云列表
-url = "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/dlls"
+sourcesList = [
+    "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/dlls",
+    "http://gfdgdxi.msns.cn/wine-runner-list/dlls"
+]
+url = sourcesList[0]
 print("获取列表中……", end="")
 try:
     lists = json.loads(requests.get(f"{url}/list.json").text)
@@ -49,8 +53,8 @@ def Download(wineBotton, dllName, urlPart, wine: str) -> bool:
         pass
     os.system(f"aria2c -x 16 -s 16 -d '{wineBotton}/drive_c/windows/system32' -o '{dllName}' '{urlPart}'")
     #print(f"WINEPREFIX='{wineBotton}' {wine} reg add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v {os.path.splitext(dllName)[0]} /d native /f")
-    os.system(f"WINEPREFIX='{wineBotton}' {wine} reg add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v {os.path.splitext(dllName)[0]} /d native /f")
-    return 0
+    return os.system(f"WINEPREFIX='{wineBotton}' {wine} reg add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v {os.path.splitext(dllName)[0]} /d native /f")
+    #return 0
 
 def exit():
     input("按回车键退出")

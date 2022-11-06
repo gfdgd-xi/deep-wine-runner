@@ -17,7 +17,11 @@ import shutil
 import req as requests
 homePath = os.path.expanduser('~')
 try:
-    fontList = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/fonts/list.json").text)
+    sources = [
+        "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/fonts/list.json",
+        "http://gfdgdxi.msns.cn/wine-runner-list/fonts/list.json"
+        ]
+    fontList = json.loads(requests.get(sources[0]).text)
 except:
     fontList = [
     ["fake_simsun.ttc", "https://gitlink.org.cn/api/attachments/392168", "simsun.ttc", "fake_simsun.ttc（会替换容器内的宋体，且与 deepin 有问题）"],

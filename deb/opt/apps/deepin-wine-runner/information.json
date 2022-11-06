@@ -1,6 +1,8 @@
 {
-    "Version": "2.4.0",
+    "Version": "2.4.1",
     "Thank": [
+        "感谢 @185******67 反馈的 2.4.0 无法打开 Visual Basic 组件安装工具的问题",
+        "感谢 @shenmo 提供的 在打包器的 postrm 脚本添加 kill.sh、追加参数改为 --uri xxxxxxx、独立生成容器 7z 文件的功能",
         "感谢 @a2035274 @虚幻的早晨 https://bbs.deepin.org/post/238301",
         "感谢 @zhangs https://bbs.deepin.org/post/227948",
         "感谢 @gtjmaster https://bbs.deepin.org/post/225509",
@@ -32,6 +34,7 @@
         "感谢 @办公助手 提供的 2.4.0 打包器支持生成的 arm 架构 deb 包同时支持 UOS box86+exagear 的建议",
         "",
         "感谢统信在 Wine 生态适配活动中提供的打包脚本",
+        "也感谢 Deepin Wine 团体制作的 Deepin Wine 和对应的 Deepin Wine Tools，对本程序有很大的帮助",
         "也感谢 DXVK 的开发者开发了 DXVK 这个程序，项目链接：https://github.com/doitsujin/dxvk",
         "也感谢 WineHQ 开发团队开发的 WineHQ，项目网址：https://dl.winehq.org/",
         "也感谢来自 Vek 的灵感和 Vek 开发者的支持，项目链接：https://jihulab.com/vk",

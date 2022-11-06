@@ -15,7 +15,11 @@ import sys
 import json
 import req as requests
 try:
-    netList = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/net/list.json").text)
+    sourcesList = [
+        "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/net/list.json",
+        "http://gfdgdxi.msns.cn/wine-runner-list/net/list.json"
+    ]
+    netList = json.loads(requests.get(sourcesList[0]).text)
 except:
     netList = [
         ["Microsoft® .NET Framework 1.1 版可转散发套件", "https://download.microsoft.com/download/8/2/7/827bb1ef-f5e1-4464-9788-40ef682930fd/dotnetfx.exe"],
@@ -48,7 +52,7 @@ except:
 def Download(wineBotton: str, id: int, wine: str):
     programName = os.path.split(netList[id][1])[1]
     os.system(f"aria2c -x 16 -s 16 -d \"/tmp/deepin-wine-runner-net\" -o \"{programName}\" \"{netList[id][1]}\"")
-    os.system(f"WINEPREFIX='{wineBotton}' {wine} '/tmp/deepin-wine-runner-net/{programName}'")
+    return os.system(f"WINEPREFIX='{wineBotton}' {wine} '/tmp/deepin-wine-runner-net/{programName}'")
 
 if __name__ == "__main__":
     if "--help" in sys.argv:

@@ -15,8 +15,10 @@ import json
 import shutil
 import random
 import pathlib
+import threading
 import traceback
 import subprocess
+import webbrowser
 from PIL import Image
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
@@ -90,6 +92,113 @@ def ErrorMsg(info):
 
 def InfoMsg(info):
     QtWidgets.QMessageBox.information(widget, "提示", info)
+
+class build7z_threading(QtCore.QThread):
+    signal = QtCore.pyqtSignal(str)
+    label = QtCore.pyqtSignal(str)
+    getSavePath = QtCore.pyqtSignal(str)
+    errorMsg = QtCore.pyqtSignal(str)
+    infoMsg = QtCore.pyqtSignal(str)
+    disabled_or_NORMAL_all = QtCore.pyqtSignal(bool)
+    build = ""
+    def __init__(self, build) -> None:
+        super().__init__()
+        self.build = build
+
+    def run_command(self, command):
+        res = subprocess.Popen([command], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        # 实时读取程序返回
+        while res.poll() is None:
+            try:
+                text = res.stdout.readline().decode("utf8")
+            except:
+                text = ""
+            print(text, end="")
+            self.signal.emit(text)
+
+    def run(self):
+        path = self.build
+        try:
+            self.disabled_or_NORMAL_all.emit(False)
+            if e6_text.text() == "/":
+                b = e6_text.text()[:-1]
+            else:
+                b = e6_text.text()
+            debInformation = [
+                {
+                    # I386 wine 打包配置文件
+                    "Wine": wine[wineVersion.currentText()]
+                },
+                {
+                    # ARM64 通用 wine 打包配置文件
+                    "Wine": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86 /opt/deepin-wine6-stable/bin/wine ",
+                }
+            ]
+            if not path[1] or path[0] == "":
+                return
+            debPackagePath = path[0]
+            Build7z(b, self, debInformation, debPackagePath)
+            self.infoMsg.emit("打包完成！")
+            self.disabled_or_NORMAL_all.emit(True)
+        except:
+            traceback.print_exc()
+            self.errorMsg.emit(traceback.format_exc())
+
+        
+def Build7z(b, self, debInformation, debPackagePath):
+    ###############
+    # 设置容器
+    ###############
+    self.label.emit("正在设置 wine 容器")
+    if e6_text.text()[-3: ] != ".7z":
+        os.chdir(programPath)
+        if cleanBottonByUOS.isChecked():
+            self.run_command(f"WINE='{debInformation[debArch.currentIndex()]['Wine']}' '{programPath}/cleanbottle.sh' '{b}'")
+            os.chdir(b)
+            # 对用户目录进行处理
+            self.run_command("sed -i \"s#$USER#@current_user@#\" ./*.reg")
+            os.chdir(f"{b}/drive_c/users")
+            if os.path.exists(f"{b}/drive_c/users/@current_user@"):
+                self.run_command(f"rm -rfv '{b}/drive_c/users/@current_user@'")
+            self.run_command(f"mv -fv '{os.getlogin()}' @current_user@")
+            # 如果缩放文件 scale.txt 存在，需要移除以便用户自行调节缩放设置
+            if os.path.exists(f"{b}/scale.txt"):
+                os.remove(f"{b}/scale.txt")
+            # 删除因为脚本失误导致用户目录嵌套（如果存在）
+            if os.path.exists(f"{b}{b}/drive_c/users/@current_user@/@current_user@"):
+                shutil.rmtree(f"{b}{b}/drive_c/users/@current_user@/@current_user@")
+            # 删除无用的软链
+            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/我的'*")
+            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/My '*")
+            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Desktop'")
+            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Downloads'")
+            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Templates'")
+    os.chdir(programPath)
+    ###############
+    # 压缩容器
+    ###############
+    self.label.emit("正在打包 wine 容器")
+    # 都有 7z 了为什么要打包呢？
+    if e6_text.text()[-3: ] == ".7z":
+        shutil.copy(e6_text.text(), f"{debPackagePath}/opt/apps/{e1_text.text()}/files/files.7z")
+    else:
+        if debPackagePath[-3: ] == ".7z":
+            self.run_command("7z a '{}' '{}/'*".format(debPackagePath, b))
+        else:
+            self.run_command("7z a {}/opt/apps/{}/files/files.7z '{}/'*".format(debPackagePath, e1_text.text(), b))
+
+
+def Build7zButton_Clicked():
+    path = QtWidgets.QFileDialog.getSaveFileName(window, "选择保存位置", get_home(), "7z文件(*.7z);;所有文件(*.*)")
+    print(path)
+    QT.thread = build7z_threading(path)
+    QT.thread.signal.connect(chang_textbox1_things)
+    QT.thread.label.connect(label13_text_change)
+    QT.thread.getSavePath.connect(SavePathGet)
+    QT.thread.errorMsg.connect(ErrorMsg)
+    QT.thread.infoMsg.connect(InfoMsg)
+    QT.thread.disabled_or_NORMAL_all.connect(disabled_or_NORMAL_all)
+    QT.thread.start()
 
 def make_deb(build=False):
     clean_textbox1_things()
@@ -1139,34 +1248,8 @@ fi
             os.mknod("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()))
             #os.mknod("{}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()))
             os.mknod("{}/opt/apps/{}/info".format(debPackagePath, e1_text.text()))
-            ###############
-            # 设置容器
-            ###############
-            self.label.emit("正在设置 wine 容器")
-            if e6_text.text()[-3: ] != ".7z":
-                os.chdir(programPath)
-                if cleanBottonByUOS.isChecked():
-                    self.run_command(f"WINE='{debInformation[debArch.currentIndex()]['Wine']}' '{programPath}/cleanbottle.sh' '{b}'")
-                os.chdir(b)
-                # 对用户目录进行处理
-                self.run_command("sed -i \"s#$USER#@current_user@#\" ./*.reg")
-                os.chdir(f"{b}/drive_c/users")
-                if os.path.exists(f"{b}/drive_c/users/@current_user@"):
-                    self.run_command(f"rm -rfv '{b}/drive_c/users/@current_user@'")
-                self.run_command(f"mv -fv '{os.getlogin()}' @current_user@")
-                # 如果缩放文件 scale.txt 存在，需要移除以便用户自行调节缩放设置
-                if os.path.exists(f"{b}/scale.txt"):
-                    os.remove(f"{b}/scale.txt")
-                # 删除因为脚本失误导致用户目录嵌套（如果存在）
-                if os.path.exists(f"{b}{b}/drive_c/users/@current_user@/@current_user@"):
-                    shutil.rmtree(f"{b}{b}/drive_c/users/@current_user@/@current_user@")
-                # 删除无用的软链
-                self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/我的'*")
-                self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/My '*")
-                self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Desktop'")
-                self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Downloads'")
-                self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Templates'")
-            os.chdir(programPath)
+            #########!!!!!!!
+            Build7z(b, self, debInformation, debPackagePath)
             ###############
             # 压缩 Wine
             ###############
@@ -1179,15 +1262,6 @@ fi
                     shutil.copy(wine[wineVersion.currentText()], f"{debPackagePath}/opt/apps/{e1_text.text()}/files/wine_archive.7z")
                 else:
                     self.run_command(f"7z a '{debPackagePath}/opt/apps/{e1_text.text()}/files/wine_archive.7z' '{wine[wineVersion.currentText()]}/*'")
-            ###############
-            # 压缩容器
-            ###############
-            self.label.emit("正在打包 wine 容器")
-            # 都有 7z 了为什么要打包呢？
-            if e6_text.text()[-3: ] == ".7z":
-                shutil.copy(e6_text.text(), f"{debPackagePath}/opt/apps/{e1_text.text()}/files/files.7z")
-            else:
-                self.run_command("7z a {}/opt/apps/{}/files/files.7z {}/*".format(debPackagePath, e1_text.text(), b))
             ###############
             # 复制文件
             ###############
@@ -1269,7 +1343,7 @@ Description: {e3_text.text()}
                 write_txt(f"{debPackagePath}/DEBIAN/postinst", debInformation[debArch.currentIndex()]["postinst"])
             if debInformation[debArch.currentIndex()]["postrm"] != "":
                 write_txt(f"{debPackagePath}/DEBIAN/postrm", debInformation[debArch.currentIndex()]["postrm"])
-            write_txt("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()), '#!/usr/bin/env xdg-open\n[Desktop Entry]\nEncoding=UTF-8\nType=Application\nX-Created-By={}\nCategories={};\nIcon={}\nExec="/opt/apps/{}/files/run.sh" {}\nName={}\nComment={}\nMimeType={}\nGenericName={}\nTerminal=false\nStartupNotify=false\n'.format(e4_text.text(), option1_text.currentText(), a, e1_text.text(), e15_text.text(), e8_text.text(), e3_text.text(), e10_text.text(), e1_text.text()))
+            write_txt("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()), '#!/usr/bin/env xdg-open\n[Desktop Entry]\nEncoding=UTF-8\nType=Application\nX-Created-By={}\nCategories={};\nIcon={}\nExec="/opt/apps/{}/files/run.sh" --uri {}\nName={}\nComment={}\nMimeType={}\nGenericName={}\nTerminal=false\nStartupNotify=false\n'.format(e4_text.text(), option1_text.currentText(), a, e1_text.text(), e15_text.text(), e8_text.text(), e3_text.text(), e10_text.text(), e1_text.text()))
             # 要开始分类讨论了
             if debArch.currentIndex() == 0:
                 write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/run.sh", debInformation[debArch.currentIndex()]["run.sh"])
@@ -1722,6 +1796,7 @@ debControlFrame = QtWidgets.QHBoxLayout()
 button5 = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "打包……"))
 installDeb = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "安装打包完成的 deb……"))
 buildDebDir = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "根据填写内容打包模板"))
+build7z = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "打包容器 7z 包"))
 debControlFrame.addWidget(button5)
 debControlFrame.addWidget(installDeb)
 rmBash = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "设置卸载该 deb 后自动删除该容器"))
@@ -1738,6 +1813,7 @@ button2.clicked.connect(button2_cl)
 button4.clicked.connect(button4_cl)
 button5.clicked.connect(make_deb)
 buildDebDir.clicked.connect(lambda: make_deb(True))
+build7z.clicked.connect(Build7zButton_Clicked)
 installDeb.clicked.connect(InstallDeb)
 wineFrame.addWidget(wineVersion)
 # 创建控件
@@ -1800,8 +1876,9 @@ moreSettingLayout.addWidget(e10_text)
 moreSettingLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "打包 deb 架构：")))
 moreSettingLayout.addWidget(debArch)
 moreSetting.setLayout(moreSettingLayout)
-widgetLayout.addWidget(moreSetting, 0, 3, 16, 1)
-widgetLayout.addWidget(buildDebDir, 16, 3)
+widgetLayout.addWidget(moreSetting, 0, 3, 16, 2)
+widgetLayout.addWidget(build7z, 16, 3)
+widgetLayout.addWidget(buildDebDir, 16, 4)
 useInstallWineArch.setDisabled(True)
 wineVersion.currentTextChanged.connect(ChangeWine)
 chooseWineHelperValue.stateChanged.connect(ChangeWine)
@@ -1814,18 +1891,29 @@ e12_text.textChanged.connect(UserPathSet)
 menu = window.menuBar()
 programmenu = menu.addMenu(QtCore.QCoreApplication.translate("U", "程序"))
 debMenu = menu.addMenu(QtCore.QCoreApplication.translate("U", "deb 包"))
+uploadSparkStore = menu.addMenu(QtCore.QCoreApplication.translate("U", "投稿到星火应用商店"))
 help = menu.addMenu(QtCore.QCoreApplication.translate("U", "帮助"))
 exit = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "退出程序"))
 debE = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "只读取 Control 信息"))
 debX = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "读取所有（需解包，时间较久）"))
+uploadSparkStoreWebsize = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从网页端投稿"))
+if os.path.exists("/opt/spark-store-submitter/bin/spark-store-submitter"):
+    uploadSparkStoreProgram = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用投稿器投稿（推荐）"))
+else:
+    uploadSparkStoreProgram = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用投稿器投稿（推荐，请先安装投稿器）"))
+    uploadSparkStoreProgram.setDisabled(True)
 tip = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "小提示"))
 exit.triggered.connect(window.close)
 tip.triggered.connect(helps)
 programmenu.addAction(exit)
 debMenu.addAction(debE)
 debMenu.addAction(debX)
+uploadSparkStore.addAction(uploadSparkStoreProgram)
+uploadSparkStore.addAction(uploadSparkStoreWebsize)
 debE.triggered.connect(lambda: ReadDeb(False))
 debX.triggered.connect(lambda: ReadDeb(True))
+uploadSparkStoreWebsize.triggered.connect(lambda: webbrowser.open_new_tab("https://upload.deepinos.org"))
+uploadSparkStoreProgram.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"/opt/spark-store-submitter/bin/spark-store-submitter '{e12_text.text()}'"]).start())
 help.addAction(tip)
 # 控件配置
 try:

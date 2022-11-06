@@ -111,6 +111,7 @@
     <addaction name="actionGitee"/>
     <addaction name="actionGithub"/>
     <addaction name="action_IPv6"/>
+    <addaction name="action_2"/>
     <addaction name="action"/>
    </widget>
    <addaction name="menu"/>
@@ -144,7 +145,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Gitlink 源</string>
+    <string>Gitlink 源（推荐）</string>
    </property>
   </action>
   <action name="actionGitee">
@@ -160,7 +161,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Github 源</string>
+    <string>Github 源（国外用户推荐）</string>
    </property>
   </action>
   <action name="action_IPv6">
@@ -168,7 +169,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>备用源（只限IPv6用户）</string>
+    <string>备用源1（只限IPv6用户）</string>
    </property>
   </action>
   <action name="action">
@@ -176,7 +177,18 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>本地测试源</string>
+    <string>本地测试源（127.0.0.1）</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>备用源2</string>
    </property>
   </action>
  </widget>

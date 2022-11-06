@@ -15,7 +15,11 @@ import sys
 import json
 import req as requests
 try:
-    netList = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/vscpp/list.json").text)
+    sourcesList = [
+        "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/vscpp/list.json",
+        "http://gfdgdxi.msns.cn/wine-runner-list/vscpp/list.json"
+    ]
+    netList = json.loads(requests.get().text)
 except:
     netList = [
         ["VC6 运行库", "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/vscpp/VC6RedistSetup_deu.exe"],
@@ -38,7 +42,7 @@ def Download(wineBotton: str, id: int, wine: str) -> int:
     except:
         pass
     os.system(f"aria2c -x 16 -s 16 -d '/tmp/deepin-wine-runner-vcpp' -o '{netList[id][2]}' \"{netList[id][1]}\"")
-    os.system(f"WINEPREFIX='{wineBotton}' {wine} '/tmp/deepin-wine-runner-vcpp/{netList[id][2]}'")
+    return os.system(f"WINEPREFIX='{wineBotton}' {wine} '/tmp/deepin-wine-runner-vcpp/{netList[id][2]}'")
 
 if __name__ == "__main__":
     if "--help" in sys.argv:

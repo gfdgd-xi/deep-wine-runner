@@ -73,6 +73,23 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addItem(spacerItem2)
         self.verticalLayout_2.addLayout(self.horizontalLayout)
         MainWindow.setCentralWidget(self.centralWidget)
+        # 菜单栏
+        _translate = QtCore.QCoreApplication.translate
+        self.menu = MainWindow.menuBar()
+        self.changeSources = self.menu.addMenu(_translate("MainWindow", "更换源"))
+        self.gitlinkAction = QtWidgets.QAction(_translate("MainWindow", "Gitlink 源（推荐）"))
+        self.ipv6Action = QtWidgets.QAction(_translate("MainWindow", "备用源（只支持 IPv6 用户）"))
+        self.localAction = QtWidgets.QAction(_translate("MainWindow", "本地测试源（127.0.0.1）"))
+        self.changeSources.addAction(self.gitlinkAction)
+        self.changeSources.addAction(self.ipv6Action)
+        self.changeSources.addAction(self.localAction)
+        for i in [self.gitlinkAction, self.ipv6Action, self.localAction]:
+            i.setCheckable(True)
+        self.gitlinkAction.setChecked(True)
+        self.changeSourcesGroup = QtWidgets.QActionGroup(MainWindow)
+        self.changeSourcesGroup.addAction(self.gitlinkAction)
+        self.changeSourcesGroup.addAction(self.ipv6Action)
+        self.changeSourcesGroup.addAction(self.localAction)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -127,6 +144,17 @@ def InstallOtherWine():
         traceback.print_exc()
         QtWidgets.QMessageBox.critical(window, "错误", traceback.format_exc())
     ReadLocalInformation()
+
+def ChangeSources():
+    global urlSources
+    sources = [ui.gitlinkAction, ui.ipv6Action, ui.localAction]
+    for i in range(0, len(sources)):
+        if sources[i].isChecked():
+            urlSources = internetWineSourceList[i]
+            # 读取信息
+            ReadLocalInformation()
+            ReadInternetInformation()
+            break
 
 # 下面内容均翻译自 C++ 版本
 def ReadInternetInformation():
@@ -308,11 +336,12 @@ def get_now_lang()->"获取当前语言":
 if __name__ == "__main__":
     localJsonList = []
     internetJsonList = []
-    internetWineSource = [
+    internetWineSourceList = [
         "https://code.gitlink.org.cn/gfdgd_xi/wine-mirrors/raw/branch/master/",
         "http://gfdgdxi.msns.cn/wine-mirrors/", # 备用源，纯 IPv6 源
         "http://127.0.0.1/wine-mirrors/"  # 本地测试源
-        ][1]
+        ]
+    internetWineSource = internetWineSourceList[0]
     app = QtWidgets.QApplication(sys.argv)
     # 读取翻译
     if not get_now_lang() == "zh_CN.UTF-8":
@@ -329,6 +358,7 @@ if __name__ == "__main__":
     ui.addButton.clicked.connect(on_addButton_clicked)
     ui.delButton.clicked.connect(on_delButton_clicked)
     ui.addOtherWine.clicked.connect(InstallOtherWine)
+    ui.changeSourcesGroup.triggered.connect(ChangeSources)
     ## 加载内容
     # 设置列表双击不会编辑
     ui.localWineList.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)

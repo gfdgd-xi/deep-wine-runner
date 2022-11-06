@@ -24,7 +24,8 @@ urlSourcesList = [
     "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/auto",  # Gitlink 源
     "https://gitee.com/gfdgd-xi/deep-wine-runner-auto-configuration-script/raw/master/",  # Gitee 源
     "https://gfdgd-xi.github.io/deep-wine-runner-auto-configuration-script/",  # Github 源
-    "http://gfdgdxi.msns.cn/wine-runner-list/auto/",  # 备用源，纯 IPv6 源
+    "http://gfdgdxi.msns.cn/wine-runner-list/auto/",  # 备用源1，纯 IPv6 源
+    "http://120.25.153.144/deep-wine-runner-auto-configuration-script/",  # 备用源2，纯 IPv6 源
     "http://127.0.0.1/wine-runner-list/auto/"  # 本地测试源
 ]
 urlSources = urlSourcesList[0]
@@ -328,7 +329,7 @@ def readtxt(path):
 
 def ChangeSources():
     global urlSources
-    sources = [ui.actionGitlink, ui.actionGitee, ui.actionGithub, ui.action_IPv6, ui.action]
+    sources = [ui.actionGitlink, ui.actionGitee, ui.actionGithub, ui.action_IPv6, ui.action_2, ui.action]
     for i in range(0, len(sources)):
         if sources[i].isChecked():
             urlSources = urlSourcesList[i]
@@ -371,7 +372,7 @@ if __name__ == "__main__":
     sourcesGroup.addAction(ui.actionGitlink)
     sourcesGroup.addAction(ui.actionGitee)
     sourcesGroup.addAction(ui.actionGithub)
-    sourcesGroup.addAction(ui.action_IPv6)
+    sourcesGroup.addAction(ui.action_2)
     sourcesGroup.addAction(ui.action)
     sourcesGroup.triggered.connect(ChangeSources)
     sourcesGroup.setExclusive(True)

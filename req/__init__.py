@@ -10,7 +10,8 @@ if unConnect:
 badUrl = [
     "http://120.25.153.144",
     "https://304626p927.goho.co",
-    "https://30x46269h2.goho.co"
+    "https://30x46269h2.goho.co",
+    "http://gfdgdxi.msns.cn"
 ]
 
 class Respon:

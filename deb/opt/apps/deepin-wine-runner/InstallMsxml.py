@@ -15,7 +15,11 @@ import sys
 import json
 import req as requests
 try:
-    msxmlList = json.loads(requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/msxml/list.json").text)
+    sourcesList = [
+        "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/msxml/list.json",
+        "http://gfdgdxi.msns.cn/wine-runner-list/msxml/list.json"
+    ]
+    msxmlList = json.loads(requests.get(sourcesList[0]).text)
 except:
     msxmlList = [
         ["MSXML 4.0 SP2", "https://www.gitlink.org.cn/api/attachments/390679?gfdgd_xi", "msxml6.0.msi"],
@@ -25,7 +29,7 @@ except:
 
 def Download(wineBotton: str, id: int, wine: str):
     os.system(f"aria2c -x 16 -s 16 -d \"/tmp/deepin-wine-runner-msxml/\" -o \"{msxmlList[id][2]}\" \"{msxmlList[id][1]}\"")
-    os.system(f"WINEPREFIX='{wineBotton}' {wine} msiexec /i \"/tmp/deepin-wine-runner-msxml/{msxmlList[id][2]}\"")
+    return os.system(f"WINEPREFIX='{wineBotton}' {wine} msiexec /i \"/tmp/deepin-wine-runner-msxml/{msxmlList[id][2]}\"")
 
 if __name__ == "__main__":
     if "--help" in sys.argv:
