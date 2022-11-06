@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 2.4.0</h1>
+<h1 align="center">Wine 运行器 2.4.1</h1>
 <hr>
 
 ## 介绍
@@ -101,7 +101,22 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 最后一个是最终生成的包的版本号，版本号命名规则：应用版本号+deepin+数字  
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
-## 更新日志
+## 更新日志 
+### 2.4.1（2022年11月06日）
+**※1、不基于生态适配活动脚本的打包器支持只生成制作容器的 7z 包**  
+**※2、两个打包器的容器自动删除脚本添加 kill.sh**  
+**※3、Wine 运行器支持杀死对应容器进程**  
+**※4、容器自动配置脚本和 Wine 安装器支持切换源**  
+5、非生态适配脚本打包器追加运行参数改为 --uri XXX 而非直接 XXX  
+6、两个打包器新增星火应用商店投稿入口  
+7、优化开启 Windows 虚拟机功能在未安装 VirtualBox 时的提示  
+8、Reg Shot 版本从 1.8.3-beta1V5 升级到 1.9.0  
+9、Geek Uninstaller 版本从 1.5.1.161 升级到 1.5.1.163  
+10、容器自动配置脚本添加 installother 命令、修复返回值传递问题  
+11、不显示 pip 安装库的提示信息（因为不是很核心的库）  
+12、非基于生态适配活动脚本的打包器默认勾选卸载该 deb 后自动删除容器、使用统信活动容器清理脚本、使用星火 wine helper  
+13、优化文案  
+![image.png](https://storage.deepin.org/thread/202211061755115167_image.png)
 ### 2.4.0（2022年10月25日）
 **※1、新增 VB Runtime 组件安装工具**  
 **※2、优化自动配置容器搜索功能，搜索不区分大小写**  
