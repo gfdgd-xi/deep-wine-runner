@@ -1724,7 +1724,33 @@ def ReadDeb(unzip = False):
                 print(f"忽略行：{i}")
 
 def AddTab():
-    pass
+    button2 = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "浏览……"))
+    button2.clicked.connect(button2_cl)
+    e7_text = QtWidgets.QLineEdit()
+    e8_text = QtWidgets.QLineEdit()
+    e9_text = QtWidgets.QLineEdit()
+    e15_text = QtWidgets.QLineEdit()
+    iconTab1 = QtWidgets.QWidget()
+    option1_text = QtWidgets.QComboBox()
+    option1_text.addItems(["Network", "Chat", "Audio", "Video", "Graphics", "Office", "Translation", "Development", "Utility"])
+    option1_text.setCurrentText("Network")
+    #desktopIconTabLayout = QtWidgets.QGridLayout()
+    desktopIconTabLayout = QtWidgets.QGridLayout()
+    desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件路径（※必填）：")), 6, 0, 1, 1)
+    desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的分类（※必填）：")), 7, 0, 1, 1)
+    desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件的参数（选填）：")), 8, 0, 1, 1)
+    desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的名称（※必填）：")), 9, 0, 1, 1)
+    desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的图标（选填）：")), 10, 0, 1, 1)
+    iconTab1.setLayout(desktopIconTabLayout)
+    desktopIconTab.addTab(iconTab1, "Defult")
+    desktopIconTabLayout.addWidget(e7_text, 6, 1, 1, 1)
+    desktopIconTabLayout.addWidget(option1_text, 7, 1, 1, 1)
+    desktopIconTabLayout.addWidget(e15_text, 8, 1, 1, 1)
+    desktopIconTabLayout.addWidget(e8_text, 9, 1, 1, 1)
+    desktopIconTabLayout.addWidget(e9_text, 10, 1, 1, 1)
+    desktopIconTabLayout.addWidget(button2, 10, 2, 1, 1)
+    iconUiList.append([e7_text, option1_text, e15_text, e8_text, e9_text])
+    print(iconUiList)
 
 def DelTab():
     pass
@@ -1756,6 +1782,7 @@ try:
 except:
     pass
 os.chdir("/")
+iconUiList = []
 iconPath = "{}/deepin-wine-runner.svg".format(programPath)
 information = json.loads(readtxt(f"{programPath}/information.json"))
 version = information["Version"]
@@ -1863,6 +1890,8 @@ desktopIconTabLayout.addWidget(e15_text, 8, 1, 1, 1)
 desktopIconTabLayout.addWidget(e8_text, 9, 1, 1, 1)
 desktopIconTabLayout.addWidget(e9_text, 10, 1, 1, 1)
 desktopIconTabLayout.addWidget(button2, 10, 2, 1, 1)
+iconUiList.append([e7_text, option1_text, e15_text, e8_text, e9_text])
+print(iconUiList)
 widgetLayout.addLayout(wineFrame, 12, 1, 1, 1)
 widgetLayout.addWidget(e12_text, 13, 1, 1, 1)
 widgetLayout.addWidget(button4, 13, 2, 1, 1)
