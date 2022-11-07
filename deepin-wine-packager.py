@@ -1723,7 +1723,11 @@ def ReadDeb(unzip = False):
             except:
                 print(f"忽略行：{i}")
 
+def AddTab():
+    pass
 
+def DelTab():
+    pass
 
 ###############
 # 程序信息
@@ -1823,11 +1827,27 @@ widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "
 widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要打包的 deb 包的维护者（※必填）：")), 3, 0, 1, 1)
 widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要解压的 wine 容器的容器名（※必填）：")), 4, 0, 1, 1)
 widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要解压的 wine 容器（※必填）：")), 5, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件路径（※必填）：")), 6, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的分类（※必填）：")), 7, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件的参数（选填）：")), 8, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的名称（※必填）：")), 9, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的图标（选填）：")), 10, 0, 1, 1)
+desktopIconTab = QtWidgets.QTabWidget()
+controlWidget = QtWidgets.QWidget()
+controlWidgetLayout = QtWidgets.QHBoxLayout()
+desktopIconTabAdd = QtWidgets.QPushButton("+")
+desktopIconTabDel = QtWidgets.QPushButton("-")
+controlWidgetLayout.addWidget(desktopIconTabAdd)
+controlWidgetLayout.addWidget(desktopIconTabDel)
+controlWidget.setLayout(controlWidgetLayout)
+desktopIconTab.setCornerWidget(controlWidget)
+desktopIconTabAdd.clicked.connect(AddTab)
+desktopIconTabDel.clicked.connect(DelTab)
+iconTab1 = QtWidgets.QWidget()
+desktopIconTabLayout = QtWidgets.QGridLayout()
+desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件路径（※必填）：")), 6, 0, 1, 1)
+desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的分类（※必填）：")), 7, 0, 1, 1)
+desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件的参数（选填）：")), 8, 0, 1, 1)
+desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的名称（※必填）：")), 9, 0, 1, 1)
+desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的图标（选填）：")), 10, 0, 1, 1)
+iconTab1.setLayout(desktopIconTabLayout)
+desktopIconTab.addTab(iconTab1, "Defult")
+widgetLayout.addWidget(desktopIconTab, 6, 0, 1, 3)
 widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "选择打包的 wine 版本（※必选）：")), 12, 0, 1, 1)
 widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "打包 deb 的保存路径（※必填）：")), 13, 0, 1, 1)
 widgetLayout.addWidget(e1_text, 0, 1, 1, 1)
@@ -1837,12 +1857,12 @@ widgetLayout.addWidget(e4_text, 3, 1, 1, 1)
 widgetLayout.addWidget(e5_text, 4, 1, 1, 1)
 widgetLayout.addWidget(e6_text, 5, 1, 1, 1)
 widgetLayout.addWidget(button1, 5, 2, 1, 1)
-widgetLayout.addWidget(e7_text, 6, 1, 1, 1)
-widgetLayout.addWidget(option1_text, 7, 1, 1, 1)
-widgetLayout.addWidget(e15_text, 8, 1, 1, 1)
-widgetLayout.addWidget(e8_text, 9, 1, 1, 1)
-widgetLayout.addWidget(e9_text, 10, 1, 1, 1)
-widgetLayout.addWidget(button2, 10, 2, 1, 1)
+desktopIconTabLayout.addWidget(e7_text, 6, 1, 1, 1)
+desktopIconTabLayout.addWidget(option1_text, 7, 1, 1, 1)
+desktopIconTabLayout.addWidget(e15_text, 8, 1, 1, 1)
+desktopIconTabLayout.addWidget(e8_text, 9, 1, 1, 1)
+desktopIconTabLayout.addWidget(e9_text, 10, 1, 1, 1)
+desktopIconTabLayout.addWidget(button2, 10, 2, 1, 1)
 widgetLayout.addLayout(wineFrame, 12, 1, 1, 1)
 widgetLayout.addWidget(e12_text, 13, 1, 1, 1)
 widgetLayout.addWidget(button4, 13, 2, 1, 1)
