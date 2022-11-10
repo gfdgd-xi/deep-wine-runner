@@ -85,6 +85,9 @@ class Ui_MainWindow(object):
         self.action_2.setCheckable(True)
         self.action_2.setChecked(False)
         self.action_2.setObjectName("action_2")
+        self.action_3 = QtWidgets.QAction(MainWindow)
+        self.action_3.setCheckable(True)
+        self.action_3.setObjectName("action_3")
         self.menu.addAction(self.openFile)
         self.menu.addSeparator()
         self.menu.addAction(self.exitProgram)
@@ -93,6 +96,7 @@ class Ui_MainWindow(object):
         self.menu_2.addAction(self.actionGithub)
         self.menu_2.addAction(self.action_IPv6)
         self.menu_2.addAction(self.action_2)
+        self.menu_2.addAction(self.action_3)
         self.menu_2.addAction(self.action)
         self.menubar.addAction(self.menu.menuAction())
         self.menubar.addAction(self.menu_2.menuAction())
@@ -121,4 +125,5 @@ class Ui_MainWindow(object):
         self.action_IPv6.setText(_translate("MainWindow", "备用源1（只限IPv6用户）"))
         self.action.setText(_translate("MainWindow", "本地测试源（127.0.0.1）"))
         self.action_2.setText(_translate("MainWindow", "备用源2"))
+        self.action_3.setText(_translate("MainWindow", "备用源3"))
 

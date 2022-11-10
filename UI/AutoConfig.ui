@@ -112,6 +112,7 @@
     <addaction name="actionGithub"/>
     <addaction name="action_IPv6"/>
     <addaction name="action_2"/>
+    <addaction name="action_3"/>
     <addaction name="action"/>
    </widget>
    <addaction name="menu"/>
@@ -189,6 +190,14 @@
    </property>
    <property name="text">
     <string>备用源2</string>
+   </property>
+  </action>
+  <action name="action_3">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>备用源3</string>
    </property>
   </action>
  </widget>
