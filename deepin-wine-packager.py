@@ -33,10 +33,10 @@ def button1_cl():
     if path != "":
         e6_text.setText(path)
 
-def button2_cl():
+def button2_cl(number):
     path = QtWidgets.QFileDialog.getOpenFileName(widget, QtCore.QCoreApplication.translate("U", "选择图标文件"), get_home(), "PNG图标(*.png);;SVG图标(*.svg);;全部文件(*.*)")[0]
     if path != "":
-        e9_text.setText(path)
+        mapLink[number].setText(path)
 
 def button4_cl():
     path = QtWidgets.QFileDialog.getSaveFileName(widget, QtCore.QCoreApplication.translate("U", "保存 deb 包"), get_home(), "deb 文件(*.deb);;所有文件(*.*)", "{}_{}_i386.deb".format(e1_text.text(), e2_text.text()))[0]
@@ -239,7 +239,7 @@ def label13_text_change(thing):
 
 def ReplaceText(string: str, lists: list):
     for i in lists:
-        string.replace(i[0], i[1])
+        string = string.replace(i[0], i[1])
     return string
 
 class make_deb_threading(QtCore.QThread):
@@ -301,19 +301,36 @@ class make_deb_threading(QtCore.QThread):
                 b = e6_text.text()[:-1]
             else:
                 b = e6_text.text()
-            if e9_text.text() != "":
-                # 获取图片格式（不太准）
-                try:
-                    im = Image.open(e9_text.text())
-                    imms = im.format.lower()
-                except: # 未知（就直接设置为 svg 后缀）
-                    imms = ".svg"
-                a = "/opt/apps/{}/entries/icons/hicolor/scalable/apps/{}.{}".format(e1_text.text(), e1_text.text(), imms)
-                if not os.path.exists(e9_text.text()):
-                    self.errorMsg.emit("图标的路径填写错误，无法进行构建 deb 包")
-                    self.disabled_or_NORMAL_all.emit(True)
-                    self.label.emit("图标的路径填写错误，无法进行构建 deb 包")
-                    return
+            if desktopIconTab.count() <= 1:
+                if e9_text.text() != "":
+                    # 获取图片格式（不太准）
+                    try:
+                        im = Image.open(e9_text.text())
+                        imms = im.format.lower()
+                    except: # 未知（就直接设置为 svg 后缀）
+                        imms = ".svg"
+                    a = "/opt/apps/{}/entries/icons/hicolor/scalable/apps/{}.{}".format(e1_text.text(), e1_text.text(), imms)
+                    if not os.path.exists(e9_text.text()):
+                        self.errorMsg.emit("图标的路径填写错误，无法进行构建 deb 包")
+                        self.disabled_or_NORMAL_all.emit(True)
+                        self.label.emit("图标的路径填写错误，无法进行构建 deb 包")
+                        return
+            else:
+                a = []
+                for i in iconUiList:
+                    if i[4].text != "":
+                        # 获取图片格式（不太准）
+                        try:
+                            im = Image.open(e9_text.text())
+                            imms = im.format.lower()
+                        except:
+                            imms = ".svg"
+                        a.append("/opt/apps/{}/entries/icons/hicolor/scalable/apps/{}-{}.{}".format(e1_text.text(), e1_text.text(), os.path.splitext(os.path.basename(i[0].text().replace("\\", "/")))[0], imms))
+                        if not os.path.exists(i[4].text()):
+                            self.errorMsg.emit("图标的路径填写错误，无法进行构建 deb 包")
+                            self.disabled_or_NORMAL_all.emit(True)
+                            self.label.emit("图标的路径填写错误，无法进行构建 deb 包")
+                            return
             if not os.path.exists(e6_text.text()):
                 print("aa")
                 self.errorMsg.emit("路径填写错误，无法继续构建 deb 包")
@@ -564,6 +581,36 @@ download_image() {{
 	popd >/dev/null
 }}
 
+move_box86_runsh() {{
+    if [[ -f $DEB_PATH/files/run_with_exagear.sh ]]; then
+        echo 单图标
+        mv $DEB_PATH/files/run_with_exagear.sh $DEB_PATH/files/run.sh
+    else
+        echo 多图标
+        for shell_path in $(ls $DEB_PATH/files/*_with_exagear.sh)
+            do
+            name=${{shell_path#$DEB_PATH/files/}}
+            name=${{name%_with_exagear.sh}}
+            mv $shell_path $DEB_PATH/files/$name.sh
+            done
+    fi
+}}
+
+move_exagear_runsh() {{
+    if [[ -f $DEB_PATH/files/run_with_exagear.sh ]]; then
+        echo 单图标
+        mv $DEB_PATH/files/run_with_box86.sh $DEB_PATH/files/run.sh
+    else
+        echo 多图标
+        for shell_path in $(ls $DEB_PATH/files/*_with_box86.sh)
+            do
+            name=${{shell_path#$DEB_PATH/files/}}
+            name=${{name%_with_box86.sh}}
+            mv $shell_path $DEB_PATH/files/$name.sh
+            done
+    fi
+}}
+
 if [[ "$KUNPENG" == "$cpu_vendor" ]] || [[ $CHECK_ARM32 != 0 ]];then
 	echo "use exagear as emulator..."
 	if [ ! -d /opt/exagear/bin ];then
@@ -577,10 +624,11 @@ if [[ "$KUNPENG" == "$cpu_vendor" ]] || [[ $CHECK_ARM32 != 0 ]];then
 	if [ ! -e /opt/exagear/bin/ubt_x64a64_al ];then
 		cp $DEB_PATH/files/exa/ubt_x64a64_al /opt/exagear/bin/ubt_x64a64_al
 	fi
-	mv $DEB_PATH/files/run_with_exagear.sh $DEB_PATH/files/run.sh
+    move_exagear_runsh
 	mv $DEB_PATH/files/exa/wineserver /opt/deepin-wine6-stable/bin/wineserver
 else
 	echo "use box86 as emulator..."
+    move_box86_runsh
 	mv $DEB_PATH/files/run_with_box86.sh $DEB_PATH/files/run.sh
 fi
 
@@ -1250,7 +1298,7 @@ fi
             ###############
             self.label.emit("正在创建文件……")
             os.mknod("{}/DEBIAN/control".format(debPackagePath))
-            os.mknod("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()))
+            #os.mknod("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()))
             #os.mknod("{}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()))
             os.mknod("{}/opt/apps/{}/info".format(debPackagePath, e1_text.text()))
             #########!!!!!!!
@@ -1308,8 +1356,12 @@ fi
                 self.run_command(f"cp -rv '{programPath}/arm-package/'* {debPackagePath}/opt/apps/{e1_text.text()}/files/")
                 #self.run_command(f"cp -rv '{programPath}/wined3d.dll.so' {debPackagePath}/opt/apps/{e1_text.text()}/files/")
                 pass    
-            if e9_text.text() != "":
-                shutil.copy(e9_text.text(), "{}/opt/apps/{}/entries/icons/hicolor/scalable/apps/{}.{}".format(debPackagePath, e1_text.text(), e1_text.text(), imms))
+            if desktopIconTab.count() <= 1:
+                if e9_text.text() != "":
+                    shutil.copy(e9_text.text(), "{}/opt/apps/{}/entries/icons/hicolor/scalable/apps/{}.{}".format(debPackagePath, e1_text.text(), e1_text.text(), imms))
+            else:
+                for i in range(len(a)):
+                    shutil.copy(iconUiList[i][4].text(), "{}/{}".format(debPackagePath, a[i]))
             ################
             # 获取文件大小
             ################
@@ -1355,7 +1407,25 @@ Description: {e3_text.text()}
                 ["@@@DEB_PACKAGE_NAME@@@", e1_text.text()],
                 ["@@@APPRUN_CMD@@@", wine[wineVersion.currentText()]]
             ]
-            write_txt("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()), '#!/usr/bin/env xdg-open\n[Desktop Entry]\nEncoding=UTF-8\nType=Application\nX-Created-By={}\nCategories={};\nIcon={}\nExec="/opt/apps/{}/files/run.sh" --uri {}\nName={}\nComment={}\nMimeType={}\nGenericName={}\nTerminal=false\nStartupNotify=false\n'.format(e4_text.text(), option1_text.currentText(), a, e1_text.text(), e15_text.text(), e8_text.text(), e3_text.text(), e10_text.text(), e1_text.text()))
+            if desktopIconTab.count() <= 1:
+                write_txt("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()), '#!/usr/bin/env xdg-open\n[Desktop Entry]\nEncoding=UTF-8\nType=Application\nX-Created-By={}\nCategories={};\nIcon={}\nExec="/opt/apps/{}/files/run.sh" --uri {}\nName={}\nComment={}\nMimeType={}\nGenericName={}\nTerminal=false\nStartupNotify=false\n'.format(e4_text.text(), option1_text.currentText(), a, e1_text.text(), e15_text.text(), e8_text.text(), e3_text.text(), e10_text.text(), e1_text.text()))
+            else:
+                for i in range(len(iconUiList)):
+                    write_txt("{}/opt/apps/{}/entries/applications/{}-{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text(), os.path.splitext(os.path.basename(iconUiList[i][0].text().replace("\\", "/")))[0]), f'''#!/usr/bin/env xdg-open
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+X-Created-By={e4_text.text()}
+Categories={iconUiList[i][1].currentText()};
+Icon={a[i]}
+Exec="/opt/apps/{e1_text.text()}/files/run.sh" --uri {iconUiList[i][2].text()}
+Name={iconUiList[i][3].text()}
+Comment={e3_text.text()}
+MimeType={e10_text.text()}
+GenericName={e1_text.text()}
+Terminal=false
+StartupNotify=false
+''')
             # 要开始分类讨论了
             if debArch.currentIndex() == 0:
                 if desktopIconTab.count() <= 1:
@@ -1396,11 +1466,11 @@ Description: {e3_text.text()}
             self.run_command("chmod -Rv 644 {}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()))
             self.run_command("chmod -Rv 644 {}/opt/apps/{}/info".format(debPackagePath, e1_text.text()))
             self.run_command("chmod -Rv 0755 {}/DEBIAN".format(debPackagePath))
-            self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()))
-            self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/kill.sh".format(debPackagePath, e1_text.text()))
-            self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/run_with_box86.sh".format(debPackagePath, e1_text.text()))
-            self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/run_with_exagear.sh".format(debPackagePath, e1_text.text()))
-            self.run_command("chmod -Rv 755 {}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()))
+            self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/*.sh".format(debPackagePath, e1_text.text()))
+            #self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/kill.sh".format(debPackagePath, e1_text.text()))
+            #self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/*_with_box86.sh".format(debPackagePath, e1_text.text()))
+            #self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/*_with_exagear.sh".format(debPackagePath, e1_text.text()))
+            self.run_command("chmod -Rv 755 {}/opt/apps/{}/entries/applications/*.desktop".format(debPackagePath, e1_text.text(), e1_text.text()))
             ################
             # 构建 deb 包
             ################
@@ -1767,9 +1837,11 @@ def ChangeTapTitle():
     title = os.path.basename(iconUiList[desktopIconTab.currentIndex()][0].text().replace("\\", "/"))
     desktopIconTab.setTabText(desktopIconTab.currentIndex(), title)
 
+mapLink = []
+
 def AddTab():
+    global mapLink
     button2 = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "浏览……"))
-    button2.clicked.connect(button2_cl)
     e7_text = QtWidgets.QLineEdit()
     e8_text = QtWidgets.QLineEdit()
     e9_text = QtWidgets.QLineEdit()
@@ -1778,6 +1850,9 @@ def AddTab():
     option1_text = QtWidgets.QComboBox()
     option1_text.addItems(["Network", "Chat", "Audio", "Video", "Graphics", "Office", "Translation", "Development", "Utility"])
     option1_text.setCurrentText("Network")
+    number = int(str(len(mapLink)))
+    button2.clicked.connect(lambda: button2_cl(number))
+    mapLink.append(e9_text)
     #desktopIconTabLayout = QtWidgets.QGridLayout()
     desktopIconTabLayout = QtWidgets.QGridLayout()
     desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件路径（※必填）：")), 6, 0, 1, 1)
@@ -1889,7 +1964,8 @@ option1_text.setCurrentText("Network")
 wineFrame = QtWidgets.QHBoxLayout()
 chooseWineHelperValue = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "使用星火wine helper\n（如不勾选默认为deepin-wine-helper）"))
 button1.clicked.connect(button1_cl)
-button2.clicked.connect(button2_cl)
+button2.clicked.connect(lambda: button2_cl(0))
+mapLink.append(e9_text)
 button4.clicked.connect(button4_cl)
 button5.clicked.connect(make_deb)
 buildDebDir.clicked.connect(lambda: make_deb(True))
