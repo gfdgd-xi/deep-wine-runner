@@ -1908,6 +1908,13 @@ iconListUnBuild = [
     ["TIM", "wineBottonPath/drive_c/Program Files (x86)/Tencent/TIM/Bin/TIM.exe"]
 ]
 iconList = [
+    ["cmd", "cmd"],
+    ["cmd", "cmd.exe"],
+    ["cmd", "wineBottonPath/drive_c/windows/system32/cmd.exe"],
+    ["Internet Explorer", "iexplore"],
+    ["Internet Explorer", "iexplore.exe"],
+    ["Internet Explorer", "wineBottonPath/drive_c/Program Files/Internet Explorer/iexplore.exe"],
+    ["Internet Explorer", "wineBottonPath/drive_c/Program Files (x86)/Internet Explorer/iexplore.exe"],
     ["微信", "wineBottonPath/drive_c/Program Files/Tencent/WeChat/WeChat.exe"],
     ["微信", "wineBottonPath/drive_c/Program Files (x86)/Tencent/WeChat/WeChat.exe"],
     ["UltraISO", "wineBottonPath/drive_c/Program Files/UltraISO/UltraISO.exe"],
