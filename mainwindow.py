@@ -1915,7 +1915,11 @@ iconList = [
     ["迅雷", "wineBottonPath/drive_c/Program Files/Thunder Network/MiniThunder/Bin/ThunderMini.exe"],
     ["迅雷", "wineBottonPath/drive_c/Program Files (x86)/Thunder Network/MiniThunder/Bin/ThunderMini.exe"],
     ["Microsoft Office Word", "wineBottonPath/drive_c/Program Files/Microsoft Office/Office12/WINWORD.EXE"],
-    ["Microsoft Office Word", "wineBottonPath/drive_c/Program Files (x86)/Microsoft Office/Office12/WINWORD.EXE"]
+    ["Microsoft Office Word", "wineBottonPath/drive_c/Program Files (x86)/Microsoft Office/Office12/WINWORD.EXE"],
+    ["腾讯会议", "wineBottonPath/drive_c/Program Files/Tencent/WeMeet/wemeetapp.exe"],
+    ["腾讯会议", "wineBottonPath/drive_c/Program Files (x86)/Tencent/WeMeet/wemeetapp.exe"],
+    ["腾讯课堂", "wineBottonPath/drive_c/Program Files/Tencent/EDU/bin/TXEDU.exe"],
+    ["腾讯课堂", "wineBottonPath/drive_c/Program Files (x86)/Tencent/EDU/bin/TXEDU.exe"]
 ]
 for i in iconListUnBuild:
     iconList.append(i)
