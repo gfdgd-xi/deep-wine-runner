@@ -118,11 +118,13 @@ class InformationWindow():
             if i[0] == choose:
                 fileName = i[1]
                 break
+        aboutHtml = ""
         try:
             get = requests.get(f"{urlSources}/information/{fileName}.txt")
             if get.status_code / 100 != 2 and get.status_code / 100 != 3:
                 int("Bad")
             about = get.text
+            aboutHtml = str(about)
             if not "<" in about:
                 # 非 Html 标签
                 for i in about.splitlines():
@@ -174,15 +176,21 @@ class InformationWindow():
         messageLayout = QtWidgets.QVBoxLayout()
         if webeng:
             informationText = QtWebEngineWidgets.QWebEngineView()
-            #informationText.linkClicked.connect(lambda: print("a"))
-            '''try:
-                with open("/tmp/deepin-wine-runner-information.html", "w") as file:
-                    file.write(about)
-                informationText.setUrl(QtCore.QUrl("file:///tmp/deepin-wine-runner-information.html"))
-            except:
-                traceback.print_exc()'''
-            informationText.setHtml(about)    
-            #informationText.urlChanged.connect(lambda: informationText.setUrl(QtCore.QUrl("https://gfdgd-xi.github.io")))
+            print(aboutHtml)
+            if aboutHtml[:7] == "Visit: ":
+                url = aboutHtml[7:].splitlines()[0]
+                print(url)
+                informationText.setUrl(QtCore.QUrl(url.strip()))
+            else:
+                #informationText.linkClicked.connect(lambda: print("a"))
+                try:
+                    with open("/tmp/deepin-wine-runner-information.html", "w") as file:
+                        file.write(about)
+                    informationText.setUrl(QtCore.QUrl("file:///tmp/deepin-wine-runner-information.html"))
+                except:
+                    traceback.print_exc()
+                    informationText.setHtml(about)    
+                #informationText.urlChanged.connect(lambda: informationText.setUrl(QtCore.QUrl("https://gfdgd-xi.github.io")))
         else:
             informationText = QtWidgets.QTextBrowser()
             informationText.setHtml(about)
