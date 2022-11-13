@@ -33,6 +33,9 @@ if [ `arch` != "x86_64" ]; then
 	rm -rf /opt/apps/deepin-wine-runner/AllInstall.py
 	rm -rf /opt/apps/deepin-wine-runner/InstallNewWineHQ.sh
 fi
+# 到时候切换 gpg 源会方便很多
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys BCC6D7F07130C0FA32669066FD6EEA1F20CD4B27 > /dev/null
+apt update > /dev/null | true
 # 设置目录权限，让用户可读可写，方便后续删除组件
 chmod 777 -R /opt/apps/deepin-wine-runner
 # 向服务器返回安装数加1（不显示内容且忽略错误）

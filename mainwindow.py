@@ -27,6 +27,11 @@ import urllib.parse as parse
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
+try:
+    import PyQt5.QtWebEngineWidgets as QtWebEngineWidgets
+    bad = False
+except:
+    bad = True
 from Model import *
 
 def PythonLower():
@@ -226,7 +231,25 @@ StartupNotify=true''')
                         # 写入不进去就别写入了，当什么事情都没发生就行
                         traceback.print_exc()
         DisableButton(False)
-  
+
+class Temp:
+    webWindow = None
+
+def OpenUrl(url):
+    print(url.url())
+    # 判断是否可以使用小窗打开
+    if not bad:
+        Temp.webWindow = QtWidgets.QMainWindow()
+        web = QtWebEngineWidgets.QWebEngineView()
+        web.setUrl(url)
+        Temp.webWindow.setWindowTitle("浏览页面")
+        Temp.webWindow.setCentralWidget(web)
+        Temp.webWindow.setWindowIcon(QtGui.QIcon(iconPath))
+        Temp.webWindow.show()
+        return
+    webbrowser.open_new_tab(url.url())
+        
+    #QtCore.QUrl().url()
 
 # 显示“关于这个程序”窗口
 def about_this_program()->"显示“关于这个程序”窗口":
@@ -240,7 +263,12 @@ def about_this_program()->"显示“关于这个程序”窗口":
     messageLayout = QtWidgets.QGridLayout()
     messageLayout.addWidget(QtWidgets.QLabel(f"<img width=256 src='{iconPath}'>"), 0, 0, 1, 1, QtCore.Qt.AlignTop)
     aboutInfo = QtWidgets.QTextBrowser(messageWidget)
+    aboutInfo.setFocusPolicy(QtCore.Qt.NoFocus)
+    #aboutInfo.copyAvailable.connect(lambda: print("b"))
+    aboutInfo.anchorClicked.connect(OpenUrl)
+    aboutInfo.setOpenLinks(False)
     aboutInfo.setHtml(about)
+    aboutInfo.setOpenExternalLinks(False)
     messageLayout.addWidget(aboutInfo, 0, 1, 1, 1)
     ok = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "确定"))
     ok.clicked.connect(QT.message.close)
@@ -1862,7 +1890,12 @@ updateThingsString = '''※1、不基于生态适配活动脚本的打包器支�
 for i in information["Thank"]:
     thankText += f"{i}\n"
 updateTime = "2022年11月06日"
-about = f'''<h1>关于</h1>
+about = f'''<style>
+a:link, a:active {{
+    text-decoration: none;
+}}
+</style>
+<h1>关于</h1>
 <p>一个能让Linux用户更加方便运行Windows应用的程序，内置了对wine图形化的支持和各种Wine工具和自制Wine程序打包器、运行库安装工具等等</p>
 <p>同时也内置了基于VirtualBox制作的小白Windows虚拟机安装工具，可以做到只需要用户下载系统镜像并点击安装即可，无需顾及虚拟机安装、创建、虚拟机的分区等等</p>
 <p>本程序依照 GPLV3 协议开源</p>
@@ -1894,7 +1927,7 @@ Qt 版本：{QtCore.qVersion()}
 Deepin 官网：https://www.deepin.org
 Deepin 论坛：https://bbs.deepin.org</pre>
 <hr>
-<h1>©2020~{time.strftime("%Y")} gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
+<h1>©2020~{time.strftime("%Y")} <a href="https://gitee.com/gfdgd-xi">gfdgd xi、</a><a href="https://weibo.com/u/7755040136">为什么您不喜欢</a><a href="https://gfdgd-xi.github.io">熊出没</a><a href="https://weibo.com/u/7755040136">和阿布呢</a></h1>'''
 title = "Wine 运行器 {}".format(version)
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 try:
