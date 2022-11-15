@@ -27,6 +27,11 @@ import urllib.parse as parse
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
+try:
+    import PyQt5.QtWebEngineWidgets as QtWebEngineWidgets
+    bad = False
+except:
+    bad = True
 from Model import *
 
 def PythonLower():
@@ -226,7 +231,25 @@ StartupNotify=true''')
                         # 写入不进去就别写入了，当什么事情都没发生就行
                         traceback.print_exc()
         DisableButton(False)
-  
+
+class Temp:
+    webWindow = None
+
+def OpenUrl(url):
+    print(url.url())
+    # 判断是否可以使用小窗打开
+    if not bad:
+        Temp.webWindow = QtWidgets.QMainWindow()
+        web = QtWebEngineWidgets.QWebEngineView()
+        web.setUrl(url)
+        Temp.webWindow.setWindowTitle("浏览页面")
+        Temp.webWindow.setCentralWidget(web)
+        Temp.webWindow.setWindowIcon(QtGui.QIcon(iconPath))
+        Temp.webWindow.show()
+        return
+    webbrowser.open_new_tab(url.url())
+        
+    #QtCore.QUrl().url()
 
 # 显示“关于这个程序”窗口
 def about_this_program()->"显示“关于这个程序”窗口":
@@ -240,7 +263,12 @@ def about_this_program()->"显示“关于这个程序”窗口":
     messageLayout = QtWidgets.QGridLayout()
     messageLayout.addWidget(QtWidgets.QLabel(f"<img width=256 src='{iconPath}'>"), 0, 0, 1, 1, QtCore.Qt.AlignTop)
     aboutInfo = QtWidgets.QTextBrowser(messageWidget)
+    aboutInfo.setFocusPolicy(QtCore.Qt.NoFocus)
+    #aboutInfo.copyAvailable.connect(lambda: print("b"))
+    aboutInfo.anchorClicked.connect(OpenUrl)
+    aboutInfo.setOpenLinks(False)
     aboutInfo.setHtml(about)
+    aboutInfo.setOpenExternalLinks(False)
     messageLayout.addWidget(aboutInfo, 0, 1, 1, 1)
     ok = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "确定"))
     ok.clicked.connect(QT.message.close)
@@ -437,6 +465,9 @@ def InstallWine():
 
 def InstallWineOnDeepin23():
     threading.Thread(target=OpenTerminal, args=[f"'{programPath}/InstallWineOnDeepin23.py'"]).start()
+
+def InstallWineOnDeepin23Alpha():
+    threading.Thread(target=OpenTerminal, args=[f"'{programPath}/InstallWineOnDeepin23Alpha.py'"]).start()
 
 def InstallWineHQ():
     threading.Thread(target=OpenTerminal, args=[f"{programPath}/InstallNewWineHQ.sh"]).start()
@@ -1845,24 +1876,21 @@ exe路径\' 参数 \'
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>'''
-updateThingsString = '''※1、不基于生态适配活动脚本的打包器支持只生成制作容器的 7z 包
-※2、两个打包器的容器自动删除脚本添加 kill.sh
-※3、Wine 运行器支持杀死对应容器进程
-※4、容器自动配置脚本和 Wine 安装器支持切换源
-5、非生态适配脚本打包器追加运行参数改为 --uri XXX 而非直接 XXX
-6、两个打包器新增星火应用商店投稿入口
-7、优化开启 Windows 虚拟机功能在未安装 VirtualBox 时的提示
-8、Reg Shot 版本从 1.8.3-beta1V5 升级到 1.9.0
-9、Geek Uninstaller 版本从 1.5.1.161 升级到 1.5.1.163
-10、容器自动配置脚本添加 installother 命令、修复返回值传递问题
-11、不显示 pip 安装库的提示信息（因为不是很核心的库）
-12、非基于生态适配活动脚本的打包器默认勾选卸载该 deb 后自动删除容器、使用统信活动容器清理脚本、使用星火 wine helper
-13、优化文案
+updateThingsString = '''※1、容器自动配置脚本 GUI 查看介绍使用 QWebEngineWidget，支持图片（非强制依赖，只做推荐）
+※2、不基于生态适配活动脚本打包器跟进 arm 架构 2022年11月11日的 Wine 微信打包方式
+※3、支持多图标的程序打包
+※4、修复了安装更多 Wine 换源换了个寂寞的问题
+5、修复了不基于生态适配活动脚本打包器在选择 arm 打包架构下容器自动删除脚本取消勾选无用的问题
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年11月06日"
-about = f'''<h1>关于</h1>
+updateTime = "2022年11月15日"
+about = f'''<style>
+a:link, a:active {{
+    text-decoration: none;
+}}
+</style>
+<h1>关于</h1>
 <p>一个能让Linux用户更加方便运行Windows应用的程序，内置了对wine图形化的支持和各种Wine工具和自制Wine程序打包器、运行库安装工具等等</p>
 <p>同时也内置了基于VirtualBox制作的小白Windows虚拟机安装工具，可以做到只需要用户下载系统镜像并点击安装即可，无需顾及虚拟机安装、创建、虚拟机的分区等等</p>
 <p>本程序依照 GPLV3 协议开源</p>
@@ -1894,7 +1922,7 @@ Qt 版本：{QtCore.qVersion()}
 Deepin 官网：https://www.deepin.org
 Deepin 论坛：https://bbs.deepin.org</pre>
 <hr>
-<h1>©2020~{time.strftime("%Y")} gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
+<h1>©2020~{time.strftime("%Y")} <a href="https://gitee.com/gfdgd-xi">gfdgd xi、</a><a href="https://weibo.com/u/7755040136">为什么您不喜欢</a><a href="https://gfdgd-xi.github.io">熊出没</a><a href="https://weibo.com/u/7755040136">和阿布呢</a></h1>'''
 title = "Wine 运行器 {}".format(version)
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 try:
@@ -1908,6 +1936,13 @@ iconListUnBuild = [
     ["TIM", "wineBottonPath/drive_c/Program Files (x86)/Tencent/TIM/Bin/TIM.exe"]
 ]
 iconList = [
+    ["cmd", "cmd"],
+    ["cmd", "cmd.exe"],
+    ["cmd", "wineBottonPath/drive_c/windows/system32/cmd.exe"],
+    ["Internet Explorer", "iexplore"],
+    ["Internet Explorer", "iexplore.exe"],
+    ["Internet Explorer", "wineBottonPath/drive_c/Program Files/Internet Explorer/iexplore.exe"],
+    ["Internet Explorer", "wineBottonPath/drive_c/Program Files (x86)/Internet Explorer/iexplore.exe"],
     ["微信", "wineBottonPath/drive_c/Program Files/Tencent/WeChat/WeChat.exe"],
     ["微信", "wineBottonPath/drive_c/Program Files (x86)/Tencent/WeChat/WeChat.exe"],
     ["UltraISO", "wineBottonPath/drive_c/Program Files/UltraISO/UltraISO.exe"],
@@ -1915,7 +1950,11 @@ iconList = [
     ["迅雷", "wineBottonPath/drive_c/Program Files/Thunder Network/MiniThunder/Bin/ThunderMini.exe"],
     ["迅雷", "wineBottonPath/drive_c/Program Files (x86)/Thunder Network/MiniThunder/Bin/ThunderMini.exe"],
     ["Microsoft Office Word", "wineBottonPath/drive_c/Program Files/Microsoft Office/Office12/WINWORD.EXE"],
-    ["Microsoft Office Word", "wineBottonPath/drive_c/Program Files (x86)/Microsoft Office/Office12/WINWORD.EXE"]
+    ["Microsoft Office Word", "wineBottonPath/drive_c/Program Files (x86)/Microsoft Office/Office12/WINWORD.EXE"],
+    ["腾讯会议", "wineBottonPath/drive_c/Program Files/Tencent/WeMeet/wemeetapp.exe"],
+    ["腾讯会议", "wineBottonPath/drive_c/Program Files (x86)/Tencent/WeMeet/wemeetapp.exe"],
+    ["腾讯课堂", "wineBottonPath/drive_c/Program Files/Tencent/EDU/bin/TXEDU.exe"],
+    ["腾讯课堂", "wineBottonPath/drive_c/Program Files (x86)/Tencent/EDU/bin/TXEDU.exe"]
 ]
 for i in iconListUnBuild:
     iconList.append(i)
@@ -2085,7 +2124,8 @@ mainLayout.addWidget(programRun, 2, 1, 1, 1)
 menu = window.menuBar()
 programmenu = menu.addMenu(QtCore.QCoreApplication.translate("U", "程序(&P)"))
 p1 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "安装 wine(&I)"))
-installWineOnDeepin23 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "安装 wine(只限Deepin23)"))
+installWineOnDeepin23 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "安装 wine(只限Deepin23 Preview)"))
+installWineOnDeepin23Alpha = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "安装 wine(只限Deepin23 Alpha)"))
 installWineHQ = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "安装 WineHQ"))
 installMoreWine = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "安装更多 Wine"))
 p2 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "设置程序(&S)"))
@@ -2095,6 +2135,7 @@ cleanProgramUnuse = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "�
 p4 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "退出程序(&E)"))
 programmenu.addAction(p1)
 programmenu.addAction(installWineOnDeepin23)
+programmenu.addAction(installWineOnDeepin23Alpha)
 programmenu.addAction(installWineHQ)
 programmenu.addAction(installMoreWine)
 programmenu.addSeparator()
@@ -2107,6 +2148,7 @@ programmenu.addSeparator()
 programmenu.addAction(p4)
 p1.triggered.connect(InstallWine)
 installWineOnDeepin23.triggered.connect(InstallWineOnDeepin23)
+installWineOnDeepin23Alpha.triggered.connect(InstallWineOnDeepin23Alpha)
 installWineHQ.triggered.connect(InstallWineHQ)
 installMoreWine.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/wine/installwine'"]).start())
 p2.triggered.connect(ProgramSetting.ShowWindow)

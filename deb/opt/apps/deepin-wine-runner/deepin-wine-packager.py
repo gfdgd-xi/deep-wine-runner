@@ -33,10 +33,10 @@ def button1_cl():
     if path != "":
         e6_text.setText(path)
 
-def button2_cl():
+def button2_cl(number):
     path = QtWidgets.QFileDialog.getOpenFileName(widget, QtCore.QCoreApplication.translate("U", "选择图标文件"), get_home(), "PNG图标(*.png);;SVG图标(*.svg);;全部文件(*.*)")[0]
     if path != "":
-        e9_text.setText(path)
+        mapLink[number].setText(path)
 
 def button4_cl():
     path = QtWidgets.QFileDialog.getSaveFileName(widget, QtCore.QCoreApplication.translate("U", "保存 deb 包"), get_home(), "deb 文件(*.deb);;所有文件(*.*)", "{}_{}_i386.deb".format(e1_text.text(), e2_text.text()))[0]
@@ -237,6 +237,11 @@ def make_deb(build=False):
 def label13_text_change(thing):
     label13_text.setText(f"<p align='center'>当前 deb 打包情况：{thing}</p>")
 
+def ReplaceText(string: str, lists: list):
+    for i in lists:
+        string = string.replace(i[0], i[1])
+    return string
+
 class make_deb_threading(QtCore.QThread):
 
     signal = QtCore.pyqtSignal(str)
@@ -296,19 +301,36 @@ class make_deb_threading(QtCore.QThread):
                 b = e6_text.text()[:-1]
             else:
                 b = e6_text.text()
-            if e9_text.text() != "":
-                # 获取图片格式（不太准）
-                try:
-                    im = Image.open(e9_text.text())
-                    imms = im.format.lower()
-                except: # 未知（就直接设置为 svg 后缀）
-                    imms = ".svg"
-                a = "/opt/apps/{}/entries/icons/hicolor/scalable/apps/{}.{}".format(e1_text.text(), e1_text.text(), imms)
-                if not os.path.exists(e9_text.text()):
-                    self.errorMsg.emit("图标的路径填写错误，无法进行构建 deb 包")
-                    self.disabled_or_NORMAL_all.emit(True)
-                    self.label.emit("图标的路径填写错误，无法进行构建 deb 包")
-                    return
+            if desktopIconTab.count() <= 1:
+                if e9_text.text() != "":
+                    # 获取图片格式（不太准）
+                    try:
+                        im = Image.open(e9_text.text())
+                        imms = im.format.lower()
+                    except: # 未知（就直接设置为 svg 后缀）
+                        imms = "svg"
+                    a = "/opt/apps/{}/entries/icons/hicolor/scalable/apps/{}.{}".format(e1_text.text(), e1_text.text(), imms)
+                    if not os.path.exists(e9_text.text()):
+                        self.errorMsg.emit("图标的路径填写错误，无法进行构建 deb 包")
+                        self.disabled_or_NORMAL_all.emit(True)
+                        self.label.emit("图标的路径填写错误，无法进行构建 deb 包")
+                        return
+            else:
+                a = []
+                for i in iconUiList:
+                    if i[4].text != "":
+                        # 获取图片格式（不太准）
+                        try:
+                            im = Image.open(e9_text.text())
+                            imms = im.format.lower()
+                        except:
+                            imms = ".svg"
+                        a.append("/opt/apps/{}/entries/icons/hicolor/scalable/apps/{}-{}.{}".format(e1_text.text(), e1_text.text(), os.path.splitext(os.path.basename(i[0].text().replace("\\", "/")))[0], imms))
+                        if not os.path.exists(i[4].text()):
+                            self.errorMsg.emit("图标的路径填写错误，无法进行构建 deb 包")
+                            self.disabled_or_NORMAL_all.emit(True)
+                            self.label.emit("图标的路径填写错误，无法进行构建 deb 包")
+                            return
             if not os.path.exists(e6_text.text()):
                 print("aa")
                 self.errorMsg.emit("路径填写错误，无法继续构建 deb 包")
@@ -362,13 +384,13 @@ fi"""][int(rmBash.isChecked())],
 
 version_gt() {{ test "$(echo "$@" | tr " " "\\n" | sort -V | head -n 1)" != "$1"; }}
 
-BOTTLENAME="{e5_text.text()}"
-APPVER="{e2_text.text()}"
-EXEC_PATH="{e7_text.text()}"
+BOTTLENAME="@@@BOTTLENAME@@@"
+APPVER="@@@APPVER@@@"
+EXEC_PATH="@@@EXEC_PATH@@@"
 START_SHELL_PATH="/opt/deepinwine/tools/run_v4.sh"
 export MIME_TYPE=""
-export DEB_PACKAGE_NAME="{e1_text.text()}"
-export APPRUN_CMD="{wine[wineVersion.currentText()]}"
+export DEB_PACKAGE_NAME="@@@DEB_PACKAGE_NAME@@@"
+export APPRUN_CMD="@@@APPRUN_CMD@@@"
 DISABLE_ATTACH_FILE_DIALOG=""
 EXPORT_ENVS=""
 
@@ -433,16 +455,16 @@ Get_Dist_Name()
 
 version_gt() {{ test "$(echo "$@" | tr " " "\n" | sort -V | head -n 1)" != "$1"; }}
 ####用于比较版本？未实装
-BOTTLENAME="{e5_text.text()}"
-APPVER="{e2_text.text()}"
-EXEC_PATH="{e7_text.text()}"
+BOTTLENAME="@@@BOTTLENAME@@@"
+APPVER="@@@APPVER@@@"
+EXEC_PATH="@@@EXEC_PATH@@@"
 ##### 软件在wine中的启动路径
 START_SHELL_PATH="/opt/deepinwine/tools/spark_run_v4.sh"
 export MIME_TYPE=""
 #####没什么用
-export DEB_PACKAGE_NAME="{e1_text.text()}"
+export DEB_PACKAGE_NAME="@@@DEB_PACKAGE_NAME@@@"
 ####这里写包名才能在启动的时候正确找到files.7z,似乎也和杀残留进程有关
-export APPRUN_CMD="{wine[wineVersion.currentText()]}"
+export APPRUN_CMD="@@@APPRUN_CMD@@@"
 #####wine启动指令，建议
 EXPORT_ENVS=""
 
@@ -527,60 +549,25 @@ fi"""
                     # ARM64 通用 wine 打包配置文件
                     "Wine": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86 /opt/deepin-wine6-stable/bin/wine ",
                     "Architecture": "arm64",
-                    "Depends": "zenity,  com.deepin-wine6-stable.deepin(>=6.0deepin31),  deepin-wine-exagear-images(>=10deepin4),  com.deepin-box86.deepin(>=0.2.3deepin21), deepin-elf-verify (>= 1.1.1-1),  p7zip-full,  fonts-wqy-microhei,  fonts-noto-cjk",
-                    "postinst": f"""#!/bin/bash
+                    "Depends": "com.deepin-wine6-stable.deepin (>= 6.0deepin31), com.wine-helper.deepin (>= 0.0.8), com.deepin-box86.deepin (>= 0.2.6deepin3), deepin-elf-verify (>= 1.1.1-1)",
+                    "postinst": f"""#!/bin/sh
 
-DEB_PATH=/opt/apps/{e1_text.text()}
-if [ -f $DEB_PATH/files/wined3d.dll.so ] && [ -d "/usr/lib/nvidia" ];then
-	mv $DEB_PATH/files/wined3d.dll.so $DEB_PATH/files/dlls
+ACTIVEX_NAME=""
+
+if [ -f "/opt/apps/{e1_text.text()}/files/install.sh" ];then
+    /opt/apps/{e1_text.text()}/files/install.sh -i
 fi
 
-KUNPENG="0x48"
-cpu_vendor=$(lscpu | grep Vendor | awk '{{print $3}}')
-KIRIN=`cat /proc/cpuinfo | grep Kirin`
-if [ ! -z "$KIRIN" ];then
-        mv $DEB_PATH/files/*.so $DEB_PATH/files/dlls
+if [ -n "$ACTIVEX_NAME" ]; then
+    if [ ! -d "/usr/lib/mozilla/plugins" ];then
+        mkdir -p /usr/lib/mozilla/plugins
+    fi
+    cp /usr/lib/pipelight/libpipelight.so /usr/lib/mozilla/plugins/libpipelight-${{ACTIVEX_NAME}}.so
+    glib-compile-schemas /usr/share/glib-2.0/schemas/
 fi
 
-## check if the cpu support arm32 instruction or not, 126 means unsupported
-/opt/deepin-box86/box86 -v
-CHECK_ARM32=$?
-
-IMAGE_VER=10deepin3
-IMAGE_DIR=/opt/deepin-wine-exagear-images/debian-buster
-ARCHIVE_FILE=files.7z
-
-download_image() {{
-	pushd /var/cache/apt/archives >/dev/null
-	apt download deepin-wine-exagear-images
-	dpkg -x deepin-wine-exagear-images*.deb /
-	rm deepin-wine-exagear-images*.deb
-	echo $IMAGE_VER > $IMAGE_DIR/VERSION 
-	popd >/dev/null
-}}
-
-if [[ "$KUNPENG" == "$cpu_vendor" ]] || [[ $CHECK_ARM32 != 0 ]];then
-	echo "use exagear as emulator..."
-	if [ ! -d /opt/exagear/bin ];then
-		mkdir /opt/exagear/bin -p
-	fi
-
-	if [ ! -e /opt/exagear/bin/ubt_x32a64_al ];then
-		cp $DEB_PATH/files/exa/ubt_x32a64_al /opt/exagear/bin/ubt_x32a64_al
-	fi
-
-	if [ ! -e /opt/exagear/bin/ubt_x64a64_al ];then
-		cp $DEB_PATH/files/exa/ubt_x64a64_al /opt/exagear/bin/ubt_x64a64_al
-	fi
-	mv $DEB_PATH/files/run_with_exagear.sh $DEB_PATH/files/run.sh
-	mv $DEB_PATH/files/exa/wineserver /opt/deepin-wine6-stable/bin/wineserver
-else
-	echo "use box86 as emulator..."
-	mv $DEB_PATH/files/run_with_box86.sh $DEB_PATH/files/run.sh
-fi
-
+# Make sure the script returns 0
 true
-
 """,
                     # 因为 arm 不依赖 helper，所以要自带 kill.sh
                     "kill.sh": """#!/bin/bash
@@ -862,7 +849,37 @@ else
     kill_app $APP_NAME
 fi
 """,
-                    "postrm": f"""#!/bin/bash
+                    "postrm": [f"""#!/bin/sh
+
+ACTIVEX_NAME=""
+
+if [ -f "/opt/apps/{e1_text.text()}/files/install.sh" ];then
+    /opt/apps/{e1_text.text()}/files/install.sh -r
+fi
+
+if [ -n "$ACTIVEX_NAME" ]; then
+    rm /usr/lib/mozilla/plugins/libpipelight-${{ACTIVEX_NAME}}.so
+    glib-compile-schemas /usr/share/glib-2.0/schemas/
+fi
+
+# Make sure the script returns 0
+true
+""", f"""#!/bin/sh
+
+ACTIVEX_NAME=""
+
+if [ -f "/opt/apps/{e1_text.text()}/files/install.sh" ];then
+    /opt/apps/{e1_text.text()}/files/install.sh -r
+fi
+
+if [ -n "$ACTIVEX_NAME" ]; then
+    rm /usr/lib/mozilla/plugins/libpipelight-${{ACTIVEX_NAME}}.so
+    glib-compile-schemas /usr/share/glib-2.0/schemas/
+fi
+
+# Make sure the script returns 0
+true
+# Clean Botton
 if [ "$1" = "remove" ] || [ "$1" = "purge" ];then
 
 echo "清理卸载残留"
@@ -887,224 +904,95 @@ for username in $(ls /home)
 else
 echo "非卸载，跳过清理"
 fi
-""",
-                "run_with_box86.sh": f"""#!/bin/bash
-DEB_PATH="/opt/apps/{e1_text.text()}"
-WINE="/opt/deepin-wine6-stable/bin/wine"
-WINESERVER="/opt/deepin-wine6-stable/bin/wineserver"
-EMU="/opt/deepin-box86/box86"
-EMU_ARGS=
-EXE="{e7_text.text()}"
-NEW_VERSION="{e2_text.text()}"
-BOTTLE="$HOME/.deepinwine/{e5_text.text()}"
+"""][int(rmBash.isChecked())],
 
-if command -v zenity >/dev/null 2>&1; then
-	progressbar()
-	{{
-		WINDOWID="" zenity --progress --title="$1" --text="$2" --pulsate --width=400 --auto-close --no-cancel ||
-		WINDOWID="" zenity --progress --title="$1" --text="$2" --pulsate --width=400 --auto-close
-	}}
+                # 又又又改
+                "run.sh": f"""#!/bin/bash
 
+#   Copyright (C) 2016 Deepin, Inc.
+#
+#   Author:     Li LongYu <lilongyu@linuxdeepin.com>
+#               Peng Hao <penghao@linuxdeepin.com>
+
+version_gt() {{ test "$(echo "$@" | tr " " "\n" | sort -V | head -n 1)" != "$1"; }}
+
+ACTIVEX_NAME=""
+BOTTLENAME="@@@BOTTLENAME@@@"
+APPVER="@@@APPVER@@@"
+EXEC_PATH="@@@EXEC_PATH@@@"
+START_SHELL_PATH="/opt/deepinwine/tools/run_v4.sh"
+export MIME_TYPE=""
+export MIME_EXEC=""
+export DEB_PACKAGE_NAME="{e1_text.text()}"
+export APPRUN_CMD="deepin-wine6-stable"
+DISABLE_ATTACH_FILE_DIALOG=""
+EXPORT_ENVS=""
+EXEC_NAME="@@@EXEC_NAME@@@"
+INSTALL_SETUP=""
+export BOX86_EMU_CMD="/opt/deepin-box86/stable/box86"
+
+export SPECIFY_SHELL_DIR=`dirname $START_SHELL_PATH`
+
+ARCHIVE_FILE_DIR="/opt/apps/$DEB_PACKAGE_NAME/files"
+
+if [ -z "$APPRUN_CMD" ];then
+    export APPRUN_CMD="/opt/deepin-wine6-stable/bin/wine"
+fi
+if [ -f "$APPRUN_CMD" ];then
+    wine_path=$(dirname $APPRUN_CMD)
+    wine_path=$(realpath "$wine_path/../")
+    export WINEDLLPATH=$wine_path/lib:$wine_path/lib64
 else
-	progressbar()
-	{{
-		cat -
-	}}
+    export WINEDLLPATH=/opt/$APPRUN_CMD/lib:/opt/$APPRUN_CMD/lib64
 fi
 
-reconstruct_bottle_symlink() {{
+export WINEPREDLL="$ARCHIVE_FILE_DIR/dlls"
 
-    if [ -L $BOTTLE/drive_c/users/$USER/Desktop ]; then
-        rm -f $BOTTLE/drive_c/users/$USER/Desktop
-        ln -s $HOME/Desktop $BOTTLE/drive_c/users/$USER/Desktop
-    fi
-    if [ -L $BOTTLE/drive_c/users/$USER/Documents ]; then
-        rm -f $BOTTLE/drive_c/users/$USER/Documents
-        ln -s $HOME/Documents $BOTTLE/drive_c/users/$USER/Documents
-    fi
-    if [ -L $BOTTLE/drive_c/users/$USER/Downloads ]; then
-        rm -f $BOTTLE/drive_c/users/$USER/Downloads
-        ln -s $HOME/Downloads $BOTTLE/drive_c/users/$USER/Downloads
-    fi
-
-    if [ -L "$BOTTLE/drive_c/users/$USER/My Documents" ]; then
-        rm -f "$BOTTLE/drive_c/users/$USER/My Documents"
-        ln -s $HOME/Documents "$BOTTLE/drive_c/users/$USER/My Documents"
-    fi
-
-    if [ -L "$BOTTLE/drive_c/users/$USER/My Music" ]; then
-        rm -f "$BOTTLE/drive_c/users/$USER/My Music"
-        ln -s $HOME/Music "$BOTTLE/drive_c/users/$USER/My Music"
-    fi
-    if [ -L "$BOTTLE/drive_c/users/$USER/My Videos" ]; then
-        rm -f "$BOTTLE/drive_c/users/$USER/My Videos"
-        ln -s $HOME/Videos "$BOTTLE/drive_c/users/$USER/My Videos"
-    fi
+_SetRegistryValue()
+{{
+    env WINEPREFIX="$BOTTLEPATH" $APPRUN_CMD reg ADD "$1" /v "$2" /t "$3" /d "$4" /f
 }}
 
-if [ ! -d "$HOME/.deepinwine" ];then
-    mkdir -p "$HOME/.deepinwine"
+if [ -z "$DISABLE_ATTACH_FILE_DIALOG" ];then
+    export ATTACH_FILE_DIALOG=1
 fi
 
-if [ -f $BOTTLE/VERSION ];then
-    old_version=`cat $BOTTLE/VERSION`
-    if [ "$old_version" != "$NEW_VERSION" ];then
-        WINEPREFIX=$BOTTLE $EMU $EMU_ARGS $WINESERVER -k
-        rm -rf $BOTTLE
+if [ -n "$EXPORT_ENVS" ];then
+    export $EXPORT_ENVS
+fi
+
+# 打包安装程序的情况
+if [[ -z "$EXEC_PATH" ]] && [[ -n "$INSTALL_SETUP" ]];then
+    $START_SHELL_PATH $BOTTLENAME $APPVER "$EXEC_PATH" -c
+    BOTTLEPATH="$HOME/.deepinwine/$BOTTLENAME"
+    EXEC_PATH=$(find "$BOTTLEPATH" -name $EXEC_NAME | head -1)
+    if [ -z "$EXEC_PATH" ];then
+        _SetRegistryValue "HKCU\\Software\\Wine\\DllOverrides" winemenubuilder.exe REG_SZ
+        WINEPREFIX="$BOTTLEPATH" $APPRUN_CMD "$ARCHIVE_FILE_DIR/$INSTALL_SETUP"
+        EXEC_PATH=$(find "$BOTTLEPATH" -name $EXEC_NAME | head -1)
+
+        cp "$ARCHIVE_FILE_DIR/setup.md5sum" "$BOTTLEPATH"
+    fi
+
+    if [ -z "$EXEC_PATH" ];then
+        echo "安装失败退出"
+        exit
     fi
 fi
 
-if [ ! -d $BOTTLE ];then
-
-    7z x "$DEB_PATH/files/files.7z" -o"$BOTTLE" -aoa
-    mv "$BOTTLE/drive_c/users/@current_user@" "$BOTTLE/drive_c/users/$USER"
-    sed -i "s#@current_user@#$USER#" $BOTTLE/*.reg
-    reconstruct_bottle_symlink
-    echo $NEW_VERSION > $BOTTLE/VERSION
-fi
-
-export WINEPREDLL=$DEB_PATH/files/dlls
-export ATTACH_FILE_DIALOG=1
-export WINEDLLPATH=/opt/deepin-wine6-stable/lib
-ulimit -s 8192
-WINEPREFIX=$BOTTLE $EMU $EMU_ARGS $WINE "$EXE" & #--disable-gpu &
-""",
-                "run_with_exagear.sh": f"""#!/bin/bash
-DEB_PATH="/opt/apps/{e1_text.text()}"
-WINE="/opt/deepin-wine6-stable/bin/wine"
-WINESERVER="/opt/deepin-wine6-stable/bin/wineserver"
-EMU="/opt/exagear/bin/ubt_x64a64_al"
-IMAGE_PATH=$HOME/.deepinwine/debian-buster
-EMU_ARGS="--path-prefix $IMAGE_PATH --utmp-paths-list $IMAGE_PATH/.exagear/utmp-list --vpaths-list $IMAGE_PATH/.exagear/vpaths-list --opaths-list $IMAGE_PATH/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al -- "
-EXE="{e7_text.text()}"
-NEW_VERSION="{e2_text.text()}"
-BOTTLE="$HOME/.deepinwine/{e5_text.text()}"
-IMG_ARCHIVE_DIR=/opt/deepin-wine-exagear-images/debian-buster
-IMAGE_VER="10deepin4"
-LOCALTIME=`readlink -f /etc/localtime`
-
-export LC_ALL=$LANG
-export XMODIFIERS=$XMODIFIERS
-export DESKTOP_SESSION=deepin
-
-if command -v zenity >/dev/null 2>&1; then
-	progressbar()
-	{{
-		WINDOWID="" zenity --progress --title="$1" --text="$2" --pulsate --width=400 --auto-close --no-cancel ||
-		WINDOWID="" zenity --progress --title="$1" --text="$2" --pulsate --width=400 --auto-close
-	}}
-
+if [ -n "$EXEC_PATH" ];then
+    if [ -z "${{EXEC_PATH##*.lnk*}}" ];then
+        $START_SHELL_PATH $BOTTLENAME $APPVER "C:/windows/command/start.exe" "/Unix" "$EXEC_PATH" "$@"
+    elif [ -z "${{EXEC_PATH##*.bat}}" ];then
+        $START_SHELL_PATH $BOTTLENAME $APPVER "cmd" -f /c "$EXEC_PATH" "${{@:2}}"
+    else
+        $START_SHELL_PATH $BOTTLENAME $APPVER "$EXEC_PATH" "$@"
+    fi
+elif [ -n "$ACTIVEX_NAME" ] && [ $# -gt 1 ];then
+    $START_SHELL_PATH $BOTTLENAME $APPVER "$1" -f "${{@:2}}"
 else
-	progressbar()
-	{{
-		cat -
-	}}
+    $START_SHELL_PATH $BOTTLENAME $APPVER "uninstaller.exe" "$@"
 fi
-
-reconstruct_bottle_symlink() {{
-
-    if [ -L $BOTTLE/drive_c/users/$USER/Desktop ]; then
-        rm -f $BOTTLE/drive_c/users/$USER/Desktop
-        ln -s $HOME/Desktop $BOTTLE/drive_c/users/$USER/Desktop
-    fi
-    if [ -L $BOTTLE/drive_c/users/$USER/Documents ]; then
-        rm -f $BOTTLE/drive_c/users/$USER/Documents
-        ln -s $HOME/Documents $BOTTLE/drive_c/users/$USER/Documents
-    fi
-    if [ -L $BOTTLE/drive_c/users/$USER/Downloads ]; then
-        rm -f $BOTTLE/drive_c/users/$USER/Downloads
-        ln -s $HOME/Downloads $BOTTLE/drive_c/users/$USER/Downloads
-    fi
-
-    if [ -L "$BOTTLE/drive_c/users/$USER/My Documents" ]; then
-        rm -f "$BOTTLE/drive_c/users/$USER/My Documents"
-        ln -s $HOME/Documents "$BOTTLE/drive_c/users/$USER/My Documents"
-    fi
-
-    if [ -L "$BOTTLE/drive_c/users/$USER/My Music" ]; then
-        rm -f "$BOTTLE/drive_c/users/$USER/My Music"
-        ln -s $HOME/Music "$BOTTLE/drive_c/users/$USER/My Music"
-    fi
-    if [ -L "$BOTTLE/drive_c/users/$USER/My Videos" ]; then
-        rm -f "$BOTTLE/drive_c/users/$USER/My Videos"
-        ln -s $HOME/Videos "$BOTTLE/drive_c/users/$USER/My Videos"
-    fi
-}}
-
-extract_image() {{
-
-    progpid=$(ps -ef | grep "zenity --progress --title=${{BOTTLE}}" | grep -v grep)
-    if [ -n "$progpid" ];then
-	    echo "one $BOTTLE app is extracting runtime images too."
-	    exit 0
-    fi
-
-    7z x "$IMG_ARCHIVE_DIR/files.7z" -o"$IMAGE_PATH" -aoa | progressbar "$BOTTLE" "正在释放环境..."
-    cp /usr/bin/dde-file-manager $IMAGE_PATH/usr/bin/dde-file-manager
-    rm $IMAGE_PATH/etc/localtime
-    ln -s $LOCALTIME $IMAGE_PATH/etc/localtime
-    if [ -d $IMAGE_PATH/etc/resolvconf ];then
-        rm $IMAGE_PATH/etc/resolvconf
-    fi
-    if [ -d /etc/resolvconf ];then
-    	cp /etc/resolvconf $IMAGE_PATH/etc/ -rf
-    fi
-    cp /etc/resolv.conf $IMAGE_PATH/etc/
-    cp /etc/hosts $IMAGE_PATH/etc/
-    echo $IMAGE_VER > $IMAGE_PATH/VERSION
-}}
-
-get_link_err_nums() {{
-
-	find  $IMAGE_PATH -type l ! -exec test -e {{}} \; -print | wc -l
-}}
-
-if [ ! -d "$HOME/.deepinwine" ];then
-    mkdir -p "$HOME/.deepinwine"
-fi
-
-if [ -f $BOTTLE/VERSION ];then
-    old_version=`cat $BOTTLE/VERSION`
-    if [ "$old_version" != "$NEW_VERSION" ];then
-        WINEPREFIX=$BOTTLE $EMU $EMU_ARGS $WINESERVER -k
-        rm -rf $BOTTLE
-    fi
-fi
-
-if [ ! -d $BOTTLE ];then
-
-    7z x "$DEB_PATH/files/files.7z" -o"$BOTTLE" -aoa
-    mv "$BOTTLE/drive_c/users/@current_user@" "$BOTTLE/drive_c/users/$USER"
-    sed -i "s#@current_user@#$USER#" $BOTTLE/*.reg
-    reconstruct_bottle_symlink
-    echo $NEW_VERSION > $BOTTLE/VERSION
-fi
-
-## 解压文件
-if [ ! -e $IMAGE_PATH/VERSION ];then
-    extract_image
-fi
-
-OLD_IMAGE_VER=`cat $IMAGE_PATH/VERSION`
-if [ "$OLD_IMAGE_VER" != "$IMAGE_VER" ];then
-    extract_image
-fi
-
-echo "======$(get_link_err_nums)===="
-if [ "$(get_link_err_nums)" -gt "120" ];then
-    extract_image
-fi
-
-## mount /data/ dir to geust
-if [ -d $IMAGE_PATH ] && [ ! -d $IMAGE_PATH/data ];then
-	mkdir $IMAGE_PATH/data
-	cp $DEB_PATH/files/exa/vpaths-list $IMAGE_PATH/.exagear
-fi
-
-export WINEPREDLL=$DEB_PATH/files/dlls
-export ATTACH_FILE_DIALOG=1
-export WINEDLLPATH=/opt/deepin-wine6-stable/lib
-WINEPREFIX=$BOTTLE $EMU $EMU_ARGS $WINE "$EXE" & #--disable-gpu &
 """,
                 "info": f'''{{
     "appid": "{e1_text.text()}",
@@ -1166,7 +1054,7 @@ extract_archive()
 
 BOTTLENAME="{e5_text.text()}"
 APPVER="{e2_text.text()}"
-EXEC_PATH="{e7_text.text()}"
+EXEC_PATH="@@@EXEC_PATH@@@"
 START_SHELL_PATH="{["/opt/deepinwine/tools/run_v4.sh", "/opt/deepinwine/tools/spark_run_v4.sh"][int(chooseWineHelperValue.isChecked())]}"
 export MIME_TYPE=""
 export DEB_PACKAGE_NAME="{e1_text.text()}"
@@ -1245,7 +1133,7 @@ fi
             ###############
             self.label.emit("正在创建文件……")
             os.mknod("{}/DEBIAN/control".format(debPackagePath))
-            os.mknod("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()))
+            #os.mknod("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()))
             #os.mknod("{}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()))
             os.mknod("{}/opt/apps/{}/info".format(debPackagePath, e1_text.text()))
             #########!!!!!!!
@@ -1289,9 +1177,10 @@ fi
                 if not os.path.exists(f"{programPath}/dlls-arm"):
                     self.run_command(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\"")
                     os.remove(f"{programPath}/dlls-arm.7z")
-                if not os.path.exists(f"{programPath}/exa"):
-                    self.run_command(f"7z x \"{programPath}/exa.7z\" -o\"{programPath}\"")
-                    os.remove(f"{programPath}/exa.7z")
+                # 已废弃
+                #if not os.path.exists(f"{programPath}/exa"):
+                #    self.run_command(f"7z x \"{programPath}/exa.7z\" -o\"{programPath}\"")
+                #    os.remove(f"{programPath}/exa.7z")
                 if not os.path.exists(f"{programPath}/arm-package"):
                     self.run_command(f"7z x \"{programPath}/arm-package.7z\" -o\"{programPath}\"")
                     os.remove(f"{programPath}/arm-package.7z")
@@ -1303,8 +1192,12 @@ fi
                 self.run_command(f"cp -rv '{programPath}/arm-package/'* {debPackagePath}/opt/apps/{e1_text.text()}/files/")
                 #self.run_command(f"cp -rv '{programPath}/wined3d.dll.so' {debPackagePath}/opt/apps/{e1_text.text()}/files/")
                 pass    
-            if e9_text.text() != "":
-                shutil.copy(e9_text.text(), "{}/opt/apps/{}/entries/icons/hicolor/scalable/apps/{}.{}".format(debPackagePath, e1_text.text(), e1_text.text(), imms))
+            if desktopIconTab.count() <= 1:
+                if e9_text.text() != "":
+                    shutil.copy(e9_text.text(), "{}/opt/apps/{}/entries/icons/hicolor/scalable/apps/{}.{}".format(debPackagePath, e1_text.text(), e1_text.text(), imms))
+            else:
+                for i in range(len(a)):
+                    shutil.copy(iconUiList[i][4].text(), "{}/{}".format(debPackagePath, a[i]))
             ################
             # 获取文件大小
             ################
@@ -1343,14 +1236,67 @@ Description: {e3_text.text()}
                 write_txt(f"{debPackagePath}/DEBIAN/postinst", debInformation[debArch.currentIndex()]["postinst"])
             if debInformation[debArch.currentIndex()]["postrm"] != "":
                 write_txt(f"{debPackagePath}/DEBIAN/postrm", debInformation[debArch.currentIndex()]["postrm"])
-            write_txt("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()), '#!/usr/bin/env xdg-open\n[Desktop Entry]\nEncoding=UTF-8\nType=Application\nX-Created-By={}\nCategories={};\nIcon={}\nExec="/opt/apps/{}/files/run.sh" --uri {}\nName={}\nComment={}\nMimeType={}\nGenericName={}\nTerminal=false\nStartupNotify=false\n'.format(e4_text.text(), option1_text.currentText(), a, e1_text.text(), e15_text.text(), e8_text.text(), e3_text.text(), e10_text.text(), e1_text.text()))
+            replaceMap = [
+                ["@@@BOTTLENAME@@@", e5_text.text()],
+                ["@@@APPVER@@@", e2_text.text()],
+                ["@@@EXEC_PATH@@@", e7_text.text()],
+                ["@@@DEB_PACKAGE_NAME@@@", e1_text.text()],
+                ["@@@APPRUN_CMD@@@", wine[wineVersion.currentText()]],
+                ["@@@EXEC_NAME@@@", os.path.basename(e7_text.text().replace("\\", "/"))]
+            ]
+            if desktopIconTab.count() <= 1:
+                write_txt("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()), '#!/usr/bin/env xdg-open\n[Desktop Entry]\nEncoding=UTF-8\nType=Application\nX-Created-By={}\nCategories={};\nIcon={}\nExec="/opt/apps/{}/files/run.sh" --uri {}\nName={}\nComment={}\nMimeType={}\nGenericName={}\nTerminal=false\nStartupNotify=false\n'.format(e4_text.text(), option1_text.currentText(), a, e1_text.text(), e15_text.text(), e8_text.text(), e3_text.text(), e10_text.text(), e1_text.text()))
+            else:
+                for i in range(len(iconUiList)):
+                    write_txt("{}/opt/apps/{}/entries/applications/{}-{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text(), os.path.splitext(os.path.basename(iconUiList[i][0].text().replace("\\", "/")))[0]), f'''#!/usr/bin/env xdg-open
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+X-Created-By={e4_text.text()}
+Categories={iconUiList[i][1].currentText()};
+Icon={a[i]}
+Exec="/opt/apps/{e1_text.text()}/files/run.sh" --uri {iconUiList[i][2].text()}
+Name={iconUiList[i][3].text()}
+Comment={e3_text.text()}
+MimeType={e10_text.text()}
+GenericName={e1_text.text()}
+Terminal=false
+StartupNotify=false
+''')
             # 要开始分类讨论了
-            if debArch.currentIndex() == 0:
-                write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/run.sh", debInformation[debArch.currentIndex()]["run.sh"])
-            if debArch.currentIndex() == 1:
+            if debArch.currentIndex() == 0 or debArch.currentIndex() == 1:
+                if desktopIconTab.count() <= 1:
+                    write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/run.sh", ReplaceText(debInformation[debArch.currentIndex()]["run.sh"], replaceMap))
+                else:
+                    for i in iconUiList:
+                        replaceMap = [
+                            ["@@@BOTTLENAME@@@", e5_text.text()],
+                            ["@@@APPVER@@@", e2_text.text()],
+                            ["@@@EXEC_PATH@@@", i[0].text()],
+                            ["@@@DEB_PACKAGE_NAME@@@", e1_text.text()],
+                            ["@@@APPRUN_CMD@@@", wine[wineVersion.currentText()]],
+                            ["@@@EXEC_NAME@@@", os.path.basename(i[0].text().replace("\\", "/"))]
+                        ]
+                        line = "\\"
+                        write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/{os.path.splitext(os.path.basename(i[0].text().replace(line, '/')))[0]}.sh", ReplaceText(debInformation[debArch.currentIndex()]["run.sh"], replaceMap))
+            if debArch.currentIndex() == 1 and False:
                 write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/kill.sh", debInformation[debArch.currentIndex()]["kill.sh"])
-                write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/run_with_box86.sh", debInformation[debArch.currentIndex()]["run_with_box86.sh"])
-                write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/run_with_exagear.sh", debInformation[debArch.currentIndex()]["run_with_exagear.sh"])
+                if desktopIconTab.count() <= 1:
+                    write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/run_with_box86.sh", ReplaceText(debInformation[debArch.currentIndex()]["run_with_box86.sh"], replaceMap))
+                    write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/run_with_exagear.sh", ReplaceText(debInformation[debArch.currentIndex()]["run_with_exagear.sh"], replaceMap))
+                else:
+                    # Flag：postrm和postinst均需要改，所以先写一下防止自己忘了
+                    for i in iconUiList:
+                        replaceMap = [
+                            ["@@@BOTTLENAME@@@", e5_text.text()],
+                            ["@@@APPVER@@@", e2_text.text()],
+                            ["@@@EXEC_PATH@@@", i[0].text()],
+                            ["@@@DEB_PACKAGE_NAME@@@", e1_text.text()],
+                            ["@@@APPRUN_CMD@@@", wine[wineVersion.currentText()]],
+                            ["@@@EXEC_NAME@@@", os.path.basename(i[0].text().replace("\\", "/"))]
+                        ]
+                        #write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/{os.path.splitext(os.path.basename(i[0].text().replace(line, '/')))[0]}_with_box86.sh", ReplaceText(debInformation[debArch.currentIndex()]["run_with_box86.sh"], replaceMap))
+                        #write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/{os.path.splitext(os.path.basename(i[0].text().replace(line, '/')))[0]}_with_exagear.sh", ReplaceText(debInformation[debArch.currentIndex()]["run_with_exagear.sh"], replaceMap))
             write_txt("{}/opt/apps/{}/info".format(debPackagePath, e1_text.text()), debInformation[debArch.currentIndex()]["info"])
             ################
             # 修改文件权限
@@ -1359,11 +1305,11 @@ Description: {e3_text.text()}
             self.run_command("chmod -Rv 644 {}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()))
             self.run_command("chmod -Rv 644 {}/opt/apps/{}/info".format(debPackagePath, e1_text.text()))
             self.run_command("chmod -Rv 0755 {}/DEBIAN".format(debPackagePath))
-            self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()))
-            self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/kill.sh".format(debPackagePath, e1_text.text()))
-            self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/run_with_box86.sh".format(debPackagePath, e1_text.text()))
-            self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/run_with_exagear.sh".format(debPackagePath, e1_text.text()))
-            self.run_command("chmod -Rv 755 {}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()))
+            self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/*.sh".format(debPackagePath, e1_text.text()))
+            #self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/kill.sh".format(debPackagePath, e1_text.text()))
+            #self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/*_with_box86.sh".format(debPackagePath, e1_text.text()))
+            #self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/*_with_exagear.sh".format(debPackagePath, e1_text.text()))
+            self.run_command("chmod -Rv 755 {}/opt/apps/{}/entries/applications/*.desktop".format(debPackagePath, e1_text.text(), e1_text.text()))
             ################
             # 构建 deb 包
             ################
@@ -1447,7 +1393,7 @@ def ChangeArchCombobox():
     if debArch.currentIndex() == 0:
         ChangeWine()
     else:
-        debDepends.setText("zenity,  com.deepin-wine6-stable.deepin(>=6.0deepin31),  deepin-wine-exagear-images(>=10deepin4),  com.deepin-box86.deepin(>=0.2.3deepin21), deepin-elf-verify (>= 1.1.1-1),  p7zip-full,  fonts-wqy-microhei,  fonts-noto-cjk")
+        debDepends.setText("com.deepin-wine6-stable.deepin (>= 6.0deepin31), com.wine-helper.deepin (>= 0.0.8), com.deepin-box86.deepin (>= 0.2.6deepin3), deepin-elf-verify (>= 1.1.1-1)")
 
 def InstallDeb():
     os.system(f"xdg-open '{e12_text.text()}'")
@@ -1723,7 +1669,54 @@ def ReadDeb(unzip = False):
             except:
                 print(f"忽略行：{i}")
 
+def ChangeTapTitle():
+    if desktopIconTab.count() <= 1:
+        desktopIconTab.setTabText(0, "run.sh")
+        return
+    title = os.path.basename(iconUiList[desktopIconTab.currentIndex()][0].text().replace("\\", "/"))
+    desktopIconTab.setTabText(desktopIconTab.currentIndex(), title)
 
+mapLink = []
+
+def AddTab():
+    global mapLink
+    button2 = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "浏览……"))
+    e7_text = QtWidgets.QLineEdit()
+    e8_text = QtWidgets.QLineEdit()
+    e9_text = QtWidgets.QLineEdit()
+    e15_text = QtWidgets.QLineEdit()
+    iconTab1 = QtWidgets.QWidget()
+    option1_text = QtWidgets.QComboBox()
+    option1_text.addItems(["Network", "Chat", "Audio", "Video", "Graphics", "Office", "Translation", "Development", "Utility"])
+    option1_text.setCurrentText("Network")
+    number = int(str(len(mapLink)))
+    button2.clicked.connect(lambda: button2_cl(number))
+    mapLink.append(e9_text)
+    #desktopIconTabLayout = QtWidgets.QGridLayout()
+    desktopIconTabLayout = QtWidgets.QGridLayout()
+    desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件路径（※必填）：")), 6, 0, 1, 1)
+    desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的分类（※必填）：")), 7, 0, 1, 1)
+    desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件的参数（选填）：")), 8, 0, 1, 1)
+    desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的名称（※必填）：")), 9, 0, 1, 1)
+    desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的图标（选填）：")), 10, 0, 1, 1)
+    iconTab1.setLayout(desktopIconTabLayout)
+    desktopIconTab.addTab(iconTab1, f"图标{desktopIconTab.count() + 1}")
+    desktopIconTabLayout.addWidget(e7_text, 6, 1, 1, 1)
+    desktopIconTabLayout.addWidget(option1_text, 7, 1, 1, 1)
+    desktopIconTabLayout.addWidget(e15_text, 8, 1, 1, 1)
+    desktopIconTabLayout.addWidget(e8_text, 9, 1, 1, 1)
+    desktopIconTabLayout.addWidget(e9_text, 10, 1, 1, 1)
+    desktopIconTabLayout.addWidget(button2, 10, 2, 1, 1)
+    e7_text.textChanged.connect(ChangeTapTitle)
+    iconUiList.append([e7_text, option1_text, e15_text, e8_text, e9_text])
+    print(iconUiList)
+
+def DelTab():
+    print(desktopIconTab.count())
+    if desktopIconTab.count() <= 1:
+        return
+    del iconUiList[desktopIconTab.currentIndex()]
+    desktopIconTab.removeTab(desktopIconTab.currentIndex())
 
 ###############
 # 程序信息
@@ -1752,6 +1745,7 @@ try:
 except:
     pass
 os.chdir("/")
+iconUiList = []
 iconPath = "{}/deepin-wine-runner.svg".format(programPath)
 information = json.loads(readtxt(f"{programPath}/information.json"))
 version = information["Version"]
@@ -1809,13 +1803,15 @@ option1_text.setCurrentText("Network")
 wineFrame = QtWidgets.QHBoxLayout()
 chooseWineHelperValue = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "使用星火wine helper\n（如不勾选默认为deepin-wine-helper）"))
 button1.clicked.connect(button1_cl)
-button2.clicked.connect(button2_cl)
+button2.clicked.connect(lambda: button2_cl(0))
+mapLink.append(e9_text)
 button4.clicked.connect(button4_cl)
 button5.clicked.connect(make_deb)
 buildDebDir.clicked.connect(lambda: make_deb(True))
 build7z.clicked.connect(Build7zButton_Clicked)
 installDeb.clicked.connect(InstallDeb)
 wineFrame.addWidget(wineVersion)
+e7_text.textChanged.connect(ChangeTapTitle)
 # 创建控件
 widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要打包的 deb 包的包名（※必填）：")), 0, 0, 1, 1)
 widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要打包的 deb 包的版本号（※必填）：")), 1, 0, 1, 1)
@@ -1823,13 +1819,30 @@ widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "
 widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要打包的 deb 包的维护者（※必填）：")), 3, 0, 1, 1)
 widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要解压的 wine 容器的容器名（※必填）：")), 4, 0, 1, 1)
 widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要解压的 wine 容器（※必填）：")), 5, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件路径（※必填）：")), 6, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的分类（※必填）：")), 7, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件的参数（选填）：")), 8, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的名称（※必填）：")), 9, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的图标（选填）：")), 10, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "选择打包的 wine 版本（※必选）：")), 12, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "打包 deb 的保存路径（※必填）：")), 13, 0, 1, 1)
+desktopIconTab = QtWidgets.QTabWidget()
+controlWidget = QtWidgets.QWidget()
+controlWidgetLayout = QtWidgets.QHBoxLayout()
+desktopIconTabAdd = QtWidgets.QPushButton("+")
+desktopIconTabDel = QtWidgets.QPushButton("-")
+controlWidgetLayout.addWidget(desktopIconTabAdd)
+controlWidgetLayout.addWidget(desktopIconTabDel)
+controlWidget.setLayout(controlWidgetLayout)
+desktopIconTabAdd.clicked.connect(AddTab)
+desktopIconTabDel.clicked.connect(DelTab)
+iconTab1 = QtWidgets.QWidget()
+desktopIconTabLayout = QtWidgets.QGridLayout()
+desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件路径（※必填）：")), 6, 0, 1, 1)
+desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的分类（※必填）：")), 7, 0, 1, 1)
+desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件的参数（选填）：")), 8, 0, 1, 1)
+desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的名称（※必填）：")), 9, 0, 1, 1)
+desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的图标（选填）：")), 10, 0, 1, 1)
+iconTab1.setLayout(desktopIconTabLayout)
+#desktopIconTab.setTabPosition(QtWidgets.QTabWidget.East)
+desktopIconTab.addTab(iconTab1, "Defult")
+desktopIconTab.setCornerWidget(controlWidget)
+widgetLayout.addWidget(desktopIconTab, 8, 0, 6, 3)
+widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "选择打包的 wine 版本（※必选）：")), 6, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "打包 deb 的保存路径（※必填）：")), 7, 0, 1, 1)
 widgetLayout.addWidget(e1_text, 0, 1, 1, 1)
 widgetLayout.addWidget(e2_text, 1, 1, 1, 1)
 widgetLayout.addWidget(e3_text, 2, 1, 1, 1)
@@ -1837,15 +1850,17 @@ widgetLayout.addWidget(e4_text, 3, 1, 1, 1)
 widgetLayout.addWidget(e5_text, 4, 1, 1, 1)
 widgetLayout.addWidget(e6_text, 5, 1, 1, 1)
 widgetLayout.addWidget(button1, 5, 2, 1, 1)
-widgetLayout.addWidget(e7_text, 6, 1, 1, 1)
-widgetLayout.addWidget(option1_text, 7, 1, 1, 1)
-widgetLayout.addWidget(e15_text, 8, 1, 1, 1)
-widgetLayout.addWidget(e8_text, 9, 1, 1, 1)
-widgetLayout.addWidget(e9_text, 10, 1, 1, 1)
-widgetLayout.addWidget(button2, 10, 2, 1, 1)
-widgetLayout.addLayout(wineFrame, 12, 1, 1, 1)
-widgetLayout.addWidget(e12_text, 13, 1, 1, 1)
-widgetLayout.addWidget(button4, 13, 2, 1, 1)
+desktopIconTabLayout.addWidget(e7_text, 6, 1, 1, 1)
+desktopIconTabLayout.addWidget(option1_text, 7, 1, 1, 1)
+desktopIconTabLayout.addWidget(e15_text, 8, 1, 1, 1)
+desktopIconTabLayout.addWidget(e8_text, 9, 1, 1, 1)
+desktopIconTabLayout.addWidget(e9_text, 10, 1, 1, 1)
+desktopIconTabLayout.addWidget(button2, 10, 2, 1, 1)
+iconUiList.append([e7_text, option1_text, e15_text, e8_text, e9_text])
+print(iconUiList)
+widgetLayout.addLayout(wineFrame, 6, 1, 1, 1)
+widgetLayout.addWidget(e12_text, 7, 1, 1, 1)
+widgetLayout.addWidget(button4, 7, 2, 1, 1)
 widgetLayout.addLayout(debControlFrame, 16, 1, 1, 1)
 widgetLayout.addWidget(label13_text, 17, 0, 1, 3)
 widgetLayout.addWidget(textbox1, 18, 0, 1, 3)

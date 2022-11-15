@@ -19,13 +19,20 @@ import req as requests
 import PyQt5.QtWidgets as QtWidgets
 from UI.AutoConfig import *
 from Model import *
+try:
+    import PyQt5.QtWebEngineWidgets as QtWebEngineWidgets
+    webeng = True
+except:
+    print("未安装此依赖库")
+    webeng = False
 
 urlSourcesList = [
     "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/auto",  # Gitlink 源
     "https://gitee.com/gfdgd-xi/deep-wine-runner-auto-configuration-script/raw/master/",  # Gitee 源
     "https://gfdgd-xi.github.io/deep-wine-runner-auto-configuration-script/",  # Github 源
     "http://gfdgdxi.msns.cn/wine-runner-list/auto/",  # 备用源1，纯 IPv6 源
-    "http://120.25.153.144/deep-wine-runner-auto-configuration-script/",  # 备用源2，纯 IPv6 源
+    "http://120.25.153.144/deep-wine-runner-auto-configuration-script/",  # 备用源2
+    "http://gfdgdxi.free.idcfengye.com/wine-runner-list/auto/",  # 备用源 3
     "http://127.0.0.1/wine-runner-list/auto/"  # 本地测试源
 ]
 urlSources = urlSourcesList[0]
@@ -98,6 +105,7 @@ class ProgramRunStatusUpload():
 
 class InformationWindow():
     def ShowWindow():
+        #webeng = False
         # 获取选中项
         try:
             choose = ui.searchList.selectionModel().selectedIndexes()[0].data()
@@ -110,11 +118,13 @@ class InformationWindow():
             if i[0] == choose:
                 fileName = i[1]
                 break
+        aboutHtml = ""
         try:
             get = requests.get(f"{urlSources}/information/{fileName}.txt")
             if get.status_code / 100 != 2 and get.status_code / 100 != 3:
                 int("Bad")
             about = get.text
+            aboutHtml = str(about)
             if not "<" in about:
                 # 非 Html 标签
                 for i in about.splitlines():
@@ -145,20 +155,49 @@ class InformationWindow():
         starHtml = ""
         if maxHead > 5:
             for i in range(end):
-                starHtml += f"<img src='{programPath}/Icon/BadStar.svg' width=50>\n"
+                if webeng:
+                    starHtml += f"<img src='https://code.gitlink.org.cn/gfdgd_xi/deep-wine-runner/raw/branch/main/Icon/BadStar.svg' width=50>\n"
+                else:
+                    starHtml += f"<img src='{programPath}/Icon/BadStar.svg' width=50>\n"
         else:
             for i in range(maxHead):
-                starHtml += f"<img src='{programPath}/Icon/Star.svg' width=50>\n"
+                if webeng:
+                    starHtml += f"<img src='https://code.gitlink.org.cn/gfdgd_xi/deep-wine-runner/raw/branch/main/Icon/Star.svg' width=50>\n"
+                else:
+                    starHtml += f"<img src='{programPath}/Icon/Star.svg' width=50>\n"
             head = maxHead
             for i in range(head, end):
-                starHtml += f"<img src='{programPath}/Icon/UnStar.svg' width=50>"
+                if webeng:
+                    starHtml += f"<img src='https://code.gitlink.org.cn/gfdgd_xi/deep-wine-runner/raw/branch/main/Icon/UnStar.svg' width=50>"
+                else:
+                    starHtml += f"<img src='{programPath}/Icon/UnStar.svg' width=50>"
         about += f"\n<hr/><h1>评分情况</h1>\n<p align='center'>{starHtml}</p>\n<p align='center'>{tipsInfo}</p>"
         message = QtWidgets.QDialog()
         messageLayout = QtWidgets.QVBoxLayout()
-        informationText = QtWidgets.QTextBrowser()
+        if webeng:
+            informationText = QtWebEngineWidgets.QWebEngineView()
+            print(aboutHtml)
+            if aboutHtml[:7] == "Visit: ":
+                url = aboutHtml[7:].splitlines()[0]
+                print(url)
+                informationText.setUrl(QtCore.QUrl(url.strip()))
+            else:
+                #informationText.linkClicked.connect(lambda: print("a"))
+                try:
+                    with open("/tmp/deepin-wine-runner-information.html", "w") as file:
+                        file.write(about)
+                    informationText.setUrl(QtCore.QUrl("file:///tmp/deepin-wine-runner-information.html"))
+                except:
+                    traceback.print_exc()
+                    informationText.setHtml(about)    
+                #informationText.urlChanged.connect(lambda: informationText.setUrl(QtCore.QUrl("https://gfdgd-xi.github.io")))
+        else:
+            informationText = QtWidgets.QTextBrowser()
+            informationText.setHtml(about)
         uploadFen = QtWidgets.QPushButton("提交评分")
         uploadFen.clicked.connect(lambda: ProgramRunStatusUpload.ShowWindow(fileName, choose))
-        informationText.setHtml(about)
+        
+        #informationText.setUrl(QtCore.QUrl("https://gfdgd-xi.github.io"))
         messageLayout.addWidget(informationText)
         messageLayout.addWidget(uploadFen)
         message.setWindowTitle(f"关于“{choose}”的介绍")
@@ -329,7 +368,7 @@ def readtxt(path):
 
 def ChangeSources():
     global urlSources
-    sources = [ui.actionGitlink, ui.actionGitee, ui.actionGithub, ui.action_IPv6, ui.action_2, ui.action]
+    sources = [ui.actionGitlink, ui.actionGitee, ui.actionGithub, ui.action_IPv6, ui.action_2, ui.action_3, ui.action]
     for i in range(0, len(sources)):
         if sources[i].isChecked():
             urlSources = urlSourcesList[i]
@@ -372,7 +411,9 @@ if __name__ == "__main__":
     sourcesGroup.addAction(ui.actionGitlink)
     sourcesGroup.addAction(ui.actionGitee)
     sourcesGroup.addAction(ui.actionGithub)
+    sourcesGroup.addAction(ui.action_IPv6)
     sourcesGroup.addAction(ui.action_2)
+    sourcesGroup.addAction(ui.action_3)
     sourcesGroup.addAction(ui.action)
     sourcesGroup.triggered.connect(ChangeSources)
     sourcesGroup.setExclusive(True)

@@ -115,8 +115,13 @@ def ReadLocalInformation():
         ui.localWineList.setModel(nmodel)
         file.close()
     except:
-        traceback.print_exc()
-        QtWidgets.QMessageBox.critical(window, "错误", traceback.format_exc())
+        print("新建空列表")
+        try:
+            with open(f"{programPath}/winelist.json", "w") as file:
+                file.write("[]")
+        except:
+            traceback.print_exc()
+            QtWidgets.QMessageBox.critical(window, "错误", traceback.format_exc())
 
 def InstallOtherWine():
     path = QtWidgets.QFileDialog.getOpenFileName(window, "选择 Wine", os.getenv("~"), "wine(wine);;wine64(wine64);;全部文件(*.*)")
