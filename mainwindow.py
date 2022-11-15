@@ -1876,23 +1876,14 @@ exe路径\' 参数 \'
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>'''
-updateThingsString = '''※1、不基于生态适配活动脚本的打包器支持只生成制作容器的 7z 包
-※2、两个打包器的容器自动删除脚本添加 kill.sh
-※3、Wine 运行器支持杀死对应容器进程
-※4、容器自动配置脚本和 Wine 安装器支持切换源
-5、非生态适配脚本打包器追加运行参数改为 --uri XXX 而非直接 XXX
-6、两个打包器新增星火应用商店投稿入口
-7、优化开启 Windows 虚拟机功能在未安装 VirtualBox 时的提示
-8、Reg Shot 版本从 1.8.3-beta1V5 升级到 1.9.0
-9、Geek Uninstaller 版本从 1.5.1.161 升级到 1.5.1.163
-10、容器自动配置脚本添加 installother 命令、修复返回值传递问题
-11、不显示 pip 安装库的提示信息（因为不是很核心的库）
-12、非基于生态适配活动脚本的打包器默认勾选卸载该 deb 后自动删除容器、使用统信活动容器清理脚本、使用星火 wine helper
-13、优化文案
+updateThingsString = '''※1、容器自动配置脚本 GUI 查看介绍使用 QWebEngineWidget，支持图片（非强制依赖，只做推荐）
+※2、不基于生态适配活动脚本打包器跟进 arm 架构 2022年11月11日的 Wine 微信打包方式
+※3、支持多图标的程序打包
+4、修复了不基于生态适配活动脚本打包器在选择 arm 打包架构下容器自动删除脚本取消勾选无用的问题
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年11月06日"
+updateTime = "2022年11月15日"
 about = f'''<style>
 a:link, a:active {{
     text-decoration: none;

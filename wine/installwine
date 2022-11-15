@@ -147,14 +147,17 @@ def InstallOtherWine():
 
 def ChangeSources():
     global urlSources
+    global internetWineSource
     sources = [ui.gitlinkAction, ui.ipv6Action, ui.localAction]
     for i in range(0, len(sources)):
         if sources[i].isChecked():
             urlSources = internetWineSourceList[i]
+            internetWineSource = internetWineSourceList[i]
             # 读取信息
             ReadLocalInformation()
             ReadInternetInformation()
             break
+    print(urlSources)
 
 # 下面内容均翻译自 C++ 版本
 def ReadInternetInformation():
