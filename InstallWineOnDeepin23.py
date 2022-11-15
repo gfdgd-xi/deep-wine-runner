@@ -70,6 +70,8 @@ m     m   "
         ["deepin-wine5-stable", "deepin-wine5-stable"],
         ["deepin-wine6-stable", "deepin-wine6-stable"]
     ]:
+        if not os.system(f"which {i[1]} > /dev/null"):
+            continue
         choose = input(f"安装{i[0]}?（添加深度源）[Y/N]").upper()
         if choose == "Y":
             print("安装中……")
@@ -80,6 +82,10 @@ m     m   "
         ["deepin-wine", "deepin-wine"],
         ["spark-wine7-devel", "spark-wine7-devel"]
     ]:
+        if not os.system(f"which {i[1]} > /dev/null"):
+            continue
         choose = input(f"安装{i[0]}?（添加深度、星火源）[Y/N]").upper()
         if choose == "Y":
             InstallWithSparkStoreSource(i[1])
+    input("按回车键后退出……")
+    exit()

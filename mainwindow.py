@@ -466,6 +466,9 @@ def InstallWine():
 def InstallWineOnDeepin23():
     threading.Thread(target=OpenTerminal, args=[f"'{programPath}/InstallWineOnDeepin23.py'"]).start()
 
+def InstallWineOnDeepin23Alpha():
+    threading.Thread(target=OpenTerminal, args=[f"'{programPath}/InstallWineOnDeepin23Alpha.py'"]).start()
+
 def InstallWineHQ():
     threading.Thread(target=OpenTerminal, args=[f"{programPath}/InstallNewWineHQ.sh"]).start()
 
@@ -2129,7 +2132,8 @@ mainLayout.addWidget(programRun, 2, 1, 1, 1)
 menu = window.menuBar()
 programmenu = menu.addMenu(QtCore.QCoreApplication.translate("U", "程序(&P)"))
 p1 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "安装 wine(&I)"))
-installWineOnDeepin23 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "安装 wine(只限Deepin23)"))
+installWineOnDeepin23 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "安装 wine(只限Deepin23 Preview)"))
+installWineOnDeepin23Alpha = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "安装 wine(只限Deepin23 Alpha)"))
 installWineHQ = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "安装 WineHQ"))
 installMoreWine = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "安装更多 Wine"))
 p2 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "设置程序(&S)"))
@@ -2139,6 +2143,7 @@ cleanProgramUnuse = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "�
 p4 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "退出程序(&E)"))
 programmenu.addAction(p1)
 programmenu.addAction(installWineOnDeepin23)
+programmenu.addAction(installWineOnDeepin23Alpha)
 programmenu.addAction(installWineHQ)
 programmenu.addAction(installMoreWine)
 programmenu.addSeparator()
@@ -2151,6 +2156,7 @@ programmenu.addSeparator()
 programmenu.addAction(p4)
 p1.triggered.connect(InstallWine)
 installWineOnDeepin23.triggered.connect(InstallWineOnDeepin23)
+installWineOnDeepin23Alpha.triggered.connect(InstallWineOnDeepin23Alpha)
 installWineHQ.triggered.connect(InstallWineHQ)
 installMoreWine.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/wine/installwine'"]).start())
 p2.triggered.connect(ProgramSetting.ShowWindow)
