@@ -221,7 +221,8 @@ CallProcess()
     debug_log_to_file "Starting process $* ..."
 	#############  WARNING: Here is the modified content: Now will run set-dwine-scale.sh
 	/opt/durapps/spark-dwine-helper/scale-set-helper/set-wine-scale.sh "$WINEPREFIX"
-    env WINEPREFIX="$WINEPREFIX" $WINE_CMD "$@" &
+    #env WINEPREFIX="$WINEPREFIX" $WINE_CMD "$@" &
+    env WINEPREFIX="$WINEPREFIX" $EMU_CMD $EMU_ARGS $WINE_CMD "$@" &
 
     #start autobottle
     if [ $autostart -eq 0 ];then

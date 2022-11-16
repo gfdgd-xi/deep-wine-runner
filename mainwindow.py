@@ -170,9 +170,9 @@ class Runexebutton_threading(QtCore.QThread):
         else:
             option += "WINEDEBUG=FIXME,ERR,WARN,TRACE,Message "
         wineUsingOption = ""
-        if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable":
+        if o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable":
             wineUsingOption = ""
-        if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
+        if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable":
             if not os.path.exists(f"{programPath}/dlls-arm"):
                 if os.system(f"7z x -y \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
                     QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
@@ -316,13 +316,13 @@ def make_desktop_on_launcher():
             else:
                 option += "WINEDEBUG=FIXME,ERR,WARN,TRACE,Message "
             wineUsingOption = ""
-            if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
+            if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable":
                 if not os.path.exists(f"{programPath}/dlls-arm"):
                     if os.system(f"7z x -y \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
                         QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
                         return
                     os.remove(f"{programPath}/dlls-arm.7z")
-            if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable":
+            if o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable":
                 wineUsingOption = ""
             value = ""
             if e2.currentText()[:2].upper() == "C:":
@@ -376,9 +376,9 @@ def make_desktop_on_desktop():
             else:
                 wineBottonPath = e1.currentText()
             wineUsingOption = ""
-            if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable":
+            if o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable":
                 wineUsingOption = ""
-            if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
+            if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable":
                 if not os.path.exists(f"{programPath}/dlls-arm"):
                     if os.system(f"7z x -y \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
                         QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
@@ -509,11 +509,11 @@ class RunWineProgramThread(QtCore.QThread):
         if not setting["Debug"]:
             option += "WINEDEBUG=-all "
         wineUsingOption = ""
-        if o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
+        if o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable":
             os.system(f"'{programPath}/deepin-wine-runner-create-botton.py' '{wineBottonPath}'")
-        if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable":
+        if o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable":
             wineUsingOption = ""
-        if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
+        if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable":
             if not os.path.exists(f"{programPath}/dlls-arm"):
                 if os.system(f"7z x -y \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
                     QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
@@ -550,7 +550,7 @@ runProgram = None
 def RunWineProgram(wineProgram, history = False, Disbled = True):
     global runProgram
     DisableButton(True)
-    if not CheckProgramIsInstall(wine[o1.currentText()]) and o1.currentText() != "基于 linglong 的 deepin-wine6-stable（不推荐）" and o1.currentText() != "基于 exagear 的 deepin-wine6-stable" and o1.currentText() != "基于 UOS box86 的 deepin-wine6-stable":
+    if not CheckProgramIsInstall(wine[o1.currentText()]) and o1.currentText() != "基于 linglong 的 deepin-wine6-stable（不推荐）" and o1.currentText() != "基于 UOS exagear 的 deepin-wine6-stable" and o1.currentText() != "基于 UOS box86 的 deepin-wine6-stable":
         if not CheckProgramIsInstall(wine[o1.currentText()]) and not o1.currentText() in untipsWine:
             DisableButton(False)
             return
@@ -575,9 +575,9 @@ class RunWinetricksThread(QtCore.QThread):
         if not setting["Debug"]:
             option += "WINEDEBUG=-all "
         wineUsingOption = ""
-        if o1.currentText() == "基于 exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable":
+        if o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable":
             wineUsingOption = ""
-        if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
+        if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable":
             if not os.path.exists(f"{programPath}/dlls-arm"):
                 if os.system(f"7z x -y \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
                     QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
@@ -606,11 +606,11 @@ runWinetricks = None
 def RunWinetricks():
     global runWinetricks
     DisableButton(True)
-    if not CheckProgramIsInstall(wine[o1.currentText()]) and o1.currentText() != "基于 linglong 的 deepin-wine6-stable（不推荐）" and o1.currentText() != "基于 exagear 的 deepin-wine6-stable" and o1.currentText() != "基于 UOS box86 的 deepin-wine6-stable":
+    if not CheckProgramIsInstall(wine[o1.currentText()]) and o1.currentText() != "基于 linglong 的 deepin-wine6-stable（不推荐）" and o1.currentText() != "基于 UOS exagear 的 deepin-wine6-stable" and o1.currentText() != "基于 UOS box86 的 deepin-wine6-stable":
         if not CheckProgramIsInstall(wine[o1.currentText()]) and not o1.currentText() in untipsWine:
             DisableButton(False)
             return
-    if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 exagear 的 deepin-wine6-stable":
+    if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable":
         if not os.path.exists(f"{programPath}/dlls-arm"):
             if os.system(f"7z x -y \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
                 QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
@@ -1667,11 +1667,14 @@ if not os.path.exists(get_home() + "/.config/deepin-wine-runner/WineSetting.json
 # 设置变量
 ###########################
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
-# 如果要添加其他 wine，请在字典添加其名称和执行路径
+# 如果要添加其他 wine，请使用安装更多 Wine 功能
+#############
+# 检测 Wine
+#############
 try:
     wine = {
         "基于 UOS box86 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86 /opt/deepin-wine6-stable/bin/wine ",
-        "基于 exagear 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al -- /opt/deepin-wine6-stable/bin/wine ",
+        "基于 UOS exagear 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al -- /opt/deepin-wine6-stable/bin/wine ",
         "deepin-wine6 stable": "deepin-wine6-stable", 
         "deepin-wine5 stable": "deepin-wine5-stable", 
         "spark-wine7-devel": "spark-wine7-devel", 
@@ -1683,11 +1686,13 @@ try:
         "mono（这不是 wine，但可以实现初步调用运行 .net 应用）": "mono",
         "基于 linglong 的 deepin-wine6-stable（不推荐）": f"ll-cli run '' --exec '/bin/deepin-wine6-stable'"
     }
-    untipsWine = ["基于 UOS box86 的 deepin-wine6-stable", "基于 exagear 的 deepin-wine6-stable", "基于 linglong 的 deepin-wine6-stable（不推荐）"]
+    untipsWine = ["基于 exagear 的 deepin-wine6-stable", "基于 UOS box86 的 deepin-wine6-stable", "基于 UOS exagear 的 deepin-wine6-stable", "基于 linglong 的 deepin-wine6-stable（不推荐）"]
     canUseWine = []
-    if os.path.exists("/opt/deepin-box86/box86"):
+    if os.path.exists("/opt/deepin-box86/box86") and os.path.exists("/opt/deepin-wine6-stable/bin/wine"):
         canUseWine.append("基于 UOS box86 的 deepin-wine6-stable")
-    if os.path.exists("/opt/exagear/bin/ubt_x64a64_al"):
+    if os.path.exists("/opt/exagear/bin/ubt_x64a64_al") and os.path.exists("/opt/deepin-wine6-stable/bin/wine"):
+        canUseWine.append("基于 UOS exagear 的 deepin-wine6-stable")
+    if not os.system("which exagear") and os.path.exists("/opt/deepin-wine6-stable/bin/wine"):
         canUseWine.append("基于 exagear 的 deepin-wine6-stable")
     for i in wine.keys():
         if not os.system(f"which '{wine[i]}'"):
@@ -1719,8 +1724,11 @@ try:
                     if os.system("which box64") == 0:
                         name = "基于 box64 的 "
                         value = f"box64  "
-                    if os.path.exists("/opt/exagear/bin/ubt_x64a64_al"):
+                    if os.system("which exagear") == 0:
                         name = "基于 exagear 的 "
+                        value = f"exagear  "
+                    if os.path.exists("/opt/exagear/bin/ubt_x64a64_al"):
+                        name = "基于 UOS exagear 的 "
                         value = f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al --  "
                 except:
                     pass
@@ -1787,6 +1795,18 @@ def getFileFolderSize(fileOrFolderPath):
 def get_now_lang()->"获取当前语言":
     return os.getenv('LANG')
 
+# 又需要修复多线程导致的控件问题
+def AddDockerMenu():
+    global dockers
+    global openFileManager
+    global openTerminal
+    dockers = menu.addMenu("该 Docker 基础管理")
+    openFileManager = QtWidgets.QAction("打开默认文件管理器")
+    openTerminal = QtWidgets.QAction("打开默认终端")
+    openFileManager.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"xdg-open '{get_home()}'"]).start())
+    dockers.addAction(openFileManager)
+    dockers.addAction(openTerminal)
+
 def GetVersion():
     global about
     global programVersionType
@@ -1795,53 +1815,65 @@ def GetVersion():
     # 商店版本：~uos
     # 编译版本：无版本号
     # Gitee/Github……：正常版本
+    # Docker 版本
     programVersionTypeLnk = {
         "spark": "星火应用商店版本",
         "uos": "deepin/UOS 应用商店版本<带签名>"
     }
-    programVersionType = "从源码运行的版本"
-    try:
-        if not os.path.exists("/var/lib/dpkg/status"):
-            print("无 dpkg，结束")
-        file = open("/var/lib/dpkg/status", "r")
-        fileName = file.read().splitlines()
-        package = False
-        for i in range(0, len(fileName)):
-            if fileName[i] == "Package: spark-deepin-wine-runner-52":
-                programVersionType = "吾爱专版"
-                window.setWindowTitle(f"{title} 吾爱专版")
-                break
-            if fileName[i] == "Package: spark-deepin-wine-runner":
-                package = True
-                continue
-            if not package:
-                continue
-            if fileName[i].replace(" ", "").replace("\n", "") == "":
-                # 空行，不再考虑
-                break
-            # 搜索版本号
-            try:
-                if fileName[i][:fileName[i].index(":")] == "Version":
-                    version = fileName[i][fileName[i].index(":") + 1:].strip()
-                    print(f"版本号为：{version}")
-                    if not "-" in version:
-                        programVersionType = "从Gitee/Github/Gitlink等平台获取的版本"
-                        break
-                    programVersionType = version[version.index("-") + 1:]
-                    print(programVersionType)
-                    if "-" in programVersionType:
-                        # 考虑到如 2.1.0-2-spark 的情况
-                        programVersionType = programVersionType[programVersionType.index("-") + 1:]
-                    try:
-                        programVersionType = programVersionTypeLnk[programVersionType]    
-                    except:
-                        programVersionType = "从Gitee/Github/Gitlink等平台获取的版本"
+    # 直接判断是不是 Docker 版本
+    if os.path.exists(f"{programPath}/docker.txt"):
+        programVersionType = "Docker 内置版本"
+        window.setWindowTitle(f"{title} （Docker 内置版本）")
+        AddDockerMenu()
+    else:
+        programVersionType = "从源码运行的版本"
+        try:
+            if not os.path.exists("/var/lib/dpkg/status"):
+                print("无 dpkg，结束")
+            file = open("/var/lib/dpkg/status", "r")
+            fileName = file.read().splitlines()
+            package = False
+            for i in range(0, len(fileName)):
+                if fileName[i] == "Package: spark-deepin-wine-runner-docker":
+                    programVersionType = "Docker 内置版本"
+                    window.setWindowTitle(f"{title} （Docker 内置版本）")
+                    AddDockerMenu()
                     break
-            except:
-                traceback.print_exc()
-                continue
-    except:
-        print("无法读取，当没有处理")
+                if fileName[i] == "Package: spark-deepin-wine-runner-52":
+                    programVersionType = "吾爱专版"
+                    window.setWindowTitle(f"{title}（吾爱专版）")
+                    break
+                if fileName[i] == "Package: spark-deepin-wine-runner":
+                    package = True
+                    continue
+                if not package:
+                    continue
+                if fileName[i].replace(" ", "").replace("\n", "") == "":
+                    # 空行，不再考虑
+                    break
+                # 搜索版本号
+                try:
+                    if fileName[i][:fileName[i].index(":")] == "Version":
+                        version = fileName[i][fileName[i].index(":") + 1:].strip()
+                        print(f"版本号为：{version}")
+                        if not "-" in version:
+                            programVersionType = "从Gitee/Github/Gitlink等平台获取的版本"
+                            break
+                        programVersionType = version[version.index("-") + 1:]
+                        print(programVersionType)
+                        if "-" in programVersionType:
+                            # 考虑到如 2.1.0-2-spark 的情况
+                            programVersionType = programVersionType[programVersionType.index("-") + 1:]
+                        try:
+                            programVersionType = programVersionTypeLnk[programVersionType]    
+                        except:
+                            programVersionType = "从Gitee/Github/Gitlink等平台获取的版本"
+                        break
+                except:
+                    traceback.print_exc()
+                    continue
+        except:
+            print("无法读取，当没有处理")
     print(programVersionType)
     about = about.replace("@VersionForType@", programVersionType)
     # 获取程序体积
@@ -1886,7 +1918,7 @@ updateThingsString = '''※1、容器自动配置脚本 GUI 查看介绍使用 Q
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年11月15日"
+updateTime = "2022年11月16日"
 about = f'''<style>
 a:link, a:active {{
     text-decoration: none;
@@ -1924,8 +1956,9 @@ Qt 版本：{QtCore.qVersion()}
 Deepin 官网：https://www.deepin.org
 Deepin 论坛：https://bbs.deepin.org</pre>
 <hr>
-<h1>©2020~{time.strftime("%Y")} <a href="https://gitee.com/gfdgd-xi">gfdgd xi、</a><a href="https://weibo.com/u/7755040136">为什么您不喜欢</a><a href="https://gfdgd-xi.github.io">熊出没</a><a href="https://weibo.com/u/7755040136">和阿布呢</a></h1>'''
+<h1>©2020~{time.strftime("%Y")} gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
 title = "Wine 运行器 {}".format(version)
+#<h1>©2020~{time.strftime("%Y")} <a href="https://gitee.com/gfdgd-xi">gfdgd xi、</a><a href="https://weibo.com/u/7755040136">为什么您不喜欢</a><a href="https://gfdgd-xi.github.io">熊出没</a><a href="https://weibo.com/u/7755040136">和阿布呢</a></h1>'''
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 try:
     threading.Thread(target=requests.get, args=[parse.unquote(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9vcGVuL0luc3RhbGwucGhw").decode("utf-8")) + "?Version=" + version]).start()
@@ -1975,8 +2008,6 @@ if not get_now_lang() == "zh_CN.UTF-8":
     app.installTranslator(trans)
 window = QtWidgets.QMainWindow()
 window.setWindowTitle(title)
-# 异同步获取信息
-threading.Thread(target=GetVersion).start()
 widget = QtWidgets.QWidget()
 window.setCentralWidget(widget)
 mainLayout = QtWidgets.QGridLayout()
@@ -2407,7 +2438,8 @@ h6.triggered.connect(WineRunnerBugUpload)
 h7.triggered.connect(about_this_program)
 h8.triggered.connect(lambda: QtWidgets.QMessageBox.aboutQt(widget))
 hm1_1.triggered.connect(lambda: webbrowser.open_new_tab("https://gitee.com/gfdgd-xi/uengine-runner"))
-
+# 异同步获取信息
+threading.Thread(target=GetVersion).start()
 # 窗口设置
 window.resize(widget.frameGeometry().width() * 2, widget.frameGeometry().height())
 widget.setLayout(mainLayout)

@@ -1244,10 +1244,15 @@ Description: {e3_text.text()}
                 ["@@@APPRUN_CMD@@@", wine[wineVersion.currentText()]],
                 ["@@@EXEC_NAME@@@", os.path.basename(e7_text.text().replace("\\", "/"))]
             ]
+            line = "\\"
             if desktopIconTab.count() <= 1:
                 write_txt("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()), '#!/usr/bin/env xdg-open\n[Desktop Entry]\nEncoding=UTF-8\nType=Application\nX-Created-By={}\nCategories={};\nIcon={}\nExec="/opt/apps/{}/files/run.sh" --uri {}\nName={}\nComment={}\nMimeType={}\nGenericName={}\nTerminal=false\nStartupNotify=false\n'.format(e4_text.text(), option1_text.currentText(), a, e1_text.text(), e15_text.text(), e8_text.text(), e3_text.text(), e10_text.text(), e1_text.text()))
             else:
                 for i in range(len(iconUiList)):
+                    if iconUiList[i][2].text().replace(" ", "") == "":
+                        command = f"--uri {iconUiList[i][2].text()}"
+                    else:
+                        command = iconUiList[i][2].text()
                     write_txt("{}/opt/apps/{}/entries/applications/{}-{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text(), os.path.splitext(os.path.basename(iconUiList[i][0].text().replace("\\", "/")))[0]), f'''#!/usr/bin/env xdg-open
 [Desktop Entry]
 Encoding=UTF-8
@@ -1255,7 +1260,7 @@ Type=Application
 X-Created-By={e4_text.text()}
 Categories={iconUiList[i][1].currentText()};
 Icon={a[i]}
-Exec="/opt/apps/{e1_text.text()}/files/run.sh" --uri {iconUiList[i][2].text()}
+Exec="/opt/apps/{e1_text.text()}/files/{os.path.splitext(os.path.basename(iconUiList[i][0].text().replace(line, "/")))[0]}.sh" {command}
 Name={iconUiList[i][3].text()}
 Comment={e3_text.text()}
 MimeType={e10_text.text()}
