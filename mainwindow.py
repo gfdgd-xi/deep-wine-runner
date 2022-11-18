@@ -1804,80 +1804,94 @@ def AddDockerMenu():
     openFileManager = QtWidgets.QAction("打开默认文件管理器")
     openTerminal = QtWidgets.QAction("打开默认终端")
     openFileManager.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"xdg-open '{get_home()}'"]).start())
+    openTerminal.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"x-terminal-emulator"]).start())
     dockers.addAction(openFileManager)
     dockers.addAction(openTerminal)
 
-def GetVersion():
-    global about
-    global programVersionType
-    # 目前分为几个版本（在 control 文件区分）：
-    # 星火版本：~spark
-    # 商店版本：~uos
-    # 编译版本：无版本号
-    # Gitee/Github……：正常版本
-    # Docker 版本
-    programVersionTypeLnk = {
-        "spark": "星火应用商店版本",
-        "uos": "deepin/UOS 应用商店版本<带签名>"
-    }
-    # 直接判断是不是 Docker 版本
-    if os.path.exists(f"{programPath}/docker.txt"):
-        programVersionType = "Docker 内置版本"
-        window.setWindowTitle(f"{title} （Docker 内置版本）")
-        AddDockerMenu()
-    else:
-        programVersionType = "从源码运行的版本"
-        try:
-            if not os.path.exists("/var/lib/dpkg/status"):
-                print("无 dpkg，结束")
-            file = open("/var/lib/dpkg/status", "r")
-            fileName = file.read().splitlines()
-            package = False
-            for i in range(0, len(fileName)):
-                if fileName[i] == "Package: spark-deepin-wine-runner-docker":
-                    programVersionType = "Docker 内置版本"
-                    window.setWindowTitle(f"{title} （Docker 内置版本）")
-                    AddDockerMenu()
-                    break
-                if fileName[i] == "Package: spark-deepin-wine-runner-52":
-                    programVersionType = "吾爱专版"
-                    window.setWindowTitle(f"{title}（吾爱专版）")
-                    break
-                if fileName[i] == "Package: spark-deepin-wine-runner":
-                    package = True
-                    continue
-                if not package:
-                    continue
-                if fileName[i].replace(" ", "").replace("\n", "") == "":
-                    # 空行，不再考虑
-                    break
-                # 搜索版本号
-                try:
-                    if fileName[i][:fileName[i].index(":")] == "Version":
-                        version = fileName[i][fileName[i].index(":") + 1:].strip()
-                        print(f"版本号为：{version}")
-                        if not "-" in version:
-                            programVersionType = "从Gitee/Github/Gitlink等平台获取的版本"
-                            break
-                        programVersionType = version[version.index("-") + 1:]
-                        print(programVersionType)
-                        if "-" in programVersionType:
-                            # 考虑到如 2.1.0-2-spark 的情况
-                            programVersionType = programVersionType[programVersionType.index("-") + 1:]
-                        try:
-                            programVersionType = programVersionTypeLnk[programVersionType]    
-                        except:
-                            programVersionType = "从Gitee/Github/Gitlink等平台获取的版本"
+class GetVersionThread(QtCore.QThread):
+    signal = QtCore.pyqtSignal(str)
+    def __init__(self) -> None:
+        super().__init__()
+
+    def run(self):
+        global about
+        global window
+        global programVersionType
+        # 目前分为几个版本（在 control 文件区分）：
+        # 星火版本：~spark
+        # 商店版本：~uos
+        # 编译版本：无版本号
+        # Gitee/Github……：正常版本
+        # Docker 版本
+        programVersionTypeLnk = {
+            "spark": "星火应用商店版本",
+            "uos": "deepin/UOS 应用商店版本<带签名>"
+        }
+        # 直接判断是不是 Docker 版本
+        if os.path.exists(f"{programPath}/docker.txt") or os.path.exists("/.dockerenv"):
+            programVersionType = "Docker 内置版本"
+            window.setWindowTitle(f"{title} （Docker 内置版本）")
+            self.signal.emit("")
+        else:
+            programVersionType = "从源码运行的版本"
+            try:
+                if not os.path.exists("/var/lib/dpkg/status"):
+                    print("无 dpkg，结束")
+                file = open("/var/lib/dpkg/status", "r")
+                fileName = file.read().splitlines()
+                package = False
+                for i in range(0, len(fileName)):
+                    if fileName[i] == "Package: spark-deepin-wine-runner-docker":
+                        programVersionType = "Docker 内置版本"
+                        window.setWindowTitle(f"{title} （Docker 内置版本）")
+                        #AddDockerMenu()
+                        self.signal.emit("")
                         break
-                except:
-                    traceback.print_exc()
-                    continue
-        except:
-            print("无法读取，当没有处理")
-    print(programVersionType)
-    about = about.replace("@VersionForType@", programVersionType)
-    # 获取程序体积
-    about = about.replace("@programSize@", str(int(getFileFolderSize(programPath) / 1024 / 1024)))
+                    if fileName[i] == "Package: spark-deepin-wine-runner-52":
+                        programVersionType = "吾爱专版"
+                        window.setWindowTitle(f"{title}（吾爱专版）")
+                        break
+                    if fileName[i] == "Package: spark-deepin-wine-runner":
+                        package = True
+                        continue
+                    if not package:
+                        continue
+                    if fileName[i].replace(" ", "").replace("\n", "") == "":
+                        # 空行，不再考虑
+                        break
+                    # 搜索版本号
+                    try:
+                        if fileName[i][:fileName[i].index(":")] == "Version":
+                            version = fileName[i][fileName[i].index(":") + 1:].strip()
+                            print(f"版本号为：{version}")
+                            if not "-" in version:
+                                programVersionType = "从Gitee/Github/Gitlink等平台获取的版本"
+                                break
+                            programVersionType = version[version.index("-") + 1:]
+                            print(programVersionType)
+                            if "-" in programVersionType:
+                                # 考虑到如 2.1.0-2-spark 的情况
+                                programVersionType = programVersionType[programVersionType.index("-") + 1:]
+                            try:
+                                programVersionType = programVersionTypeLnk[programVersionType]    
+                            except:
+                                programVersionType = "从Gitee/Github/Gitlink等平台获取的版本"
+                            break
+                    except:
+                        traceback.print_exc()
+                        continue
+            except:
+                print("无法读取，当没有处理")
+        print(programVersionType)
+        about = about.replace("@VersionForType@", programVersionType)
+        # 获取程序体积
+        about = about.replace("@programSize@", str(int(getFileFolderSize(programPath) / 1024 / 1024)))
+
+def GetVersion():
+    global runVersion
+    runVersion = GetVersionThread()
+    runVersion.signal.connect(AddDockerMenu)
+    runVersion.start()
 
 programVersionType = ""
 print(wine)
@@ -2439,7 +2453,8 @@ h7.triggered.connect(about_this_program)
 h8.triggered.connect(lambda: QtWidgets.QMessageBox.aboutQt(widget))
 hm1_1.triggered.connect(lambda: webbrowser.open_new_tab("https://gitee.com/gfdgd-xi/uengine-runner"))
 # 异同步获取信息
-threading.Thread(target=GetVersion).start()
+#threading.Thread(target=GetVersion).start()
+GetVersion()
 # 窗口设置
 window.resize(widget.frameGeometry().width() * 2, widget.frameGeometry().height())
 widget.setLayout(mainLayout)
