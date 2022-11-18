@@ -49,8 +49,18 @@ with open(sys.argv[1], "rb") as file:
             if n.encode() in things:
                 # 提取 DLL 名称
                 for i in str(things[1: -2]).split("\\x"):
-                    if n in i:
-                        dllName = i[2: ].replace(",{M", "").replace("+", "")
+                    if n in i and not "(" in i and i[0] != "/":
+                        name = i[2: ].replace(",{M", "").replace("+", "")
+                        # 文件路径合法性检测
+
+                        try:
+                            dllName = name[:name.index(".dll") + 4]
+                        except:
+                            try:
+                                dllName = name[:name.index(".DLL") + 4]
+                            except:
+                                dllName = name
+
                         if dllName.lower() == ".dll":
                             continue
                         if dllName in lists:

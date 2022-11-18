@@ -132,6 +132,8 @@ class QT:
         e1.addItems(findExeHistory)
         e1.setEditText(findExeHistory[-1])
 
+# Flag: 日志推断解决方案功能
+
 def DisableButton(things):
     button_r_6.setDisabled(things)
     button1.setDisabled(things)
@@ -466,6 +468,47 @@ def InstallWine():
 def InstallWineOnDeepin23():
     threading.Thread(target=OpenTerminal, args=[f"'{programPath}/InstallWineOnDeepin23.py'"]).start()
 
+class DllWindow():
+    def ShowWindow():
+        global dllMessage
+        global dllInfoMap
+        global textInfo
+        global dllName
+        dllMessage = QtWidgets.QWidget()
+        dllLayout = QtWidgets.QGridLayout()
+        try:
+            dllInfoMap["check"]
+        except:
+            try:
+                with open(f"{programPath}/CheckDLL/lists.json", "r") as file:
+                    dllInfoMap = json.loads(file.read())
+            except:
+                traceback.print_exc()
+                QtWidgets.QMessageBox.critical(dllMessage, "错误", traceback.format_exc())
+        # UI
+        dllName = QtWidgets.QLineEdit()
+        dllButton = QtWidgets.QPushButton("查询")
+        textInfo = QtWidgets.QTextBrowser()
+        dllButton.clicked.connect(DllWindow.Find)
+        dllLayout.addWidget(QtWidgets.QLabel("Dll 名称："), 0, 0)
+        dllLayout.addWidget(dllName, 0, 1)
+        dllLayout.addWidget(dllButton, 0, 2)
+        dllLayout.addWidget(textInfo, 1, 0, 1, 3)
+        dllMessage.setWindowTitle(f"{title}——查询 Dll")
+        dllMessage.setLayout(dllLayout)
+        dllMessage.resize(int(dllMessage.frameGeometry().width() * 1.2), int(dllMessage.frameGeometry().height() * 1.1))
+        dllMessage.setWindowIcon(QtGui.QIcon(f"{programPath}/deepin-wine-runner.svg"))
+        dllMessage.show()
+
+    def Find():
+        dllNameText = dllName.text().strip().lower()
+        if dllNameText[-4:] != ".dll":
+            dllNameText += ".dll"
+        try:
+            textInfo.setText(dllInfoMap[dllNameText])
+        except:
+            textInfo.setText(f"未查询到有关 Dll '{dllNameText}' 有关的内容")
+
 def InstallWineOnDeepin23Alpha():
     threading.Thread(target=OpenTerminal, args=[f"'{programPath}/InstallWineOnDeepin23Alpha.py'"]).start()
 
@@ -486,6 +529,31 @@ def OpenWineFontPath():
         wineBottonPath = e1.currentText()
     QtWidgets.QMessageBox.information(widget, "提示", QtCore.QCoreApplication.translate("U", "如果安装字体？只需要把字体文件复制到此字体目录\n按下“OK”按钮可以打开字体目录"))
     os.system("xdg-open \"" + wineBottonPath.replace("\'", "\\\'") + "/drive_c/windows/Fonts\"")
+
+def GetLoseDll():
+    if e1.currentText() == "":
+        wineBottonPath = setting["DefultBotton"]
+    else:
+        wineBottonPath = e1.currentText()
+    option = ""
+    if setting["MonoGeckoInstaller"]:
+        option += f"WINEDLLOVERRIDES=\"mscoree,mshtml=\" "
+    if setting["Architecture"] != "Auto":
+        option += f"WINEARCH={setting['Architecture']} "
+    if not setting["Debug"]:
+        option += "WINEDEBUG=-all "
+    wineUsingOption = ""
+    if o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable":
+        os.system(f"'{programPath}/deepin-wine-runner-create-botton.py' '{wineBottonPath}'")
+    if o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable":
+        wineUsingOption = ""
+    if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable":
+        if not os.path.exists(f"{programPath}/dlls-arm"):
+            if os.system(f"7z x -y \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
+                QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
+                return
+            os.remove(f"{programPath}/dlls-arm.7z")
+    threading.Thread(target=os.system, args=[f"python3 '{programPath}/CheckDLL/main.py' '{e2.currentText()}' '{wineBottonPath}' '{wine[o1.currentText()]}'" + setting["WineOption"]]).start()
 
 class RunWineProgramThread(QtCore.QThread):
     signal = QtCore.pyqtSignal(str)
@@ -2108,6 +2176,10 @@ programManager.addWidget(QtWidgets.QLabel(" "*5), 1, 7, 1, 1)
 getProgramStatus = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "获取该程序运行情况"))
 getProgramStatus.clicked.connect(ProgramRunStatusShow.ShowWindow)
 programManager.addWidget(getProgramStatus, 1, 8, 1, 1)
+getLoseDll = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "检测静态下程序缺少DLL"))
+getLoseDll.clicked.connect(GetLoseDll)
+programManager.addWidget(QtWidgets.QLabel(" "*5), 1, 9, 1, 1)
+programManager.addWidget(getLoseDll, 1, 10, 1, 1)
 programManager.addItem(QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum), 1, 9, 1, 1)
 programManager.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "WINE配置：")), 2, 0, 1, 1)
 wineConfig = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "配置容器"))
@@ -2388,6 +2460,11 @@ safeWebsize.addAction(s3)
 s1.triggered.connect(lambda: webbrowser.open_new_tab("https://ata.360.net/"))
 s2.triggered.connect(lambda: webbrowser.open_new_tab("https://s.threatbook.cn/"))
 s3.triggered.connect(lambda: webbrowser.open_new_tab("https://www.virustotal.com/"))
+
+log = menu.addMenu(QtCore.QCoreApplication.translate("U", "日志(&L)"))
+getDllInfo = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "查询 Dll"))
+getDllInfo.triggered.connect(DllWindow.ShowWindow)
+log.addAction(getDllInfo)
 
 help = menu.addMenu(QtCore.QCoreApplication.translate("U", "帮助(&H)"))
 runStatusWebSize = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "查询程序在 Wine 的运行情况"))
