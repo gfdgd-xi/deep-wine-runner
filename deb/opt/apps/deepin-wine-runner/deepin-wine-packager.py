@@ -62,6 +62,8 @@ def disabled_or_NORMAL_all(choose):
     button4.setDisabled(choose)
     button5.setDisabled(choose)
     option1_text.setDisabled(choose)
+    desktopIconTab.setDisabled(choose)
+    build7z.setDisabled(choose)
     chooseWineHelperValue.setDisabled(choose)
     wineVersion.setDisabled(choose)
     debArch.setDisabled(choose)
@@ -920,7 +922,7 @@ ACTIVEX_NAME=""
 BOTTLENAME="@@@BOTTLENAME@@@"
 APPVER="@@@APPVER@@@"
 EXEC_PATH="@@@EXEC_PATH@@@"
-START_SHELL_PATH="/opt/deepinwine/tools/run_v4.sh"
+START_SHELL_PATH="{['/opt/deepinwine/tools/run_v4.sh', '/opt/deepinwine/tools/spark_run_v4.sh'][chooseWineHelperValue.isChecked()]}"
 export MIME_TYPE=""
 export MIME_EXEC=""
 export DEB_PACKAGE_NAME="{e1_text.text()}"
@@ -1391,7 +1393,7 @@ def ChangeArchCombobox():
     option = True
     if debArch.currentIndex() != 0:
         option = False
-    chooseWineHelperValue.setEnabled(option)
+    #chooseWineHelperValue.setEnabled(option)
     wineVersion.setEnabled(option)
     useInstallWineArch.setEnabled(option)
     #rmBash.setEnabled(option)

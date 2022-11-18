@@ -1996,11 +1996,13 @@ updateThingsString = '''※1、容器自动配置脚本 GUI 查看介绍使用 Q
 ※4、修复了安装更多 Wine 换源换了个寂寞的问题
 ※5、修复安装更多 Wine 重新安装后列表丢失的问题
 ※6、新增了对 Deepin 23 Alpha 优化的 Wine 安装器
-7、修复了不基于生态适配活动脚本打包器在选择 arm 打包架构下容器自动删除脚本取消勾选无用的问题
+※7、新增 Dll 名称查询功能，可以查询对应 Dll 的作用
+※8、支持静态获取可执行文件可以调用的 Dll 并提供解决方案
+9、修复了不基于生态适配活动脚本打包器在选择 arm 打包架构下容器自动删除脚本取消勾选无用的问题
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年11月16日"
+updateTime = "2022年11月18日"
 about = f'''<style>
 a:link, a:active {{
     text-decoration: none;
