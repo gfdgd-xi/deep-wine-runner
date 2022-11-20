@@ -40,6 +40,9 @@ if "-w" in sys.argv:
         wineProgram = sys.argv[wineCommand + 2]
     except:
         pass
+badChar = [
+    "(", "?", "*", "!", ")", "&", "'", "\""
+]
 with open(sys.argv[1], "rb") as file:
     while True:
         things = file.readline()
@@ -49,7 +52,11 @@ with open(sys.argv[1], "rb") as file:
             if n.encode() in things:
                 # 提取 DLL 名称
                 for i in str(things[1: -2]).split("\\x"):
-                    if n in i and not "(" in i and i[0] != "/":
+                    charBad = False
+                    for b in badChar:
+                        if b in i:
+                            charBad = True
+                    if n in i and not charBad and i[0] != "/":
                         name = i[2: ].replace(",{M", "").replace("+", "")
                         # 文件路径合法性检测
 

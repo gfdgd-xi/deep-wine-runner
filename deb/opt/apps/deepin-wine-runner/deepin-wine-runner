@@ -95,7 +95,7 @@ def liulanbutton():
 
 # 第二个浏览按钮事件
 def liulanexebutton():
-    path = QtWidgets.QFileDialog.getOpenFileName(widget, "选择 exe 可执行文件", json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindExe.json"))["path"], "exe 可执行文件(*.exe);;EXE 可执行文件(*.EXE);;所有文件(*.*)")
+    path = QtWidgets.QFileDialog.getOpenFileName(widget, "选择 exe 可执行文件", json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindExe.json"))["path"], "exe 可执行文件(*.exe);;MSI 文件(*.msi);;所有文件(*.*)")
     if path != "" and path != "()":
         e2.setEditText(path[0])  # 显示路径
         write_txt(get_home() + "/.config/deepin-wine-runner/FindExe.json", json.dumps({"path": os.path.dirname(path[0])}))  # 写入配置文件
@@ -132,7 +132,87 @@ class QT:
         e1.addItems(findExeHistory)
         e1.setEditText(findExeHistory[-1])
 
+repairList = []
 # Flag: 日志推断解决方案功能
+class LogChecking():
+    def ShowWindow():
+        global logThread
+        global logWindow
+        global questionList
+        global repairButton
+        logWindow = QtWidgets.QWidget()
+        logWindowLayout = QtWidgets.QGridLayout()
+        questionList = QtWidgets.QListView()
+        repairButton = QtWidgets.QPushButton("一键修复")
+        repairButton.setDisabled(True)
+        repairButton.clicked.connect(LogChecking.RepairButton)
+        nmodel = QtGui.QStandardItemModel(window)
+        item = QtGui.QStandardItem("正在分析中……")
+        questionList.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        nmodel.appendRow(item)
+        questionList.setModel(nmodel)
+        logWindowLayout.addWidget(questionList, 0, 0, 3, 1)
+        logWindowLayout.addWidget(repairButton, 0, 2, 1, 1)
+        logWindow.setWindowTitle("分析日志")
+        logWindow.setLayout(logWindowLayout)
+        logThread = LogThreading()
+        logThread.done.connect(LogChecking.Show)
+        logThread.start()
+        logWindow.setWindowIcon(QtGui.QIcon(f"{programPath}/deepin-wine-runner.svg"))
+        logWindow.resize(int(logWindow.frameGeometry().width() * 1.2), int(logWindow.frameGeometry().height() * 1.2))
+        logWindow.show()
+    
+    def RepairButton():
+        index = questionList.currentIndex().row()
+        lists = questionMap[index]
+        print(f"{programPath}/CheckDLL/bash/{lists[1].lower()}.sh")
+        if os.path.exists(f"{programPath}/CheckDLL/bash/{lists[1].lower()}.sh"):
+            OpenTerminal(f"'{programPath}/AutoShell/main.py' '{programPath}/CheckDLL/bash/{lists[1].lower()}.sh'")
+            return
+        QtWidgets.QMessageBox.critical(logWindow, "错误", "无法修复该问题")
+
+    def Show(lists):
+        global questionMap
+        nmodel = QtGui.QStandardItemModel(window)
+        disbledButton = False
+        print(lists)
+        if not len(lists):
+            nmodel.appendRow(QtGui.QStandardItem(f"无法分析到错误"))
+            disbledButton = True
+        for i in lists:
+            if i[0] == 0:
+                nmodel.appendRow(QtGui.QStandardItem(f"无法分析到错误"))
+                disbledButton = True
+                break
+            if i[0] == 1:
+                nmodel.appendRow(QtGui.QStandardItem(f"无法调用 Dll：{i[1]}"))
+        questionMap = lists[:]
+        repairButton.setDisabled(disbledButton)
+        questionList.setModel(nmodel)
+
+class LogThreading(QtCore.QThread):
+    done = QtCore.pyqtSignal(list)
+    def __init__(self):
+        super().__init__()
+
+    def run(self):
+        global logText
+        repairList = []
+        logText = returnText.toPlainText()
+        print(logText.splitlines())
+        for i in logText.splitlines():
+            print(i)
+            checkingText = i.lower()
+            if "err:module:import_dll Library".lower() in checkingText:
+                # Lose Dll
+                repairList.append([1, i[i.index("Library") + 8: i.index("(")].strip()])
+                continue
+            if "err:module:fixup_imports_ilonly".lower() in checkingText:
+                # Lose Dll
+                repairList.append([1, i[i.index("_ilonly") + 8: i.index("not")].strip()])
+                continue
+        self.done.emit(repairList)
+    
 
 def DisableButton(things):
     button_r_6.setDisabled(things)
@@ -1998,11 +2078,12 @@ updateThingsString = '''※1、容器自动配置脚本 GUI 查看介绍使用 Q
 ※6、新增了对 Deepin 23 Alpha 优化的 Wine 安装器
 ※7、新增 Dll 名称查询功能，可以查询对应 Dll 的作用
 ※8、支持静态获取可执行文件可以调用的 Dll 并提供解决方案
-9、修复了不基于生态适配活动脚本打包器在选择 arm 打包架构下容器自动删除脚本取消勾选无用的问题
+※9、支持移除指定的 .desktop 快捷方式
+10、修复了不基于生态适配活动脚本打包器在选择 arm 打包架构下容器自动删除脚本取消勾选无用的问题
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年11月18日"
+updateTime = "2022年11月19日"
 about = f'''<style>
 a:link, a:active {{
     text-decoration: none;
@@ -2042,7 +2123,7 @@ Deepin 论坛：https://bbs.deepin.org</pre>
 <hr>
 <h1>©2020~{time.strftime("%Y")} gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
 title = "Wine 运行器 {}".format(version)
-#<h1>©2020~{time.strftime("%Y")} <a href="https://gitee.com/gfdgd-xi">gfdgd xi、</a><a href="https://weibo.com/u/7755040136">为什么您不喜欢</a><a href="https://gfdgd-xi.github.io">熊出没</a><a href="https://weibo.com/u/7755040136">和阿布呢</a></h1>'''
+#<h1>©2020~{time.strftime("%Y")} <a href="https://gitee.com/gfdgd-xi">gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 try:
     threading.Thread(target=requests.get, args=[parse.unquote(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9vcGVuL0luc3RhbGwucGhw").decode("utf-8")) + "?Version=" + version]).start()
@@ -2290,6 +2371,7 @@ w6 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用官方 Wine
 getDllOnInternet = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从互联网获取DLL"))
 w7 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从镜像获取DLL（只支持官方安装镜像，DOS内核如 Windows 95 暂不支持）"))
 updateGeek = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从 Geek Uninstaller 官网升级程序"))
+deletePartIcon = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "删除部分 Wine 程序在启动器的快捷方式"))
 deleteDesktopIcon = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "删除所有 Wine 程序在启动器的快捷方式"))
 wineOption.addAction(w1)
 wineOption.addAction(w2)
@@ -2361,7 +2443,10 @@ installDxvk = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "安装 D
 uninstallDxvk = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "卸载 DXVK"))
 dxvkMenu.addAction(installDxvk)
 dxvkMenu.addAction(uninstallDxvk)
+wineOption.addSeparator()
+wineOption.addAction(deletePartIcon)
 wineOption.addAction(deleteDesktopIcon)
+wineOption.addSeparator()
 settingWineBottleCreateLink = wineOption.addMenu(QtCore.QCoreApplication.translate("U", "允许/禁止指定 wine 容器生成快捷方式"))
 enabledWineBottleCreateLink = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "允许指定 wine 容器生成快捷方式"))
 disbledWineBottleCreateLink = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "禁止指定 wine 容器生成快捷方式"))
@@ -2418,6 +2503,7 @@ wm4_1.triggered.connect(lambda: os.system(f"'{programPath}/launch.sh' deepin-ter
 wm4_2.triggered.connect(lambda: os.system(f"'{programPath}/launch.sh' deepin-terminal -C 'pkexec apt purge winbind -y' --keep-open"))
 installDxvk.triggered.connect(InstallDXVK)
 uninstallDxvk.triggered.connect(UninstallDXVK)
+deletePartIcon.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"python3 '{programPath}/BuildDesktop.py'"]).start())
 deleteDesktopIcon.triggered.connect(DeleteDesktopIcon)
 enabledWineBottleCreateLink.triggered.connect(lambda: RunWineProgram("reg' delete 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v winemenubuilder.exe '/f"))
 disbledWineBottleCreateLink.triggered.connect(lambda: RunWineProgram("reg' add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v winemenubuilder.exe '/f"))
@@ -2465,8 +2551,11 @@ s3.triggered.connect(lambda: webbrowser.open_new_tab("https://www.virustotal.com
 
 log = menu.addMenu(QtCore.QCoreApplication.translate("U", "日志(&L)"))
 getDllInfo = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "查询 Dll"))
+checkLogText = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "日志分析"))
 getDllInfo.triggered.connect(DllWindow.ShowWindow)
+checkLogText.triggered.connect(LogChecking.ShowWindow)
 log.addAction(getDllInfo)
+log.addAction(checkLogText)
 
 help = menu.addMenu(QtCore.QCoreApplication.translate("U", "帮助(&H)"))
 runStatusWebSize = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "查询程序在 Wine 的运行情况"))
