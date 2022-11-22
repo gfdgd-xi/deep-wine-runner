@@ -11,6 +11,20 @@
 echo 安装组件
 python3 -m pip install --upgrade pynput --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple > /dev/null 2>&1 | true
 echo 执行完成
+echo 移除旧组件
+if [ -d /opt/apps/deepin-wine-runner/arm-package ]; then
+	rm -rf /opt/apps/deepin-wine-runner/arm-package
+fi
+if [ -d /opt/apps/deepin-wine-runner/dlls-arm ]; then
+	rm -rf /opt/apps/deepin-wine-runner/dlls-arm
+fi
+if [ -d /opt/apps/deepin-wine-runner/exa ]; then
+	rm -rf /opt/apps/deepin-wine-runner/exa
+fi
+if [ -d /opt/apps/deepin-wine-runner/dxvk ]; then
+	rm -rf /opt/apps/deepin-wine-runner/dxvk
+fi
+echo 移除完成
 # 如果为非 X86 PC，可以删除掉一些无用组件（主要是用不了）
 if [ `arch` != "x86_64" ]; then
 	echo 非X86架构，删除对非X86架构无用的组件
