@@ -1,9 +1,11 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 2.4.1</h1>
+<h1 align="center">Wine 运行器 2.4.1.1</h1>
 <hr>
 
 ## 介绍
-一个图形化了以下命令的程序  
+Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。  
+它同时还内置了基于VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作。  
+此外，它还简化了如下命令，让你可以更简便地使用Wine：  
 ```bash
 env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 ```
@@ -102,6 +104,9 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志 
+### 2.4.1.1（2022年11月21日）
+**※1、修复已知问题**  
+
 ### 2.4.1（2022年11月06日）
 **※1、不基于生态适配活动脚本的打包器支持只生成制作容器的 7z 包**  
 **※2、两个打包器的容器自动删除脚本添加 kill.sh**  
@@ -117,6 +122,7 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 12、非基于生态适配活动脚本的打包器默认勾选卸载该 deb 后自动删除容器、使用统信活动容器清理脚本、使用星火 wine helper  
 13、优化文案  
 ![image.png](https://storage.deepin.org/thread/202211061755115167_image.png)
+
 ### 2.4.0（2022年10月25日）
 **※1、新增 VB Runtime 组件安装工具**  
 **※2、优化自动配置容器搜索功能，搜索不区分大小写**  

@@ -2080,18 +2080,19 @@ updateThingsString = '''※1、容器自动配置脚本 GUI 查看介绍使用 Q
 ※8、支持静态获取可执行文件可以调用的 Dll 并提供解决方案
 ※9、支持移除指定的 .desktop 快捷方式
 10、修复了不基于生态适配活动脚本打包器在选择 arm 打包架构下容器自动删除脚本取消勾选无用的问题
+11、优化文案
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年11月19日"
+updateTime = "2022年11月22日"
 about = f'''<style>
 a:link, a:active {{
     text-decoration: none;
 }}
 </style>
 <h1>关于</h1>
-<p>一个能让Linux用户更加方便运行Windows应用的程序，内置了对wine图形化的支持和各种Wine工具和自制Wine程序打包器、运行库安装工具等等</p>
-<p>同时也内置了基于VirtualBox制作的小白Windows虚拟机安装工具，可以做到只需要用户下载系统镜像并点击安装即可，无需顾及虚拟机安装、创建、虚拟机的分区等等</p>
+<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。</p>
+<p>它同时还内置了基于VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作。</p>
 <p>本程序依照 GPLV3 协议开源</p>
 <pre>
 
