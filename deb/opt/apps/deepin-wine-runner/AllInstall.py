@@ -57,30 +57,37 @@ print("请问是否要更新操作系统？[Y/N]", end=' ')
 choose = input().upper()
 if not choose == "N":
     os.system("sudo apt upgrade -y")
-print("请问是否要安装原版 wine（wine64）？[Y/N]", end=' ')
-choose = input().upper()
-if not choose == "N":
-    os.system("sudo apt install wine -y")
-print("请问是否要安装 deepin-wine？[Y/N]", end=' ')
-choose = input().upper()
-if not choose == "N":
-    os.system("sudo apt install deepin-wine -y")
-print("请问是否要安装 deepin-wine5（需要安装最新版星火应用商店）？[Y/N]", end=' ')
-choose = input().upper()
-print("请问是否要安装 deepin-wine5-stable？[Y/N]", end=' ')
-choose = input().upper()
-if not choose == "N":
-    os.system("sudo apt install deepin-wine5-stable -y")
-print("请问是否要安装 deepin-wine6-stable？[Y/N]", end=' ')
-choose = input().upper()
-if not choose == "N":
-    os.system("sudo apt install deepin-wine6-stable -y")
-print("请问是否要安装 spark-wine7-devel（需要安装最新版星火应用商店）？[Y/N]", end=' ')
-choose = input().upper()
-if not choose == "N":
-    InstallSparkWine("spark-wine7-devel")
-print("请问是否要安装 ukylin-wine（需要添加 ukylin 源，但因为可能会导致系统问题，将不会自动添加）？[Y/N]", end=" ")
-choose = input().upper()
-if not choose == "N":
-    os.system("sudo apt install ukylin-wine -y")
+if os.system("which wine > /dev/null"):
+    print("请问是否要安装原版 wine（wine64）？[Y/N]", end=' ')
+    choose = input().upper()
+    if not choose == "N":
+        os.system("sudo apt install wine -y")
+if os.system("which deepin-wine > /dev/null"):
+    print("请问是否要安装 deepin-wine？[Y/N]", end=' ')
+    choose = input().upper()
+    if not choose == "N":
+        os.system("sudo apt install deepin-wine -y")
+if os.system("which deepin-wine5 > /dev/null"):
+    print("请问是否要安装 deepin-wine5（需要安装最新版星火应用商店）？[Y/N]", end=' ')
+    choose = input().upper()
+if os.system("which deepin-wine5-stable > /dev/null"):
+    print("请问是否要安装 deepin-wine5-stable？[Y/N]", end=' ')
+    choose = input().upper()
+    if not choose == "N":
+        os.system("sudo apt install deepin-wine5-stable -y")
+if os.system("which deepin-wine6-stable > /dev/null"):
+    print("请问是否要安装 deepin-wine6-stable？[Y/N]", end=' ')
+    choose = input().upper()
+    if not choose == "N":
+        os.system("sudo apt install deepin-wine6-stable -y")
+if os.system("which spark-wine7-devel > /dev/null"):
+    print("请问是否要安装 spark-wine7-devel（需要安装最新版星火应用商店）？[Y/N]", end=' ')
+    choose = input().upper()
+    if not choose == "N":
+        InstallSparkWine("spark-wine7-devel")
+if os.system("which ukylin-wine > /dev/null"):
+    print("请问是否要安装 ukylin-wine（需要添加 ukylin 源，但因为可能会导致系统问题，将不会自动添加）？[Y/N]", end=" ")
+    choose = input().upper()
+    if not choose == "N":
+        os.system("sudo apt install ukylin-wine -y")
 print("全部完成！")

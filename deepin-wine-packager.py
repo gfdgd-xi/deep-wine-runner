@@ -1393,7 +1393,9 @@ def ChangeArchCombobox():
     option = True
     if debArch.currentIndex() != 0:
         option = False
-    #chooseWineHelperValue.setEnabled(option)
+    chooseWineHelperValue.setEnabled(option)
+    if not option:
+        chooseWineHelperValue.setChecked(False)
     wineVersion.setEnabled(option)
     useInstallWineArch.setEnabled(option)
     #rmBash.setEnabled(option)

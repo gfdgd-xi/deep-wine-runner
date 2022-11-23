@@ -1,6 +1,8 @@
 {
     "Version": "2.5.0",
     "Thank": [
+        "感谢 @雁舞白沙 优化了程序文案",
+        "感谢 @豪 制作的非官方论坛 https://gfdgdxi.flarum.cloud/",
         "感谢 @185******67 反馈的 2.4.0 无法打开 Visual Basic 组件安装工具的问题",
         "感谢 @shenmo 提供的 在打包器的 postrm 脚本添加 kill.sh、追加参数改为 --uri xxxxxxx、独立生成容器 7z 文件的功能",
         "感谢 @a2035274 @虚幻的早晨 https://bbs.deepin.org/post/238301",

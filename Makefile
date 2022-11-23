@@ -16,6 +16,8 @@ build:
 	cp -rv AllInstall.py                          deb/opt/apps/deepin-wine-runner
 	cp -rv kill.sh                          deb/opt/apps/deepin-wine-runner
 	cp -rv InstallWineOnDeepin23Alpha.py          deb/opt/apps/deepin-wine-runner
+	echo "[]" > deb/opt/apps/deepin-wine-runner/wine/winelist.json
+	rm -rfv deb/opt/apps/deepin-wine-runner/wine/winelist.json
 	cp -rv req                          deb/opt/apps/deepin-wine-runner
 	cp -rv BuildDesktop.py              deb/opt/apps/deepin-wine-runner
 	cp -rv RegShot                          deb/opt/apps/deepin-wine-runner

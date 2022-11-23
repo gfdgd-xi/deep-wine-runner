@@ -9,7 +9,7 @@ Recommends: winbind, wimtools
 Section: utils
 Conflicts: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer
 Replaces: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer
-Installed-Size: 23776
+Installed-Size: 21844
 Description: gfdgd xi、为什么您不喜欢熊出没和阿布呢 制作的 wine 运行器
  2.4.1 更新内容：
  ※1、不基于生态适配活动脚本的打包器支持只生成制作容器的 7z 包
