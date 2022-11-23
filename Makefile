@@ -10,11 +10,14 @@ build:
 	cp -rv VM-source/Windows7X86Auto.iso          VM
 	cp -rv VM-source/run.py                       VM
 	cp -rv wine/                       deb/opt/apps/deepin-wine-runner/
+	cp -rv Test/                       deb/opt/apps/deepin-wine-runner/
 	zip -v -q -r package-script.zip package-script
 	cp -rv VM                                     deb/opt/apps/deepin-wine-runner
 	cp -rv AllInstall.py                          deb/opt/apps/deepin-wine-runner
 	cp -rv kill.sh                          deb/opt/apps/deepin-wine-runner
+	cp -rv InstallWineOnDeepin23Alpha.py          deb/opt/apps/deepin-wine-runner
 	cp -rv req                          deb/opt/apps/deepin-wine-runner
+	cp -rv BuildDesktop.py              deb/opt/apps/deepin-wine-runner
 	cp -rv RegShot                          deb/opt/apps/deepin-wine-runner
 	cp -rv BeCyIconGrabber.exe                    deb/opt/apps/deepin-wine-runner
 	cp -rv AutoShell                              deb/opt/apps/deepin-wine-runner
