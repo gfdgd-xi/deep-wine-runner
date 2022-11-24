@@ -1770,6 +1770,31 @@ class ValueCheck():
 def ChangePath():
     e1.setCurrentText(f'{setting["DefultBotton"]}/{os.path.splitext(os.path.basename(e2.currentText()))[0]}')
 
+def UploadLog():
+    if QtWidgets.QMessageBox.question(window, "提示", "您确定要上传吗？") == QtWidgets.QMessageBox.Yes:
+        text = QtWidgets.QInputDialog.getText(window, "输入内容", "输入内容以描述")
+        try:
+            requests.post("", {
+                "Log": returnText.toPlainText(),
+                "Wine": wine[o1.currentText()],
+                "Tips": text
+                })
+        except:
+            traceback.print_exc()
+            QtWidgets.QMessageBox.critical(window, "错误", "上传失败！")
+
+def SaveLog():
+    path = QtWidgets.QFileDialog.getSaveFileName(window, "")
+    if not path[1]:
+        return
+    print(path[0])
+    try:
+        with open(path[0], "w") as file:
+            file.write(returnText.toPlainText())
+    except:
+        traceback.print_exc()
+        QtWidgets.QMessageBox.critical(window, "错误", traceback.format_exc())
+
 ###########################
 # 加载配置
 ###########################
