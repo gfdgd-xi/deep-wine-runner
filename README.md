@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 2.4.1.1</h1>
+<h1 align="center">Wine 运行器 2.5.0</h1>
 <hr>
 
 ## 介绍
@@ -104,6 +104,22 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志 
+### 2.5.0（2022年11月25日）
+**※1、容器自动配置脚本 GUI 查看介绍使用 QWebEngineWidget，支持图片（非强制依赖，只做推荐）；**  
+**※2、不基于生态适配活动脚本打包器跟进 arm 架构 2022年11月11日的 Wine 微信打包方式；**  
+**※3、支持多图标的程序打包；**  
+**※4、修复了安装更多 Wine 换源换了个寂寞的问题；**  
+**※5、修复安装更多 Wine 重新安装后列表丢失的问题；**  
+**※6、新增了对 Deepin 23 Alpha 优化的 Wine 安装器；**  
+**※7、新增 Dll 名称查询功能，可以查询对应 Dll 的作用；**  
+**※8、支持静态获取可执行文件可以调用的 Dll 并提供解决方案；**  
+**※9、支持移除指定的 .desktop 快捷方式；**  
+**※10、新增日志分析功能以及导出、上传日志功能；**  
+11、修复了不基于生态适配活动脚本打包器在选择 arm 打包架构下容器自动删除脚本取消勾选无用的问题；  
+12、优化文案、新增友链；  
+13、提供了部分组件的测试功能。  
+![image.png](https://storage.deepin.org/thread/202211250932168081_image.png)  
+
 ### 2.4.1.1（2022年11月21日）
 **※1、修复已知问题**  
 

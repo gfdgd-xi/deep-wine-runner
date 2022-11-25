@@ -166,8 +166,14 @@ class LogChecking():
         index = questionList.currentIndex().row()
         lists = questionMap[index]
         print(f"{programPath}/CheckDLL/bash/{lists[1].lower()}.sh")
-        if os.path.exists(f"{programPath}/CheckDLL/bash/{lists[1].lower()}.sh"):
+        if lists[0] == 1 and os.path.exists(f"{programPath}/CheckDLL/bash/{lists[1].lower()}.sh"):
             OpenTerminal(f"'{programPath}/AutoShell/main.py' '{programPath}/CheckDLL/bash/{lists[1].lower()}.sh'")
+            return
+        if lists[0] == 2:
+            QtWidgets.QMessageBox.information(logWindow, "修复方法", "切换其它 Wine")
+            return    
+        if lists[0] == 4:
+            QtWidgets.QMessageBox.information(logWindow, "修复方法", "如是 Deepin Wine 可以尝试切换 WineHQ，\n并且取消勾选运行器主页面菜单栏“程序”=>“设置Wine”，取消勾选“屏蔽 Wine 默认 Mono 和 Gecko 安装器”\n然后尝试在菜单栏的“Wine”=>“在指定 Wine、容器安装组件”=>“在指定 Wine、容器安装 Gecko”来安装 Gecko")
             return
         QtWidgets.QMessageBox.critical(logWindow, "错误", "无法修复该问题")
 
@@ -177,15 +183,21 @@ class LogChecking():
         disbledButton = False
         print(lists)
         if not len(lists):
-            nmodel.appendRow(QtGui.QStandardItem(f"无法分析到错误"))
+            nmodel.appendRow(QtGui.QStandardItem(f"√ 无法分析到错误"))
             disbledButton = True
         for i in lists:
             if i[0] == 0:
-                nmodel.appendRow(QtGui.QStandardItem(f"无法分析到错误"))
+                nmodel.appendRow(QtGui.QStandardItem(f"√ 无法分析到错误"))
                 disbledButton = True
                 break
             if i[0] == 1:
-                nmodel.appendRow(QtGui.QStandardItem(f"无法调用 Dll：{i[1]}"))
+                nmodel.appendRow(QtGui.QStandardItem(f"× 无法调用 Dll：{i[1]}"))
+            if i[0] == 2:
+                nmodel.appendRow(QtGui.QStandardItem(f"× 尝试用 Mono 运行非 .net 应用 {i[1]}？"))
+            if i[0] == 3:
+                nmodel.appendRow(QtGui.QStandardItem(f"！ 无法加载 Gecko，是被禁用或未安装？"))
+            if i[0] == 4:
+                nmodel.appendRow(QtGui.QStandardItem(f"× 无法更新 Wine 容器版本，是否还有 Wine 程序运行？"))
         questionMap = lists[:]
         repairButton.setDisabled(disbledButton)
         questionList.setModel(nmodel)
@@ -211,6 +223,14 @@ class LogThreading(QtCore.QThread):
                 # Lose Dll
                 repairList.append([1, i[i.index("_ilonly") + 8: i.index("not")].strip()])
                 continue
+            if "Cannot open assembly".lower() in checkingText and ": File does not contain a valid CIL image.".lower() in checkingText:
+                # Mono
+                repairList.append([2, i.replace(": File does not contain a valid CIL image.", "").replace("Cannot open assembly", "").strip()[1: -1]])
+            if "Could not load wine-gecko. HTML rendering will be disabled.".lower() in checkingText and "Could not find Wine Gecko. HTML rendering will be disabled.".lower() in checkingText:
+                # Disbled Gecko
+                repairList.append([3, ""])
+            if "Your wineserver binary was not upgraded correctly".lower() in checkingText:
+                repairList.append([4, ""])
         self.done.emit(repairList)
     
 
@@ -1770,6 +1790,39 @@ class ValueCheck():
 def ChangePath():
     e1.setCurrentText(f'{setting["DefultBotton"]}/{os.path.splitext(os.path.basename(e2.currentText()))[0]}')
 
+def UploadLog():
+    if QtWidgets.QMessageBox.question(window, "提示", "您确定要上传吗？上传内容将不会公开，将用于加强日志分析功能") == QtWidgets.QMessageBox.Yes:
+        text = QtWidgets.QInputDialog.getMultiLineText(window, "输入内容", "输入描述信息")
+        try:
+            returnList = requests.post(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0OjMwMjUwL2xvZw==").decode("utf-8"), {
+                "Log": returnText.toPlainText(),
+                "Wine": wine[o1.currentText()],
+                "Tips": text
+                }).json
+            if returnList["ExitCode"] == 0:
+                QtWidgets.QMessageBox.information(window, "提示", "上传成功！")    
+            else:
+                print(returnList)
+                QtWidgets.QMessageBox.critical(window, "错误", "上传失败！")    
+        except:
+            traceback.print_exc()
+            QtWidgets.QMessageBox.critical(window, "错误", "上传失败！")
+
+def SaveLog():
+    path = QtWidgets.QFileDialog.getSaveFileName(window, "保存日志", get_home(), "txt文件(*.txt);;html 文件(*.html);;所有文件(*.*))")
+    if not path[1]:
+        return
+    print(path)
+    try:
+        with open(path[0], "w") as file:
+            if path[1] == "html 文件(*.html)":
+                file.write(returnText.toHtml())
+            else:
+                file.write(returnText.toPlainText())
+    except:
+        traceback.print_exc()
+        QtWidgets.QMessageBox.critical(window, "错误", traceback.format_exc())
+
 ###########################
 # 加载配置
 ###########################
@@ -2079,13 +2132,14 @@ updateThingsString = '''※1、容器自动配置脚本 GUI 查看介绍使用 Q
 ※7、新增 Dll 名称查询功能，可以查询对应 Dll 的作用；
 ※8、支持静态获取可执行文件可以调用的 Dll 并提供解决方案；
 ※9、支持移除指定的 .desktop 快捷方式；
-10、修复了不基于生态适配活动脚本打包器在选择 arm 打包架构下容器自动删除脚本取消勾选无用的问题；
-11、优化文案、新增友链；
-12、提供了部分组件的测试功能。
+※10、新增日志分析功能以及导出、上传日志功能；
+11、修复了不基于生态适配活动脚本打包器在选择 arm 打包架构下容器自动删除脚本取消勾选无用的问题；
+12、优化文案、新增友链；
+13、提供了部分组件的测试功能。
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年11月23日"
+updateTime = "2022年11月25日"
 about = f'''<style>
 a:link, a:active {{
     text-decoration: none;
@@ -2567,10 +2621,16 @@ s3.triggered.connect(lambda: webbrowser.open_new_tab("https://www.virustotal.com
 log = menu.addMenu(QtCore.QCoreApplication.translate("U", "日志(&L)"))
 getDllInfo = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "查询 Dll"))
 checkLogText = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "日志分析"))
+saveLogText = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "另存为日志"))
+uploadLogText = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "上传日志"))
 getDllInfo.triggered.connect(DllWindow.ShowWindow)
 checkLogText.triggered.connect(LogChecking.ShowWindow)
+saveLogText.triggered.connect(SaveLog)
+uploadLogText.triggered.connect(UploadLog)
 log.addAction(getDllInfo)
 log.addAction(checkLogText)
+log.addAction(saveLogText)
+log.addAction(uploadLogText)
 
 help = menu.addMenu(QtCore.QCoreApplication.translate("U", "帮助(&H)"))
 runStatusWebSize = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "查询程序在 Wine 的运行情况"))
