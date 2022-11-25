@@ -1808,6 +1808,7 @@ def UploadLog():
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(window, "错误", "上传失败！")
 
+
 def SaveLog():
     path = QtWidgets.QFileDialog.getSaveFileName(window, "保存日志", get_home(), "txt文件(*.txt);;html 文件(*.html);;所有文件(*.*))")
     if not path[1]:
@@ -1975,22 +1976,25 @@ except:
 def getFileFolderSize(fileOrFolderPath):
     """get size for file or folder"""
     totalSize = 0
-    if not os.path.exists(fileOrFolderPath):
-        return totalSize
-    if os.path.isfile(fileOrFolderPath):
-        totalSize = os.path.getsize(fileOrFolderPath)  # 5041481
-        return totalSize
-    if os.path.isdir(fileOrFolderPath):
-        with os.scandir(fileOrFolderPath) as dirEntryList:
-            for curSubEntry in dirEntryList:
-                curSubEntryFullPath = os.path.join(fileOrFolderPath, curSubEntry.name)
-                if curSubEntry.is_dir():
-                    curSubFolderSize = getFileFolderSize(curSubEntryFullPath)  # 5800007
-                    totalSize += curSubFolderSize
-                elif curSubEntry.is_file():
-                    curSubFileSize = os.path.getsize(curSubEntryFullPath)  # 1891
-                    totalSize += curSubFileSize
+    try:
+        if not os.path.exists(fileOrFolderPath):
             return totalSize
+        if os.path.isfile(fileOrFolderPath):
+            totalSize = os.path.getsize(fileOrFolderPath)  # 5041481
+            return totalSize
+        if os.path.isdir(fileOrFolderPath):
+            with os.scandir(fileOrFolderPath) as dirEntryList:
+                for curSubEntry in dirEntryList:
+                    curSubEntryFullPath = os.path.join(fileOrFolderPath, curSubEntry.name)
+                    if curSubEntry.is_dir():
+                        curSubFolderSize = getFileFolderSize(curSubEntryFullPath)  # 5800007
+                        totalSize += curSubFolderSize
+                    elif curSubEntry.is_file():
+                        curSubFileSize = os.path.getsize(curSubEntryFullPath)  # 1891
+                        totalSize += curSubFileSize
+                return totalSize
+    except:
+        return totalSize
 
 # 获取当前语言
 def get_now_lang()->"获取当前语言":
