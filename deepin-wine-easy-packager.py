@@ -449,3 +449,4 @@ if __name__ == "__main__":
     window.setWindowTitle(f"Wine 运行器 {version}——简易打包器")
     window.show()
     sys.exit(app.exec_())
+# ./wrestool ../Desktop/deep-wine-runner/geek.exe -x -t 14 > a.png
