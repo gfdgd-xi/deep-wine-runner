@@ -305,6 +305,7 @@ class RunThread(QtCore.QThread):
             # 暂定
             debPackageName = "spark-" + xpinyin.Pinyin().get_pinyin(os.path.splitext(exeName)[0].replace(" ", "")).lower().replace("--", "-").replace(" ", "")
             debPackageVersion = "1.0.0"
+            programIconPath = f"/opt/apps/{debPackageName}/entries/icons/hicolor/scalable/apps/{debPackageName}.png"
             debMaintainer = os.getlogin()
             debBuildPath = f"/tmp/deepin-wine-packager-builder-{debPackageName}"
             bottlePackagePath = f"{debBuildPath}/opt/apps/{debPackageName}/files/files.7z"
@@ -346,13 +347,14 @@ class RunThread(QtCore.QThread):
                 folderExePath = os.path.dirname(rightLnk[1].replace("\\", "/").replace("c:/", bottlePath))
                 exePathInBottle = rightLnk[1]
                 exeName = os.path.splitext(os.path.basename(folderExePath))[0]
-                programIconPath = ""
+                exePathInSystem = rightLnk[1].replace("\\", "/").replace("c:", bottlePath)
+                self.RunCommand(f"'{programPath}/wrestool' '{exePathInSystem}' -x -t 14 > '{programIconPath}'")
             else:
                 # 绿色软件
                 folderExePath = os.path.dirname(exePath.text())               
                 exePathInBottle = f"c:/Program Files/{os.path.basename(folderExePath)}/{exeName}"
                 exeName = os.path.splitext(os.path.basename(os.path.basename(exePath.text())))[0]
-                programIconPath = ""
+                self.RunCommand(f"'{programPath}/wrestool' '{exePathInBottle}' -x -t 14 > '{programIconPath}'")
                 # 拷贝文件到容器
                 self.RunCommand(f"cp -rv '{folderExePath}/..' '{bottlePath}/Program Files'")
             debDescription = f"{exeName} By Deepin Wine 6 Stable And Build By Wine Runner"
