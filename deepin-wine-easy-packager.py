@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import time
 import random
 import xpinyin
 import traceback
@@ -26,7 +27,9 @@ def QuestionMessage(text: str):
     return False
 
 def DisbledAndEnabledAll(choose: bool):
-    pass
+    exePath.setDisabled(choose)
+    browserExeButton.setDisabled(choose)
+    buildButton.setDisabled(choose)
 
 # 获取用户主目录
 def get_home():
@@ -49,6 +52,11 @@ def get_desktop_path():
     except:
         traceback.print_exc()
         return get_home()
+
+def CleanPressCompleteDownloadState(option):
+    global pressCompleteDownload
+    pressCompleteDownload = False
+    installCmpleteButton.setEnabled(True)
 
 # 读取 lnk 文件
 def GetLnkDesktop(path):
@@ -261,6 +269,27 @@ GenericName=@@@Package@@@
 Terminal=false
 StartupNotify=false'''
 
+def getFileFolderSize(fileOrFolderPath):
+    """get size for file or folder"""
+    totalSize = 0
+    if not os.path.exists(fileOrFolderPath):
+        return totalSize
+    if os.path.isfile(fileOrFolderPath):
+        totalSize = os.path.getsize(fileOrFolderPath)  # 5041481
+        return totalSize
+    if os.path.isdir(fileOrFolderPath):
+        with os.scandir(fileOrFolderPath) as dirEntryList:
+            for curSubEntry in dirEntryList:
+                curSubEntryFullPath = os.path.join(fileOrFolderPath, curSubEntry.name)
+                if curSubEntry.is_dir():
+                    curSubFolderSize = getFileFolderSize(curSubEntryFullPath)  # 5800007
+                    totalSize += curSubFolderSize
+                elif curSubEntry.is_file():
+                    curSubFileSize = os.path.getsize(curSubEntryFullPath)  # 1891
+                    totalSize += curSubFileSize
+            return totalSize
+
+
 def WriteTxt(path, things):
     with open(path, "w") as file:
         file.write(things)
@@ -277,7 +306,7 @@ class RunThread(QtCore.QThread):
     info = QtCore.pyqtBoundSignal(str)
     question = QtCore.pyqtBoundSignal(str)
     disbledAll = QtCore.pyqtBoundSignal(bool)
-
+    cleanPressState = QtCore.pyqtBoundSignal(bool)
     def RunCommand(self, command):
         res = subprocess.Popen([command], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         while res.poll() is None:
@@ -321,7 +350,9 @@ class RunThread(QtCore.QThread):
                 self.RunCommand(f"rm -rfv '{lnkPath}'")
                 # 安装包
                 self.RunCommand(f"WINEPREFIX='{bottlePath}' deepin-wine6-stable '{exePath.text()}'")
-                # 安装锁，先不写
+                # 安装锁，锁解除后才可继续
+                while not pressCompleteDownload:
+                    time.sleep(0.1)
                 # 识别 lnk
                 lnkList = GetLnkDesktop(lnkPath)
                 if len(lnkList) <= 0:
@@ -379,7 +410,7 @@ class RunThread(QtCore.QThread):
             ########### 打包容器
             self.RunCommand(f"7z a '{bottlePackagePath}' '{bottlePath}/'*")
             ########### 生成文件内容
-            buildProgramSize = 0
+            buildProgramSize = getFileFolderSize(debBuildPath)
             replaceMap = [
                 ["@@@Package@@@", debPackageName],
                 ["@@@Version@@@", debPackageVersion],
@@ -413,6 +444,7 @@ class RunThread(QtCore.QThread):
             self.showLogText.emit(traceback.format_exc())
             self.disbledAll.emit(False)
 
+
 def RunBuildThread():
     global buildThread
     buildThread = RunThread()
@@ -421,7 +453,15 @@ def RunBuildThread():
     buildThread.info.connect(InformationMessage)
     buildThread.question.connect(QuestionMessage)
     buildThread.disbledAll.connect(DisbledAndEnabledAll)
+    buildThread.cleanPressState.connect(CleanPressCompleteDownloadState)
     buildThread.start()
+
+pressCompleteDownload = False
+
+def PressCompleteDownload():
+    global pressCompleteDownload
+    pressCompleteDownload = True
+    installCmpleteButton.setDisabled(True)
 
 if __name__ == "__main__":
     programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
@@ -439,12 +479,18 @@ if __name__ == "__main__":
         background-color: black;
         color: white;
     """)
+    controlLayout = QtWidgets.QHBoxLayout()
     buildButton = QtWidgets.QPushButton("现在打包……")
+    installCmpleteButton = QtWidgets.QPushButton("安装程序执行完成")
     buildButton.clicked.connect(RunBuildThread)
+    installCmpleteButton.clicked.connect(PressCompleteDownload)
+    installCmpleteButton.setDisabled(True)
+    controlLayout.addWidget(buildButton)
+    controlLayout.addWidget(installCmpleteButton)
     layout.addWidget(QtWidgets.QLabel("选择 EXE："), 0, 0)
     layout.addWidget(exePath, 0, 1)
     layout.addWidget(browserExeButton, 0, 2)
-    layout.addWidget(buildButton, 1, 1)
+    layout.addLayout(controlLayout, 1, 1)
     layout.addWidget(logText, 2, 0, 1, 3)
     widget.setLayout(layout)
     window.setCentralWidget(widget)
@@ -452,3 +498,7 @@ if __name__ == "__main__":
     window.show()
     sys.exit(app.exec_())
 # ./wrestool ../Desktop/deep-wine-runner/geek.exe -x -t 14 > a.png
+# Flag：
+# 1、不想打包了，强制终止功能
+# 2、版本号自动识别
+# 3、包名自动识别

@@ -203,9 +203,36 @@ def Build7zButton_Clicked():
     QT.thread.start()
 
 def make_deb(build=False):
+    global bottleNameLock
     clean_textbox1_things()
     disabled_or_NORMAL_all(False)
-    if e1_text.text() == "" or e2_text.text() == "" or e3_text.text() == "" or e4_text.text() == "" or e5_text.text() == "" or e6_text.text() == "" or e7_text.text() == "" or e8_text.text() == "" or e12_text.text() == "":
+    badComplete = False
+    # 规范检测
+    if e1_text.text().lower() != e1_text.text():
+        if QtWidgets.QMessageBox.warning(window, "提示", f"包名 {e1_text.text()} 似乎不符合规范，可能会导致打包后的包无法投稿到应用商店，是否继续？\n可参考 deb 安装包打包标准", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No) == QtWidgets.QMessageBox.No:
+            disabled_or_NORMAL_all(True)
+            label13_text_change("用户已取消")
+            return    
+    for i in range(len(iconUiList)):
+        if os.path.splitext(iconUiList[i][4].text())[1] == ".ico":
+            if QtWidgets.QMessageBox.warning(window, "提示", f"图标 {iconUiList[i][4].text()} 似乎为 ico 格式，可能会导致打包后的程序在启动器的图标无法正常显示，是否继续？", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No) == QtWidgets.QMessageBox.No:
+                disabled_or_NORMAL_all(True)
+                label13_text_change("用户已取消")
+                return    
+        if os.path.exists(iconUiList[i][0].text()) and not "c:" in iconUiList[i][0].text().lower():
+            if not e6_text.text() in iconUiList[i][0].text():
+                if QtWidgets.QMessageBox.warning(window, "提示", f"路径 {iconUiList[i][0].text()} 似乎不符合规范且不位于容器内，可能会导致打包后的程序无法运行，是否继续？\n可参考 Windows 下的文件路径", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No) == QtWidgets.QMessageBox.No:
+                    disabled_or_NORMAL_all(True)
+                    label13_text_change("用户已取消")
+                    return    
+            if QtWidgets.QMessageBox.warning(window, "提示", f"路径 {iconUiList[i][0].text()} 似乎不符合规范，可能会导致打包后的程序无法运行，是否继续？\n可参考 Windows 下的文件路径", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No) == QtWidgets.QMessageBox.No:
+                disabled_or_NORMAL_all(True)
+                label13_text_change("用户已取消")
+                return
+        for k in [0, 3]:
+            if iconUiList[i][k].text().replace(" ", "") == "":
+                badComplete = True
+    if badComplete or e1_text.text() == "" or e2_text.text() == "" or e3_text.text() == "" or e4_text.text() == "" or e5_text.text() == "" or e6_text.text() == "" or e7_text.text() == "" or e8_text.text() == "" or e12_text.text() == "":
         QtWidgets.QMessageBox.critical(widget, "错误", "必填信息没有填写完整，无法继续构建 deb 包")
         disabled_or_NORMAL_all(True)
         label13_text_change("必填信息没有填写完整，无法继续构建 deb 包")
@@ -232,6 +259,7 @@ def make_deb(build=False):
     QT.thread.errorMsg.connect(ErrorMsg)
     QT.thread.infoMsg.connect(InfoMsg)
     QT.thread.disabled_or_NORMAL_all.connect(disabled_or_NORMAL_all)
+    bottleNameLock = False
     QT.thread.start()
     #thread.start()
 
@@ -245,7 +273,6 @@ def ReplaceText(string: str, lists: list):
     return string
 
 class make_deb_threading(QtCore.QThread):
-
     signal = QtCore.pyqtSignal(str)
     label = QtCore.pyqtSignal(str)
     getSavePath = QtCore.pyqtSignal(str)
@@ -1324,6 +1351,12 @@ StartupNotify=false
                 self.label.emit("正在构建 deb 包……")
                 self.run_command("bash -c 'dpkg -b \"{}\" \"{}\"'".format(debPackagePath, e12_text.text()))
             ################
+            # 删除临时文件
+            ################
+            if not self.build:
+                self.label.emit("正在删除临时文件……")
+                self.run_command(f"rm -rfv '{debPackagePath}'")
+            ################
             # 完成构建
             ################
             self.label.emit("完成构建！")
@@ -1705,9 +1738,9 @@ def AddTab():
     desktopIconTabLayout = QtWidgets.QGridLayout()
     desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件路径（※必填）：")), 6, 0, 1, 1)
     desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的分类（※必填）：")), 7, 0, 1, 1)
-    desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件的参数（选填）：")), 8, 0, 1, 1)
+    desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件的参数：")), 8, 0, 1, 1)
     desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的名称（※必填）：")), 9, 0, 1, 1)
-    desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的图标（选填）：")), 10, 0, 1, 1)
+    desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的图标：")), 10, 0, 1, 1)
     iconTab1.setLayout(desktopIconTabLayout)
     desktopIconTab.addTab(iconTab1, f"图标{desktopIconTab.count() + 1}")
     desktopIconTabLayout.addWidget(e7_text, 6, 1, 1, 1)
@@ -1717,6 +1750,8 @@ def AddTab():
     desktopIconTabLayout.addWidget(e9_text, 10, 1, 1, 1)
     desktopIconTabLayout.addWidget(button2, 10, 2, 1, 1)
     e7_text.textChanged.connect(ChangeTapTitle)
+    e7_text.setPlaceholderText("例如 c:/Program Files/Tencent/QQ/Bin/QQ.exe")
+    e9_text.setPlaceholderText("支持 png 和 svg 格式，不支持 ico 格式")
     iconUiList.append([e7_text, option1_text, e15_text, e8_text, e9_text])
     print(iconUiList)
 
@@ -1727,6 +1762,26 @@ def DelTab():
     del iconUiList[desktopIconTab.currentIndex()]
     desktopIconTab.removeTab(desktopIconTab.currentIndex())
 
+def ChangeBottleName():
+    global bottleNameLock
+    global bottleNameChangeLock
+    e1_text.setText(e1_text.text().replace(" ", ""))
+    if bottleNameLock:
+        return
+    if os.path.basename(e6_text.text()) == ".wine" or e6_text.text() == "":
+        bottleNameChangeLock = True
+        e5_text.setText(e1_text.text())
+        return
+    bottleNameChangeLock = True
+    e5_text.setText(os.path.basename(e6_text.text().replace(" ", "")))
+
+def LockBottleName():
+    global bottleNameLock
+    if bottleNameChangeLock:
+        return
+    bottleNameLock = True
+    
+bottleNameLock = False
 ###############
 # 程序信息
 ###############
@@ -1820,14 +1875,17 @@ buildDebDir.clicked.connect(lambda: make_deb(True))
 build7z.clicked.connect(Build7zButton_Clicked)
 installDeb.clicked.connect(InstallDeb)
 wineFrame.addWidget(wineVersion)
+e1_text.textChanged.connect(ChangeBottleName)
+e5_text.textChanged.connect(LockBottleName)
+e6_text.textChanged.connect(ChangeBottleName)
 e7_text.textChanged.connect(ChangeTapTitle)
 # 创建控件
 widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要打包的 deb 包的包名（※必填）：")), 0, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要打包的 deb 包的版本号（※必填）：")), 1, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要打包的 deb 包的说明（※必填）：")), 2, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要打包的 deb 包的维护者（※必填）：")), 3, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "deb 包的版本号（※必填）：")), 1, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "deb 包的说明（※必填）：")), 2, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "deb 包的维护者（※必填）：")), 3, 0, 1, 1)
 widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要解压的 wine 容器的容器名（※必填）：")), 4, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要解压的 wine 容器（※必填）：")), 5, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要打包的 wine 容器（※必填）：")), 5, 0, 1, 1)
 desktopIconTab = QtWidgets.QTabWidget()
 controlWidget = QtWidgets.QWidget()
 controlWidgetLayout = QtWidgets.QHBoxLayout()
@@ -1842,9 +1900,9 @@ iconTab1 = QtWidgets.QWidget()
 desktopIconTabLayout = QtWidgets.QGridLayout()
 desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件路径（※必填）：")), 6, 0, 1, 1)
 desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的分类（※必填）：")), 7, 0, 1, 1)
-desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件的参数（选填）：")), 8, 0, 1, 1)
+desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件的参数：")), 8, 0, 1, 1)
 desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的名称（※必填）：")), 9, 0, 1, 1)
-desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的图标（选填）：")), 10, 0, 1, 1)
+desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的图标：")), 10, 0, 1, 1)
 iconTab1.setLayout(desktopIconTabLayout)
 #desktopIconTab.setTabPosition(QtWidgets.QTabWidget.East)
 desktopIconTab.addTab(iconTab1, "Defult")
@@ -1911,6 +1969,10 @@ e2_text.textChanged.connect(AutoPathSet)
 debArch.currentIndexChanged.connect(AutoPathSet)
 debArch.currentIndexChanged.connect(ChangeArchCombobox)
 e12_text.textChanged.connect(UserPathSet)
+e1_text.setPlaceholderText("例如 spark-deepin-wine-runner，不建议有大写字符")
+e2_text.setPlaceholderText(f"例如 {version}")
+e7_text.setPlaceholderText("例如 c:/Program Files/Tencent/QQ/Bin/QQ.exe")
+e9_text.setPlaceholderText("支持 png 和 svg 格式，不支持 ico 格式")
 # 菜单栏
 menu = window.menuBar()
 programmenu = menu.addMenu(QtCore.QCoreApplication.translate("U", "程序"))
@@ -1927,6 +1989,7 @@ else:
     uploadSparkStoreProgram = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用投稿器投稿（推荐，请先安装投稿器）"))
     uploadSparkStoreProgram.setDisabled(True)
 tip = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "小提示"))
+getPdfHelp = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "Wine 运行器和 Wine 打包器傻瓜式使用教程（小白专用）\nBy @雁舞白沙"))
 exit.triggered.connect(window.close)
 tip.triggered.connect(helps)
 programmenu.addAction(exit)
@@ -1938,7 +2001,9 @@ debE.triggered.connect(lambda: ReadDeb(False))
 debX.triggered.connect(lambda: ReadDeb(True))
 uploadSparkStoreWebsize.triggered.connect(lambda: webbrowser.open_new_tab("https://upload.deepinos.org"))
 uploadSparkStoreProgram.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"/opt/spark-store-submitter/bin/spark-store-submitter '{e12_text.text()}'"]).start())
+getPdfHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://gitee.com/gfdgd-xi/deep-wine-runner/raw/main/Wine%E8%BF%90%E8%A1%8C%E5%99%A8%E5%92%8CWine%E6%89%93%E5%8C%85%E5%99%A8%E5%82%BB%E7%93%9C%E5%BC%8F%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B%EF%BC%88%E5%B0%8F%E7%99%BD%E4%B8%93%E7%94%A8%EF%BC%8920221126-V2.pdf"))
 help.addAction(tip)
+help.addAction(getPdfHelp)
 # 控件配置
 try:
     e6_text.setText(sys.argv[1].replace("~", get_home()))
