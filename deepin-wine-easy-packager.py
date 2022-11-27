@@ -388,6 +388,7 @@ class RunThread(QtCore.QThread):
 
     def run(self):
         try:   
+            self.disbledAll.emit(True)
             if not self.QuestionMsg("在此过程中，需要回答一系列的问题以进行打包，点击确定继续"):
                 self.disbledAll.emit(False)
                 return
@@ -417,13 +418,16 @@ class RunThread(QtCore.QThread):
                 self.RunCommand(f"mkdir -pv '{bottlePath}'")
                 self.RunCommand(f"chmod 777 -Rv '{bottlePath}'")
                 # 安装包
-                self.RunCommand(f"WINEPREFIX='{bottlePath}' deepin-wine6-stable '{exePath.text()}'")
                 global pressCompleteDownload
                 pressCompleteDownload = False
                 installCmpleteButton.setEnabled(True)
+                self.RunCommand(f"WINEPREFIX='{bottlePath}' deepin-wine6-stable '{exePath.text()}' &")  # 非堵塞线程
+                
                 # 安装锁，锁解除后才可继续
                 while not pressCompleteDownload:
                     time.sleep(0.1)
+                # 杀死容器内应用
+                self.RunCommand(f"'{programPath}/kill.sh' '{os.path.basename(bottlePath)}'")
                 # 识别 lnk
                 lnkList = GetLnkDesktop(lnkPath)
                 if len(lnkList) <= 0:
@@ -434,7 +438,7 @@ class RunThread(QtCore.QThread):
                 secondChooseList = []
                 for k in lnkList:
                     lnkPath = k[0].lower()
-                    if "卸载" in lnkPath or "uninstall" in lnkPath or "update" in lnkPath:
+                    if "卸载" in lnkPath or "uninstall" in lnkPath or "update" in lnkPath or "网页" in lnkPath or "websize" in lnkPath:
                         continue
                     secondChooseList.append(k)
                 if len(secondChooseList) <= 0:
@@ -516,6 +520,7 @@ class RunThread(QtCore.QThread):
             self.RunCommand(f"chmod -Rv 755 '{debBuildPath}/opt/apps/{debPackageName}/files/'*.sh")
             self.RunCommand(f"chmod -Rv 755 '{debBuildPath}/opt/apps/{debPackageName}/entries/applications/'*.desktop")
             ########### 打包 deb
+            print(debPackageVersion)
             self.RunCommand(f"dpkg -b '{debBuildPath}' '{desktopPath}/{debPackageName}_{debPackageVersion}_i386.deb'")
             self.info.emit("打包完成！")
             self.disbledAll.emit(False)
