@@ -13,7 +13,7 @@ import PyQt5.QtWidgets as QtWidgets
 def ShowText(text: str):
     if text.replace(" ", "").replace("\n", "") == "":
         return
-    logText.append(text)
+    logText.append(text.replace("\n", ""))
     
 def ErrorMessage(text: str):
     QtWidgets.QMessageBox.critical(window, "错误", text)
@@ -21,10 +21,22 @@ def ErrorMessage(text: str):
 def InformationMessage(text: str):
     QtWidgets.QMessageBox.information(window, "提示", text)
 
+questionChoose = False
+questionStatus = False
 def QuestionMessage(text: str):
+    global questionChoose
+    global questionStatus
+    # 清零
+    questionChoose = False
+    questionStatus = False
     if QtWidgets.QMessageBox.question(window, "提示", text) == QtWidgets.QMessageBox.Yes:
-        return True
-    return False
+        questionChoose = True
+        print(questionChoose)
+        questionStatus = True
+        return
+    questionChoose = False
+    questionStatus = True
+    
 
 def DisbledAndEnabledAll(choose: bool):
     exePath.setDisabled(choose)
@@ -77,13 +89,11 @@ def GetLnkDesktop(path):
                     things = file.readline().lower()
                     if things == b"":
                         break
-                    for k in str(things[1: -2]).split("\\x00"):
-                        things = k
-                        if things == b"":
-                            break
-                        if "c:" in things:
-                            lnkList.append([filePath, things])
-                            print(things)
+                    print(things[1: -2].split("\x00".encode("gbk")))
+                    for k in things[1: -2].split("\x00".encode("gbk")):
+                        if "c:".encode("gbk") in k:
+                            print(k.decode("gbk"))
+                            lnkList.append([filePath, k.decode("gbk")])
     return lnkList
 
 def ReplaceText(string: str, lists: list):
@@ -192,7 +202,7 @@ export MIME_TYPE=""
 #####没什么用
 export DEB_PACKAGE_NAME="@@@Package@@@"
 ####这里写包名才能在启动的时候正确找到files.7z,似乎也和杀残留进程有关
-export APPRUN_CMD="@@@Package@@@"
+export APPRUN_CMD="deepin-wine6-stable"
 #####wine启动指令，建议
 EXPORT_ENVS=""
 
@@ -300,13 +310,48 @@ def ReadTxt(path):
         things = file.read()
     return things
 
+def GetEXEVersion(exePath):
+    versionPath = f"/tmp/wine-runner-exe-version-{random.randint(0, 1000)}.txt"
+    if os.system(f"deepin-wine6-stable '{programPath}/GetEXEVersion.exe' '{exePath}' '{versionPath}'"):
+        return "1.0.0"
+    try:
+        exeVersion = ReadTxt(versionPath).replace("\n", "")
+        if exeVersion.replace(" ", "") == "":
+            return "1.0.0"
+        return exeVersion
+    except:
+        traceback.print_exc()
+        return "1.0.0"
+
+def StrToByteToStr(text: str):
+    lists = text.split("\\x")
+    for i in range(len(lists)):
+        lists[i]
+    return text
+
+def UnUseUpperCharPath(path: str):
+    pathList = []
+    lowerList = path.split("/")[1:]
+    for i in lowerList:
+        path = "/" + "/".join(pathList)
+        before = len(pathList)
+        for k in os.listdir(path):       
+            if k.lower() == i.lower():
+                pathList.append(k)
+                break
+        end = len(pathList)
+        if before == end:
+            raise OSError("文件路径不存在")
+    return "/" + "/".join(pathList)
+
+
 class RunThread(QtCore.QThread):
-    showLogText = QtCore.pyqtBoundSignal(str)
-    error = QtCore.pyqtBoundSignal(str)
-    info = QtCore.pyqtBoundSignal(str)
-    question = QtCore.pyqtBoundSignal(str)
-    disbledAll = QtCore.pyqtBoundSignal(bool)
-    cleanPressState = QtCore.pyqtBoundSignal(bool)
+    showLogText = QtCore.pyqtSignal(str)
+    error = QtCore.pyqtSignal(str)
+    info = QtCore.pyqtSignal(str)
+    question = QtCore.pyqtSignal(str)
+    disbledAll = QtCore.pyqtSignal(bool)
+    cleanPressState = QtCore.pyqtSignal(bool)
     def RunCommand(self, command):
         res = subprocess.Popen([command], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         while res.poll() is None:
@@ -320,12 +365,33 @@ class RunThread(QtCore.QThread):
     def __init__(self) -> None:
         super().__init__()
     
-    def run(self):
+    def GetEXEVersion(self, exePath):
+        versionPath = f"/tmp/wine-runner-exe-version-{random.randint(0, 1000)}.txt"
+        self.RunCommand(f"deepin-wine6-stable '{programPath}/GetEXEVersion.exe' '{exePath}' '{versionPath}'")
         try:
-            if not self.question.emit("在此过程中，需要回答一系列的问题以进行打包，点击确定继续"):
+            exeVersion = ReadTxt(versionPath).replace("\n", "")
+            if exeVersion.replace(" ", "") == "":
+                return "1.0.0"
+            return exeVersion
+        except:
+            traceback.print_exc()
+            return "1.0.0"
+
+    def QuestionMsg(self, text):
+        global questionStatus
+        questionStatus = False
+        self.question.emit(text)
+        while not questionStatus:
+            time.sleep(0.1)
+        print(questionChoose)
+        return questionChoose
+
+    def run(self):
+        try:   
+            if not self.QuestionMsg("在此过程中，需要回答一系列的问题以进行打包，点击确定继续"):
                 self.disbledAll.emit(False)
                 return
-            bottlePath = f"/tmp/deepin-wine-runner-bottle{random.randint(0, 10000)}"
+            bottlePath = f"/tmp/deepin-wine-runner-bottle-{random.randint(0, 10000)}"
             # 清空容器以保证能正常使用
             if os.path.exists(bottlePath):
                 self.RunCommand(f"rm -rfv '{bottlePath}'")
@@ -336,27 +402,32 @@ class RunThread(QtCore.QThread):
             debPackageVersion = "1.0.0"
             programIconPath = f"/opt/apps/{debPackageName}/entries/icons/hicolor/scalable/apps/{debPackageName}.png"
             debMaintainer = os.getlogin()
-            debBuildPath = f"/tmp/deepin-wine-packager-builder-{debPackageName}"
+            debBuildPath = f"/tmp/deepin-wine-packager-builder-{debPackageName}-{random.randint(0, 1000)}"
             bottlePackagePath = f"{debBuildPath}/opt/apps/{debPackageName}/files/files.7z"
             desktopPath = get_desktop_path()
             self.RunCommand(f"mkdir -pv '{debBuildPath}/DEBIAN'")
             self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/files'")
             self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/entries/applications'")
-            self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/entries/icons'")
+            self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/entries/icons/hicolor/scalable/apps/'")
             ############## 运行 EXE
-            if self.question.emit("请问此可执行文件是安装包还是绿色软件？是安装包请按 Yes，绿色软件按 No"):
+            if self.QuestionMsg("请问此可执行文件是安装包还是绿色软件？是安装包请按 Yes，绿色软件按 No"):
                 # 清空无益处的 lnk 文件
                 lnkPath = f"{bottlePath}/drive_c/ProgramData/Microsoft/Windows/Start Menu/Programs"
                 self.RunCommand(f"rm -rfv '{lnkPath}'")
+                self.RunCommand(f"mkdir -pv '{bottlePath}'")
+                self.RunCommand(f"chmod 777 -Rv '{bottlePath}'")
                 # 安装包
                 self.RunCommand(f"WINEPREFIX='{bottlePath}' deepin-wine6-stable '{exePath.text()}'")
+                global pressCompleteDownload
+                pressCompleteDownload = False
+                installCmpleteButton.setEnabled(True)
                 # 安装锁，锁解除后才可继续
                 while not pressCompleteDownload:
                     time.sleep(0.1)
                 # 识别 lnk
                 lnkList = GetLnkDesktop(lnkPath)
                 if len(lnkList) <= 0:
-                    self.info.error("无法识别到任何 lnk 快捷方式")
+                    self.error.emit("无法识别到任何 lnk 快捷方式")
                     self.disbledAll.emit(False)
                     return
                 # 选择最优 lnk
@@ -378,16 +449,22 @@ class RunThread(QtCore.QThread):
                 folderExePath = os.path.dirname(rightLnk[1].replace("\\", "/").replace("c:/", bottlePath))
                 exePathInBottle = rightLnk[1]
                 exeName = os.path.splitext(os.path.basename(folderExePath))[0]
-                exePathInSystem = rightLnk[1].replace("\\", "/").replace("c:", bottlePath)
-                self.RunCommand(f"'{programPath}/wrestool' '{exePathInSystem}' -x -t 14 > '{programIconPath}'")
+                exePathInSystem = rightLnk[1].replace("\\", "/").replace("c:", f"{bottlePath}/drive_c")
+                debPackageVersion = self.GetEXEVersion(exePathInBottle)
+                self.RunCommand(f"'{programPath}/wrestool' '{UnUseUpperCharPath(exePathInSystem)}' -x -t 14 > '{debBuildPath}/{programIconPath}'")
             else:
+                #/home/gfdgd_xi/Desktop/新建文件夹1/BeCyIconGrabber.exe
                 # 绿色软件
+                self.RunCommand(f"mkdir -pv '{bottlePath}'")
+                self.RunCommand(f"chmod 777 -Rv '{bottlePath}'")
+                self.RunCommand(f"WINEPREFIX='{bottlePath}' deepin-wine6-stable exit")
                 folderExePath = os.path.dirname(exePath.text())               
                 exePathInBottle = f"c:/Program Files/{os.path.basename(folderExePath)}/{exeName}"
                 exeName = os.path.splitext(os.path.basename(os.path.basename(exePath.text())))[0]
-                self.RunCommand(f"'{programPath}/wrestool' '{exePathInBottle}' -x -t 14 > '{programIconPath}'")
+                self.RunCommand(f"'{programPath}/wrestool' '{exePathInBottle}' -x -t 14 > '{debBuildPath}/{programIconPath}'")
+                debPackageVersion = self.GetEXEVersion(exePathInBottle)
                 # 拷贝文件到容器
-                self.RunCommand(f"cp -rv '{folderExePath}/..' '{bottlePath}/Program Files'")
+                self.RunCommand(f"cp -rv '{folderExePath}' '{bottlePath}/drive_c/Program Files'")
             debDescription = f"{exeName} By Deepin Wine 6 Stable And Build By Wine Runner"
             debDepends = "deepin-wine6-stable, spark-dwine-helper | store.spark-app.spark-dwine-helper, fonts-wqy-microhei, fonts-wqy-zenhei"
             ############ 处理容器
@@ -417,7 +494,7 @@ class RunThread(QtCore.QThread):
                 ["@@@Maintainer@@@", debMaintainer],
                 ["@@@Depends@@@", debDepends],
                 ["@@@Description@@@", debDescription],
-                ["@@@Installed-Size@@@", buildProgramSize],
+                ["@@@Installed-Size@@@", str(buildProgramSize)],
                 ["@@@Name@@@", exeName],
                 ["@@@EXEC_PATH@@@", exePathInBottle],
                 ["@@@Icon@@@", programIconPath]
@@ -433,18 +510,28 @@ class RunThread(QtCore.QThread):
             WriteTxt(f"{debBuildPath}/opt/apps/{debPackageName}/info", debInfo)
             WriteTxt(f"{debBuildPath}/DEBIAN/control", debControl)
             WriteTxt(f"{debBuildPath}/DEBIAN/postrm", debPostrm)
+            ########### 赋值权限
+            self.RunCommand(f"chmod -Rv 644 '{debBuildPath}/opt/apps/{debPackageName}/info'")
+            self.RunCommand(f"chmod -Rv 0755 '{debBuildPath}/DEBIAN'")
+            self.RunCommand(f"chmod -Rv 755 '{debBuildPath}/opt/apps/{debPackageName}/files/'*.sh")
+            self.RunCommand(f"chmod -Rv 755 '{debBuildPath}/opt/apps/{debPackageName}/entries/applications/'*.desktop")
             ########### 打包 deb
             self.RunCommand(f"dpkg -b '{debBuildPath}' '{desktopPath}/{debPackageName}_{debPackageVersion}_i386.deb'")
             self.info.emit("打包完成！")
             self.disbledAll.emit(False)
+            ########### 移除临时文件
+            #self.RunCommand(f"rm -rfv '{debBuildPath}' > /dev/null")
+            #self.RunCommand(f"rm -rfv '{bottlePath}' > /dev/null")
         except:
+            #self.RunCommand(f"rm -rfv '{debBuildPath}' > /dev/null")
+            #self.RunCommand(f"rm -rfv '{bottlePath}' > /dev/null")
             # 若打包出现任何错误
             traceback.print_exc()
             self.error.emit(f"打包错误，详细详细如下：{traceback.format_exc()}")
             self.showLogText.emit(traceback.format_exc())
             self.disbledAll.emit(False)
 
-
+#/home/gfdgd_xi/Downloads/XPcalc.exe
 def RunBuildThread():
     global buildThread
     buildThread = RunThread()
@@ -462,6 +549,11 @@ def PressCompleteDownload():
     global pressCompleteDownload
     pressCompleteDownload = True
     installCmpleteButton.setDisabled(True)
+
+def BrowserExe():
+    filePath = QtWidgets.QFileDialog.getOpenFileName(window, "选择 exe", get_home(), "可执行文件(*.exe);;所有文件(*.*)")
+    if filePath[0] != "" or filePath[0] != None:
+        exePath.setText(filePath[0])
 
 if __name__ == "__main__":
     programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
@@ -482,6 +574,7 @@ if __name__ == "__main__":
     controlLayout = QtWidgets.QHBoxLayout()
     buildButton = QtWidgets.QPushButton("现在打包……")
     installCmpleteButton = QtWidgets.QPushButton("安装程序执行完成")
+    browserExeButton.clicked.connect(BrowserExe)
     buildButton.clicked.connect(RunBuildThread)
     installCmpleteButton.clicked.connect(PressCompleteDownload)
     installCmpleteButton.setDisabled(True)
