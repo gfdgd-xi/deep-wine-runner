@@ -1,0 +1,29 @@
+[
+    [
+        ["QQ", "wineBottonPath/drive_c/Program Files/Tencent/QQ/Bin/QQ.exe"],
+        ["QQ", "wineBottonPath/drive_c/Program Files (x86)/Tencent/QQ/Bin/QQ.exe"],
+        ["TIM", "wineBottonPath/drive_c/Program Files/Tencent/TIM/Bin/TIM.exe"],
+        ["TIM", "wineBottonPath/drive_c/Program Files (x86)/Tencent/TIM/Bin/TIM.exe"]
+    ],
+    [
+        ["cmd", "cmd"],
+        ["cmd", "cmd.exe"],
+        ["cmd", "wineBottonPath/drive_c/windows/system32/cmd.exe"],
+        ["Internet Explorer", "iexplore"],
+        ["Internet Explorer", "iexplore.exe"],
+        ["Internet Explorer", "wineBottonPath/drive_c/Program Files/Internet Explorer/iexplore.exe"],
+        ["Internet Explorer", "wineBottonPath/drive_c/Program Files (x86)/Internet Explorer/iexplore.exe"],
+        ["微信", "wineBottonPath/drive_c/Program Files/Tencent/WeChat/WeChat.exe"],
+        ["微信", "wineBottonPath/drive_c/Program Files (x86)/Tencent/WeChat/WeChat.exe"],
+        ["UltraISO", "wineBottonPath/drive_c/Program Files/UltraISO/UltraISO.exe"],
+        ["UltraISO", "wineBottonPath/drive_c/Program Files (x86)/UltraISO/UltraISO.exe"],
+        ["迅雷", "wineBottonPath/drive_c/Program Files/Thunder Network/MiniThunder/Bin/ThunderMini.exe"],
+        ["迅雷", "wineBottonPath/drive_c/Program Files (x86)/Thunder Network/MiniThunder/Bin/ThunderMini.exe"],
+        ["Microsoft Office Word", "wineBottonPath/drive_c/Program Files/Microsoft Office/Office12/WINWORD.EXE"],
+        ["Microsoft Office Word", "wineBottonPath/drive_c/Program Files (x86)/Microsoft Office/Office12/WINWORD.EXE"],
+        ["腾讯会议", "wineBottonPath/drive_c/Program Files/Tencent/WeMeet/wemeetapp.exe"],
+        ["腾讯会议", "wineBottonPath/drive_c/Program Files (x86)/Tencent/WeMeet/wemeetapp.exe"],
+        ["腾讯课堂", "wineBottonPath/drive_c/Program Files/Tencent/EDU/bin/TXEDU.exe"],
+        ["腾讯课堂", "wineBottonPath/drive_c/Program Files (x86)/Tencent/EDU/bin/TXEDU.exe"]
+    ]  
+]

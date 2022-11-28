@@ -417,6 +417,8 @@ class RunThread(QtCore.QThread):
                 self.RunCommand(f"rm -rfv '{lnkPath}'")
                 self.RunCommand(f"mkdir -pv '{bottlePath}'")
                 self.RunCommand(f"chmod 777 -Rv '{bottlePath}'")
+                # 禁止生成 .desktop 文件
+                self.RunCommand(f"WINEPREFIX='{bottlePath}' deepin-wine6-stable 'reg' 'add' 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v winemenubuilder.exe '/f'")
                 # 安装包
                 global pressCompleteDownload
                 pressCompleteDownload = False
@@ -455,7 +457,15 @@ class RunThread(QtCore.QThread):
                 exeName = os.path.splitext(os.path.basename(folderExePath))[0]
                 exePathInSystem = rightLnk[1].replace("\\", "/").replace("c:", f"{bottlePath}/drive_c")
                 debPackageVersion = self.GetEXEVersion(exePathInBottle)
-                self.RunCommand(f"'{programPath}/wrestool' '{UnUseUpperCharPath(exePathInSystem)}' -x -t 14 > '{debBuildPath}/{programIconPath}'")
+                cpNow = False
+                for i in iconList:
+                    path = i.replace("wineBottonPath", bottlePath).lower()
+                    if path == exePathInSystem.lower():
+                        self.RunCommand(f"cp -rv '{UnUseUpperCharPath(path)}' '{debBuildPath}/{programIconPath}'")
+                        cpNow = True
+                        break
+                if not cpNow:
+                    self.RunCommand(f"'{programPath}/wrestool' '{UnUseUpperCharPath(exePathInSystem)}' -x -t 14 > '{debBuildPath}/{programIconPath}'")
             else:
                 #/home/gfdgd_xi/Desktop/新建文件夹1/BeCyIconGrabber.exe
                 # 绿色软件
@@ -564,6 +574,10 @@ if __name__ == "__main__":
     programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
     iconPath = "{}/deepin-wine-runner.svg".format(programPath)
     information = json.loads(ReadTxt(f"{programPath}/information.json"))
+    iconListUnBuild = json.loads(ReadTxt(f"{programPath}/IconList.json"))[0]
+    iconList = json.loads(ReadTxt(f"{programPath}/IconList.json"))[1]
+    for i in iconListUnBuild:
+        iconList.append(i)
     app = QtWidgets.QApplication(sys.argv)
     version = information["Version"]
     window = QtWidgets.QMainWindow()
