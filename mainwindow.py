@@ -1844,6 +1844,8 @@ defultProgramList = {
     "BuildByBottleName": False,
     "AutoPath": False
 }
+if not os.path.exists(get_home() + "/.config/"):  # 如果没有配置文件夹
+    os.mkdir(get_home() + "/.config/")  # 创建配置文件夹
 if not os.path.exists(get_home() + "/.config/deepin-wine-runner"):  # 如果没有配置文件夹
     os.mkdir(get_home() + "/.config/deepin-wine-runner")  # 创建配置文件夹
 if not os.path.exists(get_home() + "/.config/deepin-wine-runner/ShellHistory.json"):  # 如果没有配置文件
@@ -2034,8 +2036,8 @@ class GetVersionThread(QtCore.QThread):
         }
         # 直接判断是不是 Docker 版本
         if os.path.exists(f"{programPath}/docker.txt") or os.path.exists("/.dockerenv"):
-            programVersionType = "Docker 内置版本"
-            window.setWindowTitle(f"{title} （Docker 内置版本）")
+            programVersionType = "Docker/Chroot 内置版本"
+            window.setWindowTitle(f"{title} （Docker/Chroot 内置版本）")
             self.signal.emit("")
         else:
             programVersionType = "从源码运行的版本"

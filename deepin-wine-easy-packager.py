@@ -399,17 +399,13 @@ class RunThread(QtCore.QThread):
             ############# 后面将全部调用 deepin wine6 stable 进行操作
             exeName = os.path.basename(exePath.text())
             # 暂定
-            debPackageName = "spark-" + xpinyin.Pinyin().get_pinyin(os.path.splitext(exeName)[0].replace(" ", "")).lower().replace("--", "-").replace(" ", "")
+            debPackageName = "spark-" + xpinyin.Pinyin().get_pinyin(os.path.splitext(exeName)[0].replace(" ", "")).lower().replace("--", "-").replace(" ", "").replace("_", "-")
             debPackageVersion = "1.0.0"
             programIconPath = f"/opt/apps/{debPackageName}/entries/icons/hicolor/scalable/apps/{debPackageName}.png"
             debMaintainer = os.getlogin()
             debBuildPath = f"/tmp/deepin-wine-packager-builder-{debPackageName}-{random.randint(0, 1000)}"
             bottlePackagePath = f"{debBuildPath}/opt/apps/{debPackageName}/files/files.7z"
             desktopPath = get_desktop_path()
-            self.RunCommand(f"mkdir -pv '{debBuildPath}/DEBIAN'")
-            self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/files'")
-            self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/entries/applications'")
-            self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/entries/icons/hicolor/scalable/apps/'")
             ############## 运行 EXE
             if self.QuestionMsg("请问此可执行文件是安装包还是绿色软件？是安装包请按 Yes，绿色软件按 No"):
                 # 清空无益处的 lnk 文件
@@ -440,7 +436,8 @@ class RunThread(QtCore.QThread):
                 secondChooseList = []
                 for k in lnkList:
                     lnkPath = k[0].lower()
-                    if "卸载" in lnkPath or "uninstall" in lnkPath or "update" in lnkPath or "网页" in lnkPath or "websize" in lnkPath:
+                    lnkExePath = k[1].lower()
+                    if "卸载" in lnkPath or "uninstall" in lnkPath or "update" in lnkPath or "网页" in lnkPath or "websize" in lnkPath or not ".exe" in lnkExePath:
                         continue
                     secondChooseList.append(k)
                 if len(secondChooseList) <= 0:
@@ -452,6 +449,10 @@ class RunThread(QtCore.QThread):
                     if len(k[1]) < miniLenge:
                         rightLnk = k
                         miniLenge = len(rightLnk[1])
+                debPackageName = "spark-" + xpinyin.Pinyin().get_pinyin(os.path.splitext(os.path.basename(rightLnk[0]))[0].replace(" ", "")).lower().replace("--", "-").replace(" ", "").replace("_", "-")
+                programIconPath = f"/opt/apps/{debPackageName}/entries/icons/hicolor/scalable/apps/{debPackageName}.png"
+                bottlePackagePath = f"{debBuildPath}/opt/apps/{debPackageName}/files/files.7z"
+                self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/entries/icons/hicolor/scalable/apps/'")
                 folderExePath = os.path.dirname(rightLnk[1].replace("\\", "/").replace("c:/", bottlePath))
                 exePathInBottle = rightLnk[1]
                 exeName = os.path.splitext(os.path.basename(folderExePath))[0]
@@ -459,9 +460,10 @@ class RunThread(QtCore.QThread):
                 debPackageVersion = self.GetEXEVersion(exePathInBottle)
                 cpNow = False
                 for i in iconList:
-                    path = i.replace("wineBottonPath", bottlePath).lower()
+                    path = i[1].replace("wineBottonPath", bottlePath).lower()
                     if path == exePathInSystem.lower():
-                        self.RunCommand(f"cp -rv '{UnUseUpperCharPath(path)}' '{debBuildPath}/{programIconPath}'")
+                        self.RunCommand(f"cp -rv '{programPath}/Icon/{i[0]}.svg' '{debBuildPath}/{programIconPath}'")
+                        exeName = i[0]
                         cpNow = True
                         break
                 if not cpNow:
@@ -475,12 +477,17 @@ class RunThread(QtCore.QThread):
                 folderExePath = os.path.dirname(exePath.text())               
                 exePathInBottle = f"c:/Program Files/{os.path.basename(folderExePath)}/{exeName}"
                 exeName = os.path.splitext(os.path.basename(os.path.basename(exePath.text())))[0]
+                self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/entries/icons/hicolor/scalable/apps/'")
                 self.RunCommand(f"'{programPath}/wrestool' '{exePathInBottle}' -x -t 14 > '{debBuildPath}/{programIconPath}'")
                 debPackageVersion = self.GetEXEVersion(exePathInBottle)
                 # 拷贝文件到容器
                 self.RunCommand(f"cp -rv '{folderExePath}' '{bottlePath}/drive_c/Program Files'")
             debDescription = f"{exeName} By Deepin Wine 6 Stable And Build By Wine Runner"
             debDepends = "deepin-wine6-stable, spark-dwine-helper | store.spark-app.spark-dwine-helper, fonts-wqy-microhei, fonts-wqy-zenhei"
+            self.RunCommand(f"mkdir -pv '{debBuildPath}/DEBIAN'")
+            self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/files'")
+            self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/entries/applications'")
+            #self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/entries/icons/hicolor/scalable/apps/'")
             ############ 处理容器
             # 对用户目录进行处理
             os.chdir(bottlePath)
@@ -535,11 +542,11 @@ class RunThread(QtCore.QThread):
             self.info.emit("打包完成！")
             self.disbledAll.emit(False)
             ########### 移除临时文件
-            #self.RunCommand(f"rm -rfv '{debBuildPath}' > /dev/null")
-            #self.RunCommand(f"rm -rfv '{bottlePath}' > /dev/null")
+            self.RunCommand(f"rm -rfv '{debBuildPath}' > /dev/null")
+            self.RunCommand(f"rm -rfv '{bottlePath}' > /dev/null")
         except:
-            #self.RunCommand(f"rm -rfv '{debBuildPath}' > /dev/null")
-            #self.RunCommand(f"rm -rfv '{bottlePath}' > /dev/null")
+            self.RunCommand(f"rm -rfv '{debBuildPath}' > /dev/null")
+            self.RunCommand(f"rm -rfv '{bottlePath}' > /dev/null")
             # 若打包出现任何错误
             traceback.print_exc()
             self.error.emit(f"打包错误，详细详细如下：{traceback.format_exc()}")
@@ -556,6 +563,7 @@ def RunBuildThread():
     buildThread.question.connect(QuestionMessage)
     buildThread.disbledAll.connect(DisbledAndEnabledAll)
     buildThread.cleanPressState.connect(CleanPressCompleteDownloadState)
+    logText.clear()
     buildThread.start()
 
 pressCompleteDownload = False
