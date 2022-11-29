@@ -37,9 +37,9 @@ env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 
 11 directories, 6 files
 ```
+![star](https://gitee.com/gfdgd-xi/deep-wine-runner/badge/star.svg?theme=dark)](https://gitee.com/gfdgd-xi/deep-wine-runner/stargazers)  
 
 ## 软件架构
-i386、amd64 和 arm64，deepin-wine、deepin-wine5、wine、wine64、deepin-wine5-stable、deepin-wine6-stable、spark-wine7-devel、ukylin-wine 运行在哪就运行在哪  
 理论上支持全架构，如果 Python 能运行的话  
 非 X86 架构会利用到 `box86`、`exagear`等技术  
 

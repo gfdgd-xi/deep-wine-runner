@@ -91,11 +91,5 @@ install:
 remove:
 	sudo apt purge spark-deepin-wine-runner 
 
-depend:
-	sudo apt update
-	sudo apt install python3 python3-pil python3-pil.imagetk\
-	 python3-pyquery deepin-terminal aria2 curl unrar unzip\
-	  python3-requests fakeroot bash python3-pyqt5
-
 run:
 	python3 mainwindow.py
