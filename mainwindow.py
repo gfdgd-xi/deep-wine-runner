@@ -2105,7 +2105,8 @@ print(wine)
 ###########################
 # 程序信息
 ###########################
-iconPath = "{}/deepin-wine-runner.svg".format(programPath)
+#iconPath = "{}/deepin-wine-runner.svg".format(programPath)
+iconPath = "{}/Icon/Program/wine运行器.png".format(programPath)
 programUrl = "https://gitee.com/gfdgd-xi/deep-wine-runner\nhttps://github.com/gfdgd-xi/deep-wine-runner\nhttps://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner\nhttps://gfdgd-xi.github.io"
 information = json.loads(readtxt(f"{programPath}/information.json"))
 version = information["Version"]
@@ -2525,7 +2526,7 @@ w4.triggered.connect(DeleteWineBotton)
 cleanBottonUOS.triggered.connect(CleanWineBottonByUOS)
 w5.triggered.connect(BuildExeDeb)
 w6.triggered.connect(UOSPackageScript)
-easyPackager.triggered.connect()
+easyPackager.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/deepin-wine-easy-packager.py' '{e2.currentText()}'"]))
 wineKeyboardLnk.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/key/key-add-gui.py'"]).start())
 getDllOnInternet.triggered.connect(GetDllFromInternet)
 w7.triggered.connect(GetDllFromWindowsISO.ShowWindow)

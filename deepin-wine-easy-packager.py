@@ -615,5 +615,10 @@ if __name__ == "__main__":
     widget.setLayout(layout)
     window.setCentralWidget(widget)
     window.setWindowTitle(f"Wine 运行器 {version}——简易打包器")
+    try:
+        exePath.setText(sys.argv[1])
+    except:
+        pass
+    window.resize(int(window.frameGeometry().width() * 1.2), int(window.frameGeometry().height() * 1.1))
     window.show()
     sys.exit(app.exec_())
