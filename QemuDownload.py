@@ -67,8 +67,8 @@ class Ui_MainWindow(object):
         #self.deleteZip.setTristate(False)
         #self.deleteZip.setObjectName("deleteZip")
         #self.horizontalLayout.addWidget(self.deleteZip)
-        self.addOtherWine = QtWidgets.QPushButton(self.centralWidget)
-        self.horizontalLayout.addWidget(self.addOtherWine)
+        #self.addOtherWine = QtWidgets.QPushButton(self.centralWidget)
+        #self.horizontalLayout.addWidget(self.addOtherWine)
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem2)
         self.verticalLayout_2.addLayout(self.horizontalLayout)
@@ -101,7 +101,7 @@ class Ui_MainWindow(object):
         self.delButton.setText(_translate("MainWindow", ">>"))
         #self.unzip.setText(_translate("MainWindow", "不解压Wine资源文件"))
         #self.deleteZip.setText(_translate("MainWindow", "删除下载的资源包，只解压保留（两个选项都选相互抵消）"))
-        self.addOtherWine.setText(_translate("MainWindow", "导入自己的Wine"))
+        #self.addOtherWine.setText(_translate("MainWindow", "导入自己的Wine"))
 
 def ReadLocalInformation():
     try:
@@ -248,7 +248,7 @@ class DownloadThread(QtCore.QThread):
             rfile.close()
             # C++ 版注释：不直接用 readwrite 是因为不能覆盖写入
             file = open(f"{homePath}/.deepin-wine-runner-ubuntu-images/lists.json", "w")
-            list.append(self.fileSaveName.replace(".7z", ""))
+            list.append(self.fileSaveName.replace(".tar.gz", ""))
             file.write(json.dumps(list))
             file.close()
             # 读取配置文件
@@ -256,11 +256,11 @@ class DownloadThread(QtCore.QThread):
             self.localJsonList = list
             # 解压文件
             shellCommand = ""
-            if self.downloadUnzip:
-                path = f"{homePath}/.deepin-wine-runner-ubuntu-images/{arch}/{self.fileSaveName.replace('.tar.gz', '')}/"
-                #path = f"{programPath}/{self.fileSaveName.replace('.7z', '')}"
-                shellCommand += f"""mkdir -p \"{path}\"
-tar -xzvf \"{savePath}\" -C \"{path}\"
+            path = f"{homePath}/.deepin-wine-runner-ubuntu-images/{arch}/{self.fileSaveName.replace('.tar.gz', '')}/"
+            #path = f"{programPath}/{self.fileSaveName.replace('.7z', '')}"
+            shellCommand += f"""#!/bin/bash
+mkdir -p \"{path}\"
+tar -xvf \"{savePath}\" -C \"{path}\"
 rm \"{savePath}\"
 """
             #if self.downloadDeleteZip:
@@ -268,10 +268,10 @@ rm \"{savePath}\"
             shellFile = open("/tmp/depein-wine-runner-wine-install.sh", "w")
             shellFile.write(shellCommand)
             shellFile.close()
-            #process = QtCore.QProcess()
-            #command = ["deepin-terminal", "-e", "bash", "/tmp/depein-wine-runner-wine-install.sh"]
-            #process.start(f"{programPath}/../launch.sh", command)
-            #process.waitForFinished()
+            process = QtCore.QProcess()
+            command = ["deepin-terminal", "-e", "bash", "/tmp/depein-wine-runner-wine-install.sh"]
+            process.start(f"{programPath}/../launch.sh", command)
+            process.waitForFinished()
             OpenTerminal("bash /tmp/depein-wine-runner-wine-install.sh")
             self.Finish.emit()
         except:
@@ -302,7 +302,7 @@ def on_addButton_clicked():
     downloadName = internetJsonList[choose][1]
     ReadLocalInformation()
     for i in localJsonList:
-        if i == internetJsonList[choose][0]:
+        if i.replace(".tar.gz", "") == internetJsonList[choose][0]:
             QtWidgets.QMessageBox.information(window, "提示", "您已经安装了这个镜像了！无需重复安装！")
             return
     #if(ui.deleteZip.isChecked() + ui.unzip.isChecked() == 2):
@@ -340,10 +340,20 @@ def on_delButton_clicked():
         QtWidgets.QMessageBox.information(window, "提示", "您未选择任何项")
         return
     try:
-        name = f"{programPath}/{localJsonList[ui.localWineList.currentIndex().row()]}"
+        # {localJsonList[ui.localWineList.currentIndex().row()]}
+        path = f"{homePath}/.deepin-wine-runner-ubuntu-images/"
+        changed = False
+        for i in os.listdir(path):
+            if os.path.exists(f"{path}/{i}/{localJsonList[ui.localWineList.currentIndex().row()]}"):
+                changed = True
+                name = f"{path}/{i}/{localJsonList[ui.localWineList.currentIndex().row()]}".replace(".tar.gz", "")
+        if not changed:
+            name = f"{path}/i386/{localJsonList[ui.localWineList.currentIndex().row()]}".replace(".tar.gz", "")
+        print(name)
+        #name = f"{homePath}/.deepin-wine-runner-ubuntu-images/{localJsonList[ui.localWineList.currentIndex().row()]}"
         dir = QtCore.QDir(name)
         dir.removeRecursively()
-        QtCore.QFile.remove(name + ".7z")
+        QtCore.QFile.remove(name + ".tar.gz")
         del localJsonList[ui.localWineList.currentIndex().row()]
         file = open(f"{homePath}/.deepin-wine-runner-ubuntu-images/lists.json", "w")
         file.write(json.dumps(localJsonList))
@@ -364,8 +374,8 @@ if __name__ == "__main__":
     internetJsonList = []
     internetWineSourceList = [
         "https://code.gitlink.org.cn/gfdgd_xi/deepin-wine-runner-ubuntu-image/raw/branch/master/Sandbox",
-        "http://gfdgdxi.msns.cn/wine-mirrors/", # 备用源，纯 IPv6 源
-        "http://127.0.0.1/wine-mirrors/"  # 本地测试源
+        "http://gfdgdxi.msns.cn/deepin-wine-runner-ubuntu-image/Sandbox", # 备用源，纯 IPv6 源
+        "http://127.0.0.1/deepin-wine-runner-ubuntu-image/Sandbox/"  # 本地测试源
         ]
     internetWineSource = internetWineSourceList[0]
     app = QtWidgets.QApplication(sys.argv)
@@ -394,7 +404,7 @@ if __name__ == "__main__":
     # 连接信号
     ui.addButton.clicked.connect(on_addButton_clicked)
     ui.delButton.clicked.connect(on_delButton_clicked)
-    ui.addOtherWine.clicked.connect(InstallOtherWine)
+    #ui.addOtherWine.clicked.connect(InstallOtherWine)
     ui.changeSourcesGroup.triggered.connect(ChangeSources)
     ## 加载内容
     # 设置列表双击不会编辑
