@@ -350,6 +350,8 @@ def on_delButton_clicked():
         if not changed:
             name = f"{path}/i386/{localJsonList[ui.localWineList.currentIndex().row()]}".replace(".tar.gz", "")
         print(name)
+        # 必须取消挂载目录才行
+        os.system(f"bash '{programPath}/UnMount.sh' '{name}'")
         #name = f"{homePath}/.deepin-wine-runner-ubuntu-images/{localJsonList[ui.localWineList.currentIndex().row()]}"
         dir = QtCore.QDir(name)
         dir.removeRecursively()

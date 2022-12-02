@@ -23,4 +23,4 @@ if __name__ == "__main__":
     if not os.path.ismount(f"{homePath}/.deepin-wine-runner-ubuntu-images/{sys.argv[1]}/proc"):
         print("文件暂未挂载，开始挂载")
         sys.exit(os.system(f"pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY  bash '{programPath}/Mount.sh' '{homePath}/.deepin-wine-runner-ubuntu-images/{sys.argv[1]}' '{userName}' {commandList}"))
-    sys.exit(os.system(f"pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY  chroot '--userspec={userName}:{userName}' '{homePath}/.deepin-wine-runner-ubuntu-images/{sys.argv[1]}/' env DISPLAY=:0.0 {commandList}"))
+    sys.exit(os.system(f"pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY  chroot '--userspec={userName}:{userName}' '{homePath}/.deepin-wine-runner-ubuntu-images/{sys.argv[1]}/' env 'HOME=/home/{userName}' {commandList}"))

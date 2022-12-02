@@ -14,11 +14,11 @@ echo $3
 # 挂载必备目录
 cd "$1"
 mount --bind /dev ./dev
-mount --bind  /dev/pts ./dev/pts
+#mount --bind  /dev/pts ./dev/pts
 mount -t proc /proc ./proc
 mount --bind /etc/resolv.conf ./etc/resolv.conf
 mount -t sysfs /sys ./sys
-mount --bind /dev/shm  ./dev/shm
+#mount --bind /dev/shm  ./dev/shm
 chmod 777 -R root
 xhost +
 # 挂载 Wine 运行器目录
@@ -34,8 +34,8 @@ fi
 if [[ $2 == "root" ]]; then
     mount --bind root "$1/root/"
 else
-    mount --bind "/home/$2" "$1/root/"
+    mount --bind "/home/$2" "$1/home/$2"
 fi
 
 # 如果参数 3 存在
-chroot "--userspec=$2:$2" . "${@:3}"
+chroot "--userspec=$2:$2" . env "HOME=/home/$2" "${@:3}"
