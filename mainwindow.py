@@ -1913,37 +1913,87 @@ try:
             except:
                 pass
     # 读取自定义安装的 Wine（需要解包的才能使用）
+    qemuBottleList = []
+    qemuPath = f"{get_home()}/.deepin-wine-runner-ubuntu-images"
+    if not os.system("which qemu-i386-static"):
+        if os.path.exists(qemuPath):
+            for g in os.listdir(qemuPath):
+                archPath = f"{qemuPath}/{g}"
+                arch = g
+                if os.path.isdir(archPath):
+                    for d in os.listdir(archPath):
+                        bottlePath = f"{archPath}/{d}"
+                        if os.path.isdir(bottlePath):
+                            qemuBottleList.append([
+                                arch,
+                                d,
+                                bottlePath
+                            ])
     try:
-        for i in json.loads(readtxt(f"{programPath}/wine/winelist.json")):
-            if os.path.exists(f"{programPath}/wine/{i}"):
+        # 不再从列表读取，直接读目录
+        for i in os.listdir(f"{programPath}/wine/"):
+        #for i in json.loads(readtxt(f"{programPath}/wine/winelist.json")):
+            if os.path.exists(f"{programPath}/wine/{i}") and os.path.isdir(f"{programPath}/wine/{i}"):
                 name = ""
-                value = ""
+                qemuInstall = False
+                nameValue = [["", ""]]
                 try:
                     if os.path.exists("/opt/deepin-box86/box86"):
-                        name = "基于 UOS box86 的 "
-                        value = f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86  "
+                        nameValue.append(
+                            [
+                                "基于 UOS box86 的 ", 
+                                f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86  "
+                            ]
+                            )
                     if os.system("which box86") == 0:
-                        name = "基于 box86 的 "
-                        value = f"box86  "
+                        nameValue.append(
+                            [
+                                "基于 box86 的 ",
+                                f"box86  "
+                            ]
+                        )
                     if os.system("which box64") == 0:
-                        name = "基于 box64 的 "
-                        value = f"box64  "
+                        nameValue.append(
+                            [
+                                "基于 box64 的 ",
+                                f"box64  "
+                            ]
+                        )
                     if os.system("which exagear") == 0:
-                        name = "基于 exagear 的 "
-                        value = f"exagear  "
+                        nameValue.append(
+                            [
+                                "基于 exagear 的 ",
+                                f"exagear  "
+                            ]
+                        )
                     if os.path.exists("/opt/exagear/bin/ubt_x64a64_al"):
-                        name = "基于 UOS exagear 的 "
-                        value = f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al --  "
+                        nameValue.append(
+                            [
+                                "基于 UOS exagear 的 ",
+                                f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al --  "
+                            ]
+                        )
+                    for g in qemuBottleList:
+                        nameValue.append([
+                            f"使用qemu-{g[0]}-static 调用容器{g[1]}运行 ",
+                            f"python3 '{programPath}/QemuRun.py' '{g[0]}/{g[1]}' "
+                        ])
                 except:
                     pass
-                if os.path.exists(f"{programPath}/wine/{i}/bin/wine"):
-                    wine[f"{name}{programPath}/wine/{i}/bin/wine"] = f"{value}{programPath}/wine/{i}/bin/wine"
-                    canUseWine.append(f"{name}{programPath}/wine/{i}/bin/wine")
-                    untipsWine.append(f"{name}{programPath}/wine/{i}/bin/wine")
-                if os.path.exists(f"{programPath}/wine/{i}/bin/wine64"):
-                    wine[f"{name}{programPath}/wine/{i}/bin/wine64"] = f"{value}{programPath}/wine/{i}/bin/wine64"
-                    canUseWine.append(f"{name}{programPath}/wine/{i}/bin/wine64")
-                    untipsWine.append(f"{name}{programPath}/wine/{i}/bin/wine64")
+                for k in nameValue:
+                    print(k)
+                    if "qemu" in k[0]:
+                        chrootProgramPath = "/opt/apps/deepin-wine-runner"
+                    else:
+                        chrootProgramPath = programPath
+                    if os.path.exists(f"{programPath}/wine/{i}/bin/wine"):        
+                        wine[f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine"] = f"{k[1]}{chrootProgramPath}/wine/{i}/bin/wine"
+                        canUseWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine")
+                        untipsWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine")
+                    if os.path.exists(f"{programPath}/wine/{i}/bin/wine64"):
+                        wine[f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine64"] = f"{k[1]}{chrootProgramPath}/wine/{i}/bin/wine64"
+                        canUseWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine64")
+                        untipsWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine64")
     except:
         pass
     try:
@@ -2146,7 +2196,7 @@ updateThingsString = '''※1、容器自动配置脚本 GUI 查看介绍使用 Q
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年11月25日"
+updateTime = "2022年12月02日"
 about = f'''<style>
 a:link, a:active {{
     text-decoration: none;
