@@ -2165,8 +2165,8 @@ print(wine)
 ###########################
 # 程序信息
 ###########################
-#iconPath = "{}/deepin-wine-runner.svg".format(programPath)
-iconPath = "{}/Icon/Program/wine运行器.png".format(programPath)
+iconPath = "{}/deepin-wine-runner.svg".format(programPath)
+#iconPath = "{}/Icon/Program/wine运行器.png".format(programPath)
 programUrl = "https://gitee.com/gfdgd-xi/deep-wine-runner\nhttps://github.com/gfdgd-xi/deep-wine-runner\nhttps://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner\nhttps://gfdgd-xi.github.io"
 information = json.loads(readtxt(f"{programPath}/information.json"))
 version = information["Version"]
@@ -2215,7 +2215,6 @@ a:link, a:active {{
 <h1>关于</h1>
 <p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。</p>
 <p>它同时还内置了基于VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作。</p>
-<p>本程序依照 GPLV3 协议开源</p>
 <pre>
 
 一个图形化了如下命令的程序（最简单格式）
@@ -2226,9 +2225,10 @@ a:link, a:active {{
 适用平台：{goodRunSystem}（@VersionForType@）
 Qt 版本：{QtCore.qVersion()}
 程序官网：{programUrl}
-程序占用体积：@programSize@MB</pre>
+当前程序占用体积：@programSize@MB</pre>
+<p>本程序依照 GPLV3 协议开源</p>
 <hr>
-<h1>谢明名单</h1>
+<h1>鸣谢名单</h1>
 <pre>{thankText}</pre>
 <hr>
 <h1>更新内容</h1>
@@ -2698,6 +2698,7 @@ h6 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "反馈这个程�
 h7 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "关于这个程序"))
 h8 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "关于 Qt"))
 gfdgdxiio = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "作者个人站"))
+forumWebsize = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "程序论坛"))
 gitee = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "Gitee"))
 github = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "Github"))
 gitlink = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "Gitlink"))
@@ -2710,6 +2711,7 @@ h1.addAction(gitlink)
 h1.addAction(gitlab)
 h1.addAction(jihu)
 help.addSeparator()
+help.addAction(forumWebsize)
 help.addAction(runStatusWebSize)
 help.addSeparator()
 help.addAction(h2)
@@ -2739,6 +2741,7 @@ gitlink.triggered.connect(lambda: webbrowser.open_new_tab("https://gitlink.org.c
 gitlab.triggered.connect(lambda: webbrowser.open_new_tab("https://gitlab.com/gfdgd-xi/deep-wine-runner"))
 jihu.triggered.connect(lambda: webbrowser.open_new_tab("https://jihulab.com//gfdgd-xi/deep-wine-runner"))
 runStatusWebSize.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io/wine-runner-info"))
+forumWebsize.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgdxi.flarum.cloud/"))
 h2.triggered.connect(helps)
 h3.triggered.connect(UpdateThings)
 h4.triggered.connect(ThankWindow)
