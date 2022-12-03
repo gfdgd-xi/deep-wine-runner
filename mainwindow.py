@@ -455,6 +455,16 @@ StartupNotify=true''') # 写入文本文档
         traceback.print_exc()
         QtWidgets.QMessageBox.critical(widget, "错误", f"快捷方式创建失败，错误如下：\n{traceback.format_exc()}")
 
+def ConfigQemu():
+    lists = []
+    for i in qemuBottleList:
+        lists.append(f"{i[0]}/{i[1]}")
+    choose = QtWidgets.QInputDialog.getItem(window, "提示", "选择需要 Chroot 到里面的容器", lists, 0, False)
+    if not choose[1]:
+        return
+    threading.Thread(target=OpenTerminal, args=[f"python3 '{programPath}/QemuRun.py' '{choose[0]}' "]).start()
+    print(choose)
+
 # 生成 desktop 文件在桌面
 # （第四个按钮的事件）
 def make_desktop_on_desktop():
@@ -2196,7 +2206,7 @@ updateThingsString = '''※1、容器自动配置脚本 GUI 查看介绍使用 Q
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年12月02日"
+updateTime = "2022年12月03日"
 about = f'''<style>
 a:link, a:active {{
     text-decoration: none;
@@ -2669,6 +2679,13 @@ log.addAction(getDllInfo)
 log.addAction(checkLogText)
 log.addAction(saveLogText)
 log.addAction(uploadLogText)
+
+if len(qemuBottleList) >= 1:
+    qemuMenu = menu.addMenu(QtCore.QCoreApplication.translate("U", "配置Chroot容器(&C)"))
+    configMenu = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "配置指定容器"))
+    qemuMenu.addAction(configMenu)
+    configMenu.triggered.connect(ConfigQemu)
+    print(qemuBottleList)
 
 help = menu.addMenu(QtCore.QCoreApplication.translate("U", "帮助(&H)"))
 runStatusWebSize = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "查询程序在 Wine 的运行情况"))

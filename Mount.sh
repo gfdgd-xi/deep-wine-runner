@@ -28,7 +28,7 @@ mount -o bind /usr/share/fonts ./usr/share/fonts
 # 配置用户
 if [ ! -d "home/$2" ]; then
     # 新建用户，且密码为 123456，以便读写
-    chroot . echo -e "123456\n123456\n\n\n\n\n\n\n\n\n" | adduser "$2"
+    chroot . bash /opt/apps/deepin-wine-runner/ChangePassword.sh "$2"
 fi
 # 挂载用户目录到 /root（默认 $HOME 路径）
 if [[ $2 == "root" ]]; then

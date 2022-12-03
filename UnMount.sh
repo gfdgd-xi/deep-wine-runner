@@ -25,3 +25,12 @@ umount ./opt/apps/deepin-wine-runner/
 umount ./usr/share/fonts
 # 挂载用户目录到 /root（默认 $HOME 路径）
 umount ./root
+for username in $(ls ./home)
+    do
+      echo ./home/$username
+      umount ./home/$username
+#        if [ -d ./home/$username/.deepinwine/$CONTAINER_NAME ]
+#        then
+#        rm -rf ./home/$username/.deepinwine/$CONTAINER_NAME
+#        fi
+    done
