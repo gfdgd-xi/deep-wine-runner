@@ -33,7 +33,7 @@ if __name__ == "__main__":
                         continue
                     if os.path.ismount(f"{bottlePath}/dev"):
                         os.system(f"pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY bash '{programPath}/UnMount.sh' '{bottlePath}' ")
-                
+    os.system("touch /tmp/deepin-wine-runner-qemu-lock")
     # 判断是否挂载
     if not os.path.ismount(f"{homePath}/.deepin-wine-runner-ubuntu-images/{sys.argv[1]}/dev"):
         print("文件暂未挂载，开始挂载")

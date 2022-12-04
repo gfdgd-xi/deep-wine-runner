@@ -14,6 +14,7 @@ import os
 import sys
 import time
 import json
+import random
 import base64
 import shutil
 import hashlib
@@ -2160,6 +2161,39 @@ def GetVersion():
     runVersion.signal.connect(AddDockerMenu)
     runVersion.start()
 
+def UnPackage():
+    debPath = QtWidgets.QFileDialog.getOpenFileName(window)
+    if not debPath[1]:
+        return
+    path = QtWidgets.QFileDialog.getExistingDirectory(window)
+    print(path)
+    if not path[1]:
+        return
+    tempDebDir = f"/tmp/wine-runner-unpack-deb-{random.randint(0, 1000)}"
+    if os.system(f"dpkg -b '{debPath}' '{tempDebDir}'"):
+        QtWidgets.QMessageBox.critical(window, "错误", "解压失败！")
+        return
+    zippath = FindFile(tempDebDir, "files.7z")
+    if zippath == None:
+        QtWidgets.QMessageBox.critical(window, "错误", "解压失败！")
+        return
+    print(path)
+    # 解压文件
+    os.system(f"mkdir -p '{path[0]}'")
+    os.system(f"7z x '{zippath}' -o'{path[0]}'")
+
+def FindFile(file, name):
+    for i in os.listdir(file):
+        path = f"{file}/{i}"
+        if os.path.isdir(path):
+            returnPath = FindFile(path, name)
+            if returnPath != None:
+                return returnPath.replace("//", "/")
+        if os.path.isfile(path):
+            if i == name:
+                return path
+    return None
+
 programVersionType = ""
 print(wine)
 ###########################
@@ -2193,10 +2227,14 @@ exe路径\' 参数 \'
 updateThingsString = '''※1、支持使用 Qemu + Chroot 跨运行 Wine 以及指定程序的功能；
 ※2、提供了简易打包器以用于打包简易 deb；
 ※3、支持下载配置过的 Qemu + Chroot 容器；
+※4、支持解压指定 deb 的内打包好的容器；
+5、优化 Wine 列表显示；
+6、优化非基于生态适配脚本的打包器内容自动填充功能；
+7、新增程序论坛和教程入口
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年12月03日"
+updateTime = "2022年12月04日"
 about = f'''<style>
 a:link, a:active {{
     text-decoration: none;
