@@ -14,9 +14,14 @@ build:
 	zip -v -q -r package-script.zip package-script
 	cp -rv VM                                     deb/opt/apps/deepin-wine-runner
 	cp -rv AllInstall.py                          deb/opt/apps/deepin-wine-runner
+	cp -rv ShellList deb/opt/apps/deepin-wine-runner
+	cp -rv QemuDownload.py deb/opt/apps/deepin-wine-runner
+	cp -rv QemuRun.py deb/opt/apps/deepin-wine-runner
 	cp -rv kill.sh                          deb/opt/apps/deepin-wine-runner
 	cp -rv InstallWineOnDeepin23Alpha.py          deb/opt/apps/deepin-wine-runner
 	cp -rv wrestool          deb/opt/apps/deepin-wine-runner
+	cp -rv Mount.sh          deb/opt/apps/deepin-wine-runner
+	cp -rv UnMount.sh          deb/opt/apps/deepin-wine-runner
 	cp -rv deepin-wine-easy-packager.py     deb/opt/apps/deepin-wine-runner
 	cp -rv IconList.json     deb/opt/apps/deepin-wine-runner
 	cp -rv GetEXEVersion.exe deb/opt/apps/deepin-wine-runner
@@ -24,6 +29,8 @@ build:
 	rm -rfv deb/opt/apps/deepin-wine-runner/wine/winelist.json
 	cp -rv req                          deb/opt/apps/deepin-wine-runner
 	cp -rv BuildDesktop.py              deb/opt/apps/deepin-wine-runner
+	cp -rv ChangePassword.sh              deb/opt/apps/deepin-wine-runner
+	
 	cp -rv RegShot                          deb/opt/apps/deepin-wine-runner
 	cp -rv BeCyIconGrabber.exe                    deb/opt/apps/deepin-wine-runner
 	cp -rv AutoShell                              deb/opt/apps/deepin-wine-runner
@@ -36,6 +43,7 @@ build:
 	cp -rv DisabledOpengl.reg                     deb/opt/apps/deepin-wine-runner
 	cp -rv EnabledOpengl.reg                      deb/opt/apps/deepin-wine-runner
 	cp -rv geek.exe                               deb/opt/apps/deepin-wine-runner
+	cp -rv ProgramFen.py                          deb/opt/apps/deepin-wine-runner
 	cp -rv information.json                       deb/opt/apps/deepin-wine-runner
 	cp -rv InstallMono.py                         deb/opt/apps/deepin-wine-runner
 	cp -rv InstallMsxml.py                        deb/opt/apps/deepin-wine-runner

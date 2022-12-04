@@ -455,6 +455,16 @@ StartupNotify=true''') # 写入文本文档
         traceback.print_exc()
         QtWidgets.QMessageBox.critical(widget, "错误", f"快捷方式创建失败，错误如下：\n{traceback.format_exc()}")
 
+def ConfigQemu():
+    lists = []
+    for i in qemuBottleList:
+        lists.append(f"{i[0]}/{i[1]}")
+    choose = QtWidgets.QInputDialog.getItem(window, "提示", "选择需要 Chroot 到里面的容器", lists, 0, False)
+    if not choose[1]:
+        return
+    threading.Thread(target=OpenTerminal, args=[f"python3 '{programPath}/QemuRun.py' '{choose[0]}' "]).start()
+    print(choose)
+
 # 生成 desktop 文件在桌面
 # （第四个按钮的事件）
 def make_desktop_on_desktop():
@@ -1808,6 +1818,7 @@ def UploadLog():
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(window, "错误", "上传失败！")
 
+
 def SaveLog():
     path = QtWidgets.QFileDialog.getSaveFileName(window, "保存日志", get_home(), "txt文件(*.txt);;html 文件(*.html);;所有文件(*.*))")
     if not path[1]:
@@ -1843,6 +1854,8 @@ defultProgramList = {
     "BuildByBottleName": False,
     "AutoPath": False
 }
+if not os.path.exists(get_home() + "/.config/"):  # 如果没有配置文件夹
+    os.mkdir(get_home() + "/.config/")  # 创建配置文件夹
 if not os.path.exists(get_home() + "/.config/deepin-wine-runner"):  # 如果没有配置文件夹
     os.mkdir(get_home() + "/.config/deepin-wine-runner")  # 创建配置文件夹
 if not os.path.exists(get_home() + "/.config/deepin-wine-runner/ShellHistory.json"):  # 如果没有配置文件
@@ -1910,37 +1923,87 @@ try:
             except:
                 pass
     # 读取自定义安装的 Wine（需要解包的才能使用）
+    qemuBottleList = []
+    qemuPath = f"{get_home()}/.deepin-wine-runner-ubuntu-images"
+    if not os.system("which qemu-i386-static"):
+        if os.path.exists(qemuPath):
+            for g in os.listdir(qemuPath):
+                archPath = f"{qemuPath}/{g}"
+                arch = g
+                if os.path.isdir(archPath):
+                    for d in os.listdir(archPath):
+                        bottlePath = f"{archPath}/{d}"
+                        if os.path.isdir(bottlePath):
+                            qemuBottleList.append([
+                                arch,
+                                d,
+                                bottlePath
+                            ])
     try:
-        for i in json.loads(readtxt(f"{programPath}/wine/winelist.json")):
-            if os.path.exists(f"{programPath}/wine/{i}"):
+        # 不再从列表读取，直接读目录
+        for i in os.listdir(f"{programPath}/wine/"):
+        #for i in json.loads(readtxt(f"{programPath}/wine/winelist.json")):
+            if os.path.exists(f"{programPath}/wine/{i}") and os.path.isdir(f"{programPath}/wine/{i}"):
                 name = ""
-                value = ""
+                qemuInstall = False
+                nameValue = [["", ""]]
                 try:
                     if os.path.exists("/opt/deepin-box86/box86"):
-                        name = "基于 UOS box86 的 "
-                        value = f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86  "
+                        nameValue.append(
+                            [
+                                "基于 UOS box86 的 ", 
+                                f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86  "
+                            ]
+                            )
                     if os.system("which box86") == 0:
-                        name = "基于 box86 的 "
-                        value = f"box86  "
+                        nameValue.append(
+                            [
+                                "基于 box86 的 ",
+                                f"box86  "
+                            ]
+                        )
                     if os.system("which box64") == 0:
-                        name = "基于 box64 的 "
-                        value = f"box64  "
+                        nameValue.append(
+                            [
+                                "基于 box64 的 ",
+                                f"box64  "
+                            ]
+                        )
                     if os.system("which exagear") == 0:
-                        name = "基于 exagear 的 "
-                        value = f"exagear  "
+                        nameValue.append(
+                            [
+                                "基于 exagear 的 ",
+                                f"exagear  "
+                            ]
+                        )
                     if os.path.exists("/opt/exagear/bin/ubt_x64a64_al"):
-                        name = "基于 UOS exagear 的 "
-                        value = f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al --  "
+                        nameValue.append(
+                            [
+                                "基于 UOS exagear 的 ",
+                                f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al --  "
+                            ]
+                        )
+                    for g in qemuBottleList:
+                        nameValue.append([
+                            f"使用qemu-{g[0]}-static 调用容器{g[1]}运行 ",
+                            f"python3 '{programPath}/QemuRun.py' '{g[0]}/{g[1]}' "
+                        ])
                 except:
                     pass
-                if os.path.exists(f"{programPath}/wine/{i}/bin/wine"):
-                    wine[f"{name}{programPath}/wine/{i}/bin/wine"] = f"{value}{programPath}/wine/{i}/bin/wine"
-                    canUseWine.append(f"{name}{programPath}/wine/{i}/bin/wine")
-                    untipsWine.append(f"{name}{programPath}/wine/{i}/bin/wine")
-                if os.path.exists(f"{programPath}/wine/{i}/bin/wine64"):
-                    wine[f"{name}{programPath}/wine/{i}/bin/wine64"] = f"{value}{programPath}/wine/{i}/bin/wine64"
-                    canUseWine.append(f"{name}{programPath}/wine/{i}/bin/wine64")
-                    untipsWine.append(f"{name}{programPath}/wine/{i}/bin/wine64")
+                for k in nameValue:
+                    print(k)
+                    if "qemu" in k[0]:
+                        chrootProgramPath = "/opt/apps/deepin-wine-runner"
+                    else:
+                        chrootProgramPath = programPath
+                    if os.path.exists(f"{programPath}/wine/{i}/bin/wine"):        
+                        wine[f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine"] = f"{k[1]}{chrootProgramPath}/wine/{i}/bin/wine"
+                        canUseWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine")
+                        untipsWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine")
+                    if os.path.exists(f"{programPath}/wine/{i}/bin/wine64"):
+                        wine[f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine64"] = f"{k[1]}{chrootProgramPath}/wine/{i}/bin/wine64"
+                        canUseWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine64")
+                        untipsWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine64")
     except:
         pass
     try:
@@ -1975,22 +2038,25 @@ except:
 def getFileFolderSize(fileOrFolderPath):
     """get size for file or folder"""
     totalSize = 0
-    if not os.path.exists(fileOrFolderPath):
-        return totalSize
-    if os.path.isfile(fileOrFolderPath):
-        totalSize = os.path.getsize(fileOrFolderPath)  # 5041481
-        return totalSize
-    if os.path.isdir(fileOrFolderPath):
-        with os.scandir(fileOrFolderPath) as dirEntryList:
-            for curSubEntry in dirEntryList:
-                curSubEntryFullPath = os.path.join(fileOrFolderPath, curSubEntry.name)
-                if curSubEntry.is_dir():
-                    curSubFolderSize = getFileFolderSize(curSubEntryFullPath)  # 5800007
-                    totalSize += curSubFolderSize
-                elif curSubEntry.is_file():
-                    curSubFileSize = os.path.getsize(curSubEntryFullPath)  # 1891
-                    totalSize += curSubFileSize
+    try:
+        if not os.path.exists(fileOrFolderPath):
             return totalSize
+        if os.path.isfile(fileOrFolderPath):
+            totalSize = os.path.getsize(fileOrFolderPath)  # 5041481
+            return totalSize
+        if os.path.isdir(fileOrFolderPath):
+            with os.scandir(fileOrFolderPath) as dirEntryList:
+                for curSubEntry in dirEntryList:
+                    curSubEntryFullPath = os.path.join(fileOrFolderPath, curSubEntry.name)
+                    if curSubEntry.is_dir():
+                        curSubFolderSize = getFileFolderSize(curSubEntryFullPath)  # 5800007
+                        totalSize += curSubFolderSize
+                    elif curSubEntry.is_file():
+                        curSubFileSize = os.path.getsize(curSubEntryFullPath)  # 1891
+                        totalSize += curSubFileSize
+                return totalSize
+    except:
+        return totalSize
 
 # 获取当前语言
 def get_now_lang()->"获取当前语言":
@@ -2030,8 +2096,8 @@ class GetVersionThread(QtCore.QThread):
         }
         # 直接判断是不是 Docker 版本
         if os.path.exists(f"{programPath}/docker.txt") or os.path.exists("/.dockerenv"):
-            programVersionType = "Docker 内置版本"
-            window.setWindowTitle(f"{title} （Docker 内置版本）")
+            programVersionType = "Docker/Chroot 内置版本"
+            window.setWindowTitle(f"{title} （Docker/Chroot 内置版本）")
             self.signal.emit("")
         else:
             programVersionType = "从源码运行的版本"
@@ -2100,6 +2166,7 @@ print(wine)
 # 程序信息
 ###########################
 iconPath = "{}/deepin-wine-runner.svg".format(programPath)
+#iconPath = "{}/Icon/Program/wine运行器.png".format(programPath)
 programUrl = "https://gitee.com/gfdgd-xi/deep-wine-runner\nhttps://github.com/gfdgd-xi/deep-wine-runner\nhttps://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner\nhttps://gfdgd-xi.github.io"
 information = json.loads(readtxt(f"{programPath}/information.json"))
 version = information["Version"]
@@ -2123,23 +2190,13 @@ exe路径\' 参数 \'
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示；
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>'''
-updateThingsString = '''※1、容器自动配置脚本 GUI 查看介绍使用 QWebEngineWidget，支持图片（非强制依赖，只做推荐）；
-※2、不基于生态适配活动脚本打包器跟进 arm 架构 2022年11月11日的 Wine 微信打包方式；
-※3、支持多图标的程序打包；
-※4、修复了安装更多 Wine 换源换了个寂寞的问题；
-※5、修复安装更多 Wine 重新安装后列表丢失的问题；
-※6、新增了对 Deepin 23 Alpha 优化的 Wine 安装器；
-※7、新增 Dll 名称查询功能，可以查询对应 Dll 的作用；
-※8、支持静态获取可执行文件可以调用的 Dll 并提供解决方案；
-※9、支持移除指定的 .desktop 快捷方式；
-※10、新增日志分析功能以及导出、上传日志功能；
-11、修复了不基于生态适配活动脚本打包器在选择 arm 打包架构下容器自动删除脚本取消勾选无用的问题；
-12、优化文案、新增友链；
-13、提供了部分组件的测试功能。
+updateThingsString = '''※1、支持使用 Qemu + Chroot 跨运行 Wine 以及指定程序的功能；
+※2、提供了简易打包器以用于打包简易 deb；
+※3、支持下载配置过的 Qemu + Chroot 容器；
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年11月25日"
+updateTime = "2022年12月03日"
 about = f'''<style>
 a:link, a:active {{
     text-decoration: none;
@@ -2148,7 +2205,6 @@ a:link, a:active {{
 <h1>关于</h1>
 <p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。</p>
 <p>它同时还内置了基于VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作。</p>
-<p>本程序依照 GPLV3 协议开源</p>
 <pre>
 
 一个图形化了如下命令的程序（最简单格式）
@@ -2159,9 +2215,10 @@ a:link, a:active {{
 适用平台：{goodRunSystem}（@VersionForType@）
 Qt 版本：{QtCore.qVersion()}
 程序官网：{programUrl}
-程序占用体积：@programSize@MB</pre>
+当前程序占用体积：@programSize@MB</pre>
+<p>本程序依照 GPLV3 协议开源</p>
 <hr>
-<h1>谢明名单</h1>
+<h1>鸣谢名单</h1>
 <pre>{thankText}</pre>
 <hr>
 <h1>更新内容</h1>
@@ -2186,33 +2243,8 @@ try:
     threading.Thread(target=requests.get, args=[parse.unquote(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9vcGVuL0luc3RhbGwucGhw").decode("utf-8")) + "?Version=" + version]).start()
 except:
     pass
-iconListUnBuild = [
-    ["QQ", "wineBottonPath/drive_c/Program Files/Tencent/QQ/Bin/QQ.exe"],
-    ["QQ", "wineBottonPath/drive_c/Program Files (x86)/Tencent/QQ/Bin/QQ.exe"],
-    ["TIM", "wineBottonPath/drive_c/Program Files/Tencent/TIM/Bin/TIM.exe"],
-    ["TIM", "wineBottonPath/drive_c/Program Files (x86)/Tencent/TIM/Bin/TIM.exe"]
-]
-iconList = [
-    ["cmd", "cmd"],
-    ["cmd", "cmd.exe"],
-    ["cmd", "wineBottonPath/drive_c/windows/system32/cmd.exe"],
-    ["Internet Explorer", "iexplore"],
-    ["Internet Explorer", "iexplore.exe"],
-    ["Internet Explorer", "wineBottonPath/drive_c/Program Files/Internet Explorer/iexplore.exe"],
-    ["Internet Explorer", "wineBottonPath/drive_c/Program Files (x86)/Internet Explorer/iexplore.exe"],
-    ["微信", "wineBottonPath/drive_c/Program Files/Tencent/WeChat/WeChat.exe"],
-    ["微信", "wineBottonPath/drive_c/Program Files (x86)/Tencent/WeChat/WeChat.exe"],
-    ["UltraISO", "wineBottonPath/drive_c/Program Files/UltraISO/UltraISO.exe"],
-    ["UltraISO", "wineBottonPath/drive_c/Program Files (x86)/UltraISO/UltraISO.exe"],
-    ["迅雷", "wineBottonPath/drive_c/Program Files/Thunder Network/MiniThunder/Bin/ThunderMini.exe"],
-    ["迅雷", "wineBottonPath/drive_c/Program Files (x86)/Thunder Network/MiniThunder/Bin/ThunderMini.exe"],
-    ["Microsoft Office Word", "wineBottonPath/drive_c/Program Files/Microsoft Office/Office12/WINWORD.EXE"],
-    ["Microsoft Office Word", "wineBottonPath/drive_c/Program Files (x86)/Microsoft Office/Office12/WINWORD.EXE"],
-    ["腾讯会议", "wineBottonPath/drive_c/Program Files/Tencent/WeMeet/wemeetapp.exe"],
-    ["腾讯会议", "wineBottonPath/drive_c/Program Files (x86)/Tencent/WeMeet/wemeetapp.exe"],
-    ["腾讯课堂", "wineBottonPath/drive_c/Program Files/Tencent/EDU/bin/TXEDU.exe"],
-    ["腾讯课堂", "wineBottonPath/drive_c/Program Files (x86)/Tencent/EDU/bin/TXEDU.exe"]
-]
+iconListUnBuild = json.loads(readtxt(f"{programPath}/IconList.json"))[0]
+iconList = json.loads(readtxt(f"{programPath}/IconList.json"))[1]
 for i in iconListUnBuild:
     iconList.append(i)
 print(iconList)
@@ -2387,6 +2419,7 @@ installWineOnDeepin23 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U",
 installWineOnDeepin23Alpha = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "安装 wine(只限Deepin23 Alpha)"))
 installWineHQ = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "安装 WineHQ"))
 installMoreWine = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "安装更多 Wine"))
+downloadChrootBottle = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "下载 Chroot 容器"))
 p2 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "设置程序(&S)"))
 p3 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "清空软件历史记录(&C)"))
 cleanCache = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "清空软件缓存"))
@@ -2397,6 +2430,7 @@ programmenu.addAction(installWineOnDeepin23)
 programmenu.addAction(installWineOnDeepin23Alpha)
 programmenu.addAction(installWineHQ)
 programmenu.addAction(installMoreWine)
+programmenu.addAction(downloadChrootBottle)
 programmenu.addSeparator()
 programmenu.addAction(p2)
 programmenu.addSeparator()
@@ -2410,6 +2444,7 @@ installWineOnDeepin23.triggered.connect(InstallWineOnDeepin23)
 installWineOnDeepin23Alpha.triggered.connect(InstallWineOnDeepin23Alpha)
 installWineHQ.triggered.connect(InstallWineHQ)
 installMoreWine.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/wine/installwine'"]).start())
+downloadChrootBottle.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/QemuDownload.py'"]).start())
 p2.triggered.connect(ProgramSetting.ShowWindow)
 p3.triggered.connect(CleanProgramHistory)
 cleanCache.triggered.connect(CleanProgramCache)
@@ -2424,7 +2459,8 @@ w4 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "删除选择的 W
 cleanBottonUOS = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "清理 Wine 容器（基于 Wine 适配活动脚本）"))
 wineKeyboardLnk = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "Wine 快捷键映射"))
 w5 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "打包 wine 应用"))
-w6 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用官方 Wine 适配活动的脚本进行打包（小白建议使用这个）"))
+w6 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用官方 Wine 适配活动的脚本进行打包"))
+easyPackager = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用简易打包器进行打包（小白且无特殊需求建议使用这个）"))
 getDllOnInternet = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从互联网获取DLL"))
 w7 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从镜像获取DLL（只支持官方安装镜像，DOS内核如 Windows 95 暂不支持）"))
 updateGeek = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从 Geek Uninstaller 官网升级程序"))
@@ -2438,6 +2474,7 @@ wineOption.addAction(cleanBottonUOS)
 wineOption.addSeparator()
 wineOption.addAction(w5)
 wineOption.addAction(w6)
+wineOption.addAction(easyPackager)
 wineOption.addSeparator()
 wineOption.addAction(wineKeyboardLnk)
 wineOption.addSeparator()
@@ -2542,6 +2579,7 @@ w4.triggered.connect(DeleteWineBotton)
 cleanBottonUOS.triggered.connect(CleanWineBottonByUOS)
 w5.triggered.connect(BuildExeDeb)
 w6.triggered.connect(UOSPackageScript)
+easyPackager.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/deepin-wine-easy-packager.py' '{e2.currentText()}'"]))
 wineKeyboardLnk.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/key/key-add-gui.py'"]).start())
 getDllOnInternet.triggered.connect(GetDllFromInternet)
 w7.triggered.connect(GetDllFromWindowsISO.ShowWindow)
@@ -2632,10 +2670,18 @@ log.addAction(checkLogText)
 log.addAction(saveLogText)
 log.addAction(uploadLogText)
 
+if len(qemuBottleList) >= 1:
+    qemuMenu = menu.addMenu(QtCore.QCoreApplication.translate("U", "配置Chroot容器(&C)"))
+    configMenu = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "配置指定容器"))
+    qemuMenu.addAction(configMenu)
+    configMenu.triggered.connect(ConfigQemu)
+    print(qemuBottleList)
+
 help = menu.addMenu(QtCore.QCoreApplication.translate("U", "帮助(&H)"))
 runStatusWebSize = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "查询程序在 Wine 的运行情况"))
 h1 = help.addMenu(QtCore.QCoreApplication.translate("U", "程序官网"))
 h2 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "小提示"))
+wineRunnerHelp = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "Wine运行器和Wine打包器傻瓜式使用教程（小白专用） By 鹤舞白沙"))
 h3 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "更新内容"))
 h4 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "谢明名单"))
 h5 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "更新这个程序"))
@@ -2643,6 +2689,7 @@ h6 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "反馈这个程�
 h7 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "关于这个程序"))
 h8 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "关于 Qt"))
 gfdgdxiio = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "作者个人站"))
+forumWebsize = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "程序论坛"))
 gitee = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "Gitee"))
 github = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "Github"))
 gitlink = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "Gitlink"))
@@ -2655,6 +2702,8 @@ h1.addAction(gitlink)
 h1.addAction(gitlab)
 h1.addAction(jihu)
 help.addSeparator()
+help.addAction(forumWebsize)
+help.addAction(wineRunnerHelp)
 help.addAction(runStatusWebSize)
 help.addSeparator()
 help.addAction(h2)
@@ -2684,8 +2733,10 @@ gitlink.triggered.connect(lambda: webbrowser.open_new_tab("https://gitlink.org.c
 gitlab.triggered.connect(lambda: webbrowser.open_new_tab("https://gitlab.com/gfdgd-xi/deep-wine-runner"))
 jihu.triggered.connect(lambda: webbrowser.open_new_tab("https://jihulab.com//gfdgd-xi/deep-wine-runner"))
 runStatusWebSize.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io/wine-runner-info"))
+forumWebsize.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgdxi.flarum.cloud/"))
 h2.triggered.connect(helps)
 h3.triggered.connect(UpdateThings)
+wineRunnerHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://bbs.deepin.org/post/246837"))
 h4.triggered.connect(ThankWindow)
 wikiHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io/wine-runner-wiki"))
 easyHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://www.bilibili.com/video/BV1ma411972Y"))
