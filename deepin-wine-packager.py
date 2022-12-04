@@ -1231,7 +1231,7 @@ fi
             # 获取文件大小
             ################
             self.label.emit("正在计算文件大小……")
-            size = int(getFileFolderSize(debPackagePath) / 1024)
+            size = int(getFileFolderSize(debPackagePath) / 1000)
             ################
             # 写入文本文档
             ################

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import sys
 import json
@@ -399,7 +400,15 @@ class RunThread(QtCore.QThread):
             ############# 后面将全部调用 deepin wine6 stable 进行操作
             exeName = os.path.basename(exePath.text())
             # 暂定
-            debPackageName = "spark-" + xpinyin.Pinyin().get_pinyin(os.path.splitext(exeName)[0].replace(" ", "")).lower().replace("--", "-").replace(" ", "").replace("_", "-")
+            packageName = xpinyin.Pinyin().get_pinyin(os.path.splitext(exeName)[0].replace(" ", ""), "").lower().replace(" ", "").replace("_", ".").replace("-", ".").replace("..", ".")
+            
+            if " " in packageName:
+                packageName = ""
+                for i in os.path.splitext(exeName)[0].split(" "):
+                    packageName += xpinyin.Pinyin().get_pinyin(i).lower().replace(" ", "").replace("_", ".").replace("-", ".").replace("..", ".") + "."
+                    print(packageName)
+                packageName = packageName[:-1]
+            debPackageName = "com." + packageName + ".spark"
             debPackageVersion = "1.0.0"
             programIconPath = f"/opt/apps/{debPackageName}/entries/icons/hicolor/scalable/apps/{debPackageName}.png"
             debMaintainer = os.getlogin()
@@ -430,6 +439,8 @@ class RunThread(QtCore.QThread):
                 lnkList = GetLnkDesktop(lnkPath)
                 if len(lnkList) <= 0:
                     self.error.emit("无法识别到任何 lnk 快捷方式")
+                    self.RunCommand(f"rm -rfv '{debBuildPath}' > /dev/null")
+                    self.RunCommand(f"rm -rfv '{bottlePath}' > /dev/null")
                     self.disbledAll.emit(False)
                     return
                 # 选择最优 lnk
@@ -457,7 +468,7 @@ class RunThread(QtCore.QThread):
                 exePathInBottle = rightLnk[1]
                 exeName = os.path.splitext(os.path.basename(folderExePath))[0]
                 exePathInSystem = rightLnk[1].replace("\\", "/").replace("c:", f"{bottlePath}/drive_c")
-                debPackageVersion = self.GetEXEVersion(exePathInBottle)
+                debPackageVersion = self.GetEXEVersion(exePathInSystem)
                 cpNow = False
                 for i in iconList:
                     path = i[1].replace("wineBottonPath", bottlePath).lower()
@@ -478,11 +489,11 @@ class RunThread(QtCore.QThread):
                 exePathInBottle = f"c:/Program Files/{os.path.basename(folderExePath)}/{exeName}"
                 exeName = os.path.splitext(os.path.basename(os.path.basename(exePath.text())))[0]
                 self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/entries/icons/hicolor/scalable/apps/'")
-                self.RunCommand(f"'{programPath}/wrestool' '{exePathInBottle}' -x -t 14 > '{debBuildPath}/{programIconPath}'")
-                debPackageVersion = self.GetEXEVersion(exePathInBottle)
+                self.RunCommand(f"'{programPath}/wrestool' '{exePath.text()}' -x -t 14 > '{debBuildPath}/{programIconPath}'")
                 # 拷贝文件到容器
                 self.RunCommand(f"cp -rv '{folderExePath}' '{bottlePath}/drive_c/Program Files'")
-            debDescription = f"{exeName} By Deepin Wine 6 Stable And Build By Wine Runner"
+                debPackageVersion = self.GetEXEVersion(exePath.text())
+            debDescription = f"{exeName} By Deepin Wine 6 Stable And Build By Wine Runner Easy Packager"
             debDepends = "deepin-wine6-stable, spark-dwine-helper | store.spark-app.spark-dwine-helper, fonts-wqy-microhei, fonts-wqy-zenhei"
             self.RunCommand(f"mkdir -pv '{debBuildPath}/DEBIAN'")
             self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/files'")
@@ -508,7 +519,7 @@ class RunThread(QtCore.QThread):
             ########### 打包容器
             self.RunCommand(f"7z a '{bottlePackagePath}' '{bottlePath}/'*")
             ########### 生成文件内容
-            buildProgramSize = getFileFolderSize(debBuildPath)
+            buildProgramSize = getFileFolderSize(debBuildPath) / 1000
             replaceMap = [
                 ["@@@Package@@@", debPackageName],
                 ["@@@Version@@@", debPackageVersion],

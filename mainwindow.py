@@ -2190,19 +2190,9 @@ exe路径\' 参数 \'
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示；
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>'''
-updateThingsString = '''※1、容器自动配置脚本 GUI 查看介绍使用 QWebEngineWidget，支持图片（非强制依赖，只做推荐）；
-※2、不基于生态适配活动脚本打包器跟进 arm 架构 2022年11月11日的 Wine 微信打包方式；
-※3、支持多图标的程序打包；
-※4、修复了安装更多 Wine 换源换了个寂寞的问题；
-※5、修复安装更多 Wine 重新安装后列表丢失的问题；
-※6、新增了对 Deepin 23 Alpha 优化的 Wine 安装器；
-※7、新增 Dll 名称查询功能，可以查询对应 Dll 的作用；
-※8、支持静态获取可执行文件可以调用的 Dll 并提供解决方案；
-※9、支持移除指定的 .desktop 快捷方式；
-※10、新增日志分析功能以及导出、上传日志功能；
-11、修复了不基于生态适配活动脚本打包器在选择 arm 打包架构下容器自动删除脚本取消勾选无用的问题；
-12、优化文案、新增友链；
-13、提供了部分组件的测试功能。
+updateThingsString = '''※1、支持使用 Qemu + Chroot 跨运行 Wine 以及指定程序的功能；
+※2、提供了简易打包器以用于打包简易 deb；
+※3、支持下载配置过的 Qemu + Chroot 容器；
 '''
 for i in information["Thank"]:
     thankText += f"{i}\n"
@@ -2691,6 +2681,7 @@ help = menu.addMenu(QtCore.QCoreApplication.translate("U", "帮助(&H)"))
 runStatusWebSize = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "查询程序在 Wine 的运行情况"))
 h1 = help.addMenu(QtCore.QCoreApplication.translate("U", "程序官网"))
 h2 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "小提示"))
+wineRunnerHelp = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "Wine运行器和Wine打包器傻瓜式使用教程（小白专用） By 鹤舞白沙"))
 h3 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "更新内容"))
 h4 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "谢明名单"))
 h5 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "更新这个程序"))
@@ -2712,6 +2703,7 @@ h1.addAction(gitlab)
 h1.addAction(jihu)
 help.addSeparator()
 help.addAction(forumWebsize)
+help.addAction(wineRunnerHelp)
 help.addAction(runStatusWebSize)
 help.addSeparator()
 help.addAction(h2)
@@ -2744,6 +2736,7 @@ runStatusWebSize.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdg
 forumWebsize.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgdxi.flarum.cloud/"))
 h2.triggered.connect(helps)
 h3.triggered.connect(UpdateThings)
+wineRunnerHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://bbs.deepin.org/post/246837"))
 h4.triggered.connect(ThankWindow)
 wikiHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io/wine-runner-wiki"))
 easyHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://www.bilibili.com/video/BV1ma411972Y"))
