@@ -1270,12 +1270,12 @@ class GetDllFromWindowsISO:
             GetDllFromWindowsISO.dllListModel.setStringList(findList)
         except:
             traceback.print_exc()
-            QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", traceback.format_exc())
+            QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, transla.trans("错误"), traceback.format_exc())
 
  
     def MountDisk():
         if not os.path.exists(GetDllFromWindowsISO.isoPath.currentText()):
-            QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", "您选择的 ISO 镜像文件不存在")
+            QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, transla.trans("错误"), transla.trans("您选择的 ISO 镜像文件不存在"))
             return
         if os.path.exists("/tmp/wine-runner-getdll"):
             try:
