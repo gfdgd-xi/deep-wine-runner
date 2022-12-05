@@ -345,6 +345,14 @@ def UnUseUpperCharPath(path: str):
             raise OSError("文件路径不存在")
     return "/" + "/".join(pathList)
 
+def ReadMe():
+    QtWidgets.QMessageBox.information(window, "提示", """1、目前只支持打包 X86 架构的 deb 包，暂未支持 arm；
+2、需要区分要打包的程序是绿色软件还是单文件安装包，两个对应的打包方式不相同；
+3、打包详情：
+    ①调用 Wine：Deepin Wine6 Stable
+    ②调用 Helper：Spark Wine Helper
+    ③有卸载自动移除容器脚本""")
+
 
 class RunThread(QtCore.QThread):
     showLogText = QtCore.pyqtSignal(str)
@@ -425,6 +433,7 @@ class RunThread(QtCore.QThread):
                 # 禁止生成 .desktop 文件
                 self.RunCommand(f"WINEPREFIX='{bottlePath}' deepin-wine6-stable 'reg' 'add' 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v winemenubuilder.exe '/f'")
                 # 安装包
+                self.info.emit("请在运行完安装程序后按下打包器主界面的“安装程序执行完成按钮”以进行下一步操作")
                 global pressCompleteDownload
                 pressCompleteDownload = False
                 installCmpleteButton.setEnabled(True)
@@ -612,12 +621,15 @@ if __name__ == "__main__":
     controlLayout = QtWidgets.QHBoxLayout()
     buildButton = QtWidgets.QPushButton("现在打包……")
     installCmpleteButton = QtWidgets.QPushButton("安装程序执行完成")
+    helpButton = QtWidgets.QPushButton("帮助")
     browserExeButton.clicked.connect(BrowserExe)
     buildButton.clicked.connect(RunBuildThread)
     installCmpleteButton.clicked.connect(PressCompleteDownload)
+    helpButton.clicked.connect(ReadMe)
     installCmpleteButton.setDisabled(True)
     controlLayout.addWidget(buildButton)
     controlLayout.addWidget(installCmpleteButton)
+    controlLayout.addWidget(helpButton)
     layout.addWidget(QtWidgets.QLabel("选择 EXE："), 0, 0)
     layout.addWidget(exePath, 0, 1)
     layout.addWidget(browserExeButton, 0, 2)
