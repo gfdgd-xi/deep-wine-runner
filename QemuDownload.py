@@ -27,6 +27,11 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(693, 404)
+        if not get_now_lang() == "zh_CN.UTF-8":
+            transla = Trans("en_US", f"{programPath}/trans/deepin-wine-runner-qemu-download.json")
+        else:
+            transla = Trans("zh_CN")
+        _translate = transla.transe
         self.centralWidget = QtWidgets.QWidget(MainWindow)
         self.centralWidget.setObjectName("centralWidget")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.centralWidget)
@@ -42,6 +47,13 @@ class Ui_MainWindow(object):
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setSpacing(6)
         self.verticalLayout.setObjectName("verticalLayout")
+        self.verticalLayout_2.addWidget(QtWidgets.QLabel(_translate("U", """使用前须知：
+1、Qemu 跨架构效率较低，如果有条件建议优先使用 box86、exagear 等效率较高的转换层；
+2、使用此方案需要使用到 Root 权限（需开启管理员模式）并安装 qemu-user-static；
+3、chroot 时候可能会出现问题导致程序闪退或异常，出现该问题重启电脑即可；
+4、在此环境使用 Wine 时，只能读取到您用户目录或本程序文件夹下的文件，其它路径无法读取；
+5、移除容器时请保证在这次打开电脑时没有调用过需要删除容器，如果有调用过建议重启电脑后再移除；
+6、暂时属于测试功能；""")))
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem)
         self.addButton = QtWidgets.QPushButton(self.centralWidget)
@@ -76,11 +88,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralWidget)
         # 菜单栏
         #_translate = QtCore.QCoreApplication.translate
-        if not get_now_lang() == "zh_CN.UTF-8":
-            transla = Trans("en_US", f"{programPath}/trans/deepin-wine-runner-qemu-download.json")
-        else:
-            transla = Trans("zh_CN")
-        _translate = transla.transe
+        
         self.menu = MainWindow.menuBar()
         self.changeSources = self.menu.addMenu(_translate("MainWindow", "更换源"))
         self.gitlinkAction = QtWidgets.QAction(_translate("MainWindow", "Gitlink 源（推荐）"))

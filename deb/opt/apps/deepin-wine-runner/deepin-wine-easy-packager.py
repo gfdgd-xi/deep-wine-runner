@@ -469,7 +469,7 @@ class RunThread(QtCore.QThread):
                     if len(k[1]) < miniLenge:
                         rightLnk = k
                         miniLenge = len(rightLnk[1])
-                debPackageName = "spark-" + xpinyin.Pinyin().get_pinyin(os.path.splitext(os.path.basename(rightLnk[0]))[0].replace(" ", "")).lower().replace("--", "-").replace(" ", "").replace("_", "-")
+                debPackageName = "com." + xpinyin.Pinyin().get_pinyin(os.path.splitext(os.path.basename(rightLnk[0]))[0].replace(" ", "")).lower().replace("--", "-").replace(" ", "").replace("_", "-").replace("-", ".") + ".spark"
                 programIconPath = f"/opt/apps/{debPackageName}/entries/icons/hicolor/scalable/apps/{debPackageName}.png"
                 bottlePackagePath = f"{debBuildPath}/opt/apps/{debPackageName}/files/files.7z"
                 self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/entries/icons/hicolor/scalable/apps/'")

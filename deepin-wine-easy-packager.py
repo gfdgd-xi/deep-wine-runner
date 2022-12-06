@@ -348,7 +348,8 @@ def UnUseUpperCharPath(path: str):
 def ReadMe():
     QtWidgets.QMessageBox.information(window, "提示", """1、目前只支持打包 X86 架构的 deb 包，暂未支持 arm；
 2、需要区分要打包的程序是绿色软件还是单文件安装包，两个对应的打包方式不相同；
-3、打包详情：
+3、打包绿色软件时为尽可能减小程序体积，请将绿化后的程序（或程序文件夹）单独拷贝到干净的目录后再浏览选择主程序打包；
+4、打包详情：
     ①调用 Wine：Deepin Wine6 Stable
     ②调用 Helper：Spark Wine Helper
     ③有卸载自动移除容器脚本""")
@@ -469,7 +470,7 @@ class RunThread(QtCore.QThread):
                     if len(k[1]) < miniLenge:
                         rightLnk = k
                         miniLenge = len(rightLnk[1])
-                debPackageName = "spark-" + xpinyin.Pinyin().get_pinyin(os.path.splitext(os.path.basename(rightLnk[0]))[0].replace(" ", "")).lower().replace("--", "-").replace(" ", "").replace("_", "-")
+                debPackageName = "com." + xpinyin.Pinyin().get_pinyin(os.path.splitext(os.path.basename(rightLnk[0]))[0].replace(" ", "")).lower().replace("--", "-").replace(" ", "").replace("_", "-").replace("-", ".") + ".spark"
                 programIconPath = f"/opt/apps/{debPackageName}/entries/icons/hicolor/scalable/apps/{debPackageName}.png"
                 bottlePackagePath = f"{debBuildPath}/opt/apps/{debPackageName}/files/files.7z"
                 self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/entries/icons/hicolor/scalable/apps/'")
