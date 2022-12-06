@@ -23,23 +23,24 @@ from PIL import Image
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
+from trans import *
 
 #################
 # 程序所需事件
 #################
 
 def button1_cl():
-    path = QtWidgets.QFileDialog.getExistingDirectory(widget, QtCore.QCoreApplication.translate("U", "选择 wine 容器"), f"{get_home()}/.deepinwine")
+    path = QtWidgets.QFileDialog.getExistingDirectory(widget, transla.transe("U", "选择 wine 容器"), f"{get_home()}/.deepinwine")
     if path != "":
         e6_text.setText(path)
 
 def button2_cl(number):
-    path = QtWidgets.QFileDialog.getOpenFileName(widget, QtCore.QCoreApplication.translate("U", "选择图标文件"), get_home(), "PNG图标(*.png);;SVG图标(*.svg);;全部文件(*.*)")[0]
+    path = QtWidgets.QFileDialog.getOpenFileName(widget, transla.transe("U", "选择图标文件"), get_home(), "PNG图标(*.png);;SVG图标(*.svg);;全部文件(*.*)")[0]
     if path != "":
         mapLink[number].setText(path)
 
 def button4_cl():
-    path = QtWidgets.QFileDialog.getSaveFileName(widget, QtCore.QCoreApplication.translate("U", "保存 deb 包"), get_home(), "deb 文件(*.deb);;所有文件(*.*)", "{}_{}_i386.deb".format(e1_text.text(), e2_text.text()))[0]
+    path = QtWidgets.QFileDialog.getSaveFileName(widget, transla.transe("U", "保存 deb 包"), get_home(), "deb 文件(*.deb);;所有文件(*.*)", "{}_{}_i386.deb".format(e1_text.text(), e2_text.text()))[0]
     if path != "":
         e12_text.setText(path)
 
@@ -237,7 +238,7 @@ def make_deb(build=False):
         disabled_or_NORMAL_all(True)
         label13_text_change("必填信息没有填写完整，无法继续构建 deb 包")
         return
-    if QtWidgets.QMessageBox.question(widget, QtCore.QCoreApplication.translate("U", "提示"), QtCore.QCoreApplication.translate("U", "打包将会改动现在选择的容器，是否继续？")) == QtWidgets.QMessageBox.No:
+    if QtWidgets.QMessageBox.question(widget, transla.transe("U", "提示"), transla.transe("U", "打包将会改动现在选择的容器，是否继续？")) == QtWidgets.QMessageBox.No:
         disabled_or_NORMAL_all(True)
         return
     # 警告信息
@@ -1722,7 +1723,7 @@ mapLink = []
 
 def AddTab():
     global mapLink
-    button2 = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "浏览……"))
+    button2 = QtWidgets.QPushButton(transla.transe("U", "浏览……"))
     e7_text = QtWidgets.QLineEdit()
     e8_text = QtWidgets.QLineEdit()
     e9_text = QtWidgets.QLineEdit()
@@ -1736,11 +1737,11 @@ def AddTab():
     mapLink.append(e9_text)
     #desktopIconTabLayout = QtWidgets.QGridLayout()
     desktopIconTabLayout = QtWidgets.QGridLayout()
-    desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件路径（※必填）：")), 6, 0, 1, 1)
-    desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的分类（※必填）：")), 7, 0, 1, 1)
-    desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件的参数：")), 8, 0, 1, 1)
-    desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的名称（※必填）：")), 9, 0, 1, 1)
-    desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的图标：")), 10, 0, 1, 1)
+    desktopIconTabLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "wine 容器里需要运行的可执行文件路径（※必填）：")), 6, 0, 1, 1)
+    desktopIconTabLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "要显示的 .desktop 文件的分类（※必填）：")), 7, 0, 1, 1)
+    desktopIconTabLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "wine 容器里需要运行的可执行文件的参数：")), 8, 0, 1, 1)
+    desktopIconTabLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "要显示的 .desktop 文件的名称（※必填）：")), 9, 0, 1, 1)
+    desktopIconTabLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "要显示的 .desktop 文件的图标：")), 10, 0, 1, 1)
     iconTab1.setLayout(desktopIconTabLayout)
     desktopIconTab.addTab(iconTab1, f"图标{desktopIconTab.count() + 1}")
     desktopIconTabLayout.addWidget(e7_text, 6, 1, 1, 1)
@@ -1780,7 +1781,11 @@ def LockBottleName():
     if bottleNameChangeLock:
         return
     bottleNameLock = True
-    
+
+# 获取当前语言
+def get_now_lang()->"获取当前语言":
+    return os.getenv('LANG')
+
 bottleNameLock = False
 ###############
 # 程序信息
@@ -1813,18 +1818,27 @@ iconUiList = []
 iconPath = "{}/deepin-wine-runner.svg".format(programPath)
 information = json.loads(readtxt(f"{programPath}/information.json"))
 version = information["Version"]
-tips = """提示：
+# 语言载入
+if not get_now_lang() == "zh_CN.UTF-8":
+    #trans = QtCore.QTranslator()
+    #trans.load(f"{programPath}/LANG/deepin-wine-runner-en_US.qm")
+    #app.installTranslator(trans)
+    transla = Trans("en_US", f"{programPath}/trans/deepin-wine-packager.json")
+else:
+    transla = Trans("zh_CN")
+tips = transla.transe("U", """提示：
 1、deb 打包软件包名要求：
 软件包名只能含有小写字母(a-z)、数字(0-9)、加号(+)和减号(-)、以及点号(.)，软件包名最短长度两个字符；它必须以字母开头
 2、如果要填写路径，有“浏览……”按钮的是要填本计算机对应文件的路径，否则就是填写安装到其他计算机使用的路径
 3、输入 wine 的容器路径时最后面请不要输入“/”
 4、输入可执行文件的运行路径时是以“C:/XXX/XXX.exe”的格式进行输入，默认是以 C： 为开头，不用“\”做命令的分隔，而是用“/”
 5、.desktop 的图标只支持 PNG 格式和 SVG 格式，其他格式无法显示图标
-6、路径建议不要带空格，容易出问题"""
+6、路径建议不要带空格，容易出问题""")
 
 ###############
 # 窗口创建
 ###############
+
 app = QtWidgets.QApplication(sys.argv)
 window = QtWidgets.QMainWindow()
 widget = QtWidgets.QWidget()
@@ -1847,25 +1861,25 @@ e12_text = QtWidgets.QLineEdit()
 e15_text = QtWidgets.QLineEdit()
 label13_text = QtWidgets.QLabel("<p align='center'>当前 deb 打包情况：暂未打包</p>")
 option1_text = QtWidgets.QComboBox()
-button1 = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "浏览……"))
-button2 = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "浏览……"))
-button4 = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "浏览……"))
+button1 = QtWidgets.QPushButton(transla.transe("U", "浏览……"))
+button2 = QtWidgets.QPushButton(transla.transe("U", "浏览……"))
+button4 = QtWidgets.QPushButton(transla.transe("U", "浏览……"))
 debControlFrame = QtWidgets.QHBoxLayout()
-button5 = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "打包……"))
-installDeb = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "安装打包完成的 deb……"))
-buildDebDir = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "根据填写内容打包模板"))
-build7z = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "打包容器 7z 包"))
+button5 = QtWidgets.QPushButton(transla.transe("U", "打包……"))
+installDeb = QtWidgets.QPushButton(transla.transe("U", "安装打包完成的 deb……"))
+buildDebDir = QtWidgets.QPushButton(transla.transe("U", "根据填写内容打包模板"))
+build7z = QtWidgets.QPushButton(transla.transe("U", "打包容器 7z 包"))
 debControlFrame.addWidget(button5)
 debControlFrame.addWidget(installDeb)
-rmBash = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "设置卸载该 deb 后自动删除该容器"))
-cleanBottonByUOS = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "使用统信 Wine 生态适配活动容器清理脚本"))
+rmBash = QtWidgets.QCheckBox(transla.transe("U", "设置卸载该 deb 后自动删除该容器"))
+cleanBottonByUOS = QtWidgets.QCheckBox(transla.transe("U", "使用统信 Wine 生态适配活动容器清理脚本"))
 debArch = QtWidgets.QComboBox()
 debArch.addItems(["i386", "arm64(box86+exagear)"])
 textbox1 = QtWidgets.QTextBrowser()
 option1_text.addItems(["Network", "Chat", "Audio", "Video", "Graphics", "Office", "Translation", "Development", "Utility"])
 option1_text.setCurrentText("Network")
 wineFrame = QtWidgets.QHBoxLayout()
-chooseWineHelperValue = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "使用星火wine helper\n（如不勾选默认为deepin-wine-helper）"))
+chooseWineHelperValue = QtWidgets.QCheckBox(transla.transe("U", "使用星火wine helper\n（如不勾选默认为deepin-wine-helper）"))
 button1.clicked.connect(button1_cl)
 button2.clicked.connect(lambda: button2_cl(0))
 mapLink.append(e9_text)
@@ -1880,12 +1894,12 @@ e5_text.textChanged.connect(LockBottleName)
 e6_text.textChanged.connect(ChangeBottleName)
 e7_text.textChanged.connect(ChangeTapTitle)
 # 创建控件
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要打包的 deb 包的包名（※必填）：")), 0, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "deb 包的版本号（※必填）：")), 1, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "deb 包的说明（※必填）：")), 2, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "deb 包的维护者（※必填）：")), 3, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要解压的 wine 容器的名称（※必填）：")), 4, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要打包的 wine 容器路径（※必填）：")), 5, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "要打包的 deb 包的包名（※必填）：")), 0, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "deb 包的版本号（※必填）：")), 1, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "deb 包的说明（※必填）：")), 2, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "deb 包的维护者（※必填）：")), 3, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "要解压的 wine 容器的名称（※必填）：")), 4, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "要打包的 wine 容器路径（※必填）：")), 5, 0, 1, 1)
 desktopIconTab = QtWidgets.QTabWidget()
 controlWidget = QtWidgets.QWidget()
 controlWidgetLayout = QtWidgets.QHBoxLayout()
@@ -1898,18 +1912,18 @@ desktopIconTabAdd.clicked.connect(AddTab)
 desktopIconTabDel.clicked.connect(DelTab)
 iconTab1 = QtWidgets.QWidget()
 desktopIconTabLayout = QtWidgets.QGridLayout()
-desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件路径（※必填）：")), 6, 0, 1, 1)
-desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的分类（※必填）：")), 7, 0, 1, 1)
-desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "wine 容器里需要运行的可执行文件的参数：")), 8, 0, 1, 1)
-desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的名称（※必填）：")), 9, 0, 1, 1)
-desktopIconTabLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的图标：")), 10, 0, 1, 1)
+desktopIconTabLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "wine 容器里需要运行的可执行文件路径（※必填）：")), 6, 0, 1, 1)
+desktopIconTabLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "要显示的 .desktop 文件的分类（※必填）：")), 7, 0, 1, 1)
+desktopIconTabLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "wine 容器里需要运行的可执行文件的参数：")), 8, 0, 1, 1)
+desktopIconTabLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "要显示的 .desktop 文件的名称（※必填）：")), 9, 0, 1, 1)
+desktopIconTabLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "要显示的 .desktop 文件的图标：")), 10, 0, 1, 1)
 iconTab1.setLayout(desktopIconTabLayout)
 #desktopIconTab.setTabPosition(QtWidgets.QTabWidget.East)
 desktopIconTab.addTab(iconTab1, "Defult")
 desktopIconTab.setCornerWidget(controlWidget)
 widgetLayout.addWidget(desktopIconTab, 8, 0, 6, 3)
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "选择打包的 wine 版本（※必选）：")), 6, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "打包 deb 的保存路径（※必填）：")), 7, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "选择打包的 wine 版本（※必选）：")), 6, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "打包 deb 的保存路径（※必填）：")), 7, 0, 1, 1)
 widgetLayout.addWidget(e1_text, 0, 1, 1, 1)
 widgetLayout.addWidget(e2_text, 1, 1, 1, 1)
 widgetLayout.addWidget(e3_text, 2, 1, 1, 1)
@@ -1932,30 +1946,30 @@ widgetLayout.addLayout(debControlFrame, 16, 1, 1, 1)
 widgetLayout.addWidget(label13_text, 17, 0, 1, 3)
 widgetLayout.addWidget(textbox1, 18, 0, 1, 3)
 # 高级功能
-moreSetting = QtWidgets.QGroupBox(QtCore.QCoreApplication.translate("U", "高级设置"))
+moreSetting = QtWidgets.QGroupBox(transla.transe("U", "高级设置"))
 debDepends = QtWidgets.QLineEdit()
 debRecommend = QtWidgets.QLineEdit()
-debDepends.setPlaceholderText(QtCore.QCoreApplication.translate("U", "deb 包的依赖(如无特殊需求默认即可)"))
+debDepends.setPlaceholderText(transla.transe("U", "deb 包的依赖(如无特殊需求默认即可)"))
 debDepends.setText("deepin-wine6-stable, deepin-wine-helper (>= 5.1.30-1), fonts-wqy-microhei, fonts-wqy-zenhei")
-debRecommend.setPlaceholderText(QtCore.QCoreApplication.translate("U", "deb 包的推荐依赖(非强制，一般默认即可)"))
+debRecommend.setPlaceholderText(transla.transe("U", "deb 包的推荐依赖(非强制，一般默认即可)"))
 moreSettingLayout = QtWidgets.QVBoxLayout()
 localWineVersion = QtWidgets.QComboBox()
 useInstallWineArch = QtWidgets.QComboBox()
 useInstallWineArch.addItems(["wine", "wine64"])
-moreSettingLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "Wine 位数(只限本地需要打包集成的Wine)：\n提示：32位的Wine不能使用64位容器")))
+moreSettingLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "Wine 位数(只限本地需要打包集成的Wine)：\n提示：32位的Wine不能使用64位容器")))
 #moreSettingLayout.addWidget(localWineVersion)
 moreSettingLayout.addWidget(useInstallWineArch)
-moreSettingLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "deb 包选项：")))
+moreSettingLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "deb 包选项：")))
 moreSettingLayout.addWidget(rmBash)
 moreSettingLayout.addWidget(cleanBottonByUOS)
 moreSettingLayout.addWidget(chooseWineHelperValue)
-moreSettingLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "deb 的依赖(强制，如无特殊需求默认即可)：")))
+moreSettingLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "deb 的依赖(强制，如无特殊需求默认即可)：")))
 moreSettingLayout.addWidget(debDepends)
-moreSettingLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "deb 的推荐依赖(非强制，一般默认即可)：")))
+moreSettingLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "deb 的推荐依赖(非强制，一般默认即可)：")))
 moreSettingLayout.addWidget(debRecommend)
-moreSettingLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "要显示的 .desktop 文件的 MimeType：")))
+moreSettingLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "要显示的 .desktop 文件的 MimeType：")))
 moreSettingLayout.addWidget(e10_text)
-moreSettingLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "打包 deb 架构：")))
+moreSettingLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "打包 deb 架构：")))
 moreSettingLayout.addWidget(debArch)
 moreSetting.setLayout(moreSettingLayout)
 widgetLayout.addWidget(moreSetting, 0, 3, 16, 2)
@@ -1972,24 +1986,24 @@ e12_text.textChanged.connect(UserPathSet)
 e1_text.setPlaceholderText("例如 spark-deepin-wine-runner，不建议有大写字符")
 e2_text.setPlaceholderText(f"例如 {version}")
 e7_text.setPlaceholderText("例如 c:/Program Files/Tencent/QQ/Bin/QQ.exe")
-e9_text.setPlaceholderText("支持 png 和 svg 格式，不支持 ico 格式")
+e9_text.setPlaceholderText(transla.transe("U", "支持 png 和 svg 格式，不支持 ico 格式"))
 # 菜单栏
 menu = window.menuBar()
-programmenu = menu.addMenu(QtCore.QCoreApplication.translate("U", "程序"))
-debMenu = menu.addMenu(QtCore.QCoreApplication.translate("U", "deb 包"))
-uploadSparkStore = menu.addMenu(QtCore.QCoreApplication.translate("U", "投稿到星火应用商店"))
-help = menu.addMenu(QtCore.QCoreApplication.translate("U", "帮助"))
-exit = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "退出程序"))
-debE = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "只读取 Control 信息"))
-debX = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "读取所有（需解包，时间较久）"))
-uploadSparkStoreWebsize = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从网页端投稿"))
+programmenu = menu.addMenu(transla.transe("U", "程序"))
+debMenu = menu.addMenu(transla.transe("U", "deb 包"))
+uploadSparkStore = menu.addMenu(transla.transe("U", "投稿到星火应用商店"))
+help = menu.addMenu(transla.transe("U", "帮助"))
+exit = QtWidgets.QAction(transla.transe("U", "退出程序"))
+debE = QtWidgets.QAction(transla.transe("U", "只读取 Control 信息"))
+debX = QtWidgets.QAction(transla.transe("U", "读取所有（需解包，时间较久）"))
+uploadSparkStoreWebsize = QtWidgets.QAction(transla.transe("U", "从网页端投稿"))
 if os.path.exists("/opt/spark-store-submitter/bin/spark-store-submitter"):
-    uploadSparkStoreProgram = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用投稿器投稿（推荐）"))
+    uploadSparkStoreProgram = QtWidgets.QAction(transla.transe("U", "使用投稿器投稿（推荐）"))
 else:
-    uploadSparkStoreProgram = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用投稿器投稿（推荐，请先安装投稿器）"))
+    uploadSparkStoreProgram = QtWidgets.QAction(transla.transe("U", "使用投稿器投稿（推荐，请先安装投稿器）"))
     uploadSparkStoreProgram.setDisabled(True)
-tip = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "小提示"))
-getPdfHelp = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "Wine 运行器和 Wine 打包器傻瓜式使用教程（小白专用）\nBy @雁舞白沙"))
+tip = QtWidgets.QAction(transla.transe("U", "小提示"))
+getPdfHelp = QtWidgets.QAction(transla.transe("U", "Wine 运行器和 Wine 打包器傻瓜式使用教程（小白专用）\nBy @雁舞白沙"))
 exit.triggered.connect(window.close)
 tip.triggered.connect(helps)
 programmenu.addAction(exit)

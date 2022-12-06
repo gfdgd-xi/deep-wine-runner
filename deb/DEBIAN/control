@@ -1,5 +1,5 @@
 Package: spark-deepin-wine-runner
-Version: 2.6.0~alpha1
+Version: 2.6.0
 Maintainer: gfdgd xi <3025613752@qq.com>, 为什么您不喜欢熊出没和阿布呢
 Homepage: https://gitee.com/gfdgd-xi/deep-wine-runner, https://github.com/gfdgd-xi/deep-wine-runner, https://gitlink.org.cn/gfdgd_xi/deep-wine-runner
 Architecture: all
@@ -9,7 +9,7 @@ Recommends: winbind, wimtools, python3-pyqt5.qtwebengine
 Section: utils
 Conflicts: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer
 Replaces: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer
-Installed-Size: 21844
+Installed-Size: 23904
 Description: gfdgd xi、为什么您不喜欢熊出没和阿布呢 制作的 wine 运行器
  2.5.0 更新内容：
  ※1、容器自动配置脚本 GUI 查看介绍使用 QWebEngineWidget，支持图片（非强制依赖，只做推荐）；

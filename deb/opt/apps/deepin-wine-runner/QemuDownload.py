@@ -19,6 +19,7 @@ import requests
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 sys.path.append(f"{programPath}/../")
 from Model import *
+from trans import *
 from PyQt5 import QtCore, QtGui, QtWidgets
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 # UI 布局（自动生成）
@@ -74,7 +75,12 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addLayout(self.horizontalLayout)
         MainWindow.setCentralWidget(self.centralWidget)
         # 菜单栏
-        _translate = QtCore.QCoreApplication.translate
+        #_translate = QtCore.QCoreApplication.translate
+        if not get_now_lang() == "zh_CN.UTF-8":
+            transla = Trans("en_US", f"{programPath}/trans/deepin-wine-runner-qemu-download.json")
+        else:
+            transla = Trans("zh_CN")
+        _translate = transla.transe
         self.menu = MainWindow.menuBar()
         self.changeSources = self.menu.addMenu(_translate("MainWindow", "更换源"))
         self.gitlinkAction = QtWidgets.QAction(_translate("MainWindow", "Gitlink 源（推荐）"))
@@ -334,6 +340,9 @@ def on_addButton_clicked():
     QT.thread.start()
 
 def on_delButton_clicked():
+    if os.path.exists("/tmp/deepin-wine-runner-qemu-lock"):
+        if QtWidgets.QMessageBox.question(window, "提示", "检测到您的电脑已经运行了 Qemu/Chroot 容器，建议您重启电脑后再删除该容器，否则容易造成数据损失！\n是否取消操作？") == QtWidgets.QMessageBox.Yes:
+            return
     if QtWidgets.QMessageBox.question(window, "提示", "你确定要删除吗？") == QtWidgets.QMessageBox.No:
         return
     if ui.localWineList.currentIndex().row() < 0:
@@ -419,65 +428,3 @@ if __name__ == "__main__":
     ui.centralWidget.setWindowIcon(QtGui.QIcon(f"{programPath}/../deepin-wine-runner.svg"))
 
     app.exec_()
-exit()
-#!/usr/bin/env python3
-import os
-import sys
-import json
-import traceback
-import req as requests
-import PyQt5.QtGui as QtGui
-import PyQt5.QtCore as QtCore
-import PyQt5.QtWidgets as QtWidgets
-from Model import *
-
-sources = [
-    "https://code.gitlink.org.cn/gfdgd_xi/deepin-wine-runner-ubuntu-image/raw/branch/master/Sandbox"
-]
-sourceIndex = 0
-
-def ReadTXT(path: str) -> str:
-    with open(path, "r") as file:
-        things = file.read()
-    return things
-
-def WriteTXT(path: str, text: str) -> None:
-    with open(path, "w") as file:
-        file.write(text)
-
-def CheckVersion(arch: str) -> bool:
-    information = requests.get(f"{sources[sourceIndex]}/{arch}/lists.json").json()[0]
-    if not os.path.exists(f"{homePath}/.deepin-wine-runner-ubuntu-images/{arch}"):
-        return False
-    localInformation = json.loads(ReadTXT(f"{homePath}/.deepin-wine-runner-ubuntu-images/lists.json"))
-    try:
-        if localInformation["arch"][0] == information[0]:
-            print("版本相同")
-            return True
-        return False
-    except:
-        return False
-
-if __name__ == "__main__":
-    programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
-    homePath = os.getenv("HOME")
-    app = QtWidgets.QApplication(sys.argv)
-    if os.system("which qemu-i386-static"):
-        if QtWidgets.QMessageBox.question(None, "提示", "检测到您未安装 qemu-user-static，是否安装？") == QtWidgets.QMessageBox.Yes:
-            OpenTerminal(f"pkexec bash '{programPath}/ShellList/InstallQemuUserStatic.sh'")
-        exit()
-    while True:
-        archList = requests.get(f"{sources[sourceIndex]}/lists.json").json()
-        choose = QtWidgets.QInputDialog.getItem(None, "选择", "选择要安装/更新的镜像对应的架构", archList, 0, False)
-        if not choose[1]:
-            QtWidgets.QMessageBox.information(None, "提示", "用户取消操作")
-            break
-        try:
-            if CheckVersion(choose[0]):
-                QtWidgets.QMessageBox.information(None, "提示", "最新版本，无需操作")
-                continue
-
-        except:
-            traceback.print_exc()
-            QtWidgets.QMessageBox.critical(None, "出现错误", traceback.format_exc())
-            continue

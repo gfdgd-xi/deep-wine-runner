@@ -1060,7 +1060,7 @@ class UpdateWindow():
         updateWidgetLayout = QtWidgets.QGridLayout()
         versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：未知\n更新内容：")
         updateText = QtWidgets.QTextBrowser()
-        ok = QtWidgets.QPushButton(transla.transe("U", "更新（更新过程中会关闭所有Python应用，包括这个应用）"))
+        ok = QtWidgets.QPushButton(transla.transe("U", "更新（更新后需要自行手动重启程序）"))
         ok.clicked.connect(UpdateWindow.Update)
         cancel = QtWidgets.QPushButton("取消")
         cancel.clicked.connect(UpdateWindow.update.close)
@@ -1107,8 +1107,8 @@ class UpdateWindow():
             write_txt("/tmp/spark-deepin-wine-runner/update.sh", f"""#!/bin/bash
 echo 删除多余的安装包
 rm -rfv /tmp/spark-deepin-wine-runner/update/*
-echo 关闭“Wine 运行器”以及其它“Python 应用”
-killall python3
+#echo 关闭“Wine 运行器”以及其它“Python 应用”
+#killall python3
 echo 下载安装包
 wget -P /tmp/spark-deepin-wine-runner/update {UpdateWindow.data["Url"][0]}
 echo 安装安装包
@@ -2275,7 +2275,10 @@ updateThingsString = transla.transe("U", '''※1、支持使用 Qemu + Chroot �
 5、优化 Wine 列表显示；
 6、优化非基于生态适配脚本的打包器内容自动填充功能；
 7、新增程序论坛和教程入口；
-8、优化程序文案
+8、优化程序文案；
+9、新增日志翻译功能；
+10、程序进一步完善英语翻译（机翻）；
+11、优化程序更新策略；
 ''')
 for i in information["Thank"]:
     thankText += f"{i}\n"

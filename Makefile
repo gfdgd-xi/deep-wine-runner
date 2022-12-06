@@ -30,7 +30,7 @@ build:
 	cp -rv req                          deb/opt/apps/deepin-wine-runner
 	cp -rv BuildDesktop.py              deb/opt/apps/deepin-wine-runner
 	cp -rv ChangePassword.sh              deb/opt/apps/deepin-wine-runner
-	
+	cp -rv trans                        deb/opt/apps/deepin-wine-runner
 	cp -rv RegShot                          deb/opt/apps/deepin-wine-runner
 	cp -rv BeCyIconGrabber.exe                    deb/opt/apps/deepin-wine-runner
 	cp -rv AutoShell                              deb/opt/apps/deepin-wine-runner

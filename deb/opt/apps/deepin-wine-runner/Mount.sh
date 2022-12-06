@@ -13,6 +13,9 @@ echo $2
 echo $3
 # 挂载必备目录
 cd "$1"
+# 拷贝 Qemu Static
+cp -r /usr/bin/qemu-*-static ./usr/bin
+# 挂载目录
 mount --bind /dev ./dev
 #mount --bind  /dev/pts ./dev/pts
 mount -t proc /proc ./proc
