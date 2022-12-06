@@ -8,7 +8,7 @@
 # 基于 Python3 的 tkinter 构建
 ###########################################################################################
 cd `dirname $0`
-which VBoxManage1
+which VBoxManage
 if test $? == 0 ; then
     VM/VirtualMachine
     exit

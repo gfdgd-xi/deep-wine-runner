@@ -2272,13 +2272,14 @@ updateThingsString = transla.transe("U", '''※1、支持使用 Qemu + Chroot �
 ※2、提供了简易打包器以用于打包简易 deb；
 ※3、支持下载配置过的 Qemu + Chroot 容器；
 ※4、支持解压指定 deb 的内打包好的容器；
-5、优化 Wine 列表显示；
+※5、优化 Wine 列表显示；
 6、优化非基于生态适配脚本的打包器内容自动填充功能；
 7、新增程序论坛和教程入口；
 8、优化程序文案；
 9、新增日志翻译功能；
 10、程序进一步完善英语翻译（机翻）；
 11、优化程序更新策略；
+12、新增程序评分功能；
 ''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
@@ -2774,6 +2775,7 @@ h3 = QtWidgets.QAction(transla.transe("U", "更新内容"))
 h4 = QtWidgets.QAction(transla.transe("U", "谢明名单"))
 h5 = QtWidgets.QAction(transla.transe("U", "更新这个程序"))
 h6 = QtWidgets.QAction(transla.transe("U", "反馈这个程序的建议和问题"))
+fenUpload = QtWidgets.QAction(transla.transe("U", "程序评分"))
 h7 = QtWidgets.QAction(transla.transe("U", "关于这个程序"))
 h8 = QtWidgets.QAction(transla.transe("U", "关于 Qt"))
 gfdgdxiio = QtWidgets.QAction(transla.transe("U", "作者个人站"))
@@ -2808,6 +2810,7 @@ videoHelp.addAction(buildHelp)
 help.addSeparator()
 help.addAction(h5)
 help.addAction(h6)
+help.addAction(fenUpload)
 help.addAction(h7)
 help.addAction(h8)
 help.addSeparator()
@@ -2831,6 +2834,7 @@ easyHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://www.bilibili
 buildHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://www.bilibili.com/video/BV1EU4y1k7zr"))
 h5.triggered.connect(UpdateWindow.ShowWindow)
 h6.triggered.connect(WineRunnerBugUpload)
+fenUpload.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"python3 '{programPath}/ProgramFen.py'"]).start())
 h7.triggered.connect(about_this_program)
 h8.triggered.connect(lambda: QtWidgets.QMessageBox.aboutQt(widget))
 hm1_1.triggered.connect(lambda: webbrowser.open_new_tab("https://gitee.com/gfdgd-xi/uengine-runner"))
