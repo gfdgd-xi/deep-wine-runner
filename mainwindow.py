@@ -2238,14 +2238,19 @@ print(wine)
 ###########################
 # 程序信息
 ###########################
+# 语言载入
+if not get_now_lang() == "zh_CN.UTF-8":
+    transla = Trans("en_US", f"{programPath}/trans/deepin-wine-runner.json")
+else:
+    transla = Trans("zh_CN")
 iconPath = "{}/deepin-wine-runner.svg".format(programPath)
 #iconPath = "{}/Icon/Program/wine运行器.png".format(programPath)
 programUrl = "https://gitee.com/gfdgd-xi/deep-wine-runner\nhttps://github.com/gfdgd-xi/deep-wine-runner\nhttps://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner\nhttps://gfdgd-xi.github.io"
 information = json.loads(readtxt(f"{programPath}/information.json"))
 version = information["Version"]
-goodRunSystem = "常见 Linux 发行版"
+goodRunSystem = transla.transe("U", "常见 Linux 发行版")
 thankText = ""
-tips = '''<h4>提示：</h4>
+tips = transla.transe("U", '''<h4>提示：</h4>
 1、使用终端运行该程序，可以看到 wine 以及程序本身的提示和报错；
 2、wine 32 位和 64 位的容器互不兼容；
 3、所有的 wine 和 winetricks 均需要自行安装（可以从 菜单栏=>程序 里面进行安装）；
@@ -2262,8 +2267,8 @@ exe路径\' 参数 \'
 10、如果是使用 Deepin 23 的 Wine 安装脚本，请切记——安装过程会临时添加 Deepin 20 的 apt 源，不要中断安装以及
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示；
-<code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>'''
-updateThingsString = '''※1、支持使用 Qemu + Chroot 跨运行 Wine 以及指定程序的功能；
+<code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>''')
+updateThingsString = transla.transe("U", '''※1、支持使用 Qemu + Chroot 跨运行 Wine 以及指定程序的功能；
 ※2、提供了简易打包器以用于打包简易 deb；
 ※3、支持下载配置过的 Qemu + Chroot 容器；
 ※4、支持解压指定 deb 的内打包好的容器；
@@ -2271,23 +2276,24 @@ updateThingsString = '''※1、支持使用 Qemu + Chroot 跨运行 Wine 以及�
 6、优化非基于生态适配脚本的打包器内容自动填充功能；
 7、新增程序论坛和教程入口；
 8、优化程序文案
-'''
+''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
 updateTime = "2022年12月04日"
+aboutProgram = transla.transe("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。</p>
+<p>它同时还内置了基于VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作。</p>
+<pre>
+
+一个图形化了如下命令的程序（最简单格式）
+<code>env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径</code>
+让你可以简易方便的使用 wine""")
 about = f'''<style>
 a:link, a:active {{
     text-decoration: none;
 }}
 </style>
 <h1>关于</h1>
-<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。</p>
-<p>它同时还内置了基于VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作。</p>
-<pre>
-
-一个图形化了如下命令的程序（最简单格式）
-<code>env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径</code>
-让你可以简易方便的使用 wine
+{aboutProgram}
 
 版本：{version}
 适用平台：{goodRunSystem}（@VersionForType@）
@@ -2311,7 +2317,7 @@ Qt 版本：{QtCore.qVersion()}
 <pre>星火应用商店：https://spark-app.store/
 Deepin 官网：https://www.deepin.org
 Deepin 论坛：https://bbs.deepin.org
-非官方论坛：https://gfdgdxi.flarum.cloud/</pre>
+论坛：https://gfdgdxi.flarum.cloud/</pre>
 <hr>
 <h1>©2020~{time.strftime("%Y")} gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
 title = "Wine 运行器 {}".format(version)
@@ -2333,14 +2339,6 @@ print(iconList)
 # 读取主题
 # Qt 窗口
 app = QtWidgets.QApplication(sys.argv)
-# 语言载入
-if not get_now_lang() == "zh_CN.UTF-8":
-    #trans = QtCore.QTranslator()
-    #trans.load(f"{programPath}/LANG/deepin-wine-runner-en_US.qm")
-    #app.installTranslator(trans)
-    transla = Trans("en_US", f"{programPath}/trans/deepin-wine-runner.json")
-else:
-    transla = Trans("zh_CN")
 window = QtWidgets.QMainWindow()
 window.setWindowTitle(title)
 widget = QtWidgets.QWidget()
@@ -2800,8 +2798,8 @@ help.addSeparator()
 wikiHelp = QtWidgets.QAction(transla.transe("U", "程序 Wiki"))
 help.addAction(wikiHelp)
 videoHelp = help.addMenu(transla.transe("U", "视频教程"))
-easyHelp = QtWidgets.QAction("简易使用教程")
-buildHelp = QtWidgets.QAction("打包教程")
+easyHelp = QtWidgets.QAction(transla.transe("U", "简易使用教程"))
+buildHelp = QtWidgets.QAction(transla.transe("U", "打包教程"))
 videoHelp.addAction(easyHelp)
 videoHelp.addAction(buildHelp)
 help.addSeparator()

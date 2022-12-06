@@ -19,6 +19,7 @@ import subprocess
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
+from trans import *
 
 ###################
 # 程序所需事件
@@ -147,6 +148,10 @@ def NameChange(packageOrBotton: int):
     elif packageOrBotton == 1 and bottonName.text() != packageName.text():
         lockB = True
 
+# 获取当前语言
+def get_now_lang()->"获取当前语言":
+    return os.getenv('LANG')
+
 ###########################
 # 程序信息
 ###########################
@@ -154,7 +159,12 @@ programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 information = json.loads(readtxt(f"{programPath}/information.json"))
 version = information["Version"]
 iconPath = "{}/deepin-wine-runner.svg".format(programPath)
-tips = """第一个文本框是应用程序中文名
+# 语言载入
+if not get_now_lang() == "zh_CN.UTF-8":
+    transla = Trans("en_US", f"{programPath}/trans/packager.json")
+else:
+    transla = Trans("zh_CN")
+tips = transla.transe("U", """第一个文本框是应用程序中文名
 第二个文本框是应用程序英文名
 第三个文本框是最终生成的包的描述
 第四个选择框是desktop文件中的分类
@@ -164,7 +174,7 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 第六个输入框是最终生成的包的包名,包名的命名规则以deepin开头，加官网域名（需要前后对调位置），如还不能区分再加上应用名
 最后一个是最终生成的包的版本号，版本号命名规则：应用版本号+deepin+数字
 提示：包名和容器名相同，无法设置为不相同，如果需要设置为不相同，需要用另一个非基于生态适配脚本的打包器
-"""
+""")
 
 ###########################
 # 窗口创建
@@ -186,22 +196,22 @@ packageName = QtWidgets.QLineEdit()
 bottonName = QtWidgets.QLineEdit()
 versionName = QtWidgets.QLineEdit()
 controlFrame = QtWidgets.QHBoxLayout()
-buildDeb = QtWidgets.QPushButton("打包")
-debPath = QtWidgets.QPushButton("deb 包生成目录")
+buildDeb = QtWidgets.QPushButton(transla.transe("U", "打包"))
+debPath = QtWidgets.QPushButton(transla.transe("U", "deb 包生成目录"))
 buildDeb.setSizePolicy(size)
 debPath.setSizePolicy(size)
 commandReturn = QtWidgets.QTextBrowser()
 typeName.addItems(["Network", "Chat", "Audio", "Video", "Graphics", "Office", "Translation", "Development", "Utility", "System"])
 controlFrame.addWidget(buildDeb)
 controlFrame.addWidget(debPath)
-widgetLayout.addWidget(QtWidgets.QLabel("程序中文名："), 0, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel("程序英文名："), 1, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel("包描述："), 2, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel("程序分类："), 3, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel("程序在 Wine 容器的位置："), 4, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel("包名："), 5, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel("容器名："), 6, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel("版本号："), 7, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "程序中文名：")), 0, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "程序英文名：")), 1, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "包描述：")), 2, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "程序分类：")), 3, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "程序在 Wine 容器的位置：")), 4, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "包名：")), 5, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "容器名：")), 6, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "版本号：")), 7, 0, 1, 1)
 widgetLayout.addWidget(chineseName, 0, 1, 1, 1)
 widgetLayout.addWidget(englishName, 1, 1, 1, 1)
 widgetLayout.addWidget(debDescription, 2, 1, 1, 1)
@@ -221,22 +231,22 @@ window.setCentralWidget(widget)
 window.resize(int(window.frameGeometry().width() * 1.5), int(window.frameGeometry().height()))
 window.setWindowIcon(QtGui.QIcon(iconPath))
 menu = window.menuBar()
-programMenu = menu.addMenu("程序")
-exit = QtWidgets.QAction("退出")
+programMenu = menu.addMenu(transla.transe("U", "程序"))
+exit = QtWidgets.QAction(transla.transe("U", "退出"))
 exit.triggered.connect(window.close)
-uploadSparkStore = menu.addMenu(QtCore.QCoreApplication.translate("U", "投稿到星火应用商店"))
-uploadSparkStoreWebsize = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "从网页端投稿"))
+uploadSparkStore = menu.addMenu(transla.transe("U", "投稿到星火应用商店"))
+uploadSparkStoreWebsize = QtWidgets.QAction(transla.transe("U", "从网页端投稿"))
 if os.path.exists("/opt/spark-store-submitter/bin/spark-store-submitter"):
-    uploadSparkStoreProgram = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用投稿器投稿（推荐）"))
+    uploadSparkStoreProgram = QtWidgets.QAction(transla.transe("U", "使用投稿器投稿（推荐）"))
 else:
-    uploadSparkStoreProgram = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "使用投稿器投稿（推荐，请先安装投稿器）"))
+    uploadSparkStoreProgram = QtWidgets.QAction(transla.transe("U", "使用投稿器投稿（推荐，请先安装投稿器）"))
     uploadSparkStoreProgram.setDisabled(True)
 uploadSparkStore.addAction(uploadSparkStoreProgram)
 uploadSparkStore.addAction(uploadSparkStoreWebsize)
 uploadSparkStoreWebsize.triggered.connect(lambda: webbrowser.open_new_tab("https://upload.deepinos.org"))
 uploadSparkStoreProgram.triggered.connect(lambda: threading.Thread(target=os.system, args=["/opt/spark-store-submitter/bin/spark-store-submitter"]).start())
-helpMenu = menu.addMenu("帮助")
-help = QtWidgets.QAction("帮助")
+helpMenu = menu.addMenu(transla.transe("U", "帮助"))
+help = QtWidgets.QAction(transla.transe("U", "帮助"))
 help.triggered.connect(ShowHelp)
 helpMenu.addAction(help)
 programMenu.addAction(exit)
