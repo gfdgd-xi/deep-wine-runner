@@ -28,7 +28,7 @@ class Trans():
         if not self.isTrans:
             return text
         try:
-            return self.word[text]
+            return self.word[text].replace("（", "(").replace("）", ")")
         except:
             if self.unCloudTrans:
                 return text
@@ -43,7 +43,7 @@ class Trans():
                 transText = transText.replace("\n\n", "\n")[:-1]
             else:
                 transText = transText[:-1]
-            self.word[text] = transText
+            self.word[text] = transText.replace("（", "(").replace("）", ")")
             try:
                 with open(self.fileName, "w") as file:
                     file.write(json.dumps(self.word, ensure_ascii=False))

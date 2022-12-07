@@ -177,6 +177,9 @@ class LogChecking():
         if lists[0] == 4:
             QtWidgets.QMessageBox.information(logWindow, "修复方法", "如是 Deepin Wine 可以尝试切换 WineHQ，\n并且取消勾选运行器主页面菜单栏“程序”=>“设置Wine”，取消勾选“屏蔽 Wine 默认 Mono 和 Gecko 安装器”\n然后尝试在菜单栏的“Wine”=>“在指定 Wine、容器安装组件”=>“在指定 Wine、容器安装 Gecko”来安装 Gecko")
             return
+        if lists[0] == 5:
+            InstallMonoGecko("mono")
+            return
         QtWidgets.QMessageBox.critical(logWindow, "错误", "无法修复该问题")
 
     def Show(lists):
@@ -200,6 +203,8 @@ class LogChecking():
                 nmodel.appendRow(QtGui.QStandardItem(f"！ 无法加载 Gecko，是被禁用或未安装？"))
             if i[0] == 4:
                 nmodel.appendRow(QtGui.QStandardItem(f"× 无法更新 Wine 容器版本，是否还有 Wine 程序运行？"))
+            if i[0] == 5:
+                nmodel.appendRow(QtGui.QStandardItem(f"× Mono 禁用/未安装"))
         questionMap = lists[:]
         repairButton.setDisabled(disbledButton)
         questionList.setModel(nmodel)
@@ -233,6 +238,8 @@ class LogThreading(QtCore.QThread):
                 repairList.append([3, ""])
             if "Your wineserver binary was not upgraded correctly".lower() in checkingText:
                 repairList.append([4, ""])
+            if "Wine Mono is not installed".lower() in checkingText:
+                repairList.append([5, ""])
         self.done.emit(repairList)
     
 
@@ -2272,17 +2279,19 @@ updateThingsString = transla.transe("U", '''※1、支持使用 Qemu + Chroot �
 ※2、提供了简易打包器以用于打包简易 deb；
 ※3、支持下载配置过的 Qemu + Chroot 容器；
 ※4、支持解压指定 deb 的内打包好的容器；
-5、优化 Wine 列表显示；
-6、优化非基于生态适配脚本的打包器内容自动填充功能；
-7、新增程序论坛和教程入口；
+※5、优化 Wine 列表显示；
+※6、新增程序论坛和教程入口；
+7、优化非基于生态适配脚本的打包器内容自动填充功能；
 8、优化程序文案；
 9、新增日志翻译功能；
 10、程序进一步完善英语翻译（机翻）；
 11、优化程序更新策略；
+12、优化日志分析功能；
+13、新增程序评分功能。
 ''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年12月04日"
+updateTime = "2022年12月06日"
 aboutProgram = transla.transe("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。</p>
 <p>它同时还内置了基于VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作。</p>
 <pre>
@@ -2774,6 +2783,7 @@ h3 = QtWidgets.QAction(transla.transe("U", "更新内容"))
 h4 = QtWidgets.QAction(transla.transe("U", "谢明名单"))
 h5 = QtWidgets.QAction(transla.transe("U", "更新这个程序"))
 h6 = QtWidgets.QAction(transla.transe("U", "反馈这个程序的建议和问题"))
+fenUpload = QtWidgets.QAction(transla.transe("U", "程序评分"))
 h7 = QtWidgets.QAction(transla.transe("U", "关于这个程序"))
 h8 = QtWidgets.QAction(transla.transe("U", "关于 Qt"))
 gfdgdxiio = QtWidgets.QAction(transla.transe("U", "作者个人站"))
@@ -2808,6 +2818,7 @@ videoHelp.addAction(buildHelp)
 help.addSeparator()
 help.addAction(h5)
 help.addAction(h6)
+help.addAction(fenUpload)
 help.addAction(h7)
 help.addAction(h8)
 help.addSeparator()
@@ -2831,6 +2842,7 @@ easyHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://www.bilibili
 buildHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://www.bilibili.com/video/BV1EU4y1k7zr"))
 h5.triggered.connect(UpdateWindow.ShowWindow)
 h6.triggered.connect(WineRunnerBugUpload)
+fenUpload.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"python3 '{programPath}/ProgramFen.py'"]).start())
 h7.triggered.connect(about_this_program)
 h8.triggered.connect(lambda: QtWidgets.QMessageBox.aboutQt(widget))
 hm1_1.triggered.connect(lambda: webbrowser.open_new_tab("https://gitee.com/gfdgd-xi/uengine-runner"))

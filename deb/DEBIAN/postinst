@@ -49,7 +49,11 @@ if [ `arch` != "x86_64" ]; then
 	rm -rf /opt/apps/deepin-wine-runner/InstallNewWineHQ.sh
 fi
 # 到时候切换 gpg 源会方便很多
-apt-key adv --keyserver keyserver.ubuntu.com --recv-keys FD6EEA1F20CD4B27 > /dev/null 2>&1 | true
+if [ -d /usr/share/deepin-installer ]; then
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys FD6EEA1F20CD4B27 > /dev/null 2>&1 | true
+    # 用于修复 2022.11.25 Better DDE 导致的 Deepin Community Live CD Install 版问题
+    sh -c 'echo "deb [trusted=yes] https://proposed-packages.deepin.com/dde-apricot unstable main contrib non-free" > /etc/apt/sources.list.d/deepin-unstable.list' 
+fi
 apt update > /dev/null 2>&1 | true
 # 设置目录权限，让用户可读可写，方便后续删除组件
 chmod 777 -R /opt/apps/deepin-wine-runner
