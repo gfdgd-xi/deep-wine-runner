@@ -2192,15 +2192,15 @@ def GetVersion():
 
 def UnPackage():
     QtWidgets.QMessageBox.information(window, "提示", "请在下面两个对话框中选择 deb 包所在路径和容器解压到的路径")
-    debPath = QtWidgets.QFileDialog.getOpenFileName(window)
+    debPath = QtWidgets.QFileDialog.getOpenFileName(window, get_home(), "deb 文件(*.deb);;所有文件(*.*)")
     if not debPath[1]:
         return
-    path = QtWidgets.QFileDialog.getExistingDirectory(window)
+    path = QtWidgets.QFileDialog.getExistingDirectory(window, get_home())
     print(path)
-    if not path[1]:
+    if not path:
         return
     tempDebDir = f"/tmp/wine-runner-unpack-deb-{random.randint(0, 1000)}"
-    if os.system(f"dpkg -b '{debPath}' '{tempDebDir}'"):
+    if os.system(f"dpkg -x '{debPath[0]}' '{tempDebDir}'"):
         QtWidgets.QMessageBox.critical(window, "错误", "解压失败！")
         return
     zippath = FindFile(tempDebDir, "files.7z")
@@ -2209,8 +2209,10 @@ def UnPackage():
         return
     print(path)
     # 解压文件
-    os.system(f"mkdir -p '{path[0]}'")
-    os.system(f"7z x '{zippath}' -o'{path[0]}'")
+    os.system(f"mkdir -p '{path}'")
+    os.system(f"7z x -y '{zippath}' -o'{path}'")
+    os.system(f"rm -rfv '{tempDebDir}'")
+    QtWidgets.QMessageBox.information(window, "提示", "解压完成！")
 
 def FindFile(file, name):
     for i in os.listdir(file):
@@ -2304,12 +2306,13 @@ updateThingsString = transla.transe("U", '''※1、支持使用 Qemu + Chroot �
 ※6、新增程序论坛和教程入口；
 ※7、程序公告功能；
 ※8、新增程序评分功能；
-9、优化非基于生态适配脚本的打包器内容自动填充功能；
-10、优化程序文案；
-11、新增日志翻译功能；
-12、程序进一步完善英语翻译（机翻）；
-13、优化程序更新策略；
-14、优化日志分析功能。''')
+※9、新增解包 deb 内 Wine 容器功能；
+10、优化非基于生态适配脚本的打包器内容自动填充功能；
+11、优化程序文案；
+12、新增日志翻译功能；
+13、程序进一步完善英语翻译（机翻）；
+14、优化程序更新策略；
+15、优化日志分析功能。''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
 updateTime = "2022年12月07日"
