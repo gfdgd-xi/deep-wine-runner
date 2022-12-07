@@ -1843,6 +1843,27 @@ def SaveLog():
         traceback.print_exc()
         QtWidgets.QMessageBox.critical(window, "错误", traceback.format_exc())
 
+def GetNewInformation():
+    try:
+        text = requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/information/index.html").text
+    except:
+        traceback.print_exc()
+        text = """<p>无法连接到服务器</p>
+            <hr/>
+            <p>你可以尝试：</p>
+            <p>1. 判断使用的是否使用吾爱版本，如果使用吾爱版本则无法连接</p>
+            <p>2. 判断是否能正常连接网络</p>"""
+    global webInformation
+    if bad:
+        webInformation = QtWidgets.QTextBrowser()
+    else:
+        webInformation = QtWebEngineWidgets.QWebEngineView()
+    webInformation.setHtml(text)
+    webInformation.setWindowTitle("获取程序公告")
+    webInformation.setWindowIcon(QtGui.QIcon(iconPath))
+    webInformation.resize(int(webInformation.frameGeometry().width() * 1.3), int(webInformation.frameGeometry().height() * 1.1))
+    webInformation.show()
+
 ###########################
 # 加载配置
 ###########################
@@ -2281,17 +2302,17 @@ updateThingsString = transla.transe("U", '''※1、支持使用 Qemu + Chroot �
 ※4、支持解压指定 deb 的内打包好的容器；
 ※5、优化 Wine 列表显示；
 ※6、新增程序论坛和教程入口；
-7、优化非基于生态适配脚本的打包器内容自动填充功能；
-8、优化程序文案；
-9、新增日志翻译功能；
-10、程序进一步完善英语翻译（机翻）；
-11、优化程序更新策略；
-12、优化日志分析功能；
-13、新增程序评分功能。
-''')
+※7、程序公告功能；
+※8、新增程序评分功能；
+9、优化非基于生态适配脚本的打包器内容自动填充功能；
+10、优化程序文案；
+11、新增日志翻译功能；
+12、程序进一步完善英语翻译（机翻）；
+13、优化程序更新策略；
+14、优化日志分析功能。''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年12月06日"
+updateTime = "2022年12月07日"
 aboutProgram = transla.transe("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。</p>
 <p>它同时还内置了基于VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作。</p>
 <pre>
@@ -2782,6 +2803,7 @@ wineRunnerHelp = QtWidgets.QAction(transla.transe("U", "Wine运行器和Wine打�
 h3 = QtWidgets.QAction(transla.transe("U", "更新内容"))
 h4 = QtWidgets.QAction(transla.transe("U", "谢明名单"))
 h5 = QtWidgets.QAction(transla.transe("U", "更新这个程序"))
+programInformation = QtWidgets.QAction(transla.transe("U", "获取程序公告"))
 h6 = QtWidgets.QAction(transla.transe("U", "反馈这个程序的建议和问题"))
 fenUpload = QtWidgets.QAction(transla.transe("U", "程序评分"))
 h7 = QtWidgets.QAction(transla.transe("U", "关于这个程序"))
@@ -2819,6 +2841,7 @@ help.addSeparator()
 help.addAction(h5)
 help.addAction(h6)
 help.addAction(fenUpload)
+help.addAction(programInformation)
 help.addAction(h7)
 help.addAction(h8)
 help.addSeparator()
@@ -2846,6 +2869,7 @@ fenUpload.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"p
 h7.triggered.connect(about_this_program)
 h8.triggered.connect(lambda: QtWidgets.QMessageBox.aboutQt(widget))
 hm1_1.triggered.connect(lambda: webbrowser.open_new_tab("https://gitee.com/gfdgd-xi/uengine-runner"))
+programInformation.triggered.connect(GetNewInformation)
 # 异同步获取信息
 #threading.Thread(target=GetVersion).start()
 GetVersion()

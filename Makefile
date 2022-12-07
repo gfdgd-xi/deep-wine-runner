@@ -13,6 +13,7 @@ build:
 	cp -rv Test/                       deb/opt/apps/deepin-wine-runner/
 	zip -v -q -r package-script.zip package-script
 	cp -rv VM                                     deb/opt/apps/deepin-wine-runner
+	cp -rv Download.py                    deb/opt/apps/deepin-wine-runner/
 	cp -rv AllInstall.py                          deb/opt/apps/deepin-wine-runner
 	cp -rv ShellList deb/opt/apps/deepin-wine-runner
 	cp -rv QemuDownload.py deb/opt/apps/deepin-wine-runner
