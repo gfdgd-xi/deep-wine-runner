@@ -890,7 +890,31 @@ def InstallDXVK():
         wineBottonPath = setting["DefultBotton"]
     else:
         wineBottonPath = e1.currentText()
-    OpenTerminal(f"env WINE='{wine[o1.currentText()]}' WINE64='{wine[o1.currentText()]}' WINEPREFIX='{wineBottonPath}' '{programPath}/dxvk/setup_dxvk.sh' install")
+    OpenTerminal(f"env WINE='{wine[o1.currentText()]}' WINE64='{wine[o1.currentText()]}' WINEPREFIX='{wineBottonPath}' '{programPath}/dxvk/setup_dxvk.sh' uninstall")
+
+def InstallVkd3d():
+    if not os.path.exists(f"{programPath}/vkd3d-proton"):
+        if os.system(f"7z x -y \"{programPath}/vkd3d-proton.7z\" -o\"{programPath}\""):
+            QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
+            return
+        os.remove(f"{programPath}/vkd3d-proton.7z")
+    if e1.currentText() == "":
+        wineBottonPath = setting["DefultBotton"]
+    else:
+        wineBottonPath = e1.currentText()
+    OpenTerminal(f"env WINE='{wine[o1.currentText()]}' WINE64='{wine[o1.currentText()]}' WINEPREFIX='{wineBottonPath}' '{programPath}/vkd3d-proton/setup_vkd3d_proton.sh' install")
+
+def UninstallVkd3d():
+    if not os.path.exists(f"{programPath}/vkd3d-proton"):
+        if os.system(f"7z x -y \"{programPath}/vkd3d-proton.7z\" -o\"{programPath}\""):
+            QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
+            return
+        os.remove(f"{programPath}/vkd3d-proton.7z")
+    if e1.currentText() == "":
+        wineBottonPath = setting["DefultBotton"]
+    else:
+        wineBottonPath = e1.currentText()
+    OpenTerminal(f"env WINE='{wine[o1.currentText()]}' WINE64='{wine[o1.currentText()]}' WINEPREFIX='{wineBottonPath}' '{programPath}/vkd3d-proton/setup_vkd3d_proton.sh' uninstall")
     #process = QtCore.QProcess()
     #process.startDetached(f"{programPath}/launch.sh", ["deepin-terminal", "-e", 
             #"env", f"WINE={wine[o1.currentText()]}", f"WINE64={wine[o1.currentText()]}", f"WINEPREFIX={wineBottonPath}", "bash",
@@ -2307,12 +2331,13 @@ updateThingsString = transla.transe("U", '''※1、支持使用 Qemu + Chroot �
 ※7、程序公告功能；
 ※8、新增程序评分功能；
 ※9、新增解包 deb 内 Wine 容器功能；
-10、优化非基于生态适配脚本的打包器内容自动填充功能；
-11、优化程序文案；
-12、新增日志翻译功能；
-13、程序进一步完善英语翻译（机翻）；
-14、优化程序更新策略；
-15、优化日志分析功能。''')
+※10、新增 Vkd3d Proton 安装功能，更新 dxvk 版本至 2.0.0；
+11、优化非基于生态适配脚本的打包器内容自动填充功能；
+12、优化程序文案；
+13、新增日志翻译功能；
+14、程序进一步完善英语翻译（机翻）；
+15、优化程序更新策略；
+16、优化日志分析功能。''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
 updateTime = "2022年12月07日"
@@ -2661,6 +2686,11 @@ installDxvk = QtWidgets.QAction(transla.transe("U", "安装 DXVK"))
 uninstallDxvk = QtWidgets.QAction(transla.transe("U", "卸载 DXVK"))
 dxvkMenu.addAction(installDxvk)
 dxvkMenu.addAction(uninstallDxvk)
+vkd3dMenu = wm3.addMenu(transla.transe("U", "安装/卸载 DXVK"))
+installvkd3d = QtWidgets.QAction(transla.transe("U", "安装 DXVK"))
+uninstallvkd3d = QtWidgets.QAction(transla.transe("U", "卸载 DXVK"))
+dxvkMenu.addAction(installvkd3d)
+dxvkMenu.addAction(uninstallvkd3d)
 wineOption.addSeparator()
 wineOption.addAction(deletePartIcon)
 wineOption.addAction(deleteDesktopIcon)
@@ -2727,6 +2757,8 @@ wm4_1.triggered.connect(lambda: os.system(f"'{programPath}/launch.sh' deepin-ter
 wm4_2.triggered.connect(lambda: os.system(f"'{programPath}/launch.sh' deepin-terminal -C 'pkexec apt purge winbind -y' --keep-open"))
 installDxvk.triggered.connect(InstallDXVK)
 uninstallDxvk.triggered.connect(UninstallDXVK)
+installvkd3d.triggered.connect(InstallVkd3d)
+uninstallvkd3d.triggered.connect(UninstallVkd3d)
 deletePartIcon.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"python3 '{programPath}/BuildDesktop.py'"]).start())
 deleteDesktopIcon.triggered.connect(DeleteDesktopIcon)
 enabledWineBottleCreateLink.triggered.connect(lambda: RunWineProgram("reg' delete 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v winemenubuilder.exe '/f"))

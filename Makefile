@@ -23,6 +23,7 @@ build:
 	cp -rv wrestool          deb/opt/apps/deepin-wine-runner
 	cp -rv Mount.sh          deb/opt/apps/deepin-wine-runner
 	cp -rv UnMount.sh          deb/opt/apps/deepin-wine-runner
+	cp -rv vkd3d-proton.7z     deb/opt/apps/deepin-wine-runner
 	cp -rv deepin-wine-easy-packager.py     deb/opt/apps/deepin-wine-runner
 	cp -rv IconList.json     deb/opt/apps/deepin-wine-runner
 	cp -rv GetEXEVersion.exe deb/opt/apps/deepin-wine-runner
