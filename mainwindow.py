@@ -471,7 +471,7 @@ def ConfigQemu():
     choose = QtWidgets.QInputDialog.getItem(window, "提示", "选择需要 Chroot 到里面的容器", lists, 0, False)
     if not choose[1]:
         return
-    threading.Thread(target=OpenTerminal, args=[f"python3 '{programPath}/QemuRun.py' '{choose[0]}' "]).start()
+    threading.Thread(target=OpenTerminal, args=[f"python3 '{programPath}/QemuRun.py' '{int(setting['QemuUnMountHome'])}' '{choose[0]}' "]).start()
     print(choose)
 
 # 生成 desktop 文件在桌面
@@ -1631,6 +1631,7 @@ class ProgramSetting():
     runtimeCache = None
     buildByBottleName = None
     autoPath = None
+    qemuUnmountHome = None
     def ShowWindow():
         ProgramSetting.message = QtWidgets.QMainWindow()
         widget = QtWidgets.QWidget()
@@ -1647,6 +1648,7 @@ class ProgramSetting():
         widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "下载缓存：")), 9, 0, 1, 1)
         widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "图标生成：")), 10, 0, 1, 1)
         widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "自动根据EXE名称生成路径：")), 11, 0, 1, 1)
+        widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "Qemu + Chroot 挂载用户目录：")), 12, 0, 1, 1)
         ProgramSetting.wineBottonA = QtWidgets.QComboBox()
         ProgramSetting.wineDebug = QtWidgets.QCheckBox(transla.transe("U", "开启 DEBUG 输出"))
         ProgramSetting.defultWine = QtWidgets.QComboBox()
@@ -1666,7 +1668,8 @@ class ProgramSetting():
         ProgramSetting.autoWine = QtWidgets.QCheckBox(transla.transe("U", "不显示未检测到的 Wine"))
         ProgramSetting.runtimeCache = QtWidgets.QCheckBox(transla.transe("U", "开启下载缓存"))
         ProgramSetting.buildByBottleName = QtWidgets.QCheckBox(transla.transe("U", "本软件构建的图标后面添加容器名"))
-        ProgramSetting.autoPath = QtWidgets.QCheckBox(transla.transe("U", "自动根据文件名生成容器路径（开启后必须通过修改默认wine容器路径才可指定其它路径，重启后生效）"))
+        ProgramSetting.autoPath = QtWidgets.QCheckBox(transla.transe("U", "自动根据文件名生成容器路径（开启后必须通过修改默认wine容器路径才可指定其它路径，重启程序后生效）"))
+        ProgramSetting.qemuUnmountHome = QtWidgets.QCheckBox(transla.transe("U", "使用 Qemu + Chroot 时不挂载用户目录并与系统隔离（修改后重启操作系统生效）"))
         ProgramSetting.wineBottonA.addItems(["Auto", "win32", "win64"])
         ProgramSetting.wineBottonA.setCurrentText(setting["Architecture"])
         ProgramSetting.wineDebug.setChecked(setting["Debug"])
@@ -1680,6 +1683,8 @@ class ProgramSetting():
         ProgramSetting.runtimeCache.setChecked(setting["RuntimeCache"])
         ProgramSetting.buildByBottleName.setChecked(setting["BuildByBottleName"])
         ProgramSetting.autoPath.setChecked(setting["AutoPath"])
+        ProgramSetting.qemuUnmountHome.setChecked(setting["QemuUnMountHome"])
+        # QemuUnMountHome
         widgetLayout.addWidget(ProgramSetting.wineBottonA, 0, 1, 1, 1)
         widgetLayout.addWidget(ProgramSetting.wineDebug, 1, 1, 1, 1)
         widgetLayout.addWidget(ProgramSetting.defultWine, 2, 1, 1, 1)
@@ -1694,7 +1699,8 @@ class ProgramSetting():
         widgetLayout.addWidget(ProgramSetting.runtimeCache, 9, 1, 1, 1)
         widgetLayout.addWidget(ProgramSetting.buildByBottleName, 10, 1, 1, 1)
         widgetLayout.addWidget(ProgramSetting.autoPath, 11, 1, 1, 2)
-        widgetLayout.addWidget(save, 12, 2, 1, 1)
+        widgetLayout.addWidget(ProgramSetting.qemuUnmountHome, 12, 1, 1, 2)
+        widgetLayout.addWidget(save, 13, 2, 1, 1)
         widget.setLayout(widgetLayout)
         ProgramSetting.message.setCentralWidget(widget)
         ProgramSetting.message.setWindowIcon(QtGui.QIcon(iconPath))
@@ -1724,6 +1730,7 @@ class ProgramSetting():
         setting["RuntimeCache"] = ProgramSetting.runtimeCache.isChecked()
         setting["BuildByBottleName"] = ProgramSetting.buildByBottleName.isChecked()
         setting["AutoPath"] = ProgramSetting.autoPath.isChecked()
+        setting["QemuUnMountHome"] = ProgramSetting.qemuUnmountHome.isChecked()
         try:
             write_txt(get_home() + "/.config/deepin-wine-runner/WineSetting.json", json.dumps(setting))
         except:
@@ -1887,207 +1894,6 @@ def GetNewInformation():
     webInformation.setWindowIcon(QtGui.QIcon(iconPath))
     webInformation.resize(int(webInformation.frameGeometry().width() * 1.3), int(webInformation.frameGeometry().height() * 1.1))
     webInformation.show()
-
-###########################
-# 加载配置
-###########################
-defultProgramList = {
-    "Architecture": "Auto",
-    "Debug": True,
-    "DefultWine": "deepin-wine6 stable",
-    "DefultBotton" : get_home() + "/.wine",
-    "TerminalOpen": False,
-    "WineOption": "",
-    "WineBottonDifferent": False,
-    "CenterWindow": False,
-    "Theme": "",
-    "MonoGeckoInstaller": True,
-    "AutoWine": True,
-    "RuntimeCache": True,
-    "MustRead": False,
-    "BuildByBottleName": False,
-    "AutoPath": False
-}
-if not os.path.exists(get_home() + "/.config/"):  # 如果没有配置文件夹
-    os.mkdir(get_home() + "/.config/")  # 创建配置文件夹
-if not os.path.exists(get_home() + "/.config/deepin-wine-runner"):  # 如果没有配置文件夹
-    os.mkdir(get_home() + "/.config/deepin-wine-runner")  # 创建配置文件夹
-if not os.path.exists(get_home() + "/.config/deepin-wine-runner/ShellHistory.json"):  # 如果没有配置文件
-    write_txt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json", json.dumps({}))  # 创建配置文件
-if not os.path.exists(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json"):  # 如果没有配置文件
-    write_txt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json", json.dumps({}))  # 创建配置文件
-if not os.path.exists(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json"):  # 如果没有配置文件
-    write_txt(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json", json.dumps({}))  # 创建配置文件
-if not os.path.exists(get_home() + "/.config/deepin-wine-runner/ISOPath.json"):  # 如果没有配置文件
-    write_txt(get_home() + "/.config/deepin-wine-runner/ISOPath.json", json.dumps({}))  # 写入（创建）一个配置文件
-if not os.path.exists(get_home() + "/.config/deepin-wine-runner/ISOPathFound.json"):  # 如果没有配置文件
-    write_txt(get_home() + "/.config/deepin-wine-runner/ISOPathFound.json", json.dumps({}))  # 写入（创建）一个配置文件
-if not os.path.exists(get_home() + "/.config/deepin-wine-runner/FindExe.json"):  # 如果没有配置文件
-    write_txt(get_home() + "/.config/deepin-wine-runner/FindExe.json", json.dumps({"path": "~"}))  # 写入（创建）一个配置文件
-if not os.path.exists(get_home() + "/.config/deepin-wine-runner/FindISO.json"):  # 如果没有配置文件
-    write_txt(get_home() + "/.config/deepin-wine-runner/FindISO.json", json.dumps({"path": "~"}))  # 写入（创建）一个配置文件
-if not os.path.exists(get_home() + "/.config/deepin-wine-runner/WineBotton.json"):  # 如果没有配置文件
-    write_txt(get_home() + "/.config/deepin-wine-runner/WineBotton.json", json.dumps({"path": "~/.deepinwine"}))  # 写入（创建）一个配置文件
-if not os.path.exists(get_home() + "/.config/deepin-wine-runner/WineSetting.json"):  # 如果没有配置文件
-    write_txt(get_home() + "/.config/deepin-wine-runner/WineSetting.json", json.dumps(defultProgramList))  # 写入（创建）一个配置文件
-
-###########################
-# 设置变量
-###########################
-programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
-# 如果要添加其他 wine，请使用安装更多 Wine 功能
-#############
-# 检测 Wine
-#############
-try:
-    wine = {
-        "基于 UOS box86 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86 /opt/deepin-wine6-stable/bin/wine ",
-        "基于 UOS exagear 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al -- /opt/deepin-wine6-stable/bin/wine ",
-        "deepin-wine6 stable": "deepin-wine6-stable", 
-        "deepin-wine5 stable": "deepin-wine5-stable", 
-        "spark-wine7-devel": "spark-wine7-devel", 
-        "deepin-wine": "deepin-wine", 
-        "deepin-wine5": "deepin-wine5", 
-        "wine": "wine", 
-        "wine64": "wine64", 
-        "ukylin-wine": "ukylin-wine",
-        "mono（这不是 wine，但可以实现初步调用运行 .net 应用）": "mono",
-        "基于 linglong 的 deepin-wine6-stable（不推荐）": f"ll-cli run '' --exec '/bin/deepin-wine6-stable'"
-    }
-    untipsWine = ["基于 exagear 的 deepin-wine6-stable", "基于 UOS box86 的 deepin-wine6-stable", "基于 UOS exagear 的 deepin-wine6-stable", "基于 linglong 的 deepin-wine6-stable（不推荐）"]
-    canUseWine = []
-    if os.path.exists("/opt/deepin-box86/box86") and os.path.exists("/opt/deepin-wine6-stable/bin/wine"):
-        canUseWine.append("基于 UOS box86 的 deepin-wine6-stable")
-    if os.path.exists("/opt/exagear/bin/ubt_x64a64_al") and os.path.exists("/opt/deepin-wine6-stable/bin/wine"):
-        canUseWine.append("基于 UOS exagear 的 deepin-wine6-stable")
-    if not os.system("which exagear") and os.path.exists("/opt/deepin-wine6-stable/bin/wine"):
-        canUseWine.append("基于 exagear 的 deepin-wine6-stable")
-    for i in wine.keys():
-        if not os.system(f"which '{wine[i]}'"):
-            canUseWine.append(i)
-    if os.path.exists("/persistent/linglong/layers/"):  # 判断是否使用 linglong
-        for i in os.listdir("/persistent/linglong/layers/"):
-            try:
-                dire = os.listdir(f"/persistent/linglong/layers/{i}")[-1]
-                arch = os.listdir(f"/persistent/linglong/layers/{i}/{dire}")[-1]
-                if os.path.exists(f"/persistent/linglong/layers/{i}/{dire}/{arch}/runtime/bin/deepin-wine6-stable"):
-                    wine["基于 linglong 的 deepin-wine6-stable（不推荐）"] = f"ll-cli run {i} --exec '/bin/deepin-wine6-stable'"
-                    canUseWine.append("基于 linglong 的 deepin-wine6-stable（不推荐）")
-                    break
-            except:
-                pass
-    # 读取自定义安装的 Wine（需要解包的才能使用）
-    qemuBottleList = []
-    qemuPath = f"{get_home()}/.deepin-wine-runner-ubuntu-images"
-    if not os.system("which qemu-i386-static"):
-        if os.path.exists(qemuPath):
-            for g in os.listdir(qemuPath):
-                archPath = f"{qemuPath}/{g}"
-                arch = g
-                if os.path.isdir(archPath):
-                    for d in os.listdir(archPath):
-                        bottlePath = f"{archPath}/{d}"
-                        if os.path.isdir(bottlePath):
-                            qemuBottleList.append([
-                                arch,
-                                d,
-                                bottlePath
-                            ])
-    try:
-        # 不再从列表读取，直接读目录
-        for i in os.listdir(f"{programPath}/wine/"):
-        #for i in json.loads(readtxt(f"{programPath}/wine/winelist.json")):
-            if os.path.exists(f"{programPath}/wine/{i}") and os.path.isdir(f"{programPath}/wine/{i}"):
-                name = ""
-                qemuInstall = False
-                nameValue = [["", ""]]
-                try:
-                    if os.path.exists("/opt/deepin-box86/box86"):
-                        nameValue.append(
-                            [
-                                "基于 UOS box86 的 ", 
-                                f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86  "
-                            ]
-                            )
-                    if os.system("which box86") == 0:
-                        nameValue.append(
-                            [
-                                "基于 box86 的 ",
-                                f"box86  "
-                            ]
-                        )
-                    if os.system("which box64") == 0:
-                        nameValue.append(
-                            [
-                                "基于 box64 的 ",
-                                f"box64  "
-                            ]
-                        )
-                    if os.system("which exagear") == 0:
-                        nameValue.append(
-                            [
-                                "基于 exagear 的 ",
-                                f"exagear  "
-                            ]
-                        )
-                    if os.path.exists("/opt/exagear/bin/ubt_x64a64_al"):
-                        nameValue.append(
-                            [
-                                "基于 UOS exagear 的 ",
-                                f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al --  "
-                            ]
-                        )
-                    for g in qemuBottleList:
-                        nameValue.append([
-                            f"使用qemu-{g[0]}-static 调用容器{g[1]}运行 ",
-                            f"python3 '{programPath}/QemuRun.py' '{g[0]}/{g[1]}' "
-                        ])
-                except:
-                    pass
-                for k in nameValue:
-                    print(k)
-                    if "qemu" in k[0]:
-                        chrootProgramPath = "/opt/apps/deepin-wine-runner"
-                    else:
-                        chrootProgramPath = programPath
-                    if os.path.exists(f"{programPath}/wine/{i}/bin/wine"):        
-                        wine[f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine"] = f"{k[1]}{chrootProgramPath}/wine/{i}/bin/wine"
-                        canUseWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine")
-                        untipsWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine")
-                    if os.path.exists(f"{programPath}/wine/{i}/bin/wine64"):
-                        wine[f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine64"] = f"{k[1]}{chrootProgramPath}/wine/{i}/bin/wine64"
-                        canUseWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine64")
-                        untipsWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine64")
-    except:
-        pass
-    try:
-        for i in os.listdir(f"{get_home()}/.deepinwine/"):
-            if os.path.exists(f"{get_home()}/.deepinwine/{i}/bin/wine"):
-                wine[f"{get_home()}/.deepinwine/{i}/bin/wine"] = f"{get_home()}/.deepinwine/{i}/bin/wine"
-                canUseWine.append(f"{get_home()}/.deepinwine/{i}/bin/wine")
-            if os.path.exists(f"{get_home()}/.deepinwine/{i}/bin/wine64"):
-                wine[f"{get_home()}/.deepinwine/{i}/bin/wine64"] = f"{get_home()}/.deepinwine/{i}/bin/wine64"
-                canUseWine.append(f"{get_home()}/.deepinwine/{i}/bin/wine64")
-    except:
-        pass
-    shellHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json")).values())
-    findExeHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json")).values())
-    wineBottonHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json")).values())
-    isoPath = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ISOPath.json")).values())
-    isoPathFound = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ISOPathFound.json")).values())
-    setting = json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineSetting.json"))
-    change = False
-    for i in defultProgramList.keys():
-        if not i in setting:
-            change = True
-            setting[i] = defultProgramList[i]
-    if change:
-        write_txt(get_home() + "/.config/deepin-wine-runner/WineSetting.json", json.dumps(setting))
-except:
-    traceback.print_exc()
-    app = QtWidgets.QApplication(sys.argv)
-    QtWidgets.QMessageBox.critical(None, "错误", f"无法读取配置，无法继续\n{traceback.format_exc()}")
-    sys.exit(1)
 
 def getFileFolderSize(fileOrFolderPath):
     """get size for file or folder"""
@@ -2285,6 +2091,208 @@ def TransLog():
     #return transText
     returnText.setText(transText.replace("\n\n", "\n"))
 
+###########################
+# 加载配置
+###########################
+defultProgramList = {
+    "Architecture": "Auto",
+    "Debug": True,
+    "DefultWine": "deepin-wine6 stable",
+    "DefultBotton" : get_home() + "/.wine",
+    "TerminalOpen": False,
+    "WineOption": "",
+    "WineBottonDifferent": False,
+    "CenterWindow": False,
+    "Theme": "",
+    "MonoGeckoInstaller": True,
+    "AutoWine": True,
+    "RuntimeCache": True,
+    "MustRead": False,
+    "BuildByBottleName": False,
+    "AutoPath": False,
+    "QemuUnMountHome": False
+}
+if not os.path.exists(get_home() + "/.config/"):  # 如果没有配置文件夹
+    os.mkdir(get_home() + "/.config/")  # 创建配置文件夹
+if not os.path.exists(get_home() + "/.config/deepin-wine-runner"):  # 如果没有配置文件夹
+    os.mkdir(get_home() + "/.config/deepin-wine-runner")  # 创建配置文件夹
+if not os.path.exists(get_home() + "/.config/deepin-wine-runner/ShellHistory.json"):  # 如果没有配置文件
+    write_txt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json", json.dumps({}))  # 创建配置文件
+if not os.path.exists(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json"):  # 如果没有配置文件
+    write_txt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json", json.dumps({}))  # 创建配置文件
+if not os.path.exists(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json"):  # 如果没有配置文件
+    write_txt(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json", json.dumps({}))  # 创建配置文件
+if not os.path.exists(get_home() + "/.config/deepin-wine-runner/ISOPath.json"):  # 如果没有配置文件
+    write_txt(get_home() + "/.config/deepin-wine-runner/ISOPath.json", json.dumps({}))  # 写入（创建）一个配置文件
+if not os.path.exists(get_home() + "/.config/deepin-wine-runner/ISOPathFound.json"):  # 如果没有配置文件
+    write_txt(get_home() + "/.config/deepin-wine-runner/ISOPathFound.json", json.dumps({}))  # 写入（创建）一个配置文件
+if not os.path.exists(get_home() + "/.config/deepin-wine-runner/FindExe.json"):  # 如果没有配置文件
+    write_txt(get_home() + "/.config/deepin-wine-runner/FindExe.json", json.dumps({"path": "~"}))  # 写入（创建）一个配置文件
+if not os.path.exists(get_home() + "/.config/deepin-wine-runner/FindISO.json"):  # 如果没有配置文件
+    write_txt(get_home() + "/.config/deepin-wine-runner/FindISO.json", json.dumps({"path": "~"}))  # 写入（创建）一个配置文件
+if not os.path.exists(get_home() + "/.config/deepin-wine-runner/WineBotton.json"):  # 如果没有配置文件
+    write_txt(get_home() + "/.config/deepin-wine-runner/WineBotton.json", json.dumps({"path": "~/.deepinwine"}))  # 写入（创建）一个配置文件
+if not os.path.exists(get_home() + "/.config/deepin-wine-runner/WineSetting.json"):  # 如果没有配置文件
+    write_txt(get_home() + "/.config/deepin-wine-runner/WineSetting.json", json.dumps(defultProgramList))  # 写入（创建）一个配置文件
+
+###########################
+# 设置变量
+###########################
+programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
+# 如果要添加其他 wine，请使用安装更多 Wine 功能
+#############
+# 检测 Wine
+#############
+try:
+    wine = {
+        "基于 UOS box86 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86 /opt/deepin-wine6-stable/bin/wine ",
+        "基于 UOS exagear 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al -- /opt/deepin-wine6-stable/bin/wine ",
+        "deepin-wine6 stable": "deepin-wine6-stable", 
+        "deepin-wine5 stable": "deepin-wine5-stable", 
+        "spark-wine7-devel": "spark-wine7-devel", 
+        "deepin-wine": "deepin-wine", 
+        "deepin-wine5": "deepin-wine5", 
+        "wine": "wine", 
+        "wine64": "wine64", 
+        "ukylin-wine": "ukylin-wine",
+        "mono（这不是 wine，但可以实现初步调用运行 .net 应用）": "mono",
+        "基于 linglong 的 deepin-wine6-stable（不推荐）": f"ll-cli run '' --exec '/bin/deepin-wine6-stable'"
+    }
+    untipsWine = ["基于 exagear 的 deepin-wine6-stable", "基于 UOS box86 的 deepin-wine6-stable", "基于 UOS exagear 的 deepin-wine6-stable", "基于 linglong 的 deepin-wine6-stable（不推荐）"]
+    canUseWine = []
+    if os.path.exists("/opt/deepin-box86/box86") and os.path.exists("/opt/deepin-wine6-stable/bin/wine"):
+        canUseWine.append("基于 UOS box86 的 deepin-wine6-stable")
+    if os.path.exists("/opt/exagear/bin/ubt_x64a64_al") and os.path.exists("/opt/deepin-wine6-stable/bin/wine"):
+        canUseWine.append("基于 UOS exagear 的 deepin-wine6-stable")
+    if not os.system("which exagear") and os.path.exists("/opt/deepin-wine6-stable/bin/wine"):
+        canUseWine.append("基于 exagear 的 deepin-wine6-stable")
+    for i in wine.keys():
+        if not os.system(f"which '{wine[i]}'"):
+            canUseWine.append(i)
+    if os.path.exists("/persistent/linglong/layers/"):  # 判断是否使用 linglong
+        for i in os.listdir("/persistent/linglong/layers/"):
+            try:
+                dire = os.listdir(f"/persistent/linglong/layers/{i}")[-1]
+                arch = os.listdir(f"/persistent/linglong/layers/{i}/{dire}")[-1]
+                if os.path.exists(f"/persistent/linglong/layers/{i}/{dire}/{arch}/runtime/bin/deepin-wine6-stable"):
+                    wine["基于 linglong 的 deepin-wine6-stable（不推荐）"] = f"ll-cli run {i} --exec '/bin/deepin-wine6-stable'"
+                    canUseWine.append("基于 linglong 的 deepin-wine6-stable（不推荐）")
+                    break
+            except:
+                pass
+    # 读取自定义安装的 Wine（需要解包的才能使用）
+    qemuBottleList = []
+    qemuPath = f"{get_home()}/.deepin-wine-runner-ubuntu-images"
+    if not os.system("which qemu-i386-static"):
+        if os.path.exists(qemuPath):
+            for g in os.listdir(qemuPath):
+                archPath = f"{qemuPath}/{g}"
+                arch = g
+                if os.path.isdir(archPath):
+                    for d in os.listdir(archPath):
+                        bottlePath = f"{archPath}/{d}"
+                        if os.path.isdir(bottlePath):
+                            qemuBottleList.append([
+                                arch,
+                                d,
+                                bottlePath
+                            ])
+    shellHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json")).values())
+    findExeHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json")).values())
+    wineBottonHistory = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineBottonHistory.json")).values())
+    isoPath = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ISOPath.json")).values())
+    isoPathFound = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ISOPathFound.json")).values())
+    setting = json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineSetting.json"))
+    change = False
+    for i in defultProgramList.keys():
+        if not i in setting:
+            change = True
+            setting[i] = defultProgramList[i]
+    if change:
+        write_txt(get_home() + "/.config/deepin-wine-runner/WineSetting.json", json.dumps(setting))
+    try:
+        # 不再从列表读取，直接读目录
+        for i in os.listdir(f"{programPath}/wine/"):
+        #for i in json.loads(readtxt(f"{programPath}/wine/winelist.json")):
+            if os.path.exists(f"{programPath}/wine/{i}") and os.path.isdir(f"{programPath}/wine/{i}"):
+                name = ""
+                qemuInstall = False
+                nameValue = [["", ""]]
+                try:
+                    if os.path.exists("/opt/deepin-box86/box86"):
+                        nameValue.append(
+                            [
+                                "基于 UOS box86 的 ", 
+                                f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86  "
+                            ]
+                            )
+                    if os.system("which box86") == 0:
+                        nameValue.append(
+                            [
+                                "基于 box86 的 ",
+                                f"box86  "
+                            ]
+                        )
+                    if os.system("which box64") == 0:
+                        nameValue.append(
+                            [
+                                "基于 box64 的 ",
+                                f"box64  "
+                            ]
+                        )
+                    if os.system("which exagear") == 0:
+                        nameValue.append(
+                            [
+                                "基于 exagear 的 ",
+                                f"exagear  "
+                            ]
+                        )
+                    if os.path.exists("/opt/exagear/bin/ubt_x64a64_al"):
+                        nameValue.append(
+                            [
+                                "基于 UOS exagear 的 ",
+                                f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al --  "
+                            ]
+                        )
+                    for g in qemuBottleList:
+                        nameValue.append([
+                            f"使用qemu-{g[0]}-static 调用容器{g[1]}运行 ",
+                            f"python3 '{programPath}/QemuRun.py' {int(setting['QemuUnMountHome'])} '{g[0]}/{g[1]}' "
+                        ])
+                except:
+                    traceback.print_exc()
+                for k in nameValue:
+                    print(k)
+                    if "qemu" in k[0]:
+                        chrootProgramPath = "/opt/apps/deepin-wine-runner"
+                    else:
+                        chrootProgramPath = programPath
+                    if os.path.exists(f"{programPath}/wine/{i}/bin/wine"):        
+                        wine[f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine"] = f"{k[1]}{chrootProgramPath}/wine/{i}/bin/wine"
+                        canUseWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine")
+                        untipsWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine")
+                    if os.path.exists(f"{programPath}/wine/{i}/bin/wine64"):
+                        wine[f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine64"] = f"{k[1]}{chrootProgramPath}/wine/{i}/bin/wine64"
+                        canUseWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine64")
+                        untipsWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine64")
+    except:
+        pass
+    try:
+        for i in os.listdir(f"{get_home()}/.deepinwine/"):
+            if os.path.exists(f"{get_home()}/.deepinwine/{i}/bin/wine"):
+                wine[f"{get_home()}/.deepinwine/{i}/bin/wine"] = f"{get_home()}/.deepinwine/{i}/bin/wine"
+                canUseWine.append(f"{get_home()}/.deepinwine/{i}/bin/wine")
+            if os.path.exists(f"{get_home()}/.deepinwine/{i}/bin/wine64"):
+                wine[f"{get_home()}/.deepinwine/{i}/bin/wine64"] = f"{get_home()}/.deepinwine/{i}/bin/wine64"
+                canUseWine.append(f"{get_home()}/.deepinwine/{i}/bin/wine64")
+    except:
+        pass
+except:
+    traceback.print_exc()
+    app = QtWidgets.QApplication(sys.argv)
+    QtWidgets.QMessageBox.critical(None, "错误", f"无法读取配置，无法继续\n{traceback.format_exc()}")
+    sys.exit(1)
+
 # transla.transe
 
 programVersionType = ""
@@ -2325,22 +2333,25 @@ exe路径\' 参数 \'
 updateThingsString = transla.transe("U", '''※1、支持使用 Qemu + Chroot 跨运行 Wine 以及指定程序的功能；
 ※2、提供了简易打包器以用于打包简易 deb；
 ※3、支持下载配置过的 Qemu + Chroot 容器；
-※4、支持解压指定 deb 的内打包好的容器；
-※5、优化 Wine 列表显示；
-※6、新增程序论坛和教程入口；
-※7、程序公告功能；
-※8、新增程序评分功能；
-※9、新增解包 deb 内 Wine 容器功能；
-※10、新增 Vkd3d Proton 安装功能，更新 dxvk 版本至 2.0.0；
-11、优化非基于生态适配脚本的打包器内容自动填充功能；
-12、优化程序文案；
-13、新增日志翻译功能；
-14、程序进一步完善英语翻译（机翻）；
-15、优化程序更新策略；
-16、优化日志分析功能。''')
+※4、支持在隔离的 Chroot 容器内运行 Wine；
+※5、支持解压指定 deb 的内打包好的容器；
+※6、优化 Wine 列表显示；
+※7、新增程序论坛和教程入口；
+※8、程序公告功能；
+※9、新增程序评分功能；
+※10、新增解包 deb 内 Wine 容器功能；
+※11、新增 Vkd3d Proton 安装功能，更新 dxvk 版本至 2.0.0；
+※12、新增程序菜单栏部分栏目图标；
+13、优化非基于生态适配脚本的打包器内容自动填充功能；
+14、优化程序文案；
+15、新增日志翻译功能；
+16、程序进一步完善英语翻译（机翻）；
+17、优化程序更新策略；
+18、优化日志分析功能；
+19、优化程序 UI。''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年12月07日"
+updateTime = "2022年12月08日"
 aboutProgram = transla.transe("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。</p>
 <p>它同时还内置了基于VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作。</p>
 <pre>
