@@ -252,6 +252,26 @@ helpMenu.addAction(help)
 programMenu.addAction(exit)
 print(iconPath)
 window.show()
+chineseName.setWhatsThis(transla.transe("U", "应用程序中文名"))
+englishName.setWhatsThis(transla.transe("U", "应用程序英文名"))
+debDescription.setWhatsThis(transla.transe("U", "最终生成的包的描述"))
+typeName.setWhatsThis(transla.transe("U", """点击右侧的下拉箭头，选择该软件所属的软件分类即可，常见软件分类名称释义：
+Network=网络应用；
+Chat=即时通讯或社交沟通；
+Video=视频播放；
+Graphics=图形图像；
+Office=办公学习；
+Translation=阅读翻译；
+Development=软件开发；
+Utility=工具软件或其他应用。
+不明白英文的可以百度查询一下软件分类名称的意思。
+注意：此时选择的软件分类名称决定了该软件打包后再安装时会安装在启动器中的哪个软件分类目录中。"""))
+exePath.setWhatsThis("""程序在 Wine 容器的位置，以 c:\\XXX 的形式，盘符必须小写，用反斜杠，如果路径带用户名的话会自动替换为$USER
+而 StartupWMClass 字段将会由程序自动生成，作用如下：
+desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与desktop文件相对应。这个值为实际运行的主程序EXE的文件名，wine/crossover在程序运行后会将文件名设置为窗口类名""")
+packageName.setWhatsThis(transla.transe("U", "最终生成的包的包名,包名的命名规则以deepin开头，加官网域名（需要前后对调位置），如还不能区分再加上应用名"))
+bottonName.setWhatsThis(transla.transe("U", "容器名"))
+versionName.setWhatsThis(transla.transe("U", "最终生成的包的版本号，版本号命名规则：应用版本号+deepin+数字"))
 window.setWindowTitle(f"Wine 打包器 {version}——基于统信 Wine 生态活动打包脚本制作")
 windowFrameInputValueList = [
     chineseName,
