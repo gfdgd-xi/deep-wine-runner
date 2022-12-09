@@ -2301,7 +2301,7 @@ print(wine)
 # 程序信息
 ###########################
 # 语言载入
-if not get_now_lang() == "zh_CN.UTF-8":
+if not "zh_CN".lower() in get_now_lang().lower():
     transla = Trans("en_US", f"{programPath}/trans/deepin-wine-runner.json")
 else:
     transla = Trans("zh_CN")
@@ -2352,7 +2352,7 @@ updateThingsString = transla.transe("U", '''※1、支持使用 Qemu + Chroot �
 20、优化程序 UI。''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年12月08日"
+updateTime = "2022年12月09日"
 aboutProgram = transla.transe("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。</p>
 <p>它同时还内置了基于VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作。</p>
 <pre>

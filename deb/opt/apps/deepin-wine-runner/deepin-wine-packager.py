@@ -1750,9 +1750,24 @@ def AddTab():
     desktopIconTabLayout.addWidget(e8_text, 9, 1, 1, 1)
     desktopIconTabLayout.addWidget(e9_text, 10, 1, 1, 1)
     desktopIconTabLayout.addWidget(button2, 10, 2, 1, 1)
+    e8_text.setWhatsThis(transla.transe("U", """填写该软件的中文或英文名称。"""))
+    e9_text.setWhatsThis(transla.transe("U", """图标只支持PNG格式和SVG格式，其他格式无法显示。"""))
+    e15_text.setWhatsThis(transla.transe("U", "程序参数，如%u，一般不需要"))
+    e7_text.setWhatsThis(transla.transe("U", """可执行文件的运行路径格式是“C:/XXX/XXX.exe”（不包含引号）"""))
+    option1_text.setWhatsThis(transla.transe("U", """点击右侧的下拉箭头，选择该软件所属的软件分类即可，常见软件分类名称释义：
+Network=网络应用；
+Chat=即时通讯或社交沟通；
+Video=视频播放；
+Graphics=图形图像；
+Office=办公学习；
+Translation=阅读翻译；
+Development=软件开发；
+Utility=工具软件或其他应用。
+不明白英文的可以百度查询一下软件分类名称的意思。
+注意：此时选择的软件分类名称决定了该软件打包后再安装时会安装在启动器中的哪个软件分类目录中。"""))
     e7_text.textChanged.connect(ChangeTapTitle)
     e7_text.setPlaceholderText("例如 c:/Program Files/Tencent/QQ/Bin/QQ.exe")
-    e9_text.setPlaceholderText("支持 png 和 svg 格式，不支持 ico 格式")
+    e9_text.setPlaceholderText(transla.transe("U", "支持 png 和 svg 格式，不支持 ico 格式"))
     iconUiList.append([e7_text, option1_text, e15_text, e8_text, e9_text])
     print(iconUiList)
 
@@ -1893,7 +1908,6 @@ e1_text.textChanged.connect(ChangeBottleName)
 e5_text.textChanged.connect(LockBottleName)
 e6_text.textChanged.connect(ChangeBottleName)
 e7_text.textChanged.connect(ChangeTapTitle)
-# 创建控件
 widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "要打包的 deb 包的包名（※必填）：")), 0, 0, 1, 1)
 widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "deb 包的版本号（※必填）：")), 1, 0, 1, 1)
 widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "deb 包的说明（※必填）：")), 2, 0, 1, 1)
@@ -1905,6 +1919,8 @@ controlWidget = QtWidgets.QWidget()
 controlWidgetLayout = QtWidgets.QHBoxLayout()
 desktopIconTabAdd = QtWidgets.QPushButton("+")
 desktopIconTabDel = QtWidgets.QPushButton("-")
+desktopIconTabAdd.setWhatsThis("添加新图标")
+desktopIconTabDel.setWhatsThis("移除选中图标")
 controlWidgetLayout.addWidget(desktopIconTabAdd)
 controlWidgetLayout.addWidget(desktopIconTabDel)
 controlWidget.setLayout(controlWidgetLayout)
@@ -2034,6 +2050,44 @@ window.setCentralWidget(widget)
 window.setWindowTitle(f"wine 应用打包器 {version}")
 window.setWindowIcon(QtGui.QIcon(iconPath))
 window.resize(int(window.frameSize().width() * 2.1), int(window.frameSize().height()))
+e1_text.setWhatsThis("""com.XXX.deepin
+XXX指windows软件的英文名称，可以自定义名称，但最好是用软件解压安装后自动生成的英文名称，如：dingtalk。包名只能含有小写字母（a-z）、数字（0-9）、加号（+）和减号（-）、以及点号(.)，软件包名最短长度为两个字符，且包名必须以字母开头。""")
+# 创建控件
+e2_text.setWhatsThis(transla.transe("U", """6.5.50（随便填写或填写该软件的windows版本的版本号，6.5.50只是示例）。"""))
+e3_text.setWhatsThis(transla.transe("U", """随便填写或使用该软件的windows版本的软件简介。"""))
+e4_text.setWhatsThis(transla.transe("U", """填写自己的网名，若是自用软件，不上架至应用商店，不进行后续维护，可随便填写。"""))
+e5_text.setWhatsThis(f"<p>解压容器到其它机器的容器名称，一般自动带出</p><p><img src='{programPath}/Icon/Screen/202211121646232464_image.png'></p>")
+e6_text.setWhatsThis(transla.transe("U", f"要打包的容器所在路径，也可以选择已经好打包的 7z 文件，一般自动带出"))
+e7_text.setWhatsThis("""可执行文件的运行路径格式是“C:/XXX/XXX.exe”（不包含引号）""")
+debArch.setWhatsThis(transla.transe("U", "选择生成 deb 包所对应的架构"))
+rmBash.setWhatsThis(transla.transe("U", "清理容器无用内容，一般建议勾选，最新版本默认勾选，如果有特殊需求（如容器内有 mono、gecko 等）建议取消勾选"))
+debDepends.setWhatsThis(transla.transe("U", "生成 deb 包所需的依赖，一般情况下默认即可"))
+debRecommend.setWhatsThis(transla.transe("U", "生成 deb 包的推荐依赖，一般情况下为空即可"))
+cleanBottonByUOS.setWhatsThis(transla.transe("U", "清理容器无用内容，一般建议勾选，最新版本默认勾选，如果有特殊需求（如容器内有 mono、gecko 等）建议取消勾选"))
+chooseWineHelperValue.setWhatsThis(transla.transe("U", "使用星火 dwine helper 替换 Deepin Wine Helper，投稿星火应用商店的话建议勾选，最新版本默认勾选（如果打包 arm 包将不会提供选择）"))
+option1_text.setWhatsThis("""点击右侧的下拉箭头，选择该软件所属的软件分类即可，常见软件分类名称释义：
+Network=网络应用；
+Chat=即时通讯或社交沟通；
+Video=视频播放；
+Graphics=图形图像；
+Office=办公学习；
+Translation=阅读翻译；
+Development=软件开发；
+Utility=工具软件或其他应用。
+不明白英文的可以百度查询一下软件分类名称的意思。
+注意：此时选择的软件分类名称决定了该软件打包后再安装时会安装在启动器中的哪个软件分类目录中。""")
+e8_text.setWhatsThis(transla.transe("U", """填写该软件的中文或英文名称。"""))
+e9_text.setWhatsThis(transla.transe("U", """图标只支持PNG格式和SVG格式，其他格式无法显示。"""))
+e10_text.setWhatsThis(transla.transe("U", "快捷方式的 MimeType 项，一般为空即可"))
+option1_text.setWhatsThis(transla.transe("U", "打包的 Wine 版本，根据实际情况选择（如果打包 arm 包将不会提供选择）"))
+e12_text.setWhatsThis(transla.transe("U", "打包出的 deb 生成的位置，一般自动生成"))
+e15_text.setWhatsThis(transla.transe("U", "程序参数，如%u，一般不需要"))
+build7z.setWhatsThis(transla.transe("U", "只打包容器生成 7z 包，不做其它操作"))
+buildDebDir.setWhatsThis(transla.transe("U", "构建 deb 包目录，但不打包成 deb"))
+textbox1.setWhatsThis(transla.transe("U", "查看打包过程中命令返回内容"))
+button5.setWhatsThis(transla.transe("U", "点击该按钮打包生成 deb"))
+installDeb.setWhatsThis(transla.transe("U", "调用默认的 deb 安装工具安装生成的 deb"))
+#window.setWindowFlag(QtGui.Qt)
 window.show()
 sys.exit(app.exec_())
 # Flag：解包只读control和解包全部读取

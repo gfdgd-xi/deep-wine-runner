@@ -7,9 +7,9 @@ Priority: optional
 Depends: python3, python3-pil, python3-pil.imagetk, python3-pyquery, aria2, curl, unrar, unzip, python3-requests, fakeroot, bash, python3-pyqt5, python3-psutil, deepin-terminal | mate-terminal | gnome-terminal | xfce4-terminal, python3-dbus, python3-pip, p7zip-full, sudo
 Recommends: winbind, wimtools, python3-pyqt5.qtwebengine
 Section: utils
-Conflicts: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer
-Replaces: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer
-Installed-Size: 25836
+Conflicts: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, spark-deepin-wine-runner-52
+Replaces: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, spark-deepin-wine-runner-52
+Installed-Size: 25856
 Description: gfdgd xi、为什么您不喜欢熊出没和阿布呢 制作的 wine 运行器
  3.0.0 更新内容：
  ※1、支持使用 Qemu + Chroot 跨运行 Wine 以及指定程序的功能；
@@ -24,12 +24,13 @@ Description: gfdgd xi、为什么您不喜欢熊出没和阿布呢 制作的 win
  ※10、新增解包 deb 内 Wine 容器功能；
  ※11、新增 Vkd3d Proton 安装功能，更新 dxvk 版本至 2.0.0；
  ※12、新增程序菜单栏部分栏目图标；
- 13、优化非基于生态适配脚本的打包器内容自动填充功能；
- 14、优化程序文案；
- 15、新增日志翻译功能；
- 16、程序进一步完善英语翻译（机翻）；
- 17、优化程序更新策略；
- 18、优化日志分析功能；
- 19、优化程序 UI。
+ ※13、打包器支持按下 Shift + F1 查看指定选项提示；
+ 14、优化非基于生态适配脚本的打包器内容自动填充功能；
+ 15、优化程序文案；
+ 16、新增日志翻译功能；
+ 17、程序进一步完善英语翻译（机翻）；
+ 18、优化程序更新策略；
+ 19、优化日志分析功能；
+ 20、优化程序 UI。
  更新时间：2022年12月09日
  作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
