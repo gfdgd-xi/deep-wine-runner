@@ -17,7 +17,7 @@ if __name__ == "__main__":
         exit()
     commandList = ""
     userName = getpass.getuser()
-    for i in sys.argv[2:]:
+    for i in sys.argv[3:]:
         commandList += f"'{i}' "
     if commandList.replace(" ", "") == "":
         commandList = "bash"
@@ -37,5 +37,8 @@ if __name__ == "__main__":
     # 判断是否挂载
     if not os.path.ismount(f"{homePath}/.deepin-wine-runner-ubuntu-images/{sys.argv[1]}/dev"):
         print("文件暂未挂载，开始挂载")
-        sys.exit(os.system(f"pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY  bash '{programPath}/Mount.sh' '{homePath}/.deepin-wine-runner-ubuntu-images/{sys.argv[1]}' '{userName}' {commandList}"))
+        if int(sys.argv[2]):
+            sys.exit(os.system(f"pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY  bash '{programPath}/MountWithoutHome.sh' '{homePath}/.deepin-wine-runner-ubuntu-images/{sys.argv[1]}' '{userName}' {commandList}"))
+        else:
+            sys.exit(os.system(f"pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY  bash '{programPath}/Mount.sh' '{homePath}/.deepin-wine-runner-ubuntu-images/{sys.argv[1]}' '{userName}' {commandList}"))
     sys.exit(os.system(f"pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY  chroot '--userspec={userName}:{userName}' '{homePath}/.deepin-wine-runner-ubuntu-images/{sys.argv[1]}/' env 'HOME=/home/{userName}' {commandList}"))
