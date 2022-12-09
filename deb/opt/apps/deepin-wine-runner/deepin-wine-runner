@@ -471,7 +471,7 @@ def ConfigQemu():
     choose = QtWidgets.QInputDialog.getItem(window, "提示", "选择需要 Chroot 到里面的容器", lists, 0, False)
     if not choose[1]:
         return
-    threading.Thread(target=OpenTerminal, args=[f"python3 '{programPath}/QemuRun.py' '{int(setting['QemuUnMountHome'])}' '{choose[0]}' "]).start()
+    threading.Thread(target=OpenTerminal, args=[f"python3 '{programPath}/QemuRun.py' '{choose[0]}' '{int(setting['QemuUnMountHome'])}' "]).start()
     print(choose)
 
 # 生成 desktop 文件在桌面
@@ -2257,7 +2257,7 @@ try:
                     for g in qemuBottleList:
                         nameValue.append([
                             f"使用qemu-{g[0]}-static 调用容器{g[1]}运行 ",
-                            f"python3 '{programPath}/QemuRun.py' {int(setting['QemuUnMountHome'])} '{g[0]}/{g[1]}' "
+                            f"python3 '{programPath}/QemuRun.py' '{g[0]}/{g[1]}' {int(setting['QemuUnMountHome'])} "
                         ])
                 except:
                     traceback.print_exc()
@@ -2405,6 +2405,20 @@ iconList = json.loads(readtxt(f"{programPath}/IconList.json"))[1]
 for i in iconListUnBuild:
     iconList.append(i)
 print(iconList)
+
+# Qemu Lock
+try:
+    if os.path.exists("/tmp/deepin-wine-runner-lock.txt"):
+        print("lock")
+        with open(f"/tmp/deepin-wine-runner-lock.txt", "r") as file:
+            setting["QemuUnMountHome"] = bool(int(file.read()))
+    else:
+        print("unlock")
+        with open(f"/tmp/deepin-wine-runner-lock.txt", "w") as file:
+            # = bool(int(file.read()))
+            file.write(str(int(setting["QemuUnMountHome"])))
+except:
+    traceback.print_exc()
 
 ###########################
 # 窗口创建

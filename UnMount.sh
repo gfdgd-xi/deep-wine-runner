@@ -20,7 +20,8 @@ umount ./etc/resolv.conf
 umount ./sys
 umount ./dev/shm
 # 挂载 Wine 运行器目录
-umount ./opt/apps/deepin-wine-runner/
+umount ./opt
+umount ./opt/apps/deepin-wine-runner
 # 挂载字体
 umount ./usr/share/fonts
 # 挂载用户目录到 /root（默认 $HOME 路径）

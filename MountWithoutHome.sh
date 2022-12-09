@@ -26,4 +26,4 @@ chmod 777 -R root
 xhost +
 
 # 如果参数 3 存在
-chroot ${@:3}
+chroot . ${@:3}
