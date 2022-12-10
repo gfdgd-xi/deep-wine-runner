@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 2.5.0</h1>
+<h1 align="center">Wine 运行器 3.0.0</h1>
 <hr>
 
 ## 介绍
@@ -11,7 +11,7 @@ env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 ```
 让你可以简易方便的使用 wine  
 是使用 Python3 的 PyQt5 构建的    
-（测试平台：deepin 20.7.1；UOS 家庭版 21.3.1；Ubuntu 22.04；Ubuntu 20.04；UOS 专业版 1050；openkylin）    
+（测试平台：deepin 20.8；UOS 家庭版 21.3.1；Ubuntu 22.04；Ubuntu 20.04；UOS 专业版 1050；openkylin）    
 ![截图_选择区域_20221002221112.png](https://storage.deepin.org/thread/202210022215217037_截图_选择区域_20221002221112.png)  
 而打包器可以方便的把您的 wine 容器打包成 deb 包供他人使用，程序创建的 deb 构建临时文件夹目录树如下：  
 ```bash
@@ -42,13 +42,11 @@ env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 
 ## 软件架构
 理论上支持全架构，如果 Python 能运行的话  
-非 X86 架构会利用到 `box86`、`exagear`等技术  
+非 X86 架构会利用到 `box86`、`exagear`、`qemu` 等技术  
 
 ## 分支介绍
 ### main 分支
 主分支，稳定分支
-### Alpha 分支
-开发版分支，一般不稳定，有许多 bug
 
 ## 版本区分
 ### 无特殊标识
@@ -104,6 +102,29 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志 
+### 3.0.0（2022年12月10日）
+**※1、支持使用 Qemu + Chroot 跨运行 Wine 以及指定程序的功能；**  
+**※2、提供了简易打包器以用于打包简易 deb；**  
+**※3、支持下载配置过的 Qemu + Chroot 容器；**  
+**※4、支持在隔离的 Chroot 容器内运行 Wine；**  
+**※5、支持解压指定 deb 的内打包好的容器；**  
+**※6、优化 Wine 列表显示；**  
+**※7、新增程序论坛和教程入口；**  
+**※8、程序公告功能；**  
+**※9、新增程序评分功能；**  
+**※10、新增解包 deb 内 Wine 容器功能；**  
+**※11、新增 Vkd3d Proton 安装功能，更新 dxvk 版本至 2.0.0；**  
+**※12、新增程序菜单栏部分栏目图标；**  
+**※13、打包器支持按下 Shift + F1 查看指定选项提示；**  
+14、优化非基于生态适配脚本的打包器内容自动填充功能；  
+15、优化程序文案；  
+16、新增日志翻译功能；  
+17、程序进一步完善英语翻译（机翻）；  
+18、优化程序更新策略；  
+19、优化日志分析功能；  
+20、优化程序 UI。  
+![image.png](https://storage.deepin.org/thread/202212102108356218_image.png)  
+
 ### 2.5.0.1（2022年11月25日）
 **※1、修复已知问题**  
 
