@@ -82,7 +82,7 @@ class ProgramRunStatusUpload():
         
     def ShowWindow():
         ProgramRunStatusUpload.starList = []
-        ProgramRunStatusUpload.msgWindow = QtWidgets.QMainWindow()
+        ProgramRunStatusUpload.msgWindow = QtWidgets.QMainWindow(ProgramRunStatusShow.msgWindow)
         msgWidget = QtWidgets.QWidget()
         msgWidgetLayout = QtWidgets.QGridLayout()
         ProgramRunStatusUpload.fen = QtWidgets.QComboBox()
@@ -90,12 +90,12 @@ class ProgramRunStatusUpload():
         upload = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "上传"))
         upload.clicked.connect(ProgramRunStatusUpload.Upload)
         # 生成星星列表
-        for i in [1, 1, 1, 1, 0]:
+        for i in [1, 1, 1, 1, 1]:
             ProgramRunStatusUpload.starList.append(QtWidgets.QLabel(f"<img src='{programPath}/Icon/{['Un', ''][i]}Star.svg' width=25>"))
             ProgramRunStatusUpload.starLayout.addWidget(ProgramRunStatusUpload.starList[-1])
         ProgramRunStatusUpload.starLayout.addItem(QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum))
         ProgramRunStatusUpload.fen.addItems(["0分", "1分", "2分", "3分", "4分", "5分"])
-        ProgramRunStatusUpload.fen.setCurrentIndex(4)
+        ProgramRunStatusUpload.fen.setCurrentIndex(5)
         ProgramRunStatusUpload.fen.currentIndexChanged.connect(ProgramRunStatusUpload.ChangeStar)
         msgWidgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "评分：")), 1, 0)
         msgWidgetLayout.addWidget(ProgramRunStatusUpload.fen, 1, 1)
@@ -109,10 +109,10 @@ class ProgramRunStatusUpload():
 
     def Upload():
         try:
-            QtWidgets.QMessageBox.information(None, QtCore.QCoreApplication.translate("U", "提示"), requests.get(f"http://120.25.153.144/spark-deepin-wine-runner/Install.php?Version=Fen{ProgramRunStatusUpload.fen.currentIndex()}").json()["Error"])
+            QtWidgets.QMessageBox.information(ProgramRunStatusUpload.msgWindow, QtCore.QCoreApplication.translate("U", "提示"), requests.get(f"http://120.25.153.144/spark-deepin-wine-runner/Install.php?Version=Fen{ProgramRunStatusUpload.fen.currentIndex()}").json()["Error"])
         except:
             traceback.print_exc()
-            QtWidgets.QMessageBox.critical(None, QtCore.QCoreApplication.translate("U", "错误"), QtCore.QCoreApplication.translate("U", "数据上传失败！"))
+            QtWidgets.QMessageBox.critical(ProgramRunStatusUpload.msgWindow, QtCore.QCoreApplication.translate("U", "错误"), QtCore.QCoreApplication.translate("U", "数据上传失败！"))
 
 if __name__ == "__main__":
     programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string

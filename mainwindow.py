@@ -2,8 +2,8 @@
 # 使用系统默认的 python3 运行
 #################################################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
-# 版本：2.3.0
-# 更新时间：2022年10月15日
+# 版本：3.0.0
+# 更新时间：2022年12月10日
 # 感谢：感谢 wine、deepin-wine 以及星火团队，提供了 wine、deepin-wine、spark-wine-devel 给大家使用，让我能做这个程序
 # 基于 Python3 的 PyQt5 构建
 #################################################################################################################
@@ -2624,10 +2624,10 @@ w3 = QtWidgets.QAction(transla.transe("U", "安装自定义字体"))
 w4 = QtWidgets.QAction(transla.transe("U", "删除选择的 Wine 容器"))
 cleanBottonUOS = QtWidgets.QAction(transla.transe("U", "清理 Wine 容器（基于 Wine 适配活动脚本）"))
 wineKeyboardLnk = QtWidgets.QAction(transla.transe("U", "Wine 快捷键映射"))
-w5 = QtWidgets.QAction(transla.transe("U", "打包 wine 应用"))
-w6 = QtWidgets.QAction(transla.transe("U", "使用官方 Wine 适配活动的脚本进行打包"))
-easyPackager = QtWidgets.QAction(transla.transe("U", "使用简易打包器进行打包（小白且无特殊需求建议使用这个）"))
-getDllOnInternet = QtWidgets.QAction(transla.transe("U", "从互联网获取DLL"))
+w5 = QtWidgets.QAction(QtGui.QIcon.fromTheme("deb"), transla.transe("U", "打包 wine 应用"))
+w6 = QtWidgets.QAction(QtGui.QIcon.fromTheme("deb"), transla.transe("U", "使用官方 Wine 适配活动的脚本进行打包"))
+easyPackager = QtWidgets.QAction(QtGui.QIcon.fromTheme("deb"), transla.transe("U", "使用简易打包器进行打包（小白且无特殊需求建议使用这个）"))
+getDllOnInternet = QtWidgets.QAction(QtGui.QIcon.fromTheme("1CD8_rundll32.0"), transla.transe("U", "从互联网获取DLL"))
 w7 = QtWidgets.QAction(transla.transe("U", "从镜像获取DLL（只支持官方安装镜像，DOS内核如 Windows 95 暂不支持）"))
 updateGeek = QtWidgets.QAction(transla.transe("U", "从 Geek Uninstaller 官网升级程序"))
 deletePartIcon = QtWidgets.QAction(transla.transe("U", "快捷方式管理工具"))
@@ -2683,7 +2683,7 @@ settingRunV3Sh = wineOption.addMenu(transla.transe("U", "run_v3.sh 管理"))
 w8 = QtWidgets.QAction(transla.transe("U", "设置 run_v3.sh 的文管为 Deepin 默认文管"))
 w9 = QtWidgets.QAction(transla.transe("U", "设置 run_v3.sh 的文管为 Wine 默认文管"))
 w10 = QtWidgets.QAction(transla.transe("U", "重新安装 deepin-wine-helper"))
-w11 = QtWidgets.QAction(transla.transe("U", "使用winetricks打开指定容器"))
+w11 = QtWidgets.QAction(QtGui.QIcon.fromTheme("winetricks"), transla.transe("U", "使用winetricks打开指定容器"))
 settingRunV3Sh.addAction(w8)
 settingRunV3Sh.addAction(w9)
 settingRunV3Sh.addAction(w10)
@@ -2804,7 +2804,7 @@ netDemo.triggered.connect(lambda: RunWineProgram(f"{programPath}/Test/net.exe"))
 netIEDemo.triggered.connect(lambda: RunWineProgram(f"{programPath}/Test/netandie.exe"))
 
 virtualMachine = menu.addMenu(transla.transe("U", "虚拟机(&V)"))
-v1 = QtWidgets.QAction(transla.transe("U", "使用 Virtualbox 虚拟机运行 Windows 应用"))
+v1 = QtWidgets.QAction(QtGui.QIcon.fromTheme("virtualbox"), transla.transe("U", "使用 Virtualbox 虚拟机运行 Windows 应用"))
 virtualMachine.addAction(v1)
 v1.triggered.connect(RunVM)
 
