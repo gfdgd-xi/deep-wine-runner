@@ -37,7 +37,7 @@ env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 
 11 directories, 6 files
 ```
-![star](https://gitee.com/gfdgd-xi/deep-wine-runner/badge/star.svg?theme=dark)](https://gitee.com/gfdgd-xi/deep-wine-runner/stargazers)  
+[![star](https://gitee.com/gfdgd-xi/deep-wine-runner/badge/star.svg?theme=dark)](https://gitee.com/gfdgd-xi/deep-wine-runner/stargazers)  
 最后感谢 [@鹤舞白沙](https://bbs.deepin.org/user/227203) 编写的《Wine运行器和Wine打包器傻瓜式使用教程（小白专用）》，链接：https://bbs.deepin.org/post/246837
 
 ## 软件架构
