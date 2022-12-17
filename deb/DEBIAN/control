@@ -1,10 +1,14 @@
 Package: spark-deepin-wine-runner
-Version: 3.0.0
-Maintainer: gfdgd xi <3025613752@qq.com>, 为什么您不喜欢熊出没和阿布呢
-Homepage: https://gitee.com/gfdgd-xi/deep-wine-runner, https://github.com/gfdgd-xi/deep-wine-runner, https://gitlink.org.cn/gfdgd_xi/deep-wine-runner
+Version: 3.0.0.2
+Maintainer: gfdgd xi <3025613752@qq.com>
+Homepage: https://gitee.com/gfdgd-xi/deep-wine-runner
 Architecture: all
+Severity: serious
+Certainty: possible
+Check: binaries
+Type: binary, udeb
 Priority: optional
-Depends: python3, python3-pil, python3-pil.imagetk, python3-pyquery, aria2, curl, unrar, unzip, python3-requests, fakeroot, bash, python3-pyqt5, python3-psutil, deepin-terminal | mate-terminal | gnome-terminal | xfce4-terminal, python3-dbus, python3-pip, p7zip-full, sudo
+Depends: python3, python3-pil, libc6, python3-pil.imagetk, python3-pyquery, aria2, curl, unrar, unzip, python3-requests, python3-pyqt5, python3-psutil, deepin-terminal | mate-terminal | gnome-terminal | xfce4-terminal, python3-dbus, python3-pip, p7zip-full, sudo
 Recommends: winbind, wimtools, python3-pyqt5.qtwebengine
 Section: utils
 Conflicts: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, spark-deepin-wine-runner-52

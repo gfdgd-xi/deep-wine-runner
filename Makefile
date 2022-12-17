@@ -90,7 +90,12 @@ build:
 	cp -rv Model deb/opt/apps/deepin-wine-runner
 	cp -rv API deb/opt/apps/deepin-wine-runner
 	cp -rv key deb/opt/apps/deepin-wine-runner
-	dpkg -b deb spark-deepin-wine-runner.deb
+	python3 RemovePycacheFile.py
+	cp -rv deb /tmp/spark-deepin-wine-runner-builder
+	sudo chown -R root:root /tmp/spark-deepin-wine-runner-builder
+	
+	dpkg -b /tmp/spark-deepin-wine-runner-builder spark-deepin-wine-runner.deb
+	sudo rm -rfv /tmp/spark-deepin-wine-runner-builder
 	
 
 install:
