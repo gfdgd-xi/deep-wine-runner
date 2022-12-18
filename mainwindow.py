@@ -1100,12 +1100,16 @@ class UpdateWindow():
             updateText.setText("从源码运行不提供更新")
             ok.setDisabled(True)
         else:
-            if "deepin/UOS 应用商店版本<带签名>" == programVersionType:
-                url = "aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci91cGRhdGUtdW9zLmpzb24="
-            elif "星火应用商店版本" == programVersionType:
-                url = "aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci91cGRhdGUtc3BhcmsuanNvbg=="
-            else: 
-                url = "aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci91cGRhdGUuanNvbg=="
+            if newPackage:
+                url = "aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci91cGRhdGVuZXcuanNvbg=="
+            else:
+                if "deepin/UOS 应用商店版本<带签名>" == programVersionType:
+                    url = "aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci91cGRhdGUtdW9zLmpzb24="
+                elif "星火应用商店版本" == programVersionType:
+                    url = "aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci91cGRhdGUtc3BhcmsuanNvbg=="
+                else: 
+                    url = "aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci91cGRhdGUuanNvbg=="
+            
             try:
                 UpdateWindow.data = json.loads(requests.get(base64.b64decode(url).decode("utf-8")).text)
                 versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：{UpdateWindow.data['Version']}\n更新内容：")
@@ -1934,7 +1938,7 @@ def AddDockerMenu():
     openTerminal.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"x-terminal-emulator"]).start())
     dockers.addAction(openFileManager)
     dockers.addAction(openTerminal)
-
+newPackage = False
 class GetVersionThread(QtCore.QThread):
     signal = QtCore.pyqtSignal(str)
     def __init__(self) -> None:
@@ -1943,6 +1947,7 @@ class GetVersionThread(QtCore.QThread):
     def run(self):
         global about
         global window
+        global newPackage
         global programVersionType
         # 目前分为几个版本（在 control 文件区分）：
         # 星火版本：~spark
@@ -1977,8 +1982,13 @@ class GetVersionThread(QtCore.QThread):
                     if fileName[i] == "Package: spark-deepin-wine-runner-52":
                         programVersionType = "吾爱专版"
                         window.setWindowTitle(f"{title}（吾爱专版）")
+                        newPackage = False
                         break
                     if fileName[i] == "Package: spark-deepin-wine-runner":
+                        package = True
+                        newPackage = True
+                        continue
+                    if fileName[i] == "Package: wine-runner-linux":
                         package = True
                         continue
                     if not package:
