@@ -526,12 +526,17 @@ fi
 
 ##############<<<<<<<<<屏蔽mono和gecko安装器开始
 ##默认屏蔽mono和gecko安装器
-#if [ "$APPRUN_CMD" = "spark-wine7-devel" ];then
+{['''#if [ "$APPRUN_CMD" = "spark-wine7-devel" ];then
 
 #export WINEDLLOVERRIDES="mscoree,mshtml="
 #echo "为了降低打包体积，默认关闭gecko和momo，如有需要，注释此行（仅对spark-wine7-devel有效）"
 
-#fi
+#fi''', '''if [ "$APPRUN_CMD" = "spark-wine7-devel" ];then
+
+export WINEDLLOVERRIDES="mscoree,mshtml="
+echo "为了降低打包体积，默认关闭gecko和momo，如有需要，注释此行（仅对spark-wine7-devel有效）"
+
+fi'''][int(disabledMono.isChecked())]}
 ##############>>>>>>>>>屏蔽mono和gecko安装器结束
 
 #########################执行段
@@ -1888,6 +1893,7 @@ debControlFrame.addWidget(button5)
 debControlFrame.addWidget(installDeb)
 rmBash = QtWidgets.QCheckBox(transla.transe("U", "设置卸载该 deb 后自动删除该容器"))
 cleanBottonByUOS = QtWidgets.QCheckBox(transla.transe("U", "使用统信 Wine 生态适配活动容器清理脚本"))
+disabledMono = QtWidgets.QCheckBox(transla.transe("U", "禁用 Mono 和 Gecko 安装器"))
 debArch = QtWidgets.QComboBox()
 debArch.addItems(["i386", "arm64(box86+exagear)"])
 textbox1 = QtWidgets.QTextBrowser()
@@ -1935,7 +1941,7 @@ desktopIconTabLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "要显示�
 desktopIconTabLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "要显示的 .desktop 文件的图标：")), 10, 0, 1, 1)
 iconTab1.setLayout(desktopIconTabLayout)
 #desktopIconTab.setTabPosition(QtWidgets.QTabWidget.East)
-desktopIconTab.addTab(iconTab1, "Defult")
+desktopIconTab.addTab(iconTab1, "默认图标")
 desktopIconTab.setCornerWidget(controlWidget)
 widgetLayout.addWidget(desktopIconTab, 8, 0, 6, 3)
 widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "选择打包的 wine 版本（※必选）：")), 6, 0, 1, 1)
@@ -1979,6 +1985,7 @@ moreSettingLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "deb 包选项�
 moreSettingLayout.addWidget(rmBash)
 moreSettingLayout.addWidget(cleanBottonByUOS)
 moreSettingLayout.addWidget(chooseWineHelperValue)
+moreSettingLayout.addWidget(disabledMono)
 moreSettingLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "deb 的依赖(强制，如无特殊需求默认即可)：")))
 moreSettingLayout.addWidget(debDepends)
 moreSettingLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "deb 的推荐依赖(非强制，一般默认即可)：")))
@@ -2042,6 +2049,7 @@ try:
 except:
     pass
 rmBash.setChecked(True)
+disabledMono.setChecked(True)
 cleanBottonByUOS.setChecked(True)
 chooseWineHelperValue.setChecked(True)
 e12_text.setText(f"{get_desktop_path()}/demo_1.0.0_i386.deb")

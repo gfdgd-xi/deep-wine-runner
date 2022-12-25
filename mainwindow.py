@@ -2340,29 +2340,10 @@ exe路径\' 参数 \'
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示；
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>''')
-updateThingsString = transla.transe("U", '''※1、支持使用 Qemu + Chroot 跨运行 Wine 以及指定程序的功能；
-※2、提供了简易打包器以用于打包简易 deb；
-※3、支持下载配置过的 Qemu + Chroot 容器；
-※4、支持在隔离的 Chroot 容器内运行 Wine；
-※5、支持解压指定 deb 的内打包好的容器；
-※6、优化 Wine 列表显示；
-※7、新增程序论坛和教程入口；
-※8、程序公告功能；
-※9、新增程序评分功能；
-※10、新增解包 deb 内 Wine 容器功能；
-※11、新增 Vkd3d Proton 安装功能，更新 dxvk 版本至 2.0.0；
-※12、新增程序菜单栏部分栏目图标；
-※13、打包器支持按下 Shift + F1 查看指定选项提示；
-14、优化非基于生态适配脚本的打包器内容自动填充功能；
-15、优化程序文案；
-16、新增日志翻译功能；
-17、程序进一步完善英语翻译（机翻）；
-18、优化程序更新策略；
-19、优化日志分析功能；
-20、优化程序 UI。''')
+updateThingsString = transla.transe("U", '''※1、不基于生态适配脚本打包器支持禁用 Mono/Gecko 打包器''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年12月10日"
+updateTime = "2022年12月25日"
 aboutProgram = transla.transe("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。</p>
 <p>它同时还内置了基于VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作。</p>
 <pre>
