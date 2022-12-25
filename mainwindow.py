@@ -2396,15 +2396,18 @@ Qt 版本：{QtCore.qVersion()}
 <pre>{tips}
 </pre>
 <hr>
+<h1>关于 RacoonGX 项目组</h1>
+<p>是由 @gfdgd xi 带头的团队。</p>
+<hr>
 <h1>友谊链接</h1>
 <pre>星火应用商店：https://spark-app.store/
 Deepin 官网：https://www.deepin.org
 Deepin 论坛：https://bbs.deepin.org
 论坛：https://gfdgdxi.flarum.cloud/</pre>
 <hr>
-<h1>©2020~{time.strftime("%Y")} gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
+<h1>©2020~{time.strftime("%Y")} RacoonGX 项目组</h1>'''
 title = "Wine 运行器 {}".format(version)
-#<h1>©2020~{time.strftime("%Y")} <a href="https://gitee.com/gfdgd-xi">gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
+#<h1>©2020~{time.strftime("%Y")} <a href="https://gitee.com/gfdgd-xi">RacoonGX 项目组</h1>'''
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 try:
     threading.Thread(target=requests.get, args=[parse.unquote(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9vcGVuL0luc3RhbGwucGhw").decode("utf-8")) + "?Version=" + version]).start()
@@ -2568,7 +2571,7 @@ mainLayout.addWidget(returnText, 0, 1, 2, 1)
 
 # 版权
 copy = QtWidgets.QLabel(f"""\n程序版本：{version}，<b>提示：Wine 无法运行所有的 Windows 程序，如果想要运行更多可执行程序，可以考虑虚拟机和双系统</b><br>
-©2020~{time.strftime("%Y")} gfdgd xi、为什么您不喜欢熊出没和阿布呢""")
+©2020~{time.strftime("%Y")} RacoonGX 项目组""")
 mainLayout.addWidget(copy, 2, 0, 1, 1)
 
 # 程序运行
