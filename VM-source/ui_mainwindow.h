@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.15.3
+** Created by: Qt User Interface Compiler version 5.15.6
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -239,8 +239,12 @@ public:
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Noto Sans CJK SC'; font-size:10.5pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">\344\275\277\347\224\250\350\277\205\351\233\267\346\210\226\350\200\205\347\275\221\347\233\230\344\270\213\350\275\275\344\273\245\344\270\213\344\273\273\346\204\217\344\270\200\344\270\252\351\223\276\346\216\245\347\204\266\345\220\216\345\234\250\344\270\212\351\235\242\351\200\211\346\213\251\345\215\263\345\217\257\357\274\232</span></p>\n"
-"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">\357\274\210\345"
-                        "\246\202\346\236\234\344\270\213\350\275\275\350\277\231\344\270\252\357\274\214\347\263\273\347\273\237\347\211\210\346\234\254\351\200\211\347\254\254\344\270\200\351\241\271\357\274\214\344\270\200\350\210\254\346\216\250\350\215\220\350\277\231\344\270\252\357\274\211ed2k://|file|cn_windows_7_ultimate_with_sp1_x86_dvd_u_677486.iso|2653276160|7503E4B9B8738DFCB95872445C72AEFB|/</span></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">123 \347\275\221"
+                        "\347\233\230\351\223\276\346\216\245\357\274\232https://www.123pan.com/s/pDSKVv-oypWv</span></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">\350\277\205\351\233\267\347\275\221\347\233\230\357\274\232https://pan.xunlei.com/s/VNKMz3wgbYHg6JIh50ZKIc7pA1?pwd=35e5  \346\217\220\345\217\226\347\240\201\357\274\23235e5</span></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">\347\231\276\345\272\246\347\275\221\347\233\230\357\274\232https://pan.baidu.com/s/19WbvinITCQJFZpAdZutrjg?pwd=me4y \346\217\220\345\217\226\347\240\201: me4y</span></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">\357\274\210\345\246\202\346\236\234\344\270\213\350\275\275\350\277\231\344\270\252\357\274"
+                        "\214\347\263\273\347\273\237\347\211\210\346\234\254\351\200\211\347\254\254\344\270\200\351\241\271\357\274\214\344\270\200\350\210\254\346\216\250\350\215\220\350\277\231\344\270\252\357\274\211ed2k://|file|cn_windows_7_ultimate_with_sp1_x86_dvd_u_677486.iso|2653276160|7503E4B9B8738DFCB95872445C72AEFB|/</span></p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">\357\274\210\345\246\202\346\236\234\344\270\213\350\275\275\350\277\231\344\270\252\357\274\214\347\263\273\347\273\237\347\211\210\346\234\254\351\200\211\347\254\254\344\272\214\351\241\271\357\274\211ed2k://|file|cn_windows_7_ultimate_with_sp1_x64_dvd_u_677408.iso|3420557312|B58548681854236C7939003B583A8078|/</span></p>\n"
 "<hr /></body></html>", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab), QCoreApplication::translate("MainWindow", "\350\256\276\347\275\256", nullptr));
@@ -343,11 +347,11 @@ public:
                         "></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\346\255\244\347\273\204\344\273\266\344\271\237\346\234\211\351\235\236\345\270\270\345\244\247\347\232\204\347\274\272\347\202\271\357\274\214\345\260\261\346\230\257\347\233\270\346\257\224\344\272\216 Wine\357\274\214\344\274\232\351\234\200\350\246\201\345\215\240\347\224\250\345\244\247\351\207\217\347\232\204\347\251\272\351\227\264\343\200\201\345\256\211\350\243\205\351\234\200\350\246\201\345\244\247\351\207\217\347\232\204\346\227\266\351\227\264\343\200\201\346\237\220\344\272\233\346\203\205\345\206\265\344\270\213\351\234\200\350\246\201\347\233\270\346\257\224\344\272\216 Wine \351\234\200\350\246\201\346\266\210\350\200\227\346\233\264\345\244\232\347\232\204\347\263\273\347\273\237\350\265\204\346\272\220\357\274\214\344\275\206\345\217\257\344\273\245\346\233\264\345\212\240\345\256\214\347\276\216\343\200\201\346\265\201\347\225\205\347\232\204\350\277\220\350\241"
                         "\214 Windows \345\272\224\347\224\250\357\274\214\344\274\232\345\260\275\351\207\217\345\207\217\345\260\221\345\233\240\344\270\272\347\274\272\345\260\221\346\210\226\346\234\252\345\256\236\347\216\260\345\257\274\350\207\264\347\232\204 Windows exe \347\250\213\345\272\217\350\277\220\350\241\214\345\274\202\345\270\270</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\350\257\245\347\273\204\344\273\266\345\210\266\344\275\234\350\200\205\357\274\232gfdgd xi\343\200\201\344\270\272\344\273\200\344\271\210\346\202\250\344\270\215\345\226\234\346\254\242\347\206\212\345\207\272\346\262\241\345\222\214\351\230\277\345\270\203\345\221\242</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\350\257\245\347\273\204\344\273\266\345\210\266\344\275\234\350\200\205\357\274\232RacoonGX \345\233\242\351\230\237</p>\n"
 "<hr />\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\345\217\202\350\200\203\346\226\207\347\214\256\357\274\232</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-b"
-                        "lock-indent:0; text-indent:0px;\"><span style=\" font-family:'Droid Sans Mono','monospace','monospace'; font-size:11pt; color:#6a9955;\">https://juejin.cn/post/7080484519328874510</span></p></body></html>", nullptr));
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'Droid Sans Mono','monospace','monospace'; font-size:11pt; color:#6a9955;\">https://juejin.cn/"
+                        "post/7080484519328874510</span></p></body></html>", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QCoreApplication::translate("MainWindow", "\345\205\263\344\272\216", nullptr));
     } // retranslateUi
 
