@@ -11,6 +11,7 @@ import os
 import sys
 import time
 import json
+import random
 import platform
 import traceback
 import subprocess
@@ -57,6 +58,19 @@ readOnlyEnv = [
     "($SYSTEM)",
     "($DEBUG)"
 ]
+
+def FindFile(file, name):
+    for i in os.listdir(file):
+        path = f"{file}/{i}"
+        if os.path.isdir(path):
+            returnPath = FindFile(path, name)
+            if returnPath != None:
+                return returnPath.replace("//", "/")
+        if os.path.isfile(path):
+            if i == name:
+                return path
+    return None
+
 def Debug():
     if "--debug" in sys.argv:
         traceback.print_exc()
@@ -111,7 +125,8 @@ class Command():
         "disbledWinebottlecreatelink",
         "enabledWinebottlecreatelink",
         "installvb",
-        "installother"
+        "installother",
+        "decompressionbottle"
     ]
 
     def __init__(self, commandString: str) -> None:
@@ -389,6 +404,20 @@ class Command():
             self.command = ["bat", "reg", "add", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings", "/v", "ProxyServer", "/d", f"{proxyServerAddress}:{port}", "/f"]
             self.Bat()
 
+        def DecompressionBottle(self):
+            tempDebDir = f"/tmp/wine-runner-unpack-deb-{random.randint(0, 1000)}"
+            if os.system(f"dpkg -x '{self.command[1]}' '{tempDebDir}'"):
+                return 1
+            zippath = FindFile(tempDebDir, "files.7z")
+            if zippath == None:
+                return 2
+            # 解压文件
+            os.system(f"mkdir -p '{self.command[2]}'")
+            fi = os.system(f"7z x -y '{zippath}' -o'{self.command[2]}'")
+            os.system(f"rm -rfv '{tempDebDir}'")
+            return fi
+            
+
         def DisbledHttpProxy(self):
             self.command = ["bat", "reg", "add", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings", "/v", "ProxyEnable", "/t", "REG_DWORD", "/d", "00000000", "/f"]
             self.Bat()
@@ -443,7 +472,8 @@ class Command():
             "disbledWinebottlecreatelink": DisbledWineBottleCreateLink,
             "enabledWinebottlecreatelink": EnabledWineBottleCreateLink,
             "installvb": InstallVB,
-            "installother": InstallOther
+            "installother": InstallOther,
+            "decompressionbottle": DecompressionBottle
         }
 
         # 参数数列表
@@ -488,7 +518,8 @@ class Command():
             "disbledWinebottlecreatelink": [0],
             "enabledWinebottlecreatelink": [0],
             "installvb": [1],
-            "installother": [1]
+            "installother": [1],
+            "decompressionbottle": [2]
         }
         windowsUnrun = [
             "createbotton",
@@ -502,7 +533,8 @@ class Command():
             "disbledopengl",
             "installdxvk",
             "installfont",
-            "installsparkcorefont"
+            "installsparkcorefont",
+            "decompressionbottle"
         ]
         # 解析
         def __init__(self, command: list, wineBottonPath: str, wine: str) -> int:
@@ -554,7 +586,7 @@ class Command():
                             i[a] = i[a].replace(b[0], b[1])
                 commandReturn = self.commandList[i[0]](self)
                 if commandReturn:
-                    print(f"运行命令{' '.join(self.command)}出现错误")
+                    print(f"运行命令{' '.join(self.command)}出现错误，返回值:", commandReturn)
                 programEnv[9][1] = str(commandReturn)
                 if self.close: 
                     break
