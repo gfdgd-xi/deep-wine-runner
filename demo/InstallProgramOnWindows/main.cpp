@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <filesystem>
+#include <shlobj.h>
 using namespace std;
 
 string mainlist[] = {"Visual C++ 运行库", ".net framework 运行库"};
@@ -35,7 +36,7 @@ string vcppUrl[] = {
 	"http://aka.ms/vs/17/release/vc_redist.x86.exe",
 	"http://aka.ms/vs/17/release/vc_redist.x64.exe",
 	"http://aka.ms/vs/17/release/vc_redist.arm64.exe",
-	"https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/vscpp/VC6RedistSetup_deu.exe"
+	"http://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/vscpp/VC6RedistSetup_deu.exe"
 };
 string netName[] = {
 	"3.5 SP1 Offline Installer",
@@ -92,24 +93,69 @@ string netUrl[] = {
 	"http://download.visualstudio.microsoft.com/download/pr/17737b16-dbb0-45f8-9684-16cce46f0835/14475e8380422840249513d58c70d8da/windowsdesktop-runtime-6.0.8-win-arm64.exe",
 	"http://download.microsoft.com/download/8/2/7/827bb1ef-f5e1-4464-9788-40ef682930fd/dotnetfx.exe",
 	"http://download.microsoft.com/download/0/8/c/08c19fa4-4c4f-4ffb-9d6c-150906578c9e/NetFx20SP1_x86.exe",
-	"https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/net/%e5%be%ae%e8%bd%af.NET%e7%a6%bb%e7%ba%bf%e8%bf%90%e8%a1%8c%e5%ba%93%e5%90%88%e9%9b%86%202022.07.22@%e4%b8%80%e4%b8%aa%e8%b7%af%e4%ba%ba.exe",
-	"https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/net/Dotnet3.5.exe"
+	"http://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/net/%e5%be%ae%e8%bd%af.NET%e7%a6%bb%e7%ba%bf%e8%bf%90%e8%a1%8c%e5%ba%93%e5%90%88%e9%9b%86%202022.07.22@%e4%b8%80%e4%b8%aa%e8%b7%af%e4%ba%ba.exe",
+	"http://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/net/Dotnet3.5.exe"
 };
 
 int vcppMax = 0; 
 int netMax = 0;
 string *mainlistM[] = {vcppName, netName};
 int *mainlistMaxM[] = {&vcppMax, &netMax};
+string *vcppAdviceInstallI386[] = {&vcppUrl[0], &vcppUrl[1], &vcppUrl[3], &vcppUrl[5], &vcppUrl[7], &vcppUrl[9], &vcppUrl[12]};
+string *vcppAdviceInstallAmd64[] = {&vcppUrl[0], &vcppUrl[2], &vcppUrl[4], &vcppUrl[6], &vcppUrl[8], &vcppUrl[10], &vcppUrl[12]};
+string *netAdviceInstallWin7[] = {&netUrl[25]};
 string *mainlistUrlM[] = {vcppUrl, netUrl};
 string tempPath = "C:\\Windows\\Temp";
+
+bool GetSystemArch(){
+	string windowsPath = getenv("SYSTEMROOT");
+	if(filesystem::exists(windowsPath + "\\SysWOW64")){
+		return true;
+	}
+	return false;
+}
 
 int Download(string url, string savePath, string filename){
 	if(filesystem::exists(savePath + "\\" + filename)){
 		cout << "文件" << savePath << "\\" << filename << "已存在，移除" << endl;
 		filesystem::remove_all(savePath + "\\" + filename);
 	}
+	cout << "下载链接：" << url << endl;
 	string command = "aria2c -x 16 -s 16 \"" + url + "\" -d \"" + savePath + "\" -o \"" + filename + "\""; 
 	return system(command.c_str());
+}
+
+void InstallAdviceVcpp(){
+	if(GetSystemArch()){
+		int listLen = sizeof(vcppAdviceInstallAmd64) / sizeof(vcppAdviceInstallAmd64[0]);
+		for(int i=0;i<=listLen;i++){
+			Download(*vcppAdviceInstallAmd64[i], tempPath, to_string(i) + ".exe");
+		}
+		for(int i=0;i<=listLen;i++){
+			string command = "\"" + tempPath + "\\" + to_string(i) + "\"";
+			system(command.c_str());
+		}
+		return;
+	}
+	int listLen = sizeof(vcppAdviceInstallI386) / sizeof(vcppAdviceInstallI386[0]);
+	for(int i=0;i<=listLen;i++){
+		Download(*vcppAdviceInstallI386[i], tempPath, to_string(i) + ".exe");
+	}
+	for(int i=0;i<=listLen;i++){
+		string command = "\"" + tempPath + "\\" + to_string(i) + "\"";
+		system(command.c_str());
+	}
+}
+
+void InstallAdviceNet(){
+	int listLen = sizeof(netAdviceInstallWin7) / sizeof(netAdviceInstallWin7[0]);
+	for(int i=0;i<=listLen;i++){
+		Download(*netAdviceInstallWin7[i], tempPath, to_string(i) + ".exe");
+	}
+	for(int i=0;i<=listLen;i++){
+		string command = "\"" + tempPath + "\\" + to_string(i) + "\"";
+		system(command.c_str());
+	}	
 }
 
 void ShowNextList(string title, int id){
@@ -124,10 +170,21 @@ void ShowNextList(string title, int id){
 		for(int i=0;i<=max - 1;i++){
 			cout << i << ". " << *(list + i) << endl;
 		}
-		cout << max << ". 退出此级" << endl;
+		cout << max << ". 安装推荐组件" << endl;
+		cout << max + 1 << ". 退出此级" << endl;
 		int choose = 0;
 		cin >> choose;
 		if(choose == max){
+			cout << "下载文件" << endl;
+			if(!id){
+				InstallAdviceVcpp();
+			}
+			else if(id == 1){
+				InstallAdviceNet();
+			}
+			continue;
+		}
+		if(choose == max + 1){
 			break;
 		}
 		if(0 <= choose && choose < max){
@@ -170,11 +227,27 @@ int main(){
 			cout << number << ". " << i << endl;
 			number++;
 		}
-		cout << mainlistLen << ". 退出程序" << endl;
+		cout << mainlistLen << ". 设置系统 OEM 信息（需要先安装 .net framework 4.0 或以上版本）" << endl;
+		cout << mainlistLen + 1 << ". 设置默认 OEM 信息（预设）" << endl;
+		cout << mainlistLen + 2 << ". 退出程序" << endl;
 		cout << "请输入选项编号：";
 		int choose = 0;
 		cin >> choose;
 		if(choose == mainlistLen){
+			system("Depends\\OEM.exe");
+			break;
+		}
+		if(choose == mainlistLen + 1){
+			bool runInAdmin = IsUserAnAdmin();
+			if(runInAdmin){
+				system("regedit Depends/OEM.reg");
+				Download("http://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/OEM.bmp", getenv("SYSTEMROOT"), "OEM.bmp");
+				break;
+			}
+			cout << "使用该功能需要使用管理员权限运行该程序。" << endl;
+			break;
+		}
+		if(choose == mainlistLen + 2){
 			// 退出程序逻辑
 			break;
 		}
