@@ -5,6 +5,7 @@
 #include <vector>
 #include <filesystem>
 #include <shlobj.h>
+#include <fstream>
 using namespace std;
 
 string mainlist[] = {"Visual C++ 运行库", ".net framework 运行库"};
@@ -200,6 +201,39 @@ void ShowNextList(string title, int id){
 	}
 }
 
+/*void GetInternetList(){
+	Download("", tempPath, "list.txt");
+	ifstream file(tempPath + "\\list.txt");
+	if(file){
+		string line;
+		vector<string> netUrlList;
+		while(getline(file, line)){
+			netUrlList.push_back(line);
+		}		
+		// 加入数组
+		string neturlStringlist[netUrlList.size()];
+		for(int i=0;i<=(int)netUrlList.size();i++){
+			neturlStringlist[i] = netUrlList[i];
+		}
+	}
+	file.close();
+	Download("", tempPath, "list.txt");
+	ifstream netnamefile(tempPath + "\\list.txt");
+	if(file){
+		string line;
+		vector<string> netUrlList;
+		while(getline(netnamefile, line)){
+			netUrlList.push_back(line);
+		}
+		file.close();
+		// 加入数组
+		string neturlStringlist[netUrlList.size()];
+		for(int i=0;i<=(int)netUrlList.size();i++){
+			neturlStringlist[i] = netUrlList[i];
+		}
+	}	
+}*/
+
 int main(){
 	// 获取临时文件路径
 	tempPath = getenv("TMP");
@@ -209,6 +243,8 @@ int main(){
 		cout << "临时目录不存在，创建。" << endl;
 		filesystem::create_directories(tempPath);
 	}
+	// 从互联网获取数据
+	//GetInternetList();
 	// 设置窗口标题和主题
 	system("title 安装常用组件");
 	//system("color 2F");  // 设置主题颜色
@@ -235,17 +271,23 @@ int main(){
 		cin >> choose;
 		if(choose == mainlistLen){
 			system("Depends\\OEM.exe");
-			break;
+			system("cls");
+			continue;
 		}
 		if(choose == mainlistLen + 1){
 			bool runInAdmin = IsUserAnAdmin();
 			if(runInAdmin){
-				system("regedit Depends/OEM.reg");
+				system("regedit /s Depends/OEM.reg");
 				Download("http://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/OEM.bmp", getenv("SYSTEMROOT"), "OEM.bmp");
-				break;
+				cout << "完成！" << endl;
+				system("pause");
+				system("cls");
+				continue;
 			}
 			cout << "使用该功能需要使用管理员权限运行该程序。" << endl;
-			break;
+			system("pause");
+			system("cls");
+			continue;
 		}
 		if(choose == mainlistLen + 2){
 			// 退出程序逻辑
