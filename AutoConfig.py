@@ -15,6 +15,7 @@ import sys
 import base64
 import json
 import traceback
+import urllib.request
 import req as requests
 import PyQt5.QtWidgets as QtWidgets
 from UI.AutoConfig import *
@@ -37,8 +38,6 @@ urlSourcesList = [
 ]
 urlSources = urlSourcesList[0]
 lists = []
-
-#print(requests.post("http://120.25.153.144:30250/PingLun", {"PinLun": "测试文本", "Version": "purgeexepro.sh"}).text)
 
 class ProgramRunStatusUpload():
     msgWindow = None
@@ -139,7 +138,7 @@ class InformationWindow():
             about = f"<h1>关于“{choose}”的介绍</h1>\n<p>暂无此程序的介绍</p>"
         try:
             import requests as r
-            fenlists = requests.get(base64.b64decode("aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy93aW5lLXJ1bm5lci1kb3dubG9hZHMtb2YtcnVubmVyL3Jhdy9icmFuY2gvbWFzdGVyL0Jhc2hBcHBGZW4v").decode("utf-8") + fileName + base64.b64decode("L2FsbC5qc29u").decode("utf-8"), timeout=1000).json()
+            fenlists = requests.get(base64.b64decode("aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy93aW5lLXJ1bm5lci1kb3dubG9hZHMtb2YtcnVubmVyL3Jhdy9icmFuY2gvbWFzdGVyL0Jhc2hBcHBGZW4v").decode("utf-8") + urllib.request.quote(fileName) + base64.b64decode("L2FsbC5qc29u").decode("utf-8"), timeout=1000).json()
             tipsInfo = ""
         except:
             fenlists = [0, 0, 0, 0, 0]
@@ -253,7 +252,7 @@ class ProgramRunStatusShow():
                 fileName = i[1]
                 break
         try:
-            fenlists = requests.get(base64.b64decode("aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy93aW5lLXJ1bm5lci1kb3dubG9hZHMtb2YtcnVubmVyL3Jhdy9icmFuY2gvbWFzdGVyL0Jhc2hBcHBGZW4v").decode("utf-8") + fileName + base64.b64decode("L2FsbC5qc29u").decode("utf-8")).json()
+            fenlists = requests.get(base64.b64decode("aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy93aW5lLXJ1bm5lci1kb3dubG9hZHMtb2YtcnVubmVyL3Jhdy9icmFuY2gvbWFzdGVyL0Jhc2hBcHBGZW4v").decode("utf-8") + urllib.request.quote(fileName) + base64.b64decode("L2FsbC5qc29u").decode("utf-8")).json()
             tipsInfo = ""
         except:
             #traceback.print_exc()
@@ -311,7 +310,7 @@ class ProgramRunStatusShow():
         else:
             # 显示最新的3条评论
             try:
-                all = int(requests.get(f"{base64.b64decode('aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy9iYXNocGlubHVuL3Jhdy9icmFuY2gvbWFzdGVyLw==').decode('utf-8')}{fileName}/data.txt").text)
+                all = int(requests.get(f"{base64.b64decode('aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy9iYXNocGlubHVuL3Jhdy9icmFuY2gvbWFzdGVyLw==').decode('utf-8')}{urllib.request.quote(fileName)}/data.txt").text)
                 now = all - 3
                 print(all)
                 if all < 3:
@@ -322,7 +321,7 @@ class ProgramRunStatusShow():
                 uploadList = []
                 for i in range(all - 1, start - 1, -1):
                     print(f"第 {i + 1} 条评论：")
-                    info = requests.get(f"{base64.b64decode('aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy9iYXNocGlubHVuL3Jhdy9icmFuY2gvbWFzdGVyLw==').decode('utf-8')}{fileName}/pf-{i}.txt").text.strip()
+                    info = requests.get(f"{base64.b64decode('aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy9iYXNocGlubHVuL3Jhdy9icmFuY2gvbWFzdGVyLw==').decode('utf-8')}{urllib.request.quote(fileName)}/pf-{i}.txt").text.strip()
                     print(info)
                     uploadList.append([f"用户{i + 1}", i + 1, info])
                 Add(uploadList)
@@ -380,7 +379,7 @@ def UpdateFen():
     uploadList = []        
     for i in range(now + 2, now - 1, -1):
         print(f"第 {i + 1} 条评论：")
-        info = requests.get(f"https://code.gitlink.org.cn/gfdgd-xi-org/bashpinlun/raw/branch/master/{fileName}/pf-{i}.txt").text.strip()
+        info = requests.get(f"https://code.gitlink.org.cn/gfdgd-xi-org/bashpinlun/raw/branch/master/{urllib.request.quote(fileName)}/pf-{i}.txt").text.strip()
         print(info)
         uploadList.append([f"用户{i + 1}", i + 1, info])
     #ProgramRunStatusShow.pingLunLayout.removeItem(ProgramRunStatusShow.pingLunLayout.itemAt(2))
@@ -572,7 +571,7 @@ if __name__ == "__main__":
         #pass
     # 连接信号和槽
     ui.saerchBotton.clicked.connect(Connect.SearchBotton_Clicked)
-    ui.uploadFen.clicked.connect(UploadFen)
+    #ui.uploadFen.clicked.connect(UploadFen)
     ui.getInfoButton.clicked.connect(InformationWindow.ShowWindow)
     ui.runBotton.clicked.connect(Connect.RunBotton_Clicked)
     ui.openFile.triggered.connect(Connect.OpenFile_Triggered)

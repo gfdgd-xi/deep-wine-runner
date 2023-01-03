@@ -64,14 +64,7 @@
       <item>
        <widget class="QPushButton" name="getFen">
         <property name="text">
-         <string>获取选中项的评分</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="uploadFen">
-        <property name="text">
-         <string>提交选中项的评分</string>
+         <string>获取/提交选中项的评分和评论</string>
         </property>
        </widget>
       </item>
