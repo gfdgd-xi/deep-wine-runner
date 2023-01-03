@@ -300,10 +300,9 @@ class ProgramRunStatusShow():
         pingLunLayout.addWidget(pingLunInfo, 0, 0, 1, 3)
         pingLunLayout.addWidget(uploadButton, 1, 2)
         pingLunInfo.setPlaceholderText("""在此输入评论，须知：
-※1、不得含有色情、暴力、侮辱等违法内容
-※2、不得有广告推广等内容
-※3、字数至少 15 字，但不得超过 250 字
-※4、评论内容最多 5 行，且评论内容将会进行审核，意味着评论不会实时生效显示""")
+※1、不得含有色情、暴力、侮辱等违法内容以及不得有广告推广等内容
+※2、字数至少 15 字，但不得超过 250 字，评论内容最多 5 行，且评论内容将会进行审核，意味着评论不会实时生效显示
+※3、如果审核不通过将会被屏蔽并拉入黑名单，以及公开发布 IP 地址，评论前请三思！""")
         leftButton = QtWidgets.QPushButton("上一页")
         rightButton = QtWidgets.QPushButton("下一页")
         if maxHead == 0:
