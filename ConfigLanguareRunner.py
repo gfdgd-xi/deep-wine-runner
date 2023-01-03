@@ -2,7 +2,7 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
-# 版本：2.1.0
+# 版本：3.0.1
 # 更新时间：2022年10月05日
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 构建
@@ -14,6 +14,7 @@ import json
 import random
 import platform
 import traceback
+import webbrowser
 import subprocess
 import PyQt5.QtWidgets as QtWidgets
 # 读取文本文档
@@ -39,8 +40,8 @@ programEnv = [
     ["($PROGRAMPATH)", programPath],
     ["($VERSION)", version],
     ["($THANK)", thankText],
-    ["($MAKER)", "gfdgd xi、为什么您不喜欢熊出没和阿布呢"],
-    ["($COPYRIGHT)", f"©2020~{time.strftime('%Y')} gfdgd xi、为什么您不喜欢熊出没和阿布呢"],
+    ["($MAKER)", "RacoonGX 团队，By gfdgd xi、为什么您不喜欢熊出没和阿布呢"],
+    ["($COPYRIGHT)", f"©2020~{time.strftime('%Y')} RacoonGX 团队，By gfdgd xi、为什么您不喜欢熊出没和阿布呢"],
     ["($?)", "0"],
     ["($PLATFORM)", platform.system()],
     ["($DEBUG)", "1"]
@@ -126,7 +127,8 @@ class Command():
         "enabledWinebottlecreatelink",
         "installvb",
         "installother",
-        "decompressionbottle"
+        "decompressionbottle",
+        "programforum"
     ]
 
     def __init__(self, commandString: str) -> None:
@@ -294,7 +296,7 @@ class Command():
 
         def Version(self):
             print(f"版本：{version}")
-            print(f"©2020~{time.strftime('%Y')} gfdgd xi、为什么您不喜欢熊出没和阿布呢")
+            print(f"©2020~{time.strftime('%Y')} RacoonGX 团队，By gfdgd xi、为什么您不喜欢熊出没和阿布呢")
             return 0
 
         def Pause(self) -> int:
@@ -430,6 +432,9 @@ class Command():
             import InstallOther
             return InstallOther.Download(self.wineBottonPath, int(self.command[1]), self.wine)
 
+        def ProgramForum(self):
+            webbrowser.open_new_tab("https://gfdgdxi.flarum.cloud/")
+
         # 可以运行的命令的映射关系
         # 可以被使用的命令的映射
         commandList = {
@@ -473,7 +478,8 @@ class Command():
             "enabledWinebottlecreatelink": EnabledWineBottleCreateLink,
             "installvb": InstallVB,
             "installother": InstallOther,
-            "decompressionbottle": DecompressionBottle
+            "decompressionbottle": DecompressionBottle,
+            "programforum": ProgramForum
         }
 
         # 参数数列表
@@ -519,7 +525,8 @@ class Command():
             "enabledWinebottlecreatelink": [0],
             "installvb": [1],
             "installother": [1],
-            "decompressionbottle": [2]
+            "decompressionbottle": [2],
+            "programforum": [0]
         }
         windowsUnrun = [
             "createbotton",
@@ -606,7 +613,7 @@ if __name__ == "__main__":
     if len(sys.argv) - optionAll < 2:
         print("Wine 运行器自动配置文件解析器交互环境")
         print(f"版本：{version}")
-        print(f"©2020~{time.strftime('%Y')} gfdgd xi、为什么您不喜欢熊出没和阿布呢")
+        print(f"©2020~{time.strftime('%Y')} RacoonGX 团队，By gfdgd xi、为什么您不喜欢熊出没和阿布呢")
         print("--------------------------------------------------------------")
         while True:
             commandLine = input(">")
