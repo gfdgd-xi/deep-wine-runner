@@ -2340,10 +2340,14 @@ exe路径\' 参数 \'
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示；
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>''')
-updateThingsString = transla.transe("U", '''※1、不基于生态适配脚本打包器支持禁用 Mono/Gecko 打包器''')
+updateThingsString = transla.transe("U", '''※1、不基于生态适配脚本打包器支持禁用 Mono/Gecko 打包器；
+※2、自动容器配置脚本新增命令 decompressionbottle、programforum，新增评论功能；
+※3、安装 Windows 虚拟机功能更换应答镜像图标并添加常用 Windows 组件安装功能；
+※4、安装 Windows 虚拟机功能提供镜像下载的网盘链接。
+''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年12月26日"
+updateTime = "2023年01月03日"
 aboutProgram = transla.transe("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。</p>
 <p>它同时还内置了基于VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作。</p>
 <pre>

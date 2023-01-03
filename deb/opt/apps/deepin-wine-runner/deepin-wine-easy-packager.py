@@ -433,6 +433,8 @@ class RunThread(QtCore.QThread):
                 self.RunCommand(f"chmod 777 -Rv '{bottlePath}'")
                 # 禁止生成 .desktop 文件
                 self.RunCommand(f"WINEPREFIX='{bottlePath}' deepin-wine6-stable 'reg' 'add' 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v winemenubuilder.exe '/f'")
+                # 写入字体
+                self.RunCommand(f"WINEPREFIX='{bottlePath}' '{programPath}/AutoShell/command/installfont' 1")
                 # 安装包
                 self.info.emit("请在运行完安装程序后按下打包器主界面的“安装程序执行完成按钮”以进行下一步操作")
                 global pressCompleteDownload

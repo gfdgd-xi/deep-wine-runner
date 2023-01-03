@@ -1104,11 +1104,11 @@ class UpdateWindow():
                 url = "aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci91cGRhdGVuZXcuanNvbg=="
             else:
                 if "deepin/UOS 应用商店版本<带签名>" == programVersionType:
-                    url = "aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci91cGRhdGUtdW9zLmpzb24="
+                    url = "aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy93aW5lLXJ1bm5lci11cGRhdGUtaW5mb3JtYXRpb24vcmF3L2JyYW5jaC9tYXN0ZXIvdXBkYXRlLXVvcy5qc29u"
                 elif "星火应用商店版本" == programVersionType:
-                    url = "aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci91cGRhdGUtc3BhcmsuanNvbg=="
+                    url = "aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy93aW5lLXJ1bm5lci11cGRhdGUtaW5mb3JtYXRpb24vcmF3L2JyYW5jaC9tYXN0ZXIvdXBkYXRlLXNwYXJrLmpzb24="
                 else: 
-                    url = "aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci91cGRhdGUuanNvbg=="
+                    url = "aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy93aW5lLXJ1bm5lci11cGRhdGUtaW5mb3JtYXRpb24vcmF3L2JyYW5jaC9tYXN0ZXIvdXBkYXRlLmpzb24="
             
             try:
                 UpdateWindow.data = json.loads(requests.get(base64.b64decode(url).decode("utf-8")).text)
@@ -2340,29 +2340,14 @@ exe路径\' 参数 \'
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示；
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>''')
-updateThingsString = transla.transe("U", '''※1、支持使用 Qemu + Chroot 跨运行 Wine 以及指定程序的功能；
-※2、提供了简易打包器以用于打包简易 deb；
-※3、支持下载配置过的 Qemu + Chroot 容器；
-※4、支持在隔离的 Chroot 容器内运行 Wine；
-※5、支持解压指定 deb 的内打包好的容器；
-※6、优化 Wine 列表显示；
-※7、新增程序论坛和教程入口；
-※8、程序公告功能；
-※9、新增程序评分功能；
-※10、新增解包 deb 内 Wine 容器功能；
-※11、新增 Vkd3d Proton 安装功能，更新 dxvk 版本至 2.0.0；
-※12、新增程序菜单栏部分栏目图标；
-※13、打包器支持按下 Shift + F1 查看指定选项提示；
-14、优化非基于生态适配脚本的打包器内容自动填充功能；
-15、优化程序文案；
-16、新增日志翻译功能；
-17、程序进一步完善英语翻译（机翻）；
-18、优化程序更新策略；
-19、优化日志分析功能；
-20、优化程序 UI。''')
+updateThingsString = transla.transe("U", '''※1、不基于生态适配脚本打包器支持禁用 Mono/Gecko 打包器；
+※2、自动容器配置脚本新增命令 decompressionbottle、programforum，新增评论功能；
+※3、安装 Windows 虚拟机功能更换应答镜像图标并添加常用 Windows 组件安装功能；
+※4、安装 Windows 虚拟机功能提供镜像下载的网盘链接。
+''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2022年12月10日"
+updateTime = "2023年01月03日"
 aboutProgram = transla.transe("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。</p>
 <p>它同时还内置了基于VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作。</p>
 <pre>
@@ -2396,15 +2381,18 @@ Qt 版本：{QtCore.qVersion()}
 <pre>{tips}
 </pre>
 <hr>
+<h1>关于 RacoonGX 项目组</h1>
+<p>是由 @gfdgd xi 带头的团队，gfdgd xi开发了UEngine运行器等好用的开源软件。</p>
+<hr>
 <h1>友谊链接</h1>
 <pre>星火应用商店：https://spark-app.store/
 Deepin 官网：https://www.deepin.org
 Deepin 论坛：https://bbs.deepin.org
 论坛：https://gfdgdxi.flarum.cloud/</pre>
 <hr>
-<h1>©2020~{time.strftime("%Y")} gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
+<h1>©2020~{time.strftime("%Y")} RacoonGX 团队，By gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
 title = "Wine 运行器 {}".format(version)
-#<h1>©2020~{time.strftime("%Y")} <a href="https://gitee.com/gfdgd-xi">gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
+#<h1>©2020~{time.strftime("%Y")} <a href="https://gitee.com/gfdgd-xi">RacoonGX 团队，By gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 try:
     threading.Thread(target=requests.get, args=[parse.unquote(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9vcGVuL0luc3RhbGwucGhw").decode("utf-8")) + "?Version=" + version]).start()
@@ -2568,7 +2556,7 @@ mainLayout.addWidget(returnText, 0, 1, 2, 1)
 
 # 版权
 copy = QtWidgets.QLabel(f"""\n程序版本：{version}，<b>提示：Wine 无法运行所有的 Windows 程序，如果想要运行更多可执行程序，可以考虑虚拟机和双系统</b><br>
-©2020~{time.strftime("%Y")} gfdgd xi、为什么您不喜欢熊出没和阿布呢""")
+©2020~{time.strftime("%Y")} RacoonGX 团队，By gfdgd xi、为什么您不喜欢熊出没和阿布呢""")
 mainLayout.addWidget(copy, 2, 0, 1, 1)
 
 # 程序运行
@@ -2629,8 +2617,8 @@ p4.triggered.connect(window.close)
 
 wineOption = menu.addMenu(transla.transe("U", "Wine(&W)"))
 w1 = QtWidgets.QAction(transla.transe("U", "打开 Wine 容器目录"))
-w2 = QtWidgets.QAction(transla.transe("U", "安装常见字体"))
-w3 = QtWidgets.QAction(transla.transe("U", "安装自定义字体"))
+w2 = QtWidgets.QAction(QtGui.QIcon.fromTheme("font"), transla.transe("U", "安装常见字体"))
+w3 = QtWidgets.QAction(QtGui.QIcon.fromTheme("font"), transla.transe("U", "安装自定义字体"))
 w4 = QtWidgets.QAction(transla.transe("U", "删除选择的 Wine 容器"))
 cleanBottonUOS = QtWidgets.QAction(transla.transe("U", "清理 Wine 容器（基于 Wine 适配活动脚本）"))
 wineKeyboardLnk = QtWidgets.QAction(transla.transe("U", "Wine 快捷键映射"))
@@ -2665,7 +2653,7 @@ wm1_1 = QtWidgets.QAction(transla.transe("U", "在指定wine、指定容器安�
 wm1_2 = QtWidgets.QAction(transla.transe("U", "在指定wine、指定容器安装 Visual Studio C++"))
 wm1_3 = QtWidgets.QAction(transla.transe("U", "在指定wine、指定容器安装 MSXML"))
 wm1_4 = QtWidgets.QAction(transla.transe("U", "在指定wine、指定容器安装 gecko"))
-wm1_5 = QtWidgets.QAction(transla.transe("U", "在指定wine、指定容器安装 mono"))
+wm1_5 = QtWidgets.QAction(QtGui.QIcon.fromTheme("mono"), transla.transe("U", "在指定wine、指定容器安装 mono"))
 wm1_7 = QtWidgets.QAction(transla.transe("U", "在指定wine、指定容器安装 Visual Basic Runtime"))
 wm1_6 = QtWidgets.QAction(transla.transe("U", "在指定wine、指定容器安装其它运行库"))
 wm1.addAction(wm1_1)
@@ -2676,9 +2664,9 @@ wm1.addAction(wm1_5)
 wm1.addAction(wm1_7)
 wm1.addAction(wm1_6)
 wm2 = wineOption.addMenu(transla.transe("U", "在指定 Wine、容器运行基础应用"))
-wm2_1 = QtWidgets.QAction(transla.transe("U", "打开指定wine、指定容器的控制面板"))
-wm2_2 = QtWidgets.QAction(transla.transe("U", "打开指定wine、指定容器的浏览器"))
-wm2_3 = QtWidgets.QAction(transla.transe("U", "打开指定wine、指定容器的注册表"))
+wm2_1 = QtWidgets.QAction(QtGui.QIcon.fromTheme("control-center2"), transla.transe("U", "打开指定wine、指定容器的控制面板"))
+wm2_2 = QtWidgets.QAction(QtGui.QIcon.fromTheme("web-browser"), transla.transe("U", "打开指定wine、指定容器的浏览器"))
+wm2_3 = QtWidgets.QAction(QtGui.QIcon.fromTheme("regedit"), transla.transe("U", "打开指定wine、指定容器的注册表"))
 wm2_4 = QtWidgets.QAction(transla.transe("U", "打开指定wine、指定容器的任务管理器"))
 wm2_5 = QtWidgets.QAction(transla.transe("U", "打开指定wine、指定容器的资源管理器"))
 wm2_6 = QtWidgets.QAction(transla.transe("U", "打开指定wine、指定容器的关于 wine"))

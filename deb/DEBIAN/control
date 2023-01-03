@@ -1,5 +1,5 @@
-Package: wine-runner-linux
-Version: 3.0.0.2
+Package: spark-deepin-wine-runner
+Version: 3.0.1
 Maintainer: gfdgd xi <3025613752@qq.com>
 Homepage: https://gitee.com/gfdgd-xi-org/deep-wine-runner
 Architecture: all

@@ -312,7 +312,7 @@ class ProgramRunStatusShow():
         else:
             # 显示最新的3条评论
             try:
-                all = int(requests.get(f"https://code.gitlink.org.cn/gfdgd-xi-org/bashpinlun/raw/branch/master/{fileName}/data.txt").text)
+                all = int(requests.get(f"{base64.b64decode('aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy9iYXNocGlubHVuL3Jhdy9icmFuY2gvbWFzdGVyLw==').decode('utf-8')}{fileName}/data.txt").text)
                 now = all - 3
                 print(all)
                 if all < 3:
@@ -323,7 +323,7 @@ class ProgramRunStatusShow():
                 uploadList = []
                 for i in range(all - 1, start - 1, -1):
                     print(f"第 {i + 1} 条评论：")
-                    info = requests.get(f"https://code.gitlink.org.cn/gfdgd-xi-org/bashpinlun/raw/branch/master/{fileName}/pf-{i}.txt").text.strip()
+                    info = requests.get(f"{base64.b64decode('aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy9iYXNocGlubHVuL3Jhdy9icmFuY2gvbWFzdGVyLw==').decode('utf-8')}{fileName}/pf-{i}.txt").text.strip()
                     print(info)
                     uploadList.append([f"用户{i + 1}", i + 1, info])
                 Add(uploadList)

@@ -2,7 +2,7 @@
 # 使用系统默认的 python3 运行
 ###########################################################################################
 # 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
-# 版本：2.1.0
+# 版本：3.0.1
 # 更新时间：2022年10月05日
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
 # 基于 Python3 构建
@@ -11,8 +11,10 @@ import os
 import sys
 import time
 import json
+import random
 import platform
 import traceback
+import webbrowser
 import subprocess
 import PyQt5.QtWidgets as QtWidgets
 # 读取文本文档
@@ -38,8 +40,8 @@ programEnv = [
     ["($PROGRAMPATH)", programPath],
     ["($VERSION)", version],
     ["($THANK)", thankText],
-    ["($MAKER)", "gfdgd xi、为什么您不喜欢熊出没和阿布呢"],
-    ["($COPYRIGHT)", f"©2020~{time.strftime('%Y')} gfdgd xi、为什么您不喜欢熊出没和阿布呢"],
+    ["($MAKER)", "RacoonGX 团队，By gfdgd xi、为什么您不喜欢熊出没和阿布呢"],
+    ["($COPYRIGHT)", f"©2020~{time.strftime('%Y')} RacoonGX 团队，By gfdgd xi、为什么您不喜欢熊出没和阿布呢"],
     ["($?)", "0"],
     ["($PLATFORM)", platform.system()],
     ["($DEBUG)", "1"]
@@ -57,6 +59,19 @@ readOnlyEnv = [
     "($SYSTEM)",
     "($DEBUG)"
 ]
+
+def FindFile(file, name):
+    for i in os.listdir(file):
+        path = f"{file}/{i}"
+        if os.path.isdir(path):
+            returnPath = FindFile(path, name)
+            if returnPath != None:
+                return returnPath.replace("//", "/")
+        if os.path.isfile(path):
+            if i == name:
+                return path
+    return None
+
 def Debug():
     if "--debug" in sys.argv:
         traceback.print_exc()
@@ -111,7 +126,9 @@ class Command():
         "disbledWinebottlecreatelink",
         "enabledWinebottlecreatelink",
         "installvb",
-        "installother"
+        "installother",
+        "decompressionbottle",
+        "programforum"
     ]
 
     def __init__(self, commandString: str) -> None:
@@ -279,7 +296,7 @@ class Command():
 
         def Version(self):
             print(f"版本：{version}")
-            print(f"©2020~{time.strftime('%Y')} gfdgd xi、为什么您不喜欢熊出没和阿布呢")
+            print(f"©2020~{time.strftime('%Y')} RacoonGX 团队，By gfdgd xi、为什么您不喜欢熊出没和阿布呢")
             return 0
 
         def Pause(self) -> int:
@@ -389,6 +406,20 @@ class Command():
             self.command = ["bat", "reg", "add", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings", "/v", "ProxyServer", "/d", f"{proxyServerAddress}:{port}", "/f"]
             self.Bat()
 
+        def DecompressionBottle(self):
+            tempDebDir = f"/tmp/wine-runner-unpack-deb-{random.randint(0, 1000)}"
+            if os.system(f"dpkg -x '{self.command[1]}' '{tempDebDir}'"):
+                return 1
+            zippath = FindFile(tempDebDir, "files.7z")
+            if zippath == None:
+                return 2
+            # 解压文件
+            os.system(f"mkdir -p '{self.command[2]}'")
+            fi = os.system(f"7z x -y '{zippath}' -o'{self.command[2]}'")
+            os.system(f"rm -rfv '{tempDebDir}'")
+            return fi
+            
+
         def DisbledHttpProxy(self):
             self.command = ["bat", "reg", "add", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings", "/v", "ProxyEnable", "/t", "REG_DWORD", "/d", "00000000", "/f"]
             self.Bat()
@@ -400,6 +431,9 @@ class Command():
         def InstallOther(self):
             import InstallOther
             return InstallOther.Download(self.wineBottonPath, int(self.command[1]), self.wine)
+
+        def ProgramForum(self):
+            webbrowser.open_new_tab("https://gfdgdxi.flarum.cloud/")
 
         # 可以运行的命令的映射关系
         # 可以被使用的命令的映射
@@ -443,7 +477,9 @@ class Command():
             "disbledWinebottlecreatelink": DisbledWineBottleCreateLink,
             "enabledWinebottlecreatelink": EnabledWineBottleCreateLink,
             "installvb": InstallVB,
-            "installother": InstallOther
+            "installother": InstallOther,
+            "decompressionbottle": DecompressionBottle,
+            "programforum": ProgramForum
         }
 
         # 参数数列表
@@ -488,7 +524,9 @@ class Command():
             "disbledWinebottlecreatelink": [0],
             "enabledWinebottlecreatelink": [0],
             "installvb": [1],
-            "installother": [1]
+            "installother": [1],
+            "decompressionbottle": [2],
+            "programforum": [0]
         }
         windowsUnrun = [
             "createbotton",
@@ -502,7 +540,8 @@ class Command():
             "disbledopengl",
             "installdxvk",
             "installfont",
-            "installsparkcorefont"
+            "installsparkcorefont",
+            "decompressionbottle"
         ]
         # 解析
         def __init__(self, command: list, wineBottonPath: str, wine: str) -> int:
@@ -554,7 +593,7 @@ class Command():
                             i[a] = i[a].replace(b[0], b[1])
                 commandReturn = self.commandList[i[0]](self)
                 if commandReturn:
-                    print(f"运行命令{' '.join(self.command)}出现错误")
+                    print(f"运行命令{' '.join(self.command)}出现错误，返回值:", commandReturn)
                 programEnv[9][1] = str(commandReturn)
                 if self.close: 
                     break
@@ -574,7 +613,7 @@ if __name__ == "__main__":
     if len(sys.argv) - optionAll < 2:
         print("Wine 运行器自动配置文件解析器交互环境")
         print(f"版本：{version}")
-        print(f"©2020~{time.strftime('%Y')} gfdgd xi、为什么您不喜欢熊出没和阿布呢")
+        print(f"©2020~{time.strftime('%Y')} RacoonGX 团队，By gfdgd xi、为什么您不喜欢熊出没和阿布呢")
         print("--------------------------------------------------------------")
         while True:
             commandLine = input(">")

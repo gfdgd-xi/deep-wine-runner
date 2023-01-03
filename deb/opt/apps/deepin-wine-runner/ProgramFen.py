@@ -12,10 +12,9 @@ class ProgramRunStatusShow():
     msgWindow = None
     def ShowWindow():
         try:
-            #fenlists = requests.get(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9iYXNoYXBwLw==").decode("utf-8") + fileName + base64.b64decode("L2FsbC5qc29u").decode("utf-8")).json()
             fenlists = []
             for i in range(6):
-                fenlists.append(int(requests.get(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9GZW4=").decode("utf-8") + f"{i}/data.txt").text))
+                fenlists.append(int(requests.get(base64.b64decode("aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy93aW5lLXJ1bm5lci1kb3dubG9hZHMtb2YtcnVubmVyL3Jhdy9icmFuY2gvbWFzdGVyL0Zlbi9GZW4=").decode("utf-8") + f"{i}.txt").text))
             tipsInfo = ""
         except:
             traceback.print_exc()
