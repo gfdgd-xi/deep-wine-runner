@@ -32,7 +32,7 @@ except:
     ["msyhbd.ttc", "https://gitlink.org.cn/api/attachments/392183", "msyhbd.ttc", "msyhbd.ttc"]
 ]
 def Download(wineBotton: str, id: int) -> int:
-    return os.system(f"aria2c -x 16 -s 16 -d '{wineBotton}/drive_c/windows/Fonts/{fontList[id][2]}' -o '{fontList[id][0]}' \"{fontList[id][1]}\"")
+    return os.system(f"aria2c -x 16 -s 16 -d '{wineBotton}/drive_c/windows/Fonts/' -o '{fontList[id][0]}' \"{fontList[id][1]}\"")
 
 if __name__ == "__main__":
     if "--help" in sys.argv:

@@ -38,5 +38,9 @@
     "control": "打开控制面板\n参数数量：0\n参数介绍：无",
     "taskmgr": "打开任务管理器\n参数数量：0\n参数介绍：无",
     "killallwineserver": "杀死所有 Wine 程序\n参数数量：0\n参数介绍：无",
-    "installvb": "安装指定的 VB 运行库到指定容器\n参数数量：1\n参数介绍：在安装 Visual Basic Runtime 工具的编号，如 4 Visual Basic Runtime Visual Basic 6"
+    "installvb": "安装指定的 VB 运行库到指定容器\n参数数量：1\n参数介绍：在安装 Visual Basic Runtime 工具的编号，如 4 Visual Basic Runtime Visual Basic 6",
+    "installother": "安装未归类的运行库到指定容器\n参数数量：1\n参数介绍：在安装其它运行库工具的编号，如 2 MFC运行库",
+    "decompressionbottle": "解压用 wine 打包的 deb 包内的容器到指定路径\n参数数量：2\n参数介绍：deb 包路径+要解压到的路径",
+    "programforum": "打开程序论坛\n参数数量：0\n参数介绍：无",
+    "installmsi": "安装 MSI 文件到指定容器\n参数数量：1\n参数介绍：msi 文件路径"
 }

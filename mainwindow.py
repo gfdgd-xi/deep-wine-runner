@@ -2346,7 +2346,9 @@ updateThingsString = transla.transe("U", '''※1、不基于生态适配脚本�
 ※4、自动容器配置脚本新增许多应用安装脚本；
 ※5、安装 Windows 虚拟机功能更换应答镜像图标并添加常用 Windows 组件安装功能；
 ※6、安装 Windows 虚拟机功能提供镜像下载的网盘链接；
-7、修复提交日志功能在提交成功时依旧提示提交失败问题。
+※7、简易打包器支持自动添加宋体；
+8、修复 installfont 命令下载的字体目录错误问题；
+9、修复提交日志功能在提交成功时依旧提示提交失败问题。
 ''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
