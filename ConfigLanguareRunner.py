@@ -128,7 +128,8 @@ class Command():
         "installvb",
         "installother",
         "decompressionbottle",
-        "programforum"
+        "programforum",
+        "installmsi"
     ]
 
     def __init__(self, commandString: str) -> None:
@@ -435,6 +436,10 @@ class Command():
         def ProgramForum(self):
             webbrowser.open_new_tab("https://gfdgdxi.flarum.cloud/")
 
+        def InstallMSI(self):
+            self.command = ["bat", "msiexec", "/i", self.command[1]]
+            return self.Bat()
+
         # 可以运行的命令的映射关系
         # 可以被使用的命令的映射
         commandList = {
@@ -479,7 +484,8 @@ class Command():
             "installvb": InstallVB,
             "installother": InstallOther,
             "decompressionbottle": DecompressionBottle,
-            "programforum": ProgramForum
+            "programforum": ProgramForum,
+            "installmsi": InstallMSI
         }
 
         # 参数数列表
@@ -526,7 +532,8 @@ class Command():
             "installvb": [1],
             "installother": [1],
             "decompressionbottle": [2],
-            "programforum": [0]
+            "programforum": [0],
+            "installmsi": [1]
         }
         windowsUnrun = [
             "createbotton",

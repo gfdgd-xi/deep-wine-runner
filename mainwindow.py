@@ -1852,7 +1852,7 @@ def UploadLog():
                 "Log": returnText.toPlainText(),
                 "Wine": wine[o1.currentText()],
                 "Tips": text
-                }).json
+                }).json()
             if returnList["ExitCode"] == 0:
                 QtWidgets.QMessageBox.information(window, "提示", "上传成功！")    
             else:
@@ -2341,9 +2341,12 @@ exe路径\' 参数 \'
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示；
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>''')
 updateThingsString = transla.transe("U", '''※1、不基于生态适配脚本打包器支持禁用 Mono/Gecko 打包器；
-※2、自动容器配置脚本新增命令 decompressionbottle、programforum，新增评论功能；
-※3、安装 Windows 虚拟机功能更换应答镜像图标并添加常用 Windows 组件安装功能；
-※4、安装 Windows 虚拟机功能提供镜像下载的网盘链接。
+※2、自动容器配置脚本新增命令 decompressionbottle、programforum、installmsi 以及上述命令的帮助；
+※3、自动容器配置脚本新增评论功能；
+※4、自动容器配置脚本新增许多应用安装脚本；
+※5、安装 Windows 虚拟机功能更换应答镜像图标并添加常用 Windows 组件安装功能；
+※6、安装 Windows 虚拟机功能提供镜像下载的网盘链接；
+7、修复提交日志功能在提交成功时依旧提示提交失败问题。
 ''')
 for i in information["Thank"]:
     thankText += f"{i}\n"

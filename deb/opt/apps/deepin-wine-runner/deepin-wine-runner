@@ -1852,7 +1852,7 @@ def UploadLog():
                 "Log": returnText.toPlainText(),
                 "Wine": wine[o1.currentText()],
                 "Tips": text
-                }).json
+                }).json()
             if returnList["ExitCode"] == 0:
                 QtWidgets.QMessageBox.information(window, "提示", "上传成功！")    
             else:
@@ -2343,7 +2343,8 @@ exe路径\' 参数 \'
 updateThingsString = transla.transe("U", '''※1、不基于生态适配脚本打包器支持禁用 Mono/Gecko 打包器；
 ※2、自动容器配置脚本新增命令 decompressionbottle、programforum，新增评论功能；
 ※3、安装 Windows 虚拟机功能更换应答镜像图标并添加常用 Windows 组件安装功能；
-※4、安装 Windows 虚拟机功能提供镜像下载的网盘链接。
+※4、安装 Windows 虚拟机功能提供镜像下载的网盘链接；
+※5、修复提交日志功能在提交成功时依旧提示提交失败问题。
 ''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
