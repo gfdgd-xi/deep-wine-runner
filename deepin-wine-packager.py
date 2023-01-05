@@ -46,6 +46,7 @@ def button4_cl():
 
 def disabled_or_NORMAL_all(choose):
     choose = not choose
+    disabledMono.setDisabled(choose)
     e1_text.setDisabled(choose)
     e2_text.setDisabled(choose)
     e3_text.setDisabled(choose)
