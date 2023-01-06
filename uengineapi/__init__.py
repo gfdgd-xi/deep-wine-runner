@@ -45,9 +45,9 @@ class APK:
     def __init__(self, apkPath):
         self.apkPath = apkPath
     def install(self):
-        os.system("pkexec /usr/bin/uengine-session-launch-helper -- uengine install --apk='{}'".format(self.apkPath))
+        return os.system("uengine install --apk='{}'".format(self.apkPath))
     def uninstall(self):
-        os.system("pkexec /usr/bin/uengine-session-launch-helper -- uengine uninstall --pkg='{}'".format(self.packageName()))
+        return os.system("uengine uninstall --pkg='{}'".format(self.packageName()))
     def information(self):
         return subprocess.getoutput("aapt dump badging '{}'".format(self.apkPath))
     def activityName(self):
@@ -368,4 +368,5 @@ if __name__ == "__main__":
     quit()
 
 if not ROOT.GetRoot():
-    print("请获取 ROOT 权限以便更好的使用该 API")
+    pass
+    #print("请获取 ROOT 权限以便更好的使用该 API")

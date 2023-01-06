@@ -1,0 +1,14 @@
+#!/usr/bin/env python3
+# 加入路径
+import os
+import sys
+programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
+sys.path.append(f"{programPath}/../../")
+import ConfigLanguareRunner
+# 符号转移
+argv = []
+for i in sys.argv[1:]:
+    argv.append(i.replace(" ", "\\ "))
+com = ConfigLanguareRunner.Command(f"{os.path.basename(sys.argv[0])} {' '.join(argv)}")
+com.Run(com.GetCommandList(), os.getenv("WINEPREFIX"), os.getenv("WINE"))
+sys.exit(int(ConfigLanguareRunner.programEnv[9][1]))

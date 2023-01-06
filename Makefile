@@ -46,6 +46,8 @@ build:
 	cp -rv DisabledOpengl.reg deb/opt/apps/deepin-wine-runner
 	cp -rv EnabledOpengl.reg deb/opt/apps/deepin-wine-runner
 	cp -rv geek.exe deb/opt/apps/deepin-wine-runner
+	cp -rv uengineapi deb/opt/apps/deepin-wine-runner
+	cp -rv getxmlimg.py deb/opt/apps/deepin-wine-runner
 	cp -rv ProgramFen.py deb/opt/apps/deepin-wine-runner
 	cp -rv information.json deb/opt/apps/deepin-wine-runner
 	cp -rv InstallMono.py deb/opt/apps/deepin-wine-runner
