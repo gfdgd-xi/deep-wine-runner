@@ -2348,11 +2348,12 @@ updateThingsString = transla.transe("U", '''※1、不基于生态适配脚本�
 ※6、安装 Windows 虚拟机功能提供镜像下载的网盘链接；
 ※7、简易打包器支持自动添加宋体；
 8、修复 installfont 命令下载的字体目录错误问题；
-9、修复提交日志功能在提交成功时依旧提示提交失败问题。
+9、修复提交日志功能在提交成功时依旧提示提交失败问题；
+10、支持强制启用所有被禁用的组件（不推荐）。
 ''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2023年01月03日"
+updateTime = "2023年01月06日"
 aboutProgram = transla.transe("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。</p>
 <p>它同时还内置了基于VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作。</p>
 <pre>
@@ -2590,6 +2591,7 @@ installWineHQ = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine
 installMoreWine = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/more-wine.png"), transla.transe("U", "安装更多 Wine"))
 downloadChrootBottle = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/CHROOT.png"), transla.transe("U", "下载 Chroot 容器"))
 p2 = QtWidgets.QAction(transla.transe("U", "设置程序(&S)"))
+enabledAll = QtWidgets.QAction(transla.transe("U", "强制启用所有被禁用的组件（不推荐）"))
 p3 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(47), transla.transe("U", "清空软件历史记录(&C)"))
 cleanCache = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(47), transla.transe("U", "清空软件缓存"))
 cleanProgramUnuse = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(47), transla.transe("U", "删除程序组件"))
@@ -2602,6 +2604,7 @@ programmenu.addAction(installMoreWine)
 programmenu.addAction(downloadChrootBottle)
 programmenu.addSeparator()
 programmenu.addAction(p2)
+programmenu.addAction(enabledAll)
 programmenu.addSeparator()
 programmenu.addAction(p3)
 programmenu.addAction(cleanCache)
@@ -2615,6 +2618,7 @@ installWineHQ.triggered.connect(InstallWineHQ)
 installMoreWine.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/wine/installwine'"]).start())
 downloadChrootBottle.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/QemuDownload.py'"]).start())
 p2.triggered.connect(ProgramSetting.ShowWindow)
+enabledAll.triggered.connect(lambda: DisableButton(False))
 p3.triggered.connect(CleanProgramHistory)
 cleanCache.triggered.connect(CleanProgramCache)
 cleanProgramUnuse.triggered.connect(CleanProgram)
