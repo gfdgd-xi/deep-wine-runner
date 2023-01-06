@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 3.0.0</h1>
+<h1 align="center">Wine 运行器 3.1.0</h1>
 <hr>
 
 ## 介绍
@@ -102,6 +102,20 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志 
+### 3.1.0（2023年01月06日）
+**※1、不基于生态适配脚本打包器支持禁用 Mono/Gecko 打包器；**  
+**※2、自动容器配置脚本新增命令 decompressionbottle、programforum、installmsi 以及上述命令的帮助；**  
+**※3、自动容器配置脚本新增评论功能；**  
+**※4、自动容器配置脚本新增许多应用安装脚本；**  
+**※5、安装 Windows 虚拟机功能更换应答镜像图标并添加常用 Windows 组件安装功能；**  
+**※6、安装 Windows 虚拟机功能提供镜像下载的网盘链接；**  
+**※7、简易打包器支持自动添加宋体；**  
+**8、修复 installfont 命令下载的字体目录错误问题；**  
+**9、修复提交日志功能在提交成功时依旧提示提交失败问题；**  
+**10、支持强制启用所有被禁用的组件（不推荐）。**  
+
+![图片.png](https://storage.deepin.org/thread/202301061133232305_图片.png)  
+
 ### 3.0.0（2022年12月10日）
 **※1、支持使用 Qemu + Chroot 跨运行 Wine 以及指定程序的功能；**  
 **※2、提供了简易打包器以用于打包简易 deb；**  
