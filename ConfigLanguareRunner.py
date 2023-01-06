@@ -446,10 +446,12 @@ class Command():
             return self.Bat()
 
         def InstallApk(self):
+            if os.system("which uengine > /dev/null"):
+                print("未安装 UEngine，无法使用该命令")
+                return 1
             apk = uengineapi.APK(self.command[1])
             result = apk.install()
             homePath = os.getenv("HOME")
-            
             if not os.path.exists(f"{homePath}/.local/share/applications/uengine"):
                 os.makedirs(f"{homePath}/.local/share/applications/uengine")
             if not os.path.exists(f"{homePath}/.local/share/icons/hicolor/apps"):
