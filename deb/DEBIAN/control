@@ -1,5 +1,5 @@
 Package: spark-deepin-wine-runner
-Version: 3.0.1
+Version: 3.1.0
 Maintainer: gfdgd xi <3025613752@qq.com>
 Homepage: https://gitee.com/gfdgd-xi-org/deep-wine-runner
 Architecture: all
@@ -14,27 +14,17 @@ Section: utils
 Conflicts: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, spark-deepin-wine-runner-52, spark-deepin-wine-runner
 Replaces: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, spark-deepin-wine-runner-52, spark-deepin-wine-runner
 Installed-Size: 25856
-Description: gfdgd xi、为什么您不喜欢熊出没和阿布呢 制作的 wine 运行器
- 3.0.0 更新内容：
- ※1、支持使用 Qemu + Chroot 跨运行 Wine 以及指定程序的功能；
- ※2、提供了简易打包器以用于打包简易 deb；
- ※3、支持下载配置过的 Qemu + Chroot 容器；
- ※4、支持在隔离的 Chroot 容器内运行 Wine；
- ※5、支持解压指定 deb 的内打包好的容器；
- ※6、优化 Wine 列表显示；
- ※7、新增程序论坛和教程入口；
- ※8、程序公告功能；
- ※9、新增程序评分功能；
- ※10、新增解包 deb 内 Wine 容器功能；
- ※11、新增 Vkd3d Proton 安装功能，更新 dxvk 版本至 2.0.0；
- ※12、新增程序菜单栏部分栏目图标；
- ※13、打包器支持按下 Shift + F1 查看指定选项提示；
- 14、优化非基于生态适配脚本的打包器内容自动填充功能；
- 15、优化程序文案；
- 16、新增日志翻译功能；
- 17、程序进一步完善英语翻译（机翻）；
- 18、优化程序更新策略；
- 19、优化日志分析功能；
- 20、优化程序 UI。
- 更新时间：2022年12月09日
- 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
+Description: gfdgd xi、为什么您不喜欢熊出没和阿布呢 制作的 wine 运行器，RacoonGX 团队作品
+ 3.1.0 更新内容：
+ ※1、不基于生态适配脚本打包器支持禁用 Mono/Gecko 打包器；
+ ※2、自动容器配置脚本新增命令 decompressionbottle、programforum、installmsi 以及上述命令的帮助；
+ ※3、自动容器配置脚本新增评论功能；
+ ※4、自动容器配置脚本新增许多应用安装脚本；
+ ※5、安装 Windows 虚拟机功能更换应答镜像图标并添加常用 Windows 组件安装功能；
+ ※6、安装 Windows 虚拟机功能提供镜像下载的网盘链接；
+ ※7、简易打包器支持自动添加宋体；
+ 8、修复 installfont 命令下载的字体目录错误问题；
+ 9、修复提交日志功能在提交成功时依旧提示提交失败问题；
+ 10、支持强制启用所有被禁用的组件（不推荐）。
+ 更新时间：2023年01月06日
+ 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢，RacoonGX 团队作品

@@ -64,4 +64,4 @@ fi
 # 设置目录权限，让用户可读可写，方便后续删除组件
 chmod 777 -R /opt/apps/deepin-wine-runner
 # 向服务器返回安装数加1（不显示内容且忽略错误）
-python3 /opt/apps/deepin-wine-runner/Download.py 3.0.0 > /dev/null 2>&1 | true
+python3 /opt/apps/deepin-wine-runner/Download.py 3.1.0 > /dev/null 2>&1 | true
