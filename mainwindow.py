@@ -293,12 +293,16 @@ class Runexebutton_threading(QtCore.QThread):
             res = ""
             if e2.currentText()[-4:] == ".msi" and os.path.exists(e2.currentText()):
                 OpenTerminal("env WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " msiexec /i '" + e2.currentText() + "' " + setting["WineOption"])
+            elif e2.currentText()[-4:] == ".bat" and os.path.exists(e2.currentText()):
+                OpenTerminal("env WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " wineconsole '" + e2.currentText() + "' " + setting["WineOption"])
             else:
                 OpenTerminal("env WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"])
             #res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"] + "\" --keep-open" + wineUsingOption], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         else:
             if e2.currentText()[-4:] == ".msi" and os.path.exists(e2.currentText()):
                 res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " msiexec /i '" + e2.currentText() + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            elif e2.currentText()[-4:] == ".bat" and os.path.exists(e2.currentText()):
+                res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " wineconsole '" + e2.currentText() + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             else:
                 print(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"]])
                 res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
