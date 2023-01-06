@@ -1100,8 +1100,8 @@ class UpdateWindow():
             updateText.setText("从源码运行不提供更新")
             ok.setDisabled(True)
         else:
-            if newPackage:
-                url = "aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci91cGRhdGVuZXcuanNvbg=="
+            if 1 == 0:
+                url = ""
             else:
                 if "deepin/UOS 应用商店版本<带签名>" == programVersionType:
                     url = "aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy93aW5lLXJ1bm5lci11cGRhdGUtaW5mb3JtYXRpb24vcmF3L2JyYW5jaC9tYXN0ZXIvdXBkYXRlLXVvcy5qc29u"
