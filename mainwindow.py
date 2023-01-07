@@ -2118,7 +2118,7 @@ defultProgramList = {
     "WineBottonDifferent": False,
     "CenterWindow": False,
     "Theme": "",
-    "MonoGeckoInstaller": True,
+    "MonoGeckoInstaller": False,
     "AutoWine": True,
     "RuntimeCache": True,
     "MustRead": False,
