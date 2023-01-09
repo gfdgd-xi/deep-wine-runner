@@ -93,6 +93,25 @@ build:
 	cp -rv API deb/opt/apps/deepin-wine-runner
 	cp -rv key deb/opt/apps/deepin-wine-runner
 	python3 RemovePycacheFile.py
+	ln -s /opt/apps/deepin-wine-runner/deepin-wine-packager.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-package-builder 
+	ln -s /opt/apps/deepin-wine-runner/deepin-wine-easy-packager.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-packager-easy-builder
+	ln -s /opt/apps/deepin-wine-runner/deepin-wine-packager-with-script.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-packager-with-script
+	ln -s /opt/apps/deepin-wine-runner/deepin-wine-runner /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-runner
+	ln -s /opt/apps/deepin-wine-runner/AppStore.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-runner-appstore
+	ln -s /opt/apps/deepin-wine-runner/AutoShell/main.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-runner-auto-install-bash
+	ln -s /opt/apps/deepin-wine-runner/ConfigLanguareRunner.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-runner-auto-install-config-old
+	ln -s /opt/apps/deepin-wine-runner/AutoConfig.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-runner-auto-install-gui
+	ln -s /opt/apps/deepin-wine-runner/launch.sh /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-runner-dtk-launch
+	ln -s /opt/apps/deepin-wine-runner/deepin-wine-runner-update-bug /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-runner-update-bug
+	ln -s /opt/apps/deepin-wine-runner/InstallFont.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-runner-wine-font-installer
+	ln -s /opt/apps/deepin-wine-runner/InstallNewWineHQ.sh /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-runner-winehq-install
+	ln -s '/opt/apps/deepin-wine-runner/wine install' /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-runner-wine-install
+	ln -s '/opt/apps/deepin-wine-runner/wine install' /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-runner-wine-installer
+	ln -s /opt/apps/deepin-wine-runner/InstallWineOnDeepin23.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-runner-wine-install-deepin23
+	ln -s /opt/apps/deepin-wine-runner/InstallMono.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-runner-wine-monogecko-installer
+	ln -s /opt/apps/deepin-wine-runner/InstallNetFramework.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-runner-wine-netframework-installer
+	ln -s /opt/apps/deepin-wine-runner/InstallVisualCPlusPlus.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-runner-wine-vscppruntime-installer
+	ln -s /opt/apps/deepin-wine-runner/deepin-wine-venturi-setter.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-venturi-setter
 	cp -rv deb /tmp/spark-deepin-wine-runner-builder
 	sudo chown -R root:root /tmp/spark-deepin-wine-runner-builder
 	

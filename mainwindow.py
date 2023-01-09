@@ -2218,6 +2218,10 @@ try:
     isoPathFound = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ISOPathFound.json")).values())
     setting = json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineSetting.json"))
     change = False
+    if not os.path.exists(get_home() + "/.config/deepin-wine-runner/mono-lock"):
+        os.mknod(f"{get_home()}/.config/deepin-wine-runner/mono-lock")
+        setting["MonoGeckoInstaller"] = False
+        change = True
     for i in defultProgramList.keys():
         if not i in setting:
             change = True
