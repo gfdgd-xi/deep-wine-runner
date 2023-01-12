@@ -12,7 +12,7 @@ import sys
 import time
 import json
 import random
-import uengineapi
+#import uengineapi
 import platform
 import traceback
 import webbrowser
@@ -622,7 +622,11 @@ class Command():
                     for b in programEnv:
                         if b[0] in i[a]:
                             i[a] = i[a].replace(b[0], b[1])
-                commandReturn = self.commandList[i[0]](self)
+                try:
+                    commandReturn = self.commandList[i[0]](self)
+                except:
+                    traceback.print_exc()
+                    commandReturn = 1
                 if commandReturn:
                     print(f"运行命令{' '.join(self.command)}出现错误，返回值:", commandReturn)
                 programEnv[9][1] = str(commandReturn)
