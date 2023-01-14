@@ -12,6 +12,7 @@ import sys
 import time
 import json
 import random
+# 阉割 Android 应用安装功能
 #import uengineapi
 import platform
 import traceback
