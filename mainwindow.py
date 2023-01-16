@@ -28,11 +28,6 @@ import urllib.parse as parse
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
-try:
-    import PyQt5.QtWebEngineWidgets as QtWebEngineWidgets
-    bad = False
-except:
-    bad = True
 from trans import *
 from Model import *
 
@@ -416,15 +411,6 @@ def about_this_program()->"显示“关于这个程序”窗口":
     QT.message.setCentralWidget(messageWidget)
     QT.message.resize(int(messageWidget.frameGeometry().width() * 1.5), int(messageWidget.frameGeometry().height() * 1.5))
     QT.message.show()
-
-# 显示“提示”窗口
-def helps():
-    global tips
-    QtWidgets.QMessageBox.information(widget, "提示", tips)
-
-# 显示更新内容窗口
-def UpdateThings():
-    QtWidgets.QMessageBox.information(widget, "更新内容", updateThings)
 
 # 生成 desktop 文件在启动器
 def make_desktop_on_launcher():
@@ -1906,27 +1892,6 @@ def SaveLog():
         traceback.print_exc()
         QtWidgets.QMessageBox.critical(window, "错误", traceback.format_exc())
 
-def GetNewInformation():
-    try:
-        text = requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/information/index.html").text
-    except:
-        traceback.print_exc()
-        text = """<p>无法连接到服务器</p>
-            <hr/>
-            <p>你可以尝试：</p>
-            <p>1. 判断使用的是否使用吾爱版本，如果使用吾爱版本则无法连接</p>
-            <p>2. 判断是否能正常连接网络</p>"""
-    global webInformation
-    if bad:
-        webInformation = QtWidgets.QTextBrowser()
-    else:
-        webInformation = QtWebEngineWidgets.QWebEngineView()
-    webInformation.setHtml(text)
-    webInformation.setWindowTitle("获取程序公告")
-    webInformation.setWindowIcon(QtGui.QIcon(iconPath))
-    webInformation.resize(int(webInformation.frameGeometry().width() * 1.3), int(webInformation.frameGeometry().height() * 1.1))
-    webInformation.show()
-
 def getFileFolderSize(fileOrFolderPath):
     """get size for file or folder"""
     totalSize = 0
@@ -2906,12 +2871,9 @@ if len(qemuBottleList) >= 1:
 help = menu.addMenu(transla.transe("U", "帮助(&H)"))
 runStatusWebSize = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "查询程序在 Wine 的运行情况"))
 h1 = help.addMenu(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "程序官网"))
-h2 = QtWidgets.QAction(transla.transe("U", "小提示"))
 wineRunnerHelp = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "Wine运行器和Wine打包器傻瓜式使用教程（小白专用） By 鹤舞白沙"))
-h3 = QtWidgets.QAction(transla.transe("U", "更新内容"))
 h4 = QtWidgets.QAction(transla.transe("U", "鸣谢名单"))
 h5 = QtWidgets.QAction(transla.transe("U", "更新这个程序"))
-programInformation = QtWidgets.QAction(transla.transe("U", "获取程序公告"))
 h6 = QtWidgets.QAction(transla.transe("U", "反馈这个程序的建议和问题"))
 fenUpload = QtWidgets.QAction(transla.transe("U", "程序评分"))
 h7 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(9), transla.transe("U", "关于这个程序"))
@@ -2934,8 +2896,6 @@ help.addAction(forumWebsize)
 help.addAction(wineRunnerHelp)
 help.addAction(runStatusWebSize)
 help.addSeparator()
-help.addAction(h2)
-help.addAction(h3)
 help.addAction(h4)
 help.addSeparator()
 wikiHelp = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "程序 Wiki"))
@@ -2949,7 +2909,6 @@ help.addSeparator()
 help.addAction(h5)
 help.addAction(h6)
 help.addAction(fenUpload)
-help.addAction(programInformation)
 help.addAction(h7)
 help.addAction(h8)
 help.addSeparator()
@@ -2964,8 +2923,6 @@ gitlab.triggered.connect(lambda: webbrowser.open_new_tab("https://gitlab.com/gfd
 jihu.triggered.connect(lambda: webbrowser.open_new_tab("https://jihulab.com//gfdgd-xi/deep-wine-runner"))
 runStatusWebSize.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io/wine-runner-info"))
 forumWebsize.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgdxi.flarum.cloud/"))
-h2.triggered.connect(helps)
-h3.triggered.connect(UpdateThings)
 wineRunnerHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://bbs.deepin.org/post/246837"))
 h4.triggered.connect(ThankWindow)
 wikiHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io/wine-runner-wiki"))
@@ -2977,7 +2934,6 @@ fenUpload.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"p
 h7.triggered.connect(about_this_program)
 h8.triggered.connect(lambda: QtWidgets.QMessageBox.aboutQt(widget))
 hm1_1.triggered.connect(lambda: webbrowser.open_new_tab("https://gitee.com/gfdgd-xi/uengine-runner"))
-programInformation.triggered.connect(GetNewInformation)
 # 异同步获取信息
 #threading.Thread(target=GetVersion).start()
 GetVersion()
