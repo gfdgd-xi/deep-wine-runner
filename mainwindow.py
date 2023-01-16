@@ -771,15 +771,6 @@ def GetScreenSize():
         ])
     return screenInformation  # 返回结果
 
-def UOSPackageScript():
-    threading.Thread(target=os.system, args=[f"python3 '{programPath}/deepin-wine-packager-with-script.py'"]).start()
-
-def RunVM():
-    threading.Thread(target=os.system, args=[f"bash '{programPath}/RunVM.sh'"]).start()
-
-def CleanProgram():
-    OpenTerminal(f"{programPath}/clean-unuse-program.py")
-
 class UpdateWindow():
     data = {}
     update = None
@@ -2068,7 +2059,6 @@ p2 = QtWidgets.QAction(transla.transe("U", "设置程序(&S)"))
 enabledAll = QtWidgets.QAction(transla.transe("U", "强制启用所有被禁用的组件（不推荐）"))
 p3 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(47), transla.transe("U", "清空软件历史记录(&C)"))
 cleanCache = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(47), transla.transe("U", "清空软件缓存"))
-cleanProgramUnuse = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(47), transla.transe("U", "删除程序组件"))
 p4 = QtWidgets.QAction(transla.transe("U", "退出程序(&E)"))
 programmenu.addAction(installMoreWine)
 programmenu.addAction(downloadChrootBottle)
@@ -2078,7 +2068,6 @@ programmenu.addAction(enabledAll)
 programmenu.addSeparator()
 programmenu.addAction(p3)
 programmenu.addAction(cleanCache)
-programmenu.addAction(cleanProgramUnuse)
 programmenu.addSeparator()
 programmenu.addAction(p4)
 installMoreWine.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/wine/installwine'"]).start())
@@ -2087,7 +2076,6 @@ p2.triggered.connect(ProgramSetting.ShowWindow)
 enabledAll.triggered.connect(lambda: DisableButton(False))
 p3.triggered.connect(CleanProgramHistory)
 cleanCache.triggered.connect(CleanProgramCache)
-cleanProgramUnuse.triggered.connect(CleanProgram)
 p4.triggered.connect(window.close)
 
 wineOption = menu.addMenu(transla.transe("U", "Wine(&W)"))
@@ -2095,7 +2083,6 @@ w1 = QtWidgets.QAction(transla.transe("U", "打开 Wine 容器目录"))
 w4 = QtWidgets.QAction(transla.transe("U", "删除选择的 Wine 容器"))
 cleanBottonUOS = QtWidgets.QAction(transla.transe("U", "清理 Wine 容器（基于 Wine 适配活动脚本）"))
 wineKeyboardLnk = QtWidgets.QAction(transla.transe("U", "Wine 快捷键映射"))
-w6 = QtWidgets.QAction(QtGui.QIcon.fromTheme("deb"), transla.transe("U", "使用官方 Wine 适配活动的脚本进行打包"))
 easyPackager = QtWidgets.QAction(QtGui.QIcon.fromTheme("deb"), transla.transe("U", "使用简易打包器进行打包（小白且无特殊需求建议使用这个）"))
 getDllOnInternet = QtWidgets.QAction(QtGui.QIcon.fromTheme("1CD8_rundll32.0"), transla.transe("U", "从互联网获取DLL"))
 w7 = QtWidgets.QAction(transla.transe("U", "从镜像获取DLL（只支持官方安装镜像，DOS内核如 Windows 95 暂不支持）"))
@@ -2106,7 +2093,6 @@ wineOption.addAction(w1)
 wineOption.addAction(w4)
 wineOption.addAction(cleanBottonUOS)
 wineOption.addSeparator()
-wineOption.addAction(w6)
 wineOption.addAction(easyPackager)
 wineOption.addAction(deletePartIcon)
 wineOption.addSeparator()
@@ -2192,7 +2178,6 @@ dllOver.addAction(editDllOver)
 w1.triggered.connect(OpenWineBotton)
 w4.triggered.connect(DeleteWineBotton)
 cleanBottonUOS.triggered.connect(CleanWineBottonByUOS)
-w6.triggered.connect(UOSPackageScript)
 easyPackager.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/deepin-wine-easy-packager.py' '{e2.currentText()}'"]).start())
 wineKeyboardLnk.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/key/key-add-gui.py'"]).start())
 getDllOnInternet.triggered.connect(GetDllFromInternet)
@@ -2227,11 +2212,6 @@ editDllOver.triggered.connect(lambda: RunWineProgram("winecfg"))
 vbDemo.triggered.connect(lambda: RunWineProgram(f"{programPath}/Test/vb.exe"))
 netDemo.triggered.connect(lambda: RunWineProgram(f"{programPath}/Test/net.exe"))
 netIEDemo.triggered.connect(lambda: RunWineProgram(f"{programPath}/Test/netandie.exe"))
-
-virtualMachine = menu.addMenu(transla.transe("U", "虚拟机(&V)"))
-v1 = QtWidgets.QAction(QtGui.QIcon.fromTheme("virtualbox"), transla.transe("U", "使用 Virtualbox 虚拟机运行 Windows 应用"))
-virtualMachine.addAction(v1)
-v1.triggered.connect(RunVM)
 
 help = menu.addMenu(transla.transe("U", "帮助(&H)"))
 runStatusWebSize = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "查询程序在 Wine 的运行情况"))
