@@ -633,21 +633,6 @@ def ThankWindow():
     # 直接显示关于窗口，关于窗口已经添加
     about_this_program()
 
-def WineRunnerBugUpload():
-    threading.Thread(target=os.system, args=[f"'{programPath}/deepin-wine-runner-update-bug'"]).start()
-
-def SetHttpProxy():
-    QtWidgets.QMessageBox.information(window, "提示", "请在下面的对话框正确输入内容以便设置代理")
-    proxyServerAddress = QtWidgets.QInputDialog.getText(window, "提示", "请输入代理服务器地址")[0]
-    port = QtWidgets.QInputDialog.getText(window, "提示", "请输入代理服务器端口")[0]
-    if proxyServerAddress == "" or port == "":
-        return
-    RunWineProgram("reg' add 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' /v ProxyEnable /t REG_DWORD /d 00000001 '/f")
-    RunWineProgram(f"reg' add 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' /v ProxyServer /d '{proxyServerAddress}:{port}' '/f")
-
-def DisbledHttpProxy():
-    RunWineProgram("reg' add 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings' /v ProxyEnable /t REG_DWORD /d 00000000 '/f")
-
 def GetScreenSize():
     screenInformation = []
     # 使用 xrandr 进行筛选
@@ -674,82 +659,6 @@ def GetScreenSize():
             main                                       # 是否为主屏幕
         ])
     return screenInformation  # 返回结果
-
-class UpdateWindow():
-    data = {}
-    update = None
-    def ShowWindow():
-        UpdateWindow.update = QtWidgets.QMainWindow()
-        updateWidget = QtWidgets.QWidget()
-        updateWidgetLayout = QtWidgets.QGridLayout()
-        versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：未知\n更新内容：")
-        updateText = QtWidgets.QTextBrowser()
-        ok = QtWidgets.QPushButton(transla.transe("U", "更新（更新后需要自行手动重启程序）"))
-        ok.clicked.connect(UpdateWindow.Update)
-        cancel = QtWidgets.QPushButton("取消")
-        cancel.clicked.connect(UpdateWindow.update.close)
-        if "从源码运行的版本" == programVersionType:
-            versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：未知（从源码运行不提供更新）\n更新内容：")
-            updateText.setText("从源码运行不提供更新")
-            ok.setDisabled(True)
-        else:
-            if 1 == 0:
-                url = ""
-            else:
-                if "deepin/UOS 应用商店版本<带签名>" == programVersionType:
-                    url = "aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy93aW5lLXJ1bm5lci11cGRhdGUtaW5mb3JtYXRpb24vcmF3L2JyYW5jaC9tYXN0ZXIvdXBkYXRlLXVvcy5qc29u"
-                elif "星火应用商店版本" == programVersionType:
-                    url = "aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy93aW5lLXJ1bm5lci11cGRhdGUtaW5mb3JtYXRpb24vcmF3L2JyYW5jaC9tYXN0ZXIvdXBkYXRlLXNwYXJrLmpzb24="
-                else: 
-                    url = "aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy93aW5lLXJ1bm5lci11cGRhdGUtaW5mb3JtYXRpb24vcmF3L2JyYW5jaC9tYXN0ZXIvdXBkYXRlLmpzb24="
-            
-            try:
-                UpdateWindow.data = json.loads(requests.get(base64.b64decode(url).decode("utf-8")).text)
-                versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：{UpdateWindow.data['Version']}\n更新内容：")
-                if UpdateWindow.data["Version"] == version:
-                    updateText.setText(transla.transe("U", "此为最新版本，无需更新"))
-                    ok.setDisabled(True)
-                else:
-                    updateText.setText(UpdateWindow.data["New"].replace("\\n", "\n"))
-            except:
-                traceback.print_exc()
-                QtWidgets.QMessageBox.critical(updateWidget, transla.transe("U", "错误"), transla.transe("U", "无法连接服务器！"))
-                updateText.setText("无法连接服务器，无法更新")
-                ok.setDisabled(True)
-        updateWidgetLayout.addWidget(versionLabel, 0, 0, 1, 1)
-        updateWidgetLayout.addWidget(updateText, 1, 0, 1, 3)
-        updateWidgetLayout.addWidget(ok, 2, 2, 1, 1)
-        updateWidgetLayout.addWidget(cancel, 2, 1, 1, 1)
-        updateWidget.setLayout(updateWidgetLayout)
-        UpdateWindow.update.setCentralWidget(updateWidget)
-        UpdateWindow.update.setWindowTitle(transla.transe("U", "检查更新"))
-        UpdateWindow.update.resize(updateWidget.frameGeometry().width(), int(updateWidget.frameGeometry().height() * 1.5))
-        UpdateWindow.update.show()
-
-    def Update():
-        if os.path.exists("/tmp/spark-deepin-wine-runner/update"):
-            shutil.rmtree("/tmp/spark-deepin-wine-runner/update")
-        os.makedirs("/tmp/spark-deepin-wine-runner/update")
-        try:            
-            print(UpdateWindow.data["Url"])
-            write_txt("/tmp/spark-deepin-wine-runner/update.sh", f"""#!/bin/bash
-echo 删除多余的安装包
-rm -rfv /tmp/spark-deepin-wine-runner/update/*
-#echo 关闭“Wine 运行器”以及其它“Python 应用”
-#killall python3
-echo 下载安装包
-wget -P /tmp/spark-deepin-wine-runner/update {UpdateWindow.data["Url"][0]}
-echo 安装安装包
-dpkg -i /tmp/spark-deepin-wine-runner/update/*
-echo 修复依赖关系
-apt install -f -y
-notify-send -i "{iconPath}" "更新完毕！"
-zenity --info --text=\"更新完毕！\" --ellipsize
-""")
-        except:
-            traceback.print_exc()
-            QtWidgets.QMessageBox.critical(None, "出现错误，无法继续更新", traceback.format_exc())
-        OpenTerminal("pkexec bash /tmp/spark-deepin-wine-runner/update.sh")
 
 class GetDllFromWindowsISO:
     wineBottonPath = get_home() + "/.wine"
@@ -2021,11 +1930,6 @@ wm2.addAction(wm2_4)
 wm2.addAction(wm2_5)
 wm2.addAction(wm2_6)
 wineOption.addSeparator()
-settingHttpProxy = wineOption.addMenu(transla.transe("U", "设置指定 Wine 容器代理"))
-enabledHttpProxy = QtWidgets.QAction(transla.transe("U", "设置指定 wine 容器的代理"))
-disbledHttpProxy = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(40), transla.transe("U", "禁用指定 wine 容器的代理"))
-settingHttpProxy.addAction(enabledHttpProxy)
-settingHttpProxy.addAction(disbledHttpProxy)
 w1.triggered.connect(OpenWineBotton)
 w4.triggered.connect(DeleteWineBotton)
 cleanBottonUOS.triggered.connect(CleanWineBottonByUOS)
@@ -2041,16 +1945,12 @@ wm2_4.triggered.connect(lambda: RunWineProgram("taskmgr"))
 wm2_5.triggered.connect(lambda: RunWineProgram("explorer"))
 wm2_6.triggered.connect(lambda: RunWineProgram("winver"))
 deletePartIcon.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"python3 '{programPath}/BuildDesktop.py'"]).start())
-enabledHttpProxy.triggered.connect(SetHttpProxy)
-disbledHttpProxy.triggered.connect(DisbledHttpProxy)
 
 help = menu.addMenu(transla.transe("U", "帮助(&H)"))
 runStatusWebSize = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "查询程序在 Wine 的运行情况"))
 h1 = help.addMenu(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "程序官网"))
 wineRunnerHelp = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "Wine运行器和Wine打包器傻瓜式使用教程（小白专用） By 鹤舞白沙"))
 h4 = QtWidgets.QAction(transla.transe("U", "鸣谢名单"))
-h5 = QtWidgets.QAction(transla.transe("U", "更新这个程序"))
-h6 = QtWidgets.QAction(transla.transe("U", "反馈这个程序的建议和问题"))
 fenUpload = QtWidgets.QAction(transla.transe("U", "程序评分"))
 h7 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(9), transla.transe("U", "关于这个程序"))
 h8 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(9), transla.transe("U", "关于 Qt"))
@@ -2082,8 +1982,6 @@ buildHelp = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), t
 videoHelp.addAction(easyHelp)
 videoHelp.addAction(buildHelp)
 help.addSeparator()
-help.addAction(h5)
-help.addAction(h6)
 help.addAction(fenUpload)
 help.addAction(h7)
 help.addAction(h8)
@@ -2104,8 +2002,6 @@ h4.triggered.connect(ThankWindow)
 wikiHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io/wine-runner-wiki"))
 easyHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://www.bilibili.com/video/BV1ma411972Y"))
 buildHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://www.bilibili.com/video/BV1EU4y1k7zr"))
-h5.triggered.connect(UpdateWindow.ShowWindow)
-h6.triggered.connect(WineRunnerBugUpload)
 fenUpload.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"python3 '{programPath}/ProgramFen.py'"]).start())
 h7.triggered.connect(about_this_program)
 h8.triggered.connect(lambda: QtWidgets.QMessageBox.aboutQt(widget))
