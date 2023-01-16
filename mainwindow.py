@@ -594,40 +594,6 @@ def RunWineProgram(wineProgram, history = False, Disbled = True):
     runProgram.showHistory.connect(QT.ShowHistory)
     runProgram.start()
 
-def CleanWineBottonByUOS():
-    if e1.currentText() == "":
-        wineBottonPath = setting["DefultBotton"]
-    else:
-        wineBottonPath = e1.currentText()
-    OpenTerminal(f"env WINE='{wine[o1.currentText()]}' '{programPath}/cleanbottle.sh' '{wineBottonPath}'")
-
-def FontAppStore():
-    if e1.currentText() == "":
-        wineBottonPath = setting["DefultBotton"]
-    else:
-        wineBottonPath = e1.currentText()
-    OpenTerminal(f"env WINE='{programPath}/launch.sh' '{programPath}/InstallFont.py' '{wineBottonPath}' {int(setting['RuntimeCache'])}")
-
-def GetDllFromInternet():
-    if e1.currentText() == "":
-        wineBottonPath = setting["DefultBotton"]
-    else:
-        wineBottonPath = e1.currentText()
-    OpenTerminal(f"env WINE='{programPath}/launch.sh' '{programPath}/InstallDll.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
-
-def DeleteWineBotton():
-    if QtWidgets.QMessageBox.question(widget, "提示", "你确定要删除容器吗？删除后将无法恢复！\n如果没有选择 wine 容器，将会自动删除默认的容器！") == QtWidgets.QMessageBox.No:
-        return
-    if e1.currentText() == "":
-        wineBottonPath = setting["DefultBotton"]
-    else:
-        wineBottonPath = e1.currentText()
-    try:
-        shutil.rmtree(wineBottonPath)
-        QtWidgets.QMessageBox.information(widget, "提示", "删除完毕！")
-    except:
-        traceback.print_exc()
-        QtWidgets.QMessageBox.critical(widget, "错误", traceback.format_exc())
 
 def ThankWindow():
     # 直接显示关于窗口，关于窗口已经添加
@@ -1431,21 +1397,14 @@ p4.triggered.connect(window.close)
 wineOption = menu.addMenu(transla.transe("U", "Wine(&W)"))
 w1 = QtWidgets.QAction(transla.transe("U", "打开 Wine 容器目录"))
 w4 = QtWidgets.QAction(transla.transe("U", "删除选择的 Wine 容器"))
-cleanBottonUOS = QtWidgets.QAction(transla.transe("U", "清理 Wine 容器（基于 Wine 适配活动脚本）"))
-wineKeyboardLnk = QtWidgets.QAction(transla.transe("U", "Wine 快捷键映射"))
-easyPackager = QtWidgets.QAction(QtGui.QIcon.fromTheme("deb"), transla.transe("U", "使用简易打包器进行打包（小白且无特殊需求建议使用这个）"))
 getDllOnInternet = QtWidgets.QAction(QtGui.QIcon.fromTheme("1CD8_rundll32.0"), transla.transe("U", "从互联网获取DLL"))
 updateGeek = QtWidgets.QAction(transla.transe("U", "从 Geek Uninstaller 官网升级程序"))
 deletePartIcon = QtWidgets.QAction(transla.transe("U", "快捷方式管理工具"))
 deleteDesktopIcon = QtWidgets.QAction(transla.transe("U", "删除所有 Wine 程序在启动器的快捷方式"))
 wineOption.addAction(w1)
 wineOption.addAction(w4)
-wineOption.addAction(cleanBottonUOS)
 wineOption.addSeparator()
-wineOption.addAction(easyPackager)
 wineOption.addAction(deletePartIcon)
-wineOption.addSeparator()
-wineOption.addAction(wineKeyboardLnk)
 wineOption.addSeparator()
 wineOption.addAction(getDllOnInternet)
 wineOption.addSeparator()
@@ -1467,9 +1426,6 @@ wm2.addAction(wm2_6)
 wineOption.addSeparator()
 w1.triggered.connect(OpenWineBotton)
 w4.triggered.connect(DeleteWineBotton)
-cleanBottonUOS.triggered.connect(CleanWineBottonByUOS)
-easyPackager.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/deepin-wine-easy-packager.py' '{e2.currentText()}'"]).start())
-wineKeyboardLnk.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/key/key-add-gui.py'"]).start())
 getDllOnInternet.triggered.connect(GetDllFromInternet)
 updateGeek.triggered.connect(lambda: os.system(f"'{programPath}/launch.sh' deepin-terminal -C '\"{programPath}/UpdateGeek.sh\"' --keep-open"))
 wm2_1.triggered.connect(lambda: RunWineProgram("control"))
