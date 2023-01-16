@@ -594,67 +594,6 @@ def RunWineProgram(wineProgram, history = False, Disbled = True):
     runProgram.showHistory.connect(QT.ShowHistory)
     runProgram.start()
 
-class RunWinetricksThread(QtCore.QThread):
-    signal = QtCore.pyqtSignal(str)
-    def __init__(self):
-        super().__init__()
-
-    def run(self):
-        wineBottonPath = setting["DefultBotton"]
-        if not e1.currentText() == "":
-            wineBottonPath = e1.currentText()
-        option = ""
-        if setting["Architecture"] != "Auto":
-            option += f"WINEARCH={setting['Architecture']} "
-        if not setting["Debug"]:
-            option += "WINEDEBUG=-all "
-        wineUsingOption = ""
-        if o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable":
-            wineUsingOption = ""
-        if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable":
-            if not os.path.exists(f"{programPath}/dlls-arm"):
-                if os.system(f"7z x -y \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
-                    QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
-                    return
-                os.remove(f"{programPath}/dlls-arm.7z")
-        if setting["TerminalOpen"]:
-            res = ""
-            # 用终端开应该不用返回输出内容了
-            OpenTerminal(f"WINEPREFIX='{wineBottonPath}' {option} WINE=" + subprocess.getoutput(f"which {wine[o1.currentText()]}").replace(" ", "").replace("\n", "") + f" winetricks --gui {wineUsingOption}")
-            #res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='{wineBottonPath}' {option} WINE=" + subprocess.getoutput(f"which {wine[o1.currentText()]}").replace(" ", "").replace("\n", "") + f" winetricks --gui {wineUsingOption}\" --keep-open"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        else:    
-            res = subprocess.Popen([f"WINEPREFIX='{wineBottonPath}' {option} WINE='" + subprocess.getoutput(f"which {wine[o1.currentText()]}").replace(" ", "").replace("\n", "") + "' winetricks --gui"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        # 实时读取程序返回
-        while res.poll() is None:
-            try:
-                text = res.stdout.readline().decode("utf8")
-            except:
-                text = ""
-            self.signal.emit(text)
-            print(text, end="")
-        
-        
-        DisableButton(False)
-
-runWinetricks = None
-def RunWinetricks():
-    global runWinetricks
-    DisableButton(True)
-    if not CheckProgramIsInstall(wine[o1.currentText()]) and o1.currentText() != "基于 linglong 的 deepin-wine6-stable（不推荐）" and o1.currentText() != "基于 UOS exagear 的 deepin-wine6-stable" and o1.currentText() != "基于 UOS box86 的 deepin-wine6-stable":
-        if not CheckProgramIsInstall(wine[o1.currentText()]) and not o1.currentText() in untipsWine:
-            DisableButton(False)
-            return
-    if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable":
-        if not os.path.exists(f"{programPath}/dlls-arm"):
-            if os.system(f"7z x -y \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
-                QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
-                return
-            os.remove(f"{programPath}/dlls-arm.7z")
-    returnText.setText("")
-    runWinetricks = RunWinetricksThread()
-    runWinetricks.signal.connect(QT.ShowWineReturn)
-    runWinetricks.start()
-
 def CleanWineBottonByUOS():
     if e1.currentText() == "":
         wineBottonPath = setting["DefultBotton"]
@@ -675,41 +614,6 @@ def GetDllFromInternet():
     else:
         wineBottonPath = e1.currentText()
     OpenTerminal(f"env WINE='{programPath}/launch.sh' '{programPath}/InstallDll.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
-
-def AddReg():
-    path = QtWidgets.QFileDialog.getOpenFileName(window, "保存路径", get_home(), "reg文件(*.reg);;所有文件(*.*)")
-    if path[0] == "" and not path[1]:
-        return
-    RunWineProgram(f"regedit' /S '{path[0]}' 'HKEY_CURRENT_USER\Software\Wine\DllOverrides")
-
-def SaveDllList():
-    path = QtWidgets.QFileDialog.getSaveFileName(window, "保存路径", get_home(), "reg文件(*.reg);;所有文件(*.*)")
-    if path[0] == "" and not path[1]:
-        return
-    RunWineProgram(f"regedit' /E '{path[0]}' 'HKEY_CURRENT_USER\Software\Wine\DllOverrides")
-
-def SetDeepinFileDialogDefult():
-    code = os.system(f"pkexec \"{programPath}/deepin-wine-venturi-setter.py\" defult")
-    if code != 0:
-        if code == 1:
-            QtWidgets.QMessageBox.critical(widget, "错误", "无法更新配置：配置不准重复配置")
-            return
-        QtWidgets.QMessageBox.critical(widget, "错误", "配置失败")
-        return
-    QtWidgets.QMessageBox.information(widget, "提示", "设置完成！")
-
-def SetDeepinFileDialogRecovery():
-    threading.Thread(target=OpenTerminal, args=[f"pkexec '{programPath}/deepin-wine-venturi-setter.py' recovery"]).start()
-
-def DeleteDesktopIcon():
-    if os.path.exists(f"{get_home()}/.local/share/applications/wine"):
-        try:
-            shutil.rmtree(f"{get_home()}/.local/share/applications/wine")
-        except:
-            traceback.print_exc()
-            QtWidgets.QMessageBox.critical(widget, "错误", traceback.format_exc())
-            return
-    QtWidgets.QMessageBox.information(widget, "提示", "删除完成")
 
 def DeleteWineBotton():
     if QtWidgets.QMessageBox.question(widget, "提示", "你确定要删除容器吗？删除后将无法恢复！\n如果没有选择 wine 容器，将会自动删除默认的容器！") == QtWidgets.QMessageBox.No:
@@ -2117,64 +2021,11 @@ wm2.addAction(wm2_4)
 wm2.addAction(wm2_5)
 wm2.addAction(wm2_6)
 wineOption.addSeparator()
-settingRunV3Sh = wineOption.addMenu(transla.transe("U", "run_v3.sh 管理"))
-w9 = QtWidgets.QAction(transla.transe("U", "设置 run_v3.sh 的文管为 Wine 默认文管"))
-w10 = QtWidgets.QAction(transla.transe("U", "重新安装 deepin-wine-helper"))
-w11 = QtWidgets.QAction(QtGui.QIcon.fromTheme("winetricks"), transla.transe("U", "使用winetricks打开指定容器"))
-settingRunV3Sh.addAction(w9)
-settingRunV3Sh.addAction(w10)
-wineOption.addSeparator()
-wineOption.addAction(w11)
-wineOption.addSeparator()
-optionCheckDemo = wineOption.addMenu(transla.transe("U", "组件功能测试"))
-vbDemo = QtWidgets.QAction(transla.transe("U", "测试 Visual Basic 6 程序"))
-netDemo = QtWidgets.QAction(transla.transe("U", "测试 .net framework 程序"))
-netIEDemo = QtWidgets.QAction(transla.transe("U", "测试 .net framework + Internet Explorer 程序"))
-optionCheckDemo.addAction(vbDemo)
-optionCheckDemo.addAction(netDemo)
-optionCheckDemo.addAction(netIEDemo)
-wineOption.addSeparator()
-wm3 = wineOption.addMenu(transla.transe("U", "启用/禁用功能"))
-ed1 = wm3.addMenu(transla.transe("U", "启用/禁用 opengl"))
-wm3_1 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(45), transla.transe("U", "开启 opengl"))
-wm3_2 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(40), transla.transe("U", "禁用 opengl"))
-ed1.addAction(wm3_1)
-ed1.addAction(wm3_2)
-ed2 = wm3.addMenu(transla.transe("U", "安装/卸载 winbind"))
-wm4_1 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(45), transla.transe("U", "安装 winbind"))
-wm4_2 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(40), transla.transe("U", "卸载 winbind"))
-ed2.addAction(wm4_1)
-ed2.addAction(wm4_2)
-wineOption.addSeparator()
-wineOption.addAction(deleteDesktopIcon)
-wineOption.addSeparator()
-settingWineBottleCreateLink = wm3.addMenu(transla.transe("U", "启用/禁止指定 wine 容器生成快捷方式"))
-enabledWineBottleCreateLink = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(45), transla.transe("U", "允许指定 wine 容器生成快捷方式"))
-disbledWineBottleCreateLink = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(40), transla.transe("U", "禁止指定 wine 容器生成快捷方式"))
-settingWineBottleCreateLink.addAction(enabledWineBottleCreateLink)
-settingWineBottleCreateLink.addAction(disbledWineBottleCreateLink)
-settingWineCrashDialog = wm3.addMenu(transla.transe("U", "启用/禁用指定 wine 容器崩溃提示窗口"))
-disbledWineCrashDialog = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(40), transla.transe("U", "禁用指定 wine 容器崩溃提示窗口"))
-enabledWineCrashDialog = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(45), transla.transe("U", "启用指定 wine 容器崩溃提示窗口"))
-settingWineCrashDialog.addAction(enabledWineCrashDialog)
-settingWineCrashDialog.addAction(disbledWineCrashDialog)
-settingOpenProgram = wm3.addMenu(transla.transe("U", "启用/禁止指定 wine 容器创建文件关联"))
-enabledOpenProgram = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(45), transla.transe("U", "允许指定 wine 容器创建文件关联"))
-disbledOpenProgram = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(40), transla.transe("U", "禁止指定 wine 容器创建文件关联"))
-settingOpenProgram.addAction(enabledOpenProgram)
-settingOpenProgram.addAction(disbledOpenProgram)
 settingHttpProxy = wineOption.addMenu(transla.transe("U", "设置指定 Wine 容器代理"))
 enabledHttpProxy = QtWidgets.QAction(transla.transe("U", "设置指定 wine 容器的代理"))
 disbledHttpProxy = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(40), transla.transe("U", "禁用指定 wine 容器的代理"))
 settingHttpProxy.addAction(enabledHttpProxy)
 settingHttpProxy.addAction(disbledHttpProxy)
-dllOver = wineOption.addMenu(transla.transe("U", "函数顶替库列表"))
-saveDllOver = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(43), transla.transe("U", "导出函数顶替列表"))
-addDllOver = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(32), transla.transe("U", "导入函数顶替列表"))
-editDllOver = QtWidgets.QAction(transla.transe("U", "编辑函数顶替库列表"))
-dllOver.addAction(saveDllOver)
-dllOver.addAction(addDllOver)
-dllOver.addAction(editDllOver)
 w1.triggered.connect(OpenWineBotton)
 w4.triggered.connect(DeleteWineBotton)
 cleanBottonUOS.triggered.connect(CleanWineBottonByUOS)
@@ -2183,35 +2034,15 @@ wineKeyboardLnk.triggered.connect(lambda: threading.Thread(target=os.system, arg
 getDllOnInternet.triggered.connect(GetDllFromInternet)
 w7.triggered.connect(GetDllFromWindowsISO.ShowWindow)
 updateGeek.triggered.connect(lambda: os.system(f"'{programPath}/launch.sh' deepin-terminal -C '\"{programPath}/UpdateGeek.sh\"' --keep-open"))
-w9.triggered.connect(SetDeepinFileDialogDefult)
-w10.triggered.connect(SetDeepinFileDialogRecovery)
-w11.triggered.connect(lambda: RunWinetricks())
 wm2_1.triggered.connect(lambda: RunWineProgram("control"))
 wm2_2.triggered.connect(lambda: RunWineProgram("iexplore' 'https://gfdgd-xi.github.io"))
 wm2_3.triggered.connect(lambda: RunWineProgram("regedit"))
 wm2_4.triggered.connect(lambda: RunWineProgram("taskmgr"))
 wm2_5.triggered.connect(lambda: RunWineProgram("explorer"))
 wm2_6.triggered.connect(lambda: RunWineProgram("winver"))
-wm3_1.triggered.connect(lambda: RunWineProgram(f"regedit.exe' /s '{programPath}/EnabledOpengl.reg"))
-wm3_2.triggered.connect(lambda: RunWineProgram(f"regedit.exe' /s '{programPath}/DisabledOpengl.reg"))
-wm4_1.triggered.connect(lambda: os.system(f"'{programPath}/launch.sh' deepin-terminal -C 'pkexec apt install winbind -y' --keep-open"))
-wm4_2.triggered.connect(lambda: os.system(f"'{programPath}/launch.sh' deepin-terminal -C 'pkexec apt purge winbind -y' --keep-open"))
 deletePartIcon.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"python3 '{programPath}/BuildDesktop.py'"]).start())
-deleteDesktopIcon.triggered.connect(DeleteDesktopIcon)
-enabledWineBottleCreateLink.triggered.connect(lambda: RunWineProgram("reg' delete 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v winemenubuilder.exe '/f"))
-disbledWineBottleCreateLink.triggered.connect(lambda: RunWineProgram("reg' add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v winemenubuilder.exe '/f"))
-disbledWineCrashDialog.triggered.connect(lambda: RunWineProgram("reg' add 'HKEY_CURRENT_USER\Software\Wine\WineDbg' /v ShowCrashDialog /t REG_DWORD /d 00000000 '/f"))
-enabledWineCrashDialog.triggered.connect(lambda: RunWineProgram("reg' add 'HKEY_CURRENT_USER\Software\Wine\WineDbg' /v ShowCrashDialog /t REG_DWORD /d 00000001 '/f"))
-disbledOpenProgram.triggered.connect(lambda: RunWineProgram("reg' add 'HKEY_CURRENT_USER\Software\Wine\FileOpenAssociations' /v Enable /d N '/f"))
-enabledOpenProgram.triggered.connect(lambda: RunWineProgram("reg' add 'HKEY_CURRENT_USER\Software\Wine\FileOpenAssociations' /v Enable /d Y '/f"))
 enabledHttpProxy.triggered.connect(SetHttpProxy)
 disbledHttpProxy.triggered.connect(DisbledHttpProxy)
-saveDllOver.triggered.connect(SaveDllList)
-addDllOver.triggered.connect(AddReg)
-editDllOver.triggered.connect(lambda: RunWineProgram("winecfg"))
-vbDemo.triggered.connect(lambda: RunWineProgram(f"{programPath}/Test/vb.exe"))
-netDemo.triggered.connect(lambda: RunWineProgram(f"{programPath}/Test/net.exe"))
-netIEDemo.triggered.connect(lambda: RunWineProgram(f"{programPath}/Test/netandie.exe"))
 
 help = menu.addMenu(transla.transe("U", "帮助(&H)"))
 runStatusWebSize = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "查询程序在 Wine 的运行情况"))
