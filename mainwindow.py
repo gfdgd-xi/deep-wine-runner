@@ -843,144 +843,6 @@ def GetDllFromInternet():
         wineBottonPath = e1.currentText()
     OpenTerminal(f"env WINE='{programPath}/launch.sh' '{programPath}/InstallDll.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
 
-def WineBottonAutoConfig():
-    if e1.currentText() == "":
-        wineBottonPath = setting["DefultBotton"]
-    else:
-        wineBottonPath = e1.currentText()
-    option = ""
-    if setting["Architecture"] != "Auto":
-        option += f"WINEARCH={setting['Architecture']} "
-    if setting["MonoGeckoInstaller"]:
-        option += f"WINEDLLOVERRIDES=\"mscoree,mshtml=\" "
-    if not setting["Debug"]:
-        option += "WINEDEBUG=-all "
-    else:
-        option += "WINEDEBUG=FIXME,ERR,WARN,TRACE,Message "
-    os.system(f"env WINEPREFIX='{wineBottonPath}' {option} WINE='{wine[o1.currentText()]}' '{programPath}/AutoConfig.py' '{wine[o1.currentText()]}' '{wineBottonPath}'")
-
-def InstallMonoGecko(program):
-    if e1.currentText() == "":
-        wineBottonPath = setting["DefultBotton"]
-    else:
-        wineBottonPath = e1.currentText()
-    OpenTerminal(f"'{programPath}/InstallMono.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {program} {int(setting['RuntimeCache'])}")
-
-def InstallNetFramework():
-    if e1.currentText() == "":
-        wineBottonPath = setting["DefultBotton"]
-    else:
-        wineBottonPath = e1.currentText()
-    OpenTerminal(f"'{programPath}/InstallNetFramework.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
-
-def InstallVB():
-    if e1.currentText() == "":
-        wineBottonPath = setting["DefultBotton"]
-    else:
-        wineBottonPath = e1.currentText()
-    OpenTerminal(f"'{programPath}/InstallVisualBasicRuntime.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
-
-def InstallVisualStudioCPlusPlus():
-    if e1.currentText() == "":
-        wineBottonPath = setting["DefultBotton"]
-    else:
-        wineBottonPath = e1.currentText()
-    OpenTerminal(f"'{programPath}/InstallVisualCPlusPlus.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
-
-def InstallMSXML():
-    if e1.currentText() == "":
-        wineBottonPath = setting["DefultBotton"]
-    else:
-        wineBottonPath = e1.currentText()
-    OpenTerminal(f"'{programPath}/InstallMsxml.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
-
-def InstallDXVK():
-    if not os.path.exists(f"{programPath}/dxvk"):
-        if os.system(f"7z x -y \"{programPath}/dxvk.7z\" -o\"{programPath}\""):
-            QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
-            return
-        os.remove(f"{programPath}/dxvk.7z")
-    if e1.currentText() == "":
-        wineBottonPath = setting["DefultBotton"]
-    else:
-        wineBottonPath = e1.currentText()
-    OpenTerminal(f"env WINE='{wine[o1.currentText()]}' WINE64='{wine[o1.currentText()]}' WINEPREFIX='{wineBottonPath}' '{programPath}/dxvk/setup_dxvk.sh' uninstall")
-
-def InstallVkd3d():
-    if not os.path.exists(f"{programPath}/vkd3d-proton"):
-        if os.system(f"7z x -y \"{programPath}/vkd3d-proton.7z\" -o\"{programPath}\""):
-            QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
-            return
-        os.remove(f"{programPath}/vkd3d-proton.7z")
-    if e1.currentText() == "":
-        wineBottonPath = setting["DefultBotton"]
-    else:
-        wineBottonPath = e1.currentText()
-    OpenTerminal(f"env WINE='{wine[o1.currentText()]}' WINE64='{wine[o1.currentText()]}' WINEPREFIX='{wineBottonPath}' '{programPath}/vkd3d-proton/setup_vkd3d_proton.sh' install")
-
-def UninstallVkd3d():
-    if not os.path.exists(f"{programPath}/vkd3d-proton"):
-        if os.system(f"7z x -y \"{programPath}/vkd3d-proton.7z\" -o\"{programPath}\""):
-            QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
-            return
-        os.remove(f"{programPath}/vkd3d-proton.7z")
-    if e1.currentText() == "":
-        wineBottonPath = setting["DefultBotton"]
-    else:
-        wineBottonPath = e1.currentText()
-    OpenTerminal(f"env WINE='{wine[o1.currentText()]}' WINE64='{wine[o1.currentText()]}' WINEPREFIX='{wineBottonPath}' '{programPath}/vkd3d-proton/setup_vkd3d_proton.sh' uninstall")
-    #process = QtCore.QProcess()
-    #process.startDetached(f"{programPath}/launch.sh", ["deepin-terminal", "-e", 
-            #"env", f"WINE={wine[o1.currentText()]}", f"WINE64={wine[o1.currentText()]}", f"WINEPREFIX={wineBottonPath}", "bash",
-            #f"{programPath}/dxvk/setup_dxvk.sh", "install"])
-
-def UninstallDXVK():
-    if not os.path.exists(f"{programPath}/dxvk"):
-        if os.system(f"7z x -y \"{programPath}/dxvk.7z\" -o\"{programPath}\""):
-            QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
-            return
-        os.remove(f"{programPath}/dxvk.7z")
-    if e1.currentText() == "":
-        wineBottonPath = setting["DefultBotton"]
-    else:
-        wineBottonPath = e1.currentText()
-    OpenTerminal(f"env WINE='{wine[o1.currentText()]}' WINE64='{wine[o1.currentText()]}' WINEPREFIX='{wineBottonPath}' '{programPath}/dxvk/setup_dxvk.sh' uninstall")
-    #process = QtCore.QProcess()
-    #process.startDetached(f"{programPath}/launch.sh", ["deepin-terminal", "-e", 
-            #"env", f"WINE={wine[o1.currentText()]}", f"WINE64={wine[o1.currentText()]}", f"WINEPREFIX={wineBottonPath}",
-            #f"{programPath}/dxvk/setup_dxvk.sh", "uninstall"])
-
-def MiniAppStore():
-    if e1.currentText()== "":
-        wineBottonPath = setting["DefultBotton"]
-    else:
-        wineBottonPath = e1.currentText()
-    OpenTerminal(f"'{programPath}/AppStore.py' '{wineBottonPath}' '{wine[o1.currentText()]}'")
-
-def InstallOther():
-    if e1.currentText()== "":
-        wineBottonPath = setting["DefultBotton"]
-    else:
-        wineBottonPath = e1.currentText()
-    OpenTerminal(f"'{programPath}/InstallOther.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
-
-def BuildExeDeb():
-    if e1.currentText() == "":
-        wineBottonPath = setting["DefultBotton"]
-    else:
-        wineBottonPath = e1.currentText()
-    threading.Thread(target=os.system, args=[f"python3 '{programPath}/deepin-wine-packager.py' '{wineBottonPath}' '{wine[o1.currentText()]}'"]).start()
-
-def SetDeepinFileDialogDeepin():
-    code = os.system(f"pkexec \"{programPath}/deepin-wine-venturi-setter.py\" deepin")
-    if code != 0:
-        if code == 1:
-            QtWidgets.QMessageBox.critical(widget, "错误", "无法更新配置：配置不准重复配置")
-            return
-        QtWidgets.QMessageBox.critical(widget, "错误", "配置失败")
-        return
-    QtWidgets.QMessageBox.information(widget, "提示", "设置完成！")
-
 def AddReg():
     path = QtWidgets.QFileDialog.getOpenFileName(window, "保存路径", get_home(), "reg文件(*.reg);;所有文件(*.*)")
     if path[0] == "" and not path[1]:
@@ -2023,29 +1885,6 @@ def GetVersion():
     runVersion.signal.connect(AddDockerMenu)
     runVersion.start()
 
-def UnPackage():
-    QtWidgets.QMessageBox.information(window, "提示", "请在下面两个对话框中选择 deb 包所在路径和容器解压到的路径")
-    debPath = QtWidgets.QFileDialog.getOpenFileName(window, get_home(), "deb 文件(*.deb);;所有文件(*.*)")
-    if not debPath[1]:
-        return
-    path = QtWidgets.QFileDialog.getExistingDirectory(window, get_home())
-    print(path)
-    if not path:
-        return
-    tempDebDir = f"/tmp/wine-runner-unpack-deb-{random.randint(0, 1000)}"
-    if os.system(f"dpkg -x '{debPath[0]}' '{tempDebDir}'"):
-        QtWidgets.QMessageBox.critical(window, "错误", "解压失败！")
-        return
-    zippath = FindFile(tempDebDir, "files.7z")
-    if zippath == None:
-        QtWidgets.QMessageBox.critical(window, "错误", "解压失败！")
-        return
-    print(path)
-    # 解压文件
-    os.system(f"mkdir -p '{path}'")
-    os.system(f"7z x -y '{zippath}' -o'{path}'")
-    os.system(f"rm -rfv '{tempDebDir}'")
-    QtWidgets.QMessageBox.information(window, "提示", "解压完成！")
 
 def FindFile(file, name):
     for i in os.listdir(file):
@@ -2533,9 +2372,6 @@ programManager.addWidget(button_r_6, 3, 4, 1, 1)
 sparkWineSetting = QtWidgets.QPushButton(transla.transe("U", "星火wine配置"))
 sparkWineSetting.clicked.connect(lambda: threading.Thread(target=os.system, args=["/opt/durapps/spark-dwine-helper/spark-dwine-helper-settings/settings.sh"]).start())
 programManager.addWidget(sparkWineSetting, 3, 6, 1, 1)
-wineAutoConfig = QtWidgets.QPushButton(transla.transe("U", "自动/手动配置 Wine 容器"))
-wineAutoConfig.clicked.connect(WineBottonAutoConfig)
-programManager.addWidget(wineAutoConfig, 3, 8, 1, 1)
 # 权重
 button5.setSizePolicy(size)
 saveDesktopFileOnLauncher.setSizePolicy(size)
@@ -2628,7 +2464,6 @@ w3 = QtWidgets.QAction(QtGui.QIcon.fromTheme("font"), transla.transe("U", "安�
 w4 = QtWidgets.QAction(transla.transe("U", "删除选择的 Wine 容器"))
 cleanBottonUOS = QtWidgets.QAction(transla.transe("U", "清理 Wine 容器（基于 Wine 适配活动脚本）"))
 wineKeyboardLnk = QtWidgets.QAction(transla.transe("U", "Wine 快捷键映射"))
-w5 = QtWidgets.QAction(QtGui.QIcon.fromTheme("deb"), transla.transe("U", "打包 wine 应用"))
 w6 = QtWidgets.QAction(QtGui.QIcon.fromTheme("deb"), transla.transe("U", "使用官方 Wine 适配活动的脚本进行打包"))
 easyPackager = QtWidgets.QAction(QtGui.QIcon.fromTheme("deb"), transla.transe("U", "使用简易打包器进行打包（小白且无特殊需求建议使用这个）"))
 getDllOnInternet = QtWidgets.QAction(QtGui.QIcon.fromTheme("1CD8_rundll32.0"), transla.transe("U", "从互联网获取DLL"))
@@ -2642,7 +2477,6 @@ wineOption.addAction(w3)
 wineOption.addAction(w4)
 wineOption.addAction(cleanBottonUOS)
 wineOption.addSeparator()
-wineOption.addAction(w5)
 wineOption.addAction(w6)
 wineOption.addAction(easyPackager)
 wineOption.addAction(deletePartIcon)
@@ -2654,21 +2488,6 @@ wineOption.addAction(w7)
 wineOption.addSeparator()
 wineOption.addAction(updateGeek)
 wineOption.addSeparator()
-wm1 = wineOption.addMenu(transla.transe("U", "在指定 Wine、容器安装组件"))
-wm1_1 = QtWidgets.QAction(transla.transe("U", "在指定wine、指定容器安装 .net framework"))
-wm1_2 = QtWidgets.QAction(transla.transe("U", "在指定wine、指定容器安装 Visual Studio C++"))
-wm1_3 = QtWidgets.QAction(transla.transe("U", "在指定wine、指定容器安装 MSXML"))
-wm1_4 = QtWidgets.QAction(transla.transe("U", "在指定wine、指定容器安装 gecko"))
-wm1_5 = QtWidgets.QAction(QtGui.QIcon.fromTheme("mono"), transla.transe("U", "在指定wine、指定容器安装 mono"))
-wm1_7 = QtWidgets.QAction(transla.transe("U", "在指定wine、指定容器安装 Visual Basic Runtime"))
-wm1_6 = QtWidgets.QAction(transla.transe("U", "在指定wine、指定容器安装其它运行库"))
-wm1.addAction(wm1_1)
-wm1.addAction(wm1_2)
-wm1.addAction(wm1_3)
-wm1.addAction(wm1_4)
-wm1.addAction(wm1_5)
-wm1.addAction(wm1_7)
-wm1.addAction(wm1_6)
 wm2 = wineOption.addMenu(transla.transe("U", "在指定 Wine、容器运行基础应用"))
 wm2_1 = QtWidgets.QAction(QtGui.QIcon.fromTheme("control-center2"), transla.transe("U", "打开指定wine、指定容器的控制面板"))
 wm2_2 = QtWidgets.QAction(QtGui.QIcon.fromTheme("web-browser"), transla.transe("U", "打开指定wine、指定容器的浏览器"))
@@ -2684,11 +2503,9 @@ wm2.addAction(wm2_5)
 wm2.addAction(wm2_6)
 wineOption.addSeparator()
 settingRunV3Sh = wineOption.addMenu(transla.transe("U", "run_v3.sh 管理"))
-w8 = QtWidgets.QAction(transla.transe("U", "设置 run_v3.sh 的文管为 Deepin 默认文管"))
 w9 = QtWidgets.QAction(transla.transe("U", "设置 run_v3.sh 的文管为 Wine 默认文管"))
 w10 = QtWidgets.QAction(transla.transe("U", "重新安装 deepin-wine-helper"))
 w11 = QtWidgets.QAction(QtGui.QIcon.fromTheme("winetricks"), transla.transe("U", "使用winetricks打开指定容器"))
-settingRunV3Sh.addAction(w8)
 settingRunV3Sh.addAction(w9)
 settingRunV3Sh.addAction(w10)
 wineOption.addSeparator()
@@ -2713,16 +2530,6 @@ wm4_1 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(45), trans
 wm4_2 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(40), transla.transe("U", "卸载 winbind"))
 ed2.addAction(wm4_1)
 ed2.addAction(wm4_2)
-dxvkMenu = wm3.addMenu(transla.transe("U", "安装/卸载 DXVK"))
-installDxvk = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(45), transla.transe("U", "安装 DXVK"))
-uninstallDxvk = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(40), transla.transe("U", "卸载 DXVK"))
-dxvkMenu.addAction(installDxvk)
-dxvkMenu.addAction(uninstallDxvk)
-vkd3dMenu = wm3.addMenu(transla.transe("U", "安装/卸载 Vkd3d"))
-installvkd3d = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(45), transla.transe("U", "安装 Vkd3d"))
-uninstallvkd3d = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(40), transla.transe("U", "卸载 Vkd3d"))
-vkd3dMenu.addAction(installvkd3d)
-vkd3dMenu.addAction(uninstallvkd3d)
 wineOption.addSeparator()
 wineOption.addAction(deleteDesktopIcon)
 wineOption.addSeparator()
@@ -2758,24 +2565,15 @@ w2.triggered.connect(InstallWineFont)
 w3.triggered.connect(OpenWineFontPath)
 w4.triggered.connect(DeleteWineBotton)
 cleanBottonUOS.triggered.connect(CleanWineBottonByUOS)
-w5.triggered.connect(BuildExeDeb)
 w6.triggered.connect(UOSPackageScript)
 easyPackager.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/deepin-wine-easy-packager.py' '{e2.currentText()}'"]).start())
 wineKeyboardLnk.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/key/key-add-gui.py'"]).start())
 getDllOnInternet.triggered.connect(GetDllFromInternet)
 w7.triggered.connect(GetDllFromWindowsISO.ShowWindow)
 updateGeek.triggered.connect(lambda: os.system(f"'{programPath}/launch.sh' deepin-terminal -C '\"{programPath}/UpdateGeek.sh\"' --keep-open"))
-w8.triggered.connect(SetDeepinFileDialogDeepin)
 w9.triggered.connect(SetDeepinFileDialogDefult)
 w10.triggered.connect(SetDeepinFileDialogRecovery)
 w11.triggered.connect(lambda: RunWinetricks())
-wm1_1.triggered.connect(lambda: threading.Thread(target=InstallNetFramework).start())
-wm1_2.triggered.connect(lambda: threading.Thread(target=InstallVisualStudioCPlusPlus).start())
-wm1_3.triggered.connect(lambda: threading.Thread(target=InstallMSXML).start())
-wm1_4.triggered.connect(lambda: threading.Thread(target=InstallMonoGecko, args=["gecko"]).start())
-wm1_5.triggered.connect(lambda: threading.Thread(target=InstallMonoGecko, args=["mono"]).start())
-wm1_7.triggered.connect(lambda: threading.Thread(target=InstallVB).start())
-wm1_6.triggered.connect(lambda: threading.Thread(target=InstallOther).start())
 wm2_1.triggered.connect(lambda: RunWineProgram("control"))
 wm2_2.triggered.connect(lambda: RunWineProgram("iexplore' 'https://gfdgd-xi.github.io"))
 wm2_3.triggered.connect(lambda: RunWineProgram("regedit"))
@@ -2786,10 +2584,6 @@ wm3_1.triggered.connect(lambda: RunWineProgram(f"regedit.exe' /s '{programPath}/
 wm3_2.triggered.connect(lambda: RunWineProgram(f"regedit.exe' /s '{programPath}/DisabledOpengl.reg"))
 wm4_1.triggered.connect(lambda: os.system(f"'{programPath}/launch.sh' deepin-terminal -C 'pkexec apt install winbind -y' --keep-open"))
 wm4_2.triggered.connect(lambda: os.system(f"'{programPath}/launch.sh' deepin-terminal -C 'pkexec apt purge winbind -y' --keep-open"))
-installDxvk.triggered.connect(InstallDXVK)
-uninstallDxvk.triggered.connect(UninstallDXVK)
-installvkd3d.triggered.connect(InstallVkd3d)
-uninstallvkd3d.triggered.connect(UninstallVkd3d)
 deletePartIcon.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"python3 '{programPath}/BuildDesktop.py'"]).start())
 deleteDesktopIcon.triggered.connect(DeleteDesktopIcon)
 enabledWineBottleCreateLink.triggered.connect(lambda: RunWineProgram("reg' delete 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v winemenubuilder.exe '/f"))
@@ -2829,18 +2623,6 @@ checkValue.addAction(base64Value)
 checkValue.addAction(sha256Value)
 checkValue.addAction(sha512Value)
 
-
-safeWebsize = menu.addMenu(transla.transe("U", "云沙箱(&C)"))
-s1 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(9), transla.transe("U", "360 沙箱云"))
-s2 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(9), transla.transe("U", "微步云沙箱"))
-s3 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(9), transla.transe("U", "VIRUSTOTAL"))
-safeWebsize.addAction(s1)
-safeWebsize.addAction(s2)
-safeWebsize.addAction(s3)
-s1.triggered.connect(lambda: webbrowser.open_new_tab("https://ata.360.net/"))
-s2.triggered.connect(lambda: webbrowser.open_new_tab("https://s.threatbook.cn/"))
-s3.triggered.connect(lambda: webbrowser.open_new_tab("https://www.virustotal.com/"))
-
 log = menu.addMenu(transla.transe("U", "日志(&L)"))
 getDllInfo = QtWidgets.QAction(transla.transe("U", "查询 Dll"))
 checkLogText = QtWidgets.QAction(transla.transe("U", "日志分析"))
@@ -2857,16 +2639,6 @@ log.addAction(checkLogText)
 log.addAction(saveLogText)
 log.addAction(transLogText)
 log.addAction(uploadLogText)
-
-qemuMenu = menu.addMenu(transla.transe("U", "容器(&C)"))
-unpackDeb = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(32), transla.transe("U", "解包 deb 提取容器"))
-qemuMenu.addAction(unpackDeb)
-unpackDeb.triggered.connect(UnPackage)
-if len(qemuBottleList) >= 1:
-    configMenu = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/CHROOT.png"), transla.transe("U", "配置指定 Chroot 容器"))
-    qemuMenu.addAction(configMenu)
-    configMenu.triggered.connect(ConfigQemu)
-    print(qemuBottleList)
 
 help = menu.addMenu(transla.transe("U", "帮助(&H)"))
 runStatusWebSize = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "查询程序在 Wine 的运行情况"))
@@ -2956,10 +2728,9 @@ else:
 # 禁用被精简掉的控件
 for i in [
     [[p1, installWineOnDeepin23, installWineHQ, installMoreWine], f"{programPath}/InstallWineOnDeepin23.py"],
-    [[w5], f"{programPath}/deepin-wine-packager.py"],
     [[w6], f"{programPath}/deepin-wine-packager-with-script.py"],
     [[p1, v1], f"{programPath}/RunVM.sh"],
-    [[getProgramIcon, uninstallProgram, updateGeek, trasButton, miniAppStore, fontAppStore, wm1_1, wm1_2, wm1_3, wm1_6, w7, w2], f"{programPath}/geek.exe"],
+    [[getProgramIcon, uninstallProgram, updateGeek, trasButton, miniAppStore, fontAppStore, w7, w2], f"{programPath}/geek.exe"],
 ]:
     if not os.path.exists(i[1]):
         for x in i[0]:
