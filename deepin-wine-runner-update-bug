@@ -1,0 +1,104 @@
+#!/usr/bin/env python3
+import os
+import sys
+import json
+import base64
+import req as requests
+import traceback
+import webbrowser
+import urllib.parse as parse
+import PyQt5.QtGui as QtGui
+import PyQt5.QtWidgets as QtWidgets
+
+# 读取文本文档
+def readtxt(path: "路径")->"读取文本文档":
+    f = open(path, "r")  # 设置文件对象
+    str = f.read()  # 获取内容
+    f.close()  # 关闭文本对象
+    return str  # 返回结果
+
+def Update(name, stars, contact, things, version):
+    # post 内容
+    data = {
+        "Name": name,
+        "Starts": stars,
+        "Contact": contact,
+        "Things": things,
+        "Version": version
+    }
+    try:
+        QtWidgets.QMessageBox.information(widget, "提示", requests.post(parse.unquote(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9idWcvdXBsb2FkLnBocA==").decode("utf-8")), data=data).text)
+    except:
+        traceback.print_exc()
+        QtWidgets.QMessageBox.critical(widget, "错误", f"服务器疑似出现错误，可以进行以下尝试：①多尝试几次；②使用其他反馈途径\n错误信息：{traceback.format_exc()}")
+    
+def UpdateButtonClick():
+    #判断是否为空
+    if nameThings.text() == "" or starMenu.currentText() == "" or contactThings.text() == "" or updateThings.toPlainText().replace(" ", "").replace("\n", "") == "":
+        QtWidgets.QMessageBox.critical(widget, "错误", "反馈信息未填写完整！")
+        return
+    Update(name=nameThings.text(), stars=starMenu.currentText(), contact=contactThings.text(), things=updateThings.toPlainText(), version=version)
+
+def OpenGiteeIssues():
+    webbrowser.open_new_tab("https://gitee.com/gfdgd-xi/deep-wine-runner/issues")
+
+def OpenGithubIssues():
+    webbrowser.open_new_tab("https://github.com/gfdgd-xi/deep-wine-runner/issues")
+
+def OpenGitlinkIssues():
+    webbrowser.open_new_tab("https://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner/issues")
+
+# 获取用户主目录
+def get_home()->"获取用户主目录":
+    return os.path.expanduser('~')
+
+###########################
+# 程序信息
+###########################
+iconPath = "{}/deepin-wine-runner.svg".format(os.path.split(os.path.realpath(__file__))[0])
+programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
+information = json.loads(readtxt(programPath + "/information.json"))
+version = information["Version"]
+
+###########################
+# 窗口创建
+###########################
+app = QtWidgets.QApplication(sys.argv)
+window = QtWidgets.QMainWindow()
+widget = QtWidgets.QWidget()
+widgetLayout = QtWidgets.QGridLayout()
+nameThings = QtWidgets.QLineEdit()
+contactThings = QtWidgets.QLineEdit()
+starMenu = QtWidgets.QComboBox()
+updateThings = QtWidgets.QTextEdit()
+updateButton = QtWidgets.QPushButton("提交")
+otherUpload = QtWidgets.QHBoxLayout()
+giteeButton = QtWidgets.QPushButton("Gitee Issues")
+githubButton = QtWidgets.QPushButton("Github Issues")
+gitlinkButton = QtWidgets.QPushButton("Gitlink Issues")
+otherUpload.addWidget(QtWidgets.QLabel("如果无法正常反馈，可以用其他方式反馈："))
+otherUpload.addWidget(giteeButton)
+otherUpload.addWidget(githubButton)
+otherUpload.addWidget(gitlinkButton)
+otherUpload.addSpacerItem(QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum))
+starMenu.addItems(["5分", "4分", "3分", "2分", "1分"])
+widgetLayout.addWidget(QtWidgets.QLabel("你的昵称："), 0, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("联系方式（电子邮箱）："), 0, 2, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("评分："), 0, 4, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel("反馈内容（支持 Markdown 格式）："), 1, 0, 1, 2)
+widgetLayout.addWidget(nameThings, 0, 1, 1, 1)
+widgetLayout.addWidget(contactThings, 0, 3, 1, 1)
+widgetLayout.addWidget(starMenu, 0, 5, 1, 1)
+widgetLayout.addWidget(updateThings, 2, 0, 1, 6)
+widgetLayout.addLayout(otherUpload, 3, 0, 1, 5)
+widgetLayout.addWidget(updateButton, 3, 5, 1, 1)
+giteeButton.clicked.connect(OpenGiteeIssues)
+githubButton.clicked.connect(OpenGithubIssues)
+gitlinkButton.clicked.connect(OpenGitlinkIssues)
+updateButton.clicked.connect(UpdateButtonClick)
+widget.setLayout(widgetLayout)
+window.setCentralWidget(widget)
+window.setWindowTitle(f"Wine 运行器 {version} 问题/建议反馈")
+window.setWindowIcon(QtGui.QIcon(iconPath))
+window.show()
+sys.exit(app.exec_())
