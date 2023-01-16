@@ -1,4 +1,4 @@
-{
+
     "ac1st15.dll": "描述： ac1st15.dll是AutoCAD、AutoCAD LT、KeyPLANTING和KeySCAPE等软件动态链接库，该文件是Autodesk公司出品。\n属于： AutoCAD \n系统 DLL文件： 否 \n常见错误： File Not Found, Missing File, Exception \n\n资料来源：https://www.2cto.com/shouce/system/dlllibrary",
     "binkw32.dll": "描述： binkw32.dll是BINK视频解码器相关进程，用于压缩视频回放，例如游戏中的视频。\n属于： Bink Video Player \n系统 DLL文件： 否 \n常见错误： File Not Found, Missing File, Exception \n\n资料来源：https://www.2cto.com/shouce/system/dlllibrary",
     "bwcc.dll": "描述： bwcc.dll是Borland Windows控件相关动态链接库文件。\n属于： Borland C++ \n系统 DLL文件： 否 \n常见错误： File Not Found, Missing File, Exception \n\n资料来源：https://www.2cto.com/shouce/system/dlllibrary",
@@ -123,4 +123,3 @@
     "ygxa_2.dll": "描述： ygxa_2.dll是Yahoo!雅虎通即时通讯软件图形用户界面相关文件。\n属于： Yahoo Messenger \n系统 DLL文件： 否 \n常见错误： File Not Found, Missing File, Exception \n\n资料来源：https://www.2cto.com/shouce/system/dlllibrary",
     "yml.dll": "描述： yml.dll是Yahoo!雅虎通应用程序相关库文件。\n属于： Yahoo Messenger \n系统 DLL文件： 否 \n常见错误： File Not Found, Missing File, Exception \n\n资料来源：https://www.2cto.com/shouce/system/dlllibrary",
     "zlib.dll": "描述： zlib.dll是ZLIB压缩库相关文件，用于Windows应用程序压缩和解压缩。\n属于： ZLIB \n系统 DLL文件： 否 \n常见错误： File Not Found, Missing File, Exception \n\n资料来源：https://www.2cto.com/shouce/system/dlllibrary"
-}

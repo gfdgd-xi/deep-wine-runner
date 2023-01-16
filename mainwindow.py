@@ -281,6 +281,30 @@ class Runexebutton_threading(QtCore.QThread):
         else:
             option += "WINEDEBUG=FIXME,ERR,WARN,TRACE,Message "
         wineUsingOption = ""
+        exePath = e2.currentText()
+        if True:
+            fileName = [".exe"]
+            changePath = False
+            for i in fileName:
+                if i in exePath:
+                    print(i)
+                    print(exePath)
+                    l = exePath.index(i)
+                    exePath = f"{exePath[:l+4]}' {exePath[l+4:]} '"
+                    print(l)
+                    print(exePath)
+                    changePath = True
+                    break
+            #if not changePath and not os.path.exists(changePath):
+            if not changePath and not os.path.exists(exePath):
+                # 删除前后无用空格以防止出现问题
+                print(exePath)
+                exePath = exePath.strip()
+                l = exePath.index(" ")
+                exePath = f"{exePath[:l]}' {exePath[l:]} '"
+                print(l)
+                #print(i)
+                print(exePath)
         if o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable":
             wineUsingOption = ""
         if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable":
@@ -296,7 +320,7 @@ class Runexebutton_threading(QtCore.QThread):
             elif e2.currentText()[-4:] == ".bat" and os.path.exists(e2.currentText()):
                 OpenTerminal("env WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " wineconsole '" + e2.currentText() + "' " + setting["WineOption"])
             else:
-                OpenTerminal("env WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"])
+                OpenTerminal("env WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + exePath + "' " + setting["WineOption"])
             #res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"] + "\" --keep-open" + wineUsingOption], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         else:
             if e2.currentText()[-4:] == ".msi" and os.path.exists(e2.currentText()):
@@ -304,8 +328,8 @@ class Runexebutton_threading(QtCore.QThread):
             elif e2.currentText()[-4:] == ".bat" and os.path.exists(e2.currentText()):
                 res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " wineconsole '" + e2.currentText() + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             else:
-                print(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"]])
-                res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                print(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + exePath + "' " + setting["WineOption"]])
+                res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + exePath + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         # 实时读取程序返回
         #
         if not setting["TerminalOpen"]:

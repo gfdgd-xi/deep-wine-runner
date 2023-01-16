@@ -1,4 +1,4 @@
-{
+
     "advapi32.dll": "描述： advapi32.dll是一个高级API应用程序接口服务库的一部分，用于支持非常多的API应用程序接口，包括安全和注册的调用。\n属于： Windows NT 4.0 \n系统 DLL文件： 是 \n常见错误： File Not Found, Missing File, Exception \n\n资料来源：https://www.2cto.com/shouce/system/dlllibrary",
     "advpack.dll": "描述： advpack.dll用于帮助硬件和软件读取和验证.INF文件。\n属于： Windows \n系统 DLL文件： 是 \n常见错误： File Not Found, Missing File, Exception \n\n资料来源：https://www.2cto.com/shouce/system/dlllibrary",
     "asycfilt.dll": "描述： asycfilt.dll是Microsoft OLE (对象链接和嵌入)特性相关DLL文件。\n属于： OLE \n系统 DLL文件： 是 \n常见错误： File Not Found, Missing File, Exception \n\n资料来源：https://www.2cto.com/shouce/system/dlllibrary",
@@ -95,5 +95,4 @@
     "wnaspi32.dll": "描述： wnaspi32.dll是高级Advanced SCSI程序接口( ASPI )管理相关文件。\n属于： Windows \n系统 DLL文件： 是 \n常见错误： File Not Found, Missing File, Exception \n\n资料来源：https://www.2cto.com/shouce/system/dlllibrary",
     "ws2_32.dll": "描述： ws2_32.dll是Windows Sockets应用程序接口，用于支持Internet和网络应用程序。\n属于： Windows Sockets \n系统 DLL文件： 是 \n常见错误： File Not Found, Missing File, Exception \n\n资料来源：https://www.2cto.com/shouce/system/dlllibrary",
     "ws2help.dll": "描述： ws2help.dll是Windows Sockets应用程序接口，用于支持Internet和网络应用程序。\n属于： Windows Sockets \n系统 DLL文件： 是 \n常见错误： File Not Found, Missing File, Exception \n\n资料来源：https://www.2cto.com/shouce/system/dlllibrary",
-    "wsock32.dll": "描述： wsock32.dll是Windows Sockets应用程序接口，用于支持很多Internet和网络应用程序。\n属于： Windows Sockets \n系统 DLL文件： 是 \n常见错误： File Not Found, Missing File, Exception \n\n资料来源：https://www.2cto.com/shouce/system/dlllibrary"
-}
+    "wsock32.dll": "描述： wsock32.dll是Windows Sockets应用程序接口，用于支持很多Internet和网络应用程序。\n属于： Windows Sockets \n系统 DLL文件： 是 \n常见错误： File Not Found, Missing File, Exception \n\n资料来源：https://www.2cto.com/shouce/system/dlllibrary",
