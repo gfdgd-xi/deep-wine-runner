@@ -247,12 +247,6 @@ def DisableButton(things):
     e1.setDisabled(things)
     e2.setDisabled(things)
     o1.setDisabled(things)
-    miniAppStore.setDisabled(things)
-    #winetricksOpen.configure(state=a[things])
-    getProgramIcon.setDisabled(things)
-    uninstallProgram.setDisabled(things)
-    trasButton.setDisabled(things)
-
 def CheckProgramIsInstall(program):
     return not bool(os.system(f"which '{program}'"))
 class Runexebutton_threading(QtCore.QThread):
@@ -586,67 +580,12 @@ def ReStartProgram():
     python = sys.executable
     os.execl(python, python, * sys.argv)
 
-def KillAllProgram():
-    pass
-
 def KillProgram():
     os.system(f"killall {wine[o1.currentText()]} -9")
     os.system("killall winedbg -9")
     exeName = os.path.basename(e2.currentText())
     os.system(f"killall {exeName} -9")
 
-def InstallWine():
-    threading.Thread(target=OpenTerminal, args=[f"'{programPath}/AllInstall.py'"]).start()
-
-def InstallWineOnDeepin23():
-    threading.Thread(target=OpenTerminal, args=[f"'{programPath}/InstallWineOnDeepin23.py'"]).start()
-
-class DllWindow():
-    def ShowWindow():
-        global dllMessage
-        global dllInfoMap
-        global textInfo
-        global dllName
-        dllMessage = QtWidgets.QWidget()
-        dllLayout = QtWidgets.QGridLayout()
-        try:
-            dllInfoMap["check"]
-        except:
-            try:
-                with open(f"{programPath}/CheckDLL/lists.json", "r") as file:
-                    dllInfoMap = json.loads(file.read())
-            except:
-                traceback.print_exc()
-                QtWidgets.QMessageBox.critical(dllMessage, "错误", traceback.format_exc())
-        # UI
-        dllName = QtWidgets.QLineEdit()
-        dllButton = QtWidgets.QPushButton("查询")
-        textInfo = QtWidgets.QTextBrowser()
-        dllButton.clicked.connect(DllWindow.Find)
-        dllLayout.addWidget(QtWidgets.QLabel("Dll 名称："), 0, 0)
-        dllLayout.addWidget(dllName, 0, 1)
-        dllLayout.addWidget(dllButton, 0, 2)
-        dllLayout.addWidget(textInfo, 1, 0, 1, 3)
-        dllMessage.setWindowTitle(f"{title}——查询 Dll")
-        dllMessage.setLayout(dllLayout)
-        dllMessage.resize(int(dllMessage.frameGeometry().width() * 1.2), int(dllMessage.frameGeometry().height() * 1.1))
-        dllMessage.setWindowIcon(QtGui.QIcon(f"{programPath}/deepin-wine-runner.svg"))
-        dllMessage.show()
-
-    def Find():
-        dllNameText = dllName.text().strip().lower()
-        if dllNameText[-4:] != ".dll":
-            dllNameText += ".dll"
-        try:
-            textInfo.setText(dllInfoMap[dllNameText])
-        except:
-            textInfo.setText(f"未查询到有关 Dll '{dllNameText}' 有关的内容")
-
-def InstallWineOnDeepin23Alpha():
-    threading.Thread(target=OpenTerminal, args=[f"'{programPath}/InstallWineOnDeepin23Alpha.py'"]).start()
-
-def InstallWineHQ():
-    threading.Thread(target=OpenTerminal, args=[f"{programPath}/InstallNewWineHQ.sh"]).start()
 
 def OpenWineBotton():
     if e1.currentText() == "":
@@ -654,39 +593,6 @@ def OpenWineBotton():
     else:
         wineBottonPath = e1.currentText()
     os.system("xdg-open \"" + wineBottonPath.replace("\'", "\\\'") + "\"")
-
-def OpenWineFontPath():
-    if e1.currentText() == "":
-        wineBottonPath = setting["DefultBotton"]
-    else:
-        wineBottonPath = e1.currentText()
-    QtWidgets.QMessageBox.information(widget, "提示", transla.transe("U", "如果安装字体？只需要把字体文件复制到此字体目录\n按下“OK”按钮可以打开字体目录"))
-    os.system("xdg-open \"" + wineBottonPath.replace("\'", "\\\'") + "/drive_c/windows/Fonts\"")
-
-def GetLoseDll():
-    if e1.currentText() == "":
-        wineBottonPath = setting["DefultBotton"]
-    else:
-        wineBottonPath = e1.currentText()
-    option = ""
-    if setting["MonoGeckoInstaller"]:
-        option += f"WINEDLLOVERRIDES=\"mscoree,mshtml=\" "
-    if setting["Architecture"] != "Auto":
-        option += f"WINEARCH={setting['Architecture']} "
-    if not setting["Debug"]:
-        option += "WINEDEBUG=-all "
-    wineUsingOption = ""
-    if o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable":
-        os.system(f"'{programPath}/deepin-wine-runner-create-botton.py' '{wineBottonPath}'")
-    if o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable":
-        wineUsingOption = ""
-    if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable":
-        if not os.path.exists(f"{programPath}/dlls-arm"):
-            if os.system(f"7z x -y \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
-                QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
-                return
-            os.remove(f"{programPath}/dlls-arm.7z")
-    threading.Thread(target=os.system, args=[f"python3 '{programPath}/CheckDLL/main.py' '{e2.currentText()}' '{wineBottonPath}' '{wine[o1.currentText()]}'" + setting["WineOption"]]).start()
 
 class RunWineProgramThread(QtCore.QThread):
     signal = QtCore.pyqtSignal(str)
@@ -895,17 +801,6 @@ def DeleteWineBotton():
 def ThankWindow():
     # 直接显示关于窗口，关于窗口已经添加
     about_this_program()
-
-def InstallWineFont():
-    # 筛选 apt
-    if not os.system("which aptss"):
-        threading.Thread(target=OpenTerminal, args=[f"sudo aptss install ms-core-fonts -y"]).start()
-    elif not os.system("which ss-apt-fast"):
-        threading.Thread(target=OpenTerminal, args=[f"sudo ss-apt-fast install ms-core-fonts -y"]).start()
-    elif not os.system("which apt-fast"):
-        threading.Thread(target=OpenTerminal, args=[f"sudo apt-fast install ms-core-fonts -y"]).start()
-    else:
-        threading.Thread(target=OpenTerminal, args=[f"sudo apt install ms-core-fonts -y"]).start()
 
 def WineRunnerBugUpload():
     threading.Thread(target=os.system, args=[f"'{programPath}/deepin-wine-runner-update-bug'"]).start()
@@ -2346,18 +2241,11 @@ uninstallProgram = QtWidgets.QPushButton(transla.transe("U", "卸载程序"))
 uninstallProgram.clicked.connect(lambda: RunWineProgram(f"{programPath}/geek.exe"))
 programManager.addWidget(QtWidgets.QLabel(" "*5), 1, 3, 1, 1)
 programManager.addWidget(uninstallProgram, 1, 4, 1, 1)
-miniAppStore = QtWidgets.QPushButton(transla.transe("U", "微型应用商店"))
-miniAppStore.clicked.connect(lambda: threading.Thread(target=MiniAppStore).start())
 programManager.addWidget(QtWidgets.QLabel(" "*5), 1, 5, 1, 1)
-programManager.addWidget(miniAppStore, 1, 6, 1, 1)
 programManager.addWidget(QtWidgets.QLabel(" "*5), 1, 7, 1, 1)
 getProgramStatus = QtWidgets.QPushButton(transla.transe("U", "获取该程序运行情况"))
 getProgramStatus.clicked.connect(ProgramRunStatusShow.ShowWindow)
 programManager.addWidget(getProgramStatus, 1, 8, 1, 1)
-getLoseDll = QtWidgets.QPushButton(transla.transe("U", "检测静态下程序缺少DLL"))
-getLoseDll.clicked.connect(GetLoseDll)
-programManager.addWidget(QtWidgets.QLabel(" "*5), 1, 9, 1, 1)
-programManager.addWidget(getLoseDll, 1, 10, 1, 1)
 programManager.addItem(QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum), 1, 11, 1, 1)
 programManager.addWidget(QtWidgets.QLabel(transla.transe("U", "WINE配置：")), 2, 0, 1, 1)
 wineConfig = QtWidgets.QPushButton(transla.transe("U", "配置容器"))
@@ -2369,9 +2257,6 @@ programManager.addWidget(fontAppStore, 3, 2, 1, 1)
 button_r_6 = QtWidgets.QPushButton(transla.transe("U", "RegShot"))
 button_r_6.clicked.connect(lambda: RunWineProgram(f"{programPath}/RegShot/regshot.exe"))
 programManager.addWidget(button_r_6, 3, 4, 1, 1)
-sparkWineSetting = QtWidgets.QPushButton(transla.transe("U", "星火wine配置"))
-sparkWineSetting.clicked.connect(lambda: threading.Thread(target=os.system, args=["/opt/durapps/spark-dwine-helper/spark-dwine-helper-settings/settings.sh"]).start())
-programManager.addWidget(sparkWineSetting, 3, 6, 1, 1)
 # 权重
 button5.setSizePolicy(size)
 saveDesktopFileOnLauncher.setSizePolicy(size)
@@ -2417,10 +2302,6 @@ mainLayout.addWidget(programRun, 2, 1, 1, 1)
 # 菜单栏
 menu = window.menuBar()
 programmenu = menu.addMenu(transla.transe("U", "程序(&P)"))
-p1 = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine.png"), transla.transe("U", "安装 wine(&I)"))
-installWineOnDeepin23 = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine23P.png"), transla.transe("U", "安装 wine(只限Deepin23 Preview)"))
-installWineOnDeepin23Alpha = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine23A.png"), transla.transe("U", "安装 wine(只限Deepin23 Alpha)"))
-installWineHQ = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine.png"), transla.transe("U", "安装 WineHQ"))
 installMoreWine = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/more-wine.png"), transla.transe("U", "安装更多 Wine"))
 downloadChrootBottle = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/CHROOT.png"), transla.transe("U", "下载 Chroot 容器"))
 p2 = QtWidgets.QAction(transla.transe("U", "设置程序(&S)"))
@@ -2429,10 +2310,6 @@ p3 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(47), transla.
 cleanCache = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(47), transla.transe("U", "清空软件缓存"))
 cleanProgramUnuse = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(47), transla.transe("U", "删除程序组件"))
 p4 = QtWidgets.QAction(transla.transe("U", "退出程序(&E)"))
-programmenu.addAction(p1)
-programmenu.addAction(installWineOnDeepin23)
-programmenu.addAction(installWineOnDeepin23Alpha)
-programmenu.addAction(installWineHQ)
 programmenu.addAction(installMoreWine)
 programmenu.addAction(downloadChrootBottle)
 programmenu.addSeparator()
@@ -2444,10 +2321,6 @@ programmenu.addAction(cleanCache)
 programmenu.addAction(cleanProgramUnuse)
 programmenu.addSeparator()
 programmenu.addAction(p4)
-p1.triggered.connect(InstallWine)
-installWineOnDeepin23.triggered.connect(InstallWineOnDeepin23)
-installWineOnDeepin23Alpha.triggered.connect(InstallWineOnDeepin23Alpha)
-installWineHQ.triggered.connect(InstallWineHQ)
 installMoreWine.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/wine/installwine'"]).start())
 downloadChrootBottle.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/QemuDownload.py'"]).start())
 p2.triggered.connect(ProgramSetting.ShowWindow)
@@ -2459,8 +2332,6 @@ p4.triggered.connect(window.close)
 
 wineOption = menu.addMenu(transla.transe("U", "Wine(&W)"))
 w1 = QtWidgets.QAction(transla.transe("U", "打开 Wine 容器目录"))
-w2 = QtWidgets.QAction(QtGui.QIcon.fromTheme("font"), transla.transe("U", "安装常见字体"))
-w3 = QtWidgets.QAction(QtGui.QIcon.fromTheme("font"), transla.transe("U", "安装自定义字体"))
 w4 = QtWidgets.QAction(transla.transe("U", "删除选择的 Wine 容器"))
 cleanBottonUOS = QtWidgets.QAction(transla.transe("U", "清理 Wine 容器（基于 Wine 适配活动脚本）"))
 wineKeyboardLnk = QtWidgets.QAction(transla.transe("U", "Wine 快捷键映射"))
@@ -2472,8 +2343,6 @@ updateGeek = QtWidgets.QAction(transla.transe("U", "从 Geek Uninstaller 官网�
 deletePartIcon = QtWidgets.QAction(transla.transe("U", "快捷方式管理工具"))
 deleteDesktopIcon = QtWidgets.QAction(transla.transe("U", "删除所有 Wine 程序在启动器的快捷方式"))
 wineOption.addAction(w1)
-wineOption.addAction(w2)
-wineOption.addAction(w3)
 wineOption.addAction(w4)
 wineOption.addAction(cleanBottonUOS)
 wineOption.addSeparator()
@@ -2561,8 +2430,6 @@ dllOver.addAction(saveDllOver)
 dllOver.addAction(addDllOver)
 dllOver.addAction(editDllOver)
 w1.triggered.connect(OpenWineBotton)
-w2.triggered.connect(InstallWineFont)
-w3.triggered.connect(OpenWineFontPath)
 w4.triggered.connect(DeleteWineBotton)
 cleanBottonUOS.triggered.connect(CleanWineBottonByUOS)
 w6.triggered.connect(UOSPackageScript)
@@ -2624,17 +2491,14 @@ checkValue.addAction(sha256Value)
 checkValue.addAction(sha512Value)
 
 log = menu.addMenu(transla.transe("U", "日志(&L)"))
-getDllInfo = QtWidgets.QAction(transla.transe("U", "查询 Dll"))
 checkLogText = QtWidgets.QAction(transla.transe("U", "日志分析"))
 saveLogText = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(16), transla.transe("U", "另存为日志"))
 transLogText = QtWidgets.QAction(transla.transe("U", "翻译日志（翻译后日志分析功能会故障）"))
 uploadLogText = QtWidgets.QAction(transla.transe("U", "上传日志"))
-getDllInfo.triggered.connect(DllWindow.ShowWindow)
 checkLogText.triggered.connect(LogChecking.ShowWindow)
 saveLogText.triggered.connect(SaveLog)
 transLogText.triggered.connect(TransLog)
 uploadLogText.triggered.connect(UploadLog)
-log.addAction(getDllInfo)
 log.addAction(checkLogText)
 log.addAction(saveLogText)
 log.addAction(transLogText)
@@ -2725,24 +2589,11 @@ if setting["AutoWine"]:
     o1.addItems(canUseWine)
 else:
     o1.addItems(wine.keys())
-# 禁用被精简掉的控件
-for i in [
-    [[p1, installWineOnDeepin23, installWineHQ, installMoreWine], f"{programPath}/InstallWineOnDeepin23.py"],
-    [[w6], f"{programPath}/deepin-wine-packager-with-script.py"],
-    [[p1, v1], f"{programPath}/RunVM.sh"],
-    [[getProgramIcon, uninstallProgram, updateGeek, trasButton, miniAppStore, fontAppStore, w7, w2], f"{programPath}/geek.exe"],
-]:
-    if not os.path.exists(i[1]):
-        for x in i[0]:
-            x.setDisabled(True)
 # 有些功能是非 X86 不适用的，需要屏蔽
 if subprocess.getoutput("arch").lower() != "x86_64":
-    p1.setDisabled(True)
-    installWineOnDeepin23.setDisabled(True)
     installMoreWine.setEnabled(True)
     virtualMachine.setDisabled(True)
     v1.setDisabled(True)
-    installWineHQ.setDisabled(True)
     pass
 o1.setCurrentText(setting["DefultWine"])
 e1.setEditText(setting["DefultBotton"])
@@ -2750,8 +2601,6 @@ e2.setEditText("")
 combobox1.setEditText("")
 if len(sys.argv) > 1 and sys.argv[1]:
     e2.setEditText(sys.argv[1])
-if not os.path.exists("/opt/durapps/spark-dwine-helper/spark-dwine-helper-settings/settings.sh"):
-    sparkWineSetting.setEnabled(False)
 if o1.currentText() == "":
     # 一个 Wine 都没有却用 Wine 的功能
     # 还是要处理的，至少不会闪退
