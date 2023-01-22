@@ -24,12 +24,13 @@ mount -t tmpfs tmpfs  "$DESTDIR/dev/shm"
 if [[ -d /sys/firmware/efi/ ]] ; then
     mount -t efivarfs efivarfs  "$DESTDIR/sys/firmware/efi/efivars"
 fi
-cat /etc/resolv.conf > $DESTDIR/etc/resolv.conf
+#cat /etc/resolv.conf > $DESTDIR/etc/resolv.conf
 SHELL=/bin/bash unshare --fork --pid chroot "$DESTDIR" "$@"
+exit
 if [[ -d /sys/firmware/efi/ ]] ; then
     while umount "$DESTDIR/sys/firmware/efi/efivars" 2>/dev/null ; do : ;done
 fi
 for dir in dev/pts dev/shm dev sys proc run media ; do
     while umount "$DESTDIR/$dir" 2>/dev/null; do : ;done
 done
-umount -lf "$DESTDIR"  2>/dev/null
+#umount -lf "$DESTDIR"  2>/dev/null

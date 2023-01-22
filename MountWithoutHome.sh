@@ -26,6 +26,7 @@ cp -r /usr/bin/qemu-*-static ./usr/bin
 #mount --bind /dev/shm  ./dev/shm
 chmod 777 -R root tmp
 xhost +
-
+# 挂载此内容以可以跨架构运行程序
+mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc
 # 如果参数 3 存在
 "$programPath/pardus-chroot" . ${@:3}
