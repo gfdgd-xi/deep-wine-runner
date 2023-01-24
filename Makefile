@@ -46,7 +46,7 @@ build:
 	cp -rv DisabledOpengl.reg deb/opt/apps/deepin-wine-runner
 	cp -rv EnabledOpengl.reg deb/opt/apps/deepin-wine-runner
 	cp -rv geek.exe deb/opt/apps/deepin-wine-runner
-	cp -rv uengineapi deb/opt/apps/deepin-wine-runner
+	#cp -rv uengineapi deb/opt/apps/deepin-wine-runner
 	cp -rv getxmlimg.py deb/opt/apps/deepin-wine-runner
 	cp -rv ProgramFen.py deb/opt/apps/deepin-wine-runner
 	cp -rv information.json deb/opt/apps/deepin-wine-runner
@@ -93,6 +93,7 @@ build:
 	cp -rv API deb/opt/apps/deepin-wine-runner
 	cp -rv key deb/opt/apps/deepin-wine-runner
 	python3 RemovePycacheFile.py
+	cp -rv deb /tmp/spark-deepin-wine-runner-builder
 	ln -s /opt/apps/deepin-wine-runner/deepin-wine-packager.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-package-builder 
 	ln -s /opt/apps/deepin-wine-runner/deepin-wine-easy-packager.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-packager-easy-builder
 	ln -s /opt/apps/deepin-wine-runner/deepin-wine-packager-with-script.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-packager-with-script
@@ -112,7 +113,7 @@ build:
 	ln -s /opt/apps/deepin-wine-runner/InstallNetFramework.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-runner-wine-netframework-installer
 	ln -s /opt/apps/deepin-wine-runner/InstallVisualCPlusPlus.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-runner-wine-vscppruntime-installer
 	ln -s /opt/apps/deepin-wine-runner/deepin-wine-venturi-setter.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-venturi-setter
-	cp -rv deb /tmp/spark-deepin-wine-runner-builder
+	
 	sudo chown -R root:root /tmp/spark-deepin-wine-runner-builder
 	
 	dpkg -b /tmp/spark-deepin-wine-runner-builder spark-deepin-wine-runner.deb

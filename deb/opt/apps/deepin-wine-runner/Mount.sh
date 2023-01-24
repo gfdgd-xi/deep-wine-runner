@@ -41,6 +41,7 @@ if [[ $2 == "root" ]]; then
 else
     mount --bind "/home/$2" "$1/home/$2"
 fi
-
+# 挂载此内容以可以跨架构运行程序
+mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc
 # 如果参数 3 存在
 "$programPath/pardus-chroot" "--userspec=$2:$2" . env "HOME=/home/$2" ${@:3}

@@ -350,7 +350,6 @@ class ProgramRunStatusShow():
         print(f"脚本：{name}")
         print(f"评论：{info}")
         try:
-            #
             res = requests.post(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0OjMwMjUwL1BpbmdMdW4=").decode("utf-8"), {"PinLun": info, "Version": name}).json()
             print(res)
             if res["ExitCode"]:

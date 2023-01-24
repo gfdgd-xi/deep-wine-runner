@@ -12,6 +12,8 @@ import sys
 import time
 import json
 import random
+# 阉割 Android 应用安装功能
+#import uengineapi
 import platform
 import traceback
 import webbrowser
@@ -129,7 +131,8 @@ class Command():
         "installother",
         "decompressionbottle",
         "programforum",
-        "installmsi"
+        "installmsi",
+        "installapk"
     ]
 
     def __init__(self, commandString: str) -> None:
@@ -236,7 +239,7 @@ class Command():
             return 0
 
         def StopDll(self) -> int:
-            os.system(f"WINEPREFIX='{self.wineBottonPath}' '{self.wine}' reg add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v {os.path.splitext(self.command[1])[0]}  /f")
+            return os.system(f"WINEPREFIX='{self.wineBottonPath}' '{self.wine}' reg add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v {os.path.splitext(self.command[1])[0]}  /f")
 
         def CreateBotton(self):
             self.command = ["bat", "exit"]
@@ -349,9 +352,11 @@ class Command():
                 file = open(self.command[1], "r")
                 print(file.read())
                 file.close()
+                return 0
             except:
                 print("文件读取错误")
                 Debug()
+                return 1
 
         def Taskmgr(self):
             self.command = ["bat", "taskmgr"]
@@ -362,7 +367,7 @@ class Command():
             return self.Bat()
 
         def Killall(self):
-            os.system(f"killall -9 {self.command[1]}")
+            return os.system(f"killall -9 {self.command[1]}")
 
         def KillallWineServer(self):
             command = ["WINEPREFIX='($WINEPREFIX)'", "($WINE)", "-k"]
@@ -385,19 +390,19 @@ class Command():
             
         def EnabledWineBottleCreateLink(self):
             self.command = ["bat", "reg", "delete", "HKEY_CURRENT_USER\Software\Wine\DllOverrides", "/v", "winemenubuilder.exe", "/f"]
-            self.Bat()
+            return self.Bat()
 
         def DisbledWineBottleCreateLink(self):
             self.command = ["bat", "reg", "add", "HKEY_CURRENT_USER\Software\Wine\DllOverrides", "/v", "winemenubuilder.exe", "/f"]
-            self.Bat()
+            return self.Bat()
 
         def DisbledWineCrashDialog(self):
             self.command = ["bat", "reg", "add", "HKEY_CURRENT_USER\Software\Wine\WineDbg", "/v", "ShowCrashDialog", "/t", "REG_DWORD", "/d", "00000000", "/f"]
-            self.Bat()
+            return self.Bat()
 
         def EnabledWineCrashDialog(self):
             self.command = ["bat", "reg", "add", "HKEY_CURRENT_USER\Software\Wine\WineDbg", "/v", "ShowCrashDialog", "/t", "REG_DWORD", "/d", "00000001", "/f"]
-            self.Bat()
+            return self.Bat()
 
         def EnabledHttpProxy(self):
             proxyServerAddress = self.command[1]
@@ -405,7 +410,7 @@ class Command():
             self.command = ["bat", "reg", "add", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings", "/v", "ProxyEnable", "/t", "REG_DWORD", "/d", "00000001", "/f"]
             self.Bat()
             self.command = ["bat", "reg", "add", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings", "/v", "ProxyServer", "/d", f"{proxyServerAddress}:{port}", "/f"]
-            self.Bat()
+            return self.Bat()
 
         def DecompressionBottle(self):
             tempDebDir = f"/tmp/wine-runner-unpack-deb-{random.randint(0, 1000)}"
@@ -423,7 +428,7 @@ class Command():
 
         def DisbledHttpProxy(self):
             self.command = ["bat", "reg", "add", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings", "/v", "ProxyEnable", "/t", "REG_DWORD", "/d", "00000000", "/f"]
-            self.Bat()
+            return self.Bat()
 
         def InstallVB(self):
             import InstallVisualBasicRuntime
@@ -435,10 +440,27 @@ class Command():
 
         def ProgramForum(self):
             webbrowser.open_new_tab("https://gfdgdxi.flarum.cloud/")
+            return
 
         def InstallMSI(self):
             self.command = ["bat", "msiexec", "/i", self.command[1]]
             return self.Bat()
+
+        def InstallApk(self):
+            if os.system("which uengine > /dev/null"):
+                print("未安装 UEngine，无法使用该命令")
+                return 1
+            apk = uengineapi.APK(self.command[1])
+            result = apk.install()
+            homePath = os.getenv("HOME")
+            if not os.path.exists(f"{homePath}/.local/share/applications/uengine"):
+                os.makedirs(f"{homePath}/.local/share/applications/uengine")
+            if not os.path.exists(f"{homePath}/.local/share/icons/hicolor/apps"):
+                os.makedirs(f"{homePath}/.local/share/icons/hicolor/apps")
+            package = apk.packageName()
+            apk.saveApkIcon(f"{homePath}/.local/share/icons/hicolor/apps/{package}.png")
+            apk.saveDesktopFile(f"{homePath}/.local/share/applications/uengine/{package}.desktop", f"{homePath}/.local/share/icons/hicolor/apps/{package}.png")
+            return result
 
         # 可以运行的命令的映射关系
         # 可以被使用的命令的映射
@@ -485,7 +507,8 @@ class Command():
             "installother": InstallOther,
             "decompressionbottle": DecompressionBottle,
             "programforum": ProgramForum,
-            "installmsi": InstallMSI
+            "installmsi": InstallMSI,
+            "installapk": InstallApk
         }
 
         # 参数数列表
@@ -533,7 +556,8 @@ class Command():
             "installother": [1],
             "decompressionbottle": [2],
             "programforum": [0],
-            "installmsi": [1]
+            "installmsi": [1],
+            "installapk": [1]
         }
         windowsUnrun = [
             "createbotton",
@@ -548,7 +572,8 @@ class Command():
             "installdxvk",
             "installfont",
             "installsparkcorefont",
-            "decompressionbottle"
+            "decompressionbottle",
+            "installapk"
         ]
         # 解析
         def __init__(self, command: list, wineBottonPath: str, wine: str) -> int:
@@ -598,7 +623,11 @@ class Command():
                     for b in programEnv:
                         if b[0] in i[a]:
                             i[a] = i[a].replace(b[0], b[1])
-                commandReturn = self.commandList[i[0]](self)
+                try:
+                    commandReturn = self.commandList[i[0]](self)
+                except:
+                    traceback.print_exc()
+                    commandReturn = 1
                 if commandReturn:
                     print(f"运行命令{' '.join(self.command)}出现错误，返回值:", commandReturn)
                 programEnv[9][1] = str(commandReturn)

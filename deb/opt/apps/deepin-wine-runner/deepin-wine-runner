@@ -281,6 +281,30 @@ class Runexebutton_threading(QtCore.QThread):
         else:
             option += "WINEDEBUG=FIXME,ERR,WARN,TRACE,Message "
         wineUsingOption = ""
+        exePath = e2.currentText()
+        if True:
+            fileName = [".exe"]
+            changePath = False
+            for i in fileName:
+                if i in exePath:
+                    print(i)
+                    print(exePath)
+                    l = exePath.index(i)
+                    exePath = f"{exePath[:l+4]}' {exePath[l+4:]} '"
+                    print(l)
+                    print(exePath)
+                    changePath = True
+                    break
+            #if not changePath and not os.path.exists(changePath):
+            if not changePath and not os.path.exists(exePath):
+                # 删除前后无用空格以防止出现问题
+                print(exePath)
+                exePath = exePath.strip()
+                l = exePath.index(" ")
+                exePath = f"{exePath[:l]}' {exePath[l:]} '"
+                print(l)
+                #print(i)
+                print(exePath)
         if o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable":
             wineUsingOption = ""
         if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable":
@@ -293,15 +317,19 @@ class Runexebutton_threading(QtCore.QThread):
             res = ""
             if e2.currentText()[-4:] == ".msi" and os.path.exists(e2.currentText()):
                 OpenTerminal("env WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " msiexec /i '" + e2.currentText() + "' " + setting["WineOption"])
+            elif e2.currentText()[-4:] == ".bat" and os.path.exists(e2.currentText()):
+                OpenTerminal("env WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " wineconsole '" + e2.currentText() + "' " + setting["WineOption"])
             else:
-                OpenTerminal("env WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"])
+                OpenTerminal("env WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + exePath + "' " + setting["WineOption"])
             #res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"] + "\" --keep-open" + wineUsingOption], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         else:
             if e2.currentText()[-4:] == ".msi" and os.path.exists(e2.currentText()):
                 res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " msiexec /i '" + e2.currentText() + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            elif e2.currentText()[-4:] == ".bat" and os.path.exists(e2.currentText()):
+                res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " wineconsole '" + e2.currentText() + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             else:
-                print(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"]])
-                res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                print(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + exePath + "' " + setting["WineOption"]])
+                res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + exePath + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         # 实时读取程序返回
         #
         if not setting["TerminalOpen"]:
@@ -2114,7 +2142,7 @@ defultProgramList = {
     "WineBottonDifferent": False,
     "CenterWindow": False,
     "Theme": "",
-    "MonoGeckoInstaller": True,
+    "MonoGeckoInstaller": False,
     "AutoWine": True,
     "RuntimeCache": True,
     "MustRead": False,
@@ -2214,6 +2242,10 @@ try:
     isoPathFound = list(json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/ISOPathFound.json")).values())
     setting = json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineSetting.json"))
     change = False
+    if not os.path.exists(get_home() + "/.config/deepin-wine-runner/mono-lock"):
+        os.mknod(f"{get_home()}/.config/deepin-wine-runner/mono-lock")
+        setting["MonoGeckoInstaller"] = False
+        change = True
     for i in defultProgramList.keys():
         if not i in setting:
             change = True
@@ -2561,7 +2593,7 @@ mainLayout.setColumnStretch(1, 1)
 mainLayout.addWidget(returnText, 0, 1, 2, 1)
 
 # 版权
-copy = QtWidgets.QLabel(f"""\n程序版本：{version}，<b>提示：Wine 无法运行所有的 Windows 程序，如果想要运行更多可执行程序，可以考虑虚拟机和双系统</b><br>
+copy = QtWidgets.QLabel(f"""\n程序版本：{version}，<b>提示：Wine 无法运行保证可以运行所有的 Windows 程序，如果想要运行更多可执行程序，可以考虑虚拟机和双系统</b><br>
 ©2020~{time.strftime("%Y")} gfdgd xi、为什么您不喜欢熊出没和阿布呢，RacoonGX 团队作品""")
 mainLayout.addWidget(copy, 2, 0, 1, 1)
 
@@ -2590,12 +2622,12 @@ installWineOnDeepin23Alpha = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/
 installWineHQ = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine.png"), transla.transe("U", "安装 WineHQ"))
 installMoreWine = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/more-wine.png"), transla.transe("U", "安装更多 Wine"))
 downloadChrootBottle = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/CHROOT.png"), transla.transe("U", "下载 Chroot 容器"))
-p2 = QtWidgets.QAction(transla.transe("U", "设置程序(&S)"))
+p2 = QtWidgets.QAction(QtGui.QIcon.fromTheme("settings"), transla.transe("U", "设置程序(&S)"))
 enabledAll = QtWidgets.QAction(transla.transe("U", "强制启用所有被禁用的组件（不推荐）"))
 p3 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(47), transla.transe("U", "清空软件历史记录(&C)"))
 cleanCache = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(47), transla.transe("U", "清空软件缓存"))
 cleanProgramUnuse = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(47), transla.transe("U", "删除程序组件"))
-p4 = QtWidgets.QAction(transla.transe("U", "退出程序(&E)"))
+p4 = QtWidgets.QAction(QtGui.QIcon.fromTheme("exit"), transla.transe("U", "退出程序(&E)"))
 programmenu.addAction(p1)
 programmenu.addAction(installWineOnDeepin23)
 programmenu.addAction(installWineOnDeepin23Alpha)
