@@ -2938,6 +2938,12 @@ help.addAction(h2)
 help.addAction(h3)
 help.addAction(h4)
 help.addSeparator()
+
+zanShang = menu.addMenu("赞赏我们")
+zanShangAction = QtWidgets.QAction("赞赏我们")
+zanShang.addAction(zanShangAction)
+zanShangAction.triggered.connect(lambda: webbrowser.open_new_tab("http://dt.racoongx.cn/"))
+
 wikiHelp = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "程序 Wiki"))
 help.addAction(wikiHelp)
 videoHelp = help.addMenu(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "视频教程"))
