@@ -1650,7 +1650,8 @@ def ReadDeb(unzip = False):
                     lnkMap[name].setText(value)
                     continue
                 # 其它的特殊情况判断
-                if name == "START_SHELL_PATH" and value == "/opt/deepinwine/tools/spark_run_v4.sh":
+                # 在选择 arm 架构的情况下不勾选
+                if name == "START_SHELL_PATH" and value == "/opt/deepinwine/tools/spark_run_v4.sh" and debArch.currentIndex() == 0:
                     # helper
                     chooseWineHelperValue.setChecked(True)
                 if name == "APPRUN_CMD" and value in wineValue:
@@ -1680,7 +1681,8 @@ def ReadDeb(unzip = False):
                     lnkMap[name].setText(value)
                     continue
                 # 其它的特殊情况判断
-                if name == "START_SHELL_PATH" and value == "/opt/deepinwine/tools/spark_run_v4.sh":
+                # 在选择 arm 架构的情况下不勾选
+                if name == "START_SHELL_PATH" and value == "/opt/deepinwine/tools/spark_run_v4.sh" and debArch.currentIndex() == 0:
                     # helper
                     chooseWineHelperValue.setChecked(True)
                 if name == "APPRUN_CMD" and value in wineValue:
@@ -1710,7 +1712,8 @@ def ReadDeb(unzip = False):
                     lnkMap[name].setText(value)
                     continue
                 # 其它的特殊情况判断
-                if name == "START_SHELL_PATH" and value == "/opt/deepinwine/tools/spark_run_v4.sh":
+                # 在选择 arm 架构的情况下不勾选
+                if name == "START_SHELL_PATH" and value == "/opt/deepinwine/tools/spark_run_v4.sh" and debArch.currentIndex() == 0:
                     # helper
                     chooseWineHelperValue.setChecked(True)
                 if name == "APPRUN_CMD" and value in wineValue:
