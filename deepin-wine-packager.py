@@ -154,29 +154,46 @@ def Build7z(b, self, debInformation, debPackagePath):
     # 设置容器
     ###############
     self.label.emit("正在设置 wine 容器")
-    if e6_text.text()[-3: ] != ".7z":
+    if e6_text.text()[-3: ] != ".7z" and debArch.currentIndex() != 2:
         os.chdir(programPath)
         if cleanBottonByUOS.isChecked():
             self.run_command(f"WINE='{debInformation[debArch.currentIndex()]['Wine']}' '{programPath}/cleanbottle.sh' '{b}'")
-            os.chdir(b)
-            # 对用户目录进行处理
-            self.run_command("sed -i \"s#$USER#@current_user@#\" ./*.reg")
-            os.chdir(f"{b}/drive_c/users")
-            if os.path.exists(f"{b}/drive_c/users/@current_user@"):
-                self.run_command(f"rm -rfv '{b}/drive_c/users/@current_user@'")
-            self.run_command(f"mv -fv '{os.getlogin()}' @current_user@")
-            # 如果缩放文件 scale.txt 存在，需要移除以便用户自行调节缩放设置
-            if os.path.exists(f"{b}/scale.txt"):
-                os.remove(f"{b}/scale.txt")
-            # 删除因为脚本失误导致用户目录嵌套（如果存在）
-            if os.path.exists(f"{b}{b}/drive_c/users/@current_user@/@current_user@"):
-                shutil.rmtree(f"{b}{b}/drive_c/users/@current_user@/@current_user@")
-            # 删除无用的软链
-            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/我的'*")
-            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/My '*")
-            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Desktop'")
-            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Downloads'")
-            self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Templates'")
+        os.chdir(b)
+        # 对用户目录进行处理
+        self.run_command("sed -i \"s#$USER#@current_user@#\" ./*.reg")
+        os.chdir(f"{b}/drive_c/users")
+        if os.path.exists(f"{b}/drive_c/users/@current_user@"):
+            self.run_command(f"rm -rfv '{b}/drive_c/users/@current_user@'")
+        self.run_command(f"mv -fv '{os.getlogin()}' @current_user@")
+        # 如果缩放文件 scale.txt 存在，需要移除以便用户自行调节缩放设置
+        if os.path.exists(f"{b}/scale.txt"):
+            os.remove(f"{b}/scale.txt")
+        # 删除因为脚本失误导致用户目录嵌套（如果存在）
+        if os.path.exists(f"{b}{b}/drive_c/users/@current_user@/@current_user@"):
+            shutil.rmtree(f"{b}{b}/drive_c/users/@current_user@/@current_user@")
+        # 删除无用的软链
+        self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/我的'*")
+        self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/My '*")
+        self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Desktop'")
+        self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Downloads'")
+        self.run_command(f"rm -fv '{b}/drive_c/users/@current_user@/Templates'")
+    elif debArch.currentIndex() == 2 and e6_text.text()[-3: ] != ".7z":
+        os.chdir(b)
+        # 对用户目录进行处理
+        self.run_command("sed -i \"s#$USER#crossover#\" ./*.reg")
+        os.chdir(f"{b}/drive_c/users")
+        if os.path.exists(f"{b}/drive_c/users/crossover"):
+            self.run_command(f"rm -rfv '{b}/drive_c/users/crossover'")
+        self.run_command(f"mv -fv '{os.getlogin()}' crossover")
+        # 删除因为脚本失误导致用户目录嵌套（如果存在）
+        if os.path.exists(f"{b}{b}/drive_c/users/crossover/crossover"):
+            shutil.rmtree(f"{b}{b}/drive_c/users/crossover/crossover")
+        # 删除无用的软链
+        self.run_command(f"rm -fv '{b}/drive_c/users/crossover/我的'*")
+        self.run_command(f"rm -fv '{b}/drive_c/users/crossover/My '*")
+        self.run_command(f"rm -fv '{b}/drive_c/users/crossover/Desktop'")
+        self.run_command(f"rm -fv '{b}/drive_c/users/crossover/Downloads'")
+        self.run_command(f"rm -fv '{b}/drive_c/users/crossover/Templates'")
     os.chdir(programPath)
     ###############
     # 压缩容器
@@ -186,6 +203,10 @@ def Build7z(b, self, debInformation, debPackagePath):
     if e6_text.text()[-3: ] == ".7z":
         shutil.copy(e6_text.text(), f"{debPackagePath}/opt/apps/{e1_text.text()}/files/files.7z")
     else:
+        if debArch.currentIndex() == 2:
+            # Crossover 包直接拷贝容器即可，无需打包 7z
+            os.system(f"cp -rv '{b}' '{debPackagePath}/opt/cxoffice/support/{e5_text.text()}'")
+            return
         if debPackagePath[-3: ] == ".7z":
             self.run_command("7z a '{}' '{}/'*".format(debPackagePath, b))
         else:
@@ -1047,8 +1068,178 @@ fi
         "installed_apps": false
     }}
 }}'''
+                },
+                {
+                    "Wine": None,
+                    "Architecture": "all",
+                    "Depends": "cxoffice20 | cxoffice5 | cxoffice5:i386",
+                    "run.sh": None,
+                    "info": None,
+                    "postinst": f'''#!/bin/sh
+# (c) Copyright 2008. CodeWeavers, Inc.
+
+# Setup logging
+if [ -n "$CX_LOG" ]
+then
+    [ "$CX_LOG" = "-" ] || exec 2>>"$CX_LOG"
+    echo >&2
+    echo "***** `date`" >&2
+    echo "Starting: $0 $@" >&2
+    set -x
+fi
+
+action="$1"
+oldver="$2"
+
+CX_ROOT="/opt/cxoffice"
+CX_BOTTLE="{e5_text.text()}"
+export CX_ROOT CX_BOTTLE
+
+if [ "$action" = "configure" ]
+then
+    uuid=""
+    uuid_file="$CX_ROOT/support/$CX_BOTTLE/.uuid"
+    if [ -f "$uuid_file" ]
+    then
+        uuid=`cat "$uuid_file"`
+        rm -f "$uuid_file"
+    fi
+
+    set_uuid=""
+    if [ -n "$uuid" ]
+    then
+        set_uuid="--set-uuid $uuid"
+    fi
+
+    "$CX_ROOT/bin/cxbottle" $set_uuid --restored --removeall --install
+fi
+
+# Make sure the script returns 0
+true
+
+
+''',
+                    "postrm": f'''#!/bin/sh
+# (c) Copyright 2008. CodeWeavers, Inc.
+
+# Setup logging
+if [ -n "$CX_LOG" ]
+then
+    [ "$CX_LOG" = "-" ] || exec 2>>"$CX_LOG"
+    echo >&2
+    echo "***** `date`" >&2
+    echo "Starting: $0 $@" >&2
+    set -x
+fi
+
+action="$1"
+
+CX_ROOT="/opt/cxoffice"
+CX_BOTTLE="{e5_text.text()}"
+export CX_ROOT CX_BOTTLE
+
+if [ "$action" = "purge" ]
+then
+    # Delete any leftover file
+    rm -rf "$CX_ROOT/support/$CX_BOTTLE"
+fi
+
+# Make sure the script returns 0
+true
+
+
+''',
+                    "preinst": f'''#!/bin/sh
+# (c) Copyright 2008. CodeWeavers, Inc.
+
+# Setup logging
+if [ -n "$CX_LOG" ]
+then
+    [ "$CX_LOG" = "-" ] || exec 2>>"$CX_LOG"
+    echo >&2
+    echo "***** `date`" >&2
+    echo "Starting: $0 $@" >&2
+    set -x
+fi
+
+action="$1"
+oldver="$2"
+
+CX_ROOT="/opt/cxoffice"
+CX_BOTTLE="{e5_text.text()}"
+export CX_ROOT CX_BOTTLE
+
+case "$action" in
+install|upgrade)
+    if [ ! -f "$CX_ROOT/bin/cxbottle" ]
+    then
+        echo "error: could not find CrossOver in '$CX_ROOT'" >&2
+        exit 1
+    fi
+    if [ ! -x "$CX_ROOT/bin/cxbottle" ]
+    then
+        echo "error: the '$CX_ROOT/bin/cxbottle' tool is not executable!" >&2
+        exit 1
+    fi
+    if [ ! -x "$CX_ROOT/bin/wineprefixcreate" -o ! -f "$CX_ROOT/bin/wineprefixcreate" ]
+    then
+        echo "error: managed bottles are not supported in this version of CrossOver" >&2
+        exit 1
+    fi
+
+    if [ -d "$CX_ROOT/support/$CX_BOTTLE" ]
+    then
+        # Save the bottle's uuid
+        "$CX_ROOT/bin/cxbottle" --get-uuid >"$CX_ROOT/support/$CX_BOTTLE/.uuid" 2>/dev/null
+    fi
+    ;;
+
+abort-upgrade)
+    rm -f "$CX_ROOT/support/$CX_BOTTLE/.uuid"
+    ;;
+esac
+
+# Make sure the script returns 0
+true
+
+
+''',
+                    "prerm": f'''#!/bin/sh
+# (c) Copyright 2008. CodeWeavers, Inc.
+
+# Setup logging
+if [ -n "$CX_LOG" ]
+then
+    [ "$CX_LOG" = "-" ] || exec 2>>"$CX_LOG"
+    echo >&2
+    echo "***** `date`" >&2
+    echo "Starting: $0 $@" >&2
+    set -x
+fi
+
+action="$1"
+if [ "$2" = "in-favour" ]
+then
+    # Treating this as an upgrade is less work and safer
+    action="upgrade"
+fi
+
+CX_ROOT="/opt/cxoffice"
+CX_BOTTLE="{e5_text.text()}"
+export CX_ROOT CX_BOTTLE
+
+if [ "$action" = "remove" ]
+then
+    # Uninstall the bottle before cxbottle.conf gets deleted
+    "$CX_ROOT/bin/cxbottle" --removeall
+fi
+
+# Make sure the script returns 0
+true
+
+
+'''
                 }
-                
             ]
             print("c")
             if os.path.exists(wine[wineVersion.currentText()]):
@@ -1161,9 +1352,16 @@ fi
             ###############
             self.label.emit("正在创建目录……")
             os.makedirs("{}/DEBIAN".format(debPackagePath))
-            os.makedirs("{}/opt/apps/{}/entries/applications".format(debPackagePath, e1_text.text()))
-            os.makedirs("{}/opt/apps/{}/entries/icons/hicolor/scalable/apps".format(debPackagePath, e1_text.text()))
-            os.makedirs("{}/opt/apps/{}/files".format(debPackagePath, e1_text.text()))
+            
+            if debArch.currentIndex() != 2:
+                # Deepin Wine 包目录结构
+                os.makedirs("{}/opt/apps/{}/entries/applications".format(debPackagePath, e1_text.text()))
+                os.makedirs("{}/opt/apps/{}/entries/icons/hicolor/scalable/apps".format(debPackagePath, e1_text.text()))
+                os.makedirs("{}/opt/apps/{}/files".format(debPackagePath, e1_text.text()))
+            else:
+                # Crossover包目录结构
+                os.makedirs(f"{debPackagePath}/opt/cxoffice/support/{e5_text.text()}")
+                # 为啥就没了
             ###############
             # 创建文件
             ###############
@@ -1171,12 +1369,14 @@ fi
             os.mknod("{}/DEBIAN/control".format(debPackagePath))
             #os.mknod("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()))
             #os.mknod("{}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()))
-            os.mknod("{}/opt/apps/{}/info".format(debPackagePath, e1_text.text()))
+            if debArch.currentIndex() != 2:
+                os.mknod("{}/opt/apps/{}/info".format(debPackagePath, e1_text.text()))
             #########!!!!!!!
             Build7z(b, self, debInformation, debPackagePath)
             ###############
             # 压缩 Wine
             ###############
+            # Deepin Wine 包
             print("e")
             self.label.emit("正在处理 Wine")
             if os.path.exists(wine[wineVersion.currentText()]):
@@ -1190,7 +1390,7 @@ fi
             # 复制文件
             ###############
             self.label.emit("正在复制文件……")
-            if os.path.exists(wine[wineVersion.currentText()]):
+            if os.path.exists(wine[wineVersion.currentText()]) and debArch.currentIndex() != 2:
                 shutil.copy(f"{programPath}/gtkGetFileNameDlg", f"{debPackagePath}/opt/apps/{e1_text.text()}/files")
             # arm64 box86 需要复制 dlls-arm 目录
             '''if debArch.currentIndex() == 1:
@@ -1228,12 +1428,13 @@ fi
                 self.run_command(f"cp -rv '{programPath}/arm-package/'* {debPackagePath}/opt/apps/{e1_text.text()}/files/")
                 #self.run_command(f"cp -rv '{programPath}/wined3d.dll.so' {debPackagePath}/opt/apps/{e1_text.text()}/files/")
                 pass    
-            if desktopIconTab.count() <= 1:
-                if e9_text.text() != "":
-                    shutil.copy(e9_text.text(), "{}/opt/apps/{}/entries/icons/hicolor/scalable/apps/{}.{}".format(debPackagePath, e1_text.text(), e1_text.text(), imms))
-            else:
-                for i in range(len(a)):
-                    shutil.copy(iconUiList[i][4].text(), "{}/{}".format(debPackagePath, a[i]))
+            if debArch.currentIndex() != 2:
+                if desktopIconTab.count() <= 1:
+                    if e9_text.text() != "":
+                        shutil.copy(e9_text.text(), "{}/opt/apps/{}/entries/icons/hicolor/scalable/apps/{}.{}".format(debPackagePath, e1_text.text(), e1_text.text(), imms))
+                else:
+                    for i in range(len(a)):
+                        shutil.copy(iconUiList[i][4].text(), "{}/{}".format(debPackagePath, a[i]))
             ################
             # 获取文件大小
             ################
@@ -1272,6 +1473,14 @@ Description: {e3_text.text()}
                 write_txt(f"{debPackagePath}/DEBIAN/postinst", debInformation[debArch.currentIndex()]["postinst"])
             if debInformation[debArch.currentIndex()]["postrm"] != "":
                 write_txt(f"{debPackagePath}/DEBIAN/postrm", debInformation[debArch.currentIndex()]["postrm"])
+            try:
+                # 因为不一定含有此项，所以需要 try except
+                if debInformation[debArch.currentIndex()]["preinst"] != "":
+                    write_txt(f"{debPackagePath}/DEBIAN/preinst", debInformation[debArch.currentIndex()]["preinst"])
+                if debInformation[debArch.currentIndex()]["prerm"] != "":
+                    write_txt(f"{debPackagePath}/DEBIAN/prerm", debInformation[debArch.currentIndex()]["prerm"])
+            except:
+                pass
             replaceMap = [
                 ["@@@BOTTLENAME@@@", e5_text.text()],
                 ["@@@APPVER@@@", e2_text.text()],
@@ -1281,8 +1490,11 @@ Description: {e3_text.text()}
                 ["@@@EXEC_NAME@@@", os.path.basename(e7_text.text().replace("\\", "/"))]
             ]
             line = "\\"
-            if desktopIconTab.count() <= 1:
+            if desktopIconTab.count() <= 1 and debArch.currentIndex() != 2:
                 write_txt("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()), '#!/usr/bin/env xdg-open\n[Desktop Entry]\nEncoding=UTF-8\nType=Application\nX-Created-By={}\nCategories={};\nIcon={}\nExec="/opt/apps/{}/files/run.sh" --uri {}\nName={}\nComment={}\nMimeType={}\nGenericName={}\nTerminal=false\nStartupNotify=false\n'.format(e4_text.text(), option1_text.currentText(), a, e1_text.text(), e15_text.text(), e8_text.text(), e3_text.text(), e10_text.text(), e1_text.text()))
+            elif debArch.currentIndex() == 2:
+                # 直接跳过 .desktop 文件生成
+                pass
             else:
                 for i in range(len(iconUiList)):
                     if iconUiList[i][2].text().replace(" ", "") == "":
@@ -1305,7 +1517,7 @@ Terminal=false
 StartupNotify=false
 ''')
             # 要开始分类讨论了
-            if debArch.currentIndex() == 0 or debArch.currentIndex() == 1:
+            if debArch.currentIndex() == 0 or debArch.currentIndex() == 1 and debArch.currentIndex() != 2:
                 if desktopIconTab.count() <= 1:
                     write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/run.sh", ReplaceText(debInformation[debArch.currentIndex()]["run.sh"], replaceMap))
                 else:
@@ -1321,7 +1533,8 @@ StartupNotify=false
                         line = "\\"
                         write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/{os.path.splitext(os.path.basename(i[0].text().replace(line, '/')))[0]}.sh", ReplaceText(debInformation[debArch.currentIndex()]["run.sh"], replaceMap))
             if debArch.currentIndex() == 1 and False:
-                write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/kill.sh", debInformation[debArch.currentIndex()]["kill.sh"])
+                # 废弃内容
+                '''write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/kill.sh", debInformation[debArch.currentIndex()]["kill.sh"])
                 if desktopIconTab.count() <= 1:
                     write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/run_with_box86.sh", ReplaceText(debInformation[debArch.currentIndex()]["run_with_box86.sh"], replaceMap))
                     write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/run_with_exagear.sh", ReplaceText(debInformation[debArch.currentIndex()]["run_with_exagear.sh"], replaceMap))
@@ -1335,22 +1548,25 @@ StartupNotify=false
                             ["@@@DEB_PACKAGE_NAME@@@", e1_text.text()],
                             ["@@@APPRUN_CMD@@@", wine[wineVersion.currentText()]],
                             ["@@@EXEC_NAME@@@", os.path.basename(i[0].text().replace("\\", "/"))]
-                        ]
+                        ]'''
                         #write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/{os.path.splitext(os.path.basename(i[0].text().replace(line, '/')))[0]}_with_box86.sh", ReplaceText(debInformation[debArch.currentIndex()]["run_with_box86.sh"], replaceMap))
                         #write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/{os.path.splitext(os.path.basename(i[0].text().replace(line, '/')))[0]}_with_exagear.sh", ReplaceText(debInformation[debArch.currentIndex()]["run_with_exagear.sh"], replaceMap))
-            write_txt("{}/opt/apps/{}/info".format(debPackagePath, e1_text.text()), debInformation[debArch.currentIndex()]["info"])
+            if debArch.currentIndex() != 2:                    
+                write_txt("{}/opt/apps/{}/info".format(debPackagePath, e1_text.text()), debInformation[debArch.currentIndex()]["info"])
             ################
             # 修改文件权限
             ################
             self.label.emit("正在修改文件权限……")
-            self.run_command("chmod -Rv 644 {}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()))
-            self.run_command("chmod -Rv 644 {}/opt/apps/{}/info".format(debPackagePath, e1_text.text()))
             self.run_command("chmod -Rv 0755 {}/DEBIAN".format(debPackagePath))
-            self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/*.sh".format(debPackagePath, e1_text.text()))
-            #self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/kill.sh".format(debPackagePath, e1_text.text()))
-            #self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/*_with_box86.sh".format(debPackagePath, e1_text.text()))
-            #self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/*_with_exagear.sh".format(debPackagePath, e1_text.text()))
-            self.run_command("chmod -Rv 755 {}/opt/apps/{}/entries/applications/*.desktop".format(debPackagePath, e1_text.text(), e1_text.text()))
+            if debArch.currentIndex() != 2:
+                self.run_command("chmod -Rv 644 {}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()))
+                self.run_command("chmod -Rv 644 {}/opt/apps/{}/info".format(debPackagePath, e1_text.text()))
+            
+                self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/*.sh".format(debPackagePath, e1_text.text()))
+                #self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/kill.sh".format(debPackagePath, e1_text.text()))
+                #self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/*_with_box86.sh".format(debPackagePath, e1_text.text()))
+                #self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/*_with_exagear.sh".format(debPackagePath, e1_text.text()))
+                self.run_command("chmod -Rv 755 {}/opt/apps/{}/entries/applications/*.desktop".format(debPackagePath, e1_text.text(), e1_text.text()))
             ################
             # 构建 deb 包
             ################
@@ -1899,7 +2115,7 @@ rmBash = QtWidgets.QCheckBox(transla.transe("U", "设置卸载该 deb 后自动�
 cleanBottonByUOS = QtWidgets.QCheckBox(transla.transe("U", "使用统信 Wine 生态适配活动容器清理脚本"))
 disabledMono = QtWidgets.QCheckBox(transla.transe("U", "禁用 Mono 和 Gecko 安装器"))
 debArch = QtWidgets.QComboBox()
-debArch.addItems(["i386", "arm64(box86+exagear)"])
+debArch.addItems(["i386", "arm64(box86+exagear)", "all(crossover)"])
 textbox1 = QtWidgets.QTextBrowser()
 option1_text.addItems(["Network", "Chat", "Audio", "Video", "Graphics", "Office", "Translation", "Development", "Utility"])
 option1_text.setCurrentText("Network")
