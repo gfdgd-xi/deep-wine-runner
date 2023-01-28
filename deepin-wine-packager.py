@@ -76,9 +76,9 @@ def disabled_or_NORMAL_all(choose):
     buildDebDir.setDisabled(choose)
     debDepends.setDisabled(choose)
     debRecommend.setDisabled(choose)
-    if not choose:
-        ChangeArchCombobox()
-        ChangeWine()
+    #if not choose:
+    #    ChangeArchCombobox()
+    #    ChangeWine()
     
 class QT:
     thread = None
