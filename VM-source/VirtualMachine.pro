@@ -29,10 +29,16 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    buildvbox.cpp \
+    vbox.cpp \
+    command.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    buildvbox.h \
+    vbox.h \
+    command.h
 
 FORMS += \
         mainwindow.ui

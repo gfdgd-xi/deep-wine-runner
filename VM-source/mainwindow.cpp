@@ -1,9 +1,14 @@
+/*
+ * 归属 RacoonGX 团队，开发者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
+*/
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "buildvbox.h"
 #include <QFileDialog>
 #include <QDebug>
 #include <QNetworkInterface>
 #include <QProcess>
+#include <QLoggingCategory>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -11,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->tabWidget->setTabPosition(QTabWidget::West);  // 标签靠左
+    // 允许输出 qDebug 信息
+    QLoggingCategory::defaultCategory()->setEnabled(QtDebugMsg, true);
 }
 
 MainWindow::~MainWindow()
@@ -29,6 +36,9 @@ void MainWindow::on_browser_clicked()
 
 void MainWindow::on_install_clicked()
 {
+    buildvbox();
+    return;
+    //
     QProcess progress;
     QStringList list;
     list << ui->isoPath->text() << QString::number(ui->systemVersion->currentIndex());
