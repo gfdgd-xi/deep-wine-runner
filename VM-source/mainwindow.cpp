@@ -39,20 +39,6 @@ void MainWindow::on_browser_clicked()
 
 void MainWindow::on_install_clicked()
 {
-    /*long memory = 0;
-    long memoryAll = 0;
-    long swap = 0;
-    long swapAll = 0;
-    infoUtils::memoryRate(memory, memoryAll, swap, swapAll);
-    QMessageBox::information(this, "", QString::number(memoryAll));
-    return;*/
-    buildvbox();
+    buildvbox(ui->isoPath->text(), ui->systemVersion->currentIndex());
     return;
-    //
-    /*QProcess progress;
-    QStringList list;
-    list << ui->isoPath->text() << QString::number(ui->systemVersion->currentIndex());
-    qDebug() << QCoreApplication::applicationDirPath() + QString("/run.py");
-    progress.startDetached(QCoreApplication::applicationDirPath() + QString("/run.py"), list);
-    ui->tabWidget->setCurrentIndex(1);*/
 }

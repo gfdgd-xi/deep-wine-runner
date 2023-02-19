@@ -27,7 +27,7 @@ QString buildvbox::GetNet(){
         foreach(QNetworkAddressEntry entry, entryList){
             QString ip = entry.ip().toString();
             qDebug() << "IP Address: " << ip;
-            if(ip != "127.0.0.1" && ip != "192.168.250.1"){
+            if(ip != "127.0.0.1" && ip != "192.168.250.1" && ip != "::1" && net.name() != "lo"){
                 // 返回网卡名称
                 return net.name();
             }
@@ -36,8 +36,7 @@ QString buildvbox::GetNet(){
     return "";
 }
 
-buildvbox::buildvbox(int id)
-{
+buildvbox::buildvbox(QString isoPath, int id){
     QString programPath = QCoreApplication::applicationDirPath();
     QString net = GetNet();
     qDebug() << "使用网卡：" << net << endl;
@@ -46,13 +45,23 @@ buildvbox::buildvbox(int id)
     switch (id) {
         case 0:
             vm.Create("Windows7");
-            vm.MountISO(programPath + "/Windows7X86Auto.iso", "storage_controller_1", 1);
             break;
         case 1:
             vm.Create("Windows7_64");
-            vm.MountISO(programPath + "/Windows7X64Auto.iso", "storage_controller_1", 1);
             break;
         vm.Create("WindowsNT_64");
+    }
+    vm.CreateDiskControl();
+    vm.CreateDisk(QDir::homePath() + "/VirtualBox VMs/Windows/Windows.vdi", 131072);
+    vm.MountDisk(QDir::homePath() + "/VirtualBox VMs/Windows/Windows.vdi");
+    vm.MountISO(isoPath);
+    switch (id) {
+        case 0:
+            vm.MountISO(programPath + "/Windows7X86Auto.iso", "storage_controller_1", 1);
+            break;
+        case 1:
+            vm.MountISO(programPath + "/Windows7X64Auto.iso", "storage_controller_1", 1);
+            break;
     }
     vm.SetCPU(1);
     long memory = 0;
@@ -61,7 +70,7 @@ buildvbox::buildvbox(int id)
     long swapAll = 0;
     infoUtils::memoryRate(memory, memoryAll, swap, swapAll);
     //memoryRate(memory, memoryAll, swap, swapAll);
-    vm.SetMemory(memoryAll / 1024 / 1024 / 3);
+    vm.SetMemory(memoryAll / 3 / 1024);
     vm.SetDisplayMemory(32);
     vm.SetNetBridge(net);
     vm.EnabledAudio();

@@ -6,7 +6,7 @@ class buildvbox
 {
 //    Q_OBJECT
 public:
-    buildvbox(int id=0);
+    buildvbox(QString isoPath, int id=0);
     void CleanScreen();
     QString GetNet();
 };
