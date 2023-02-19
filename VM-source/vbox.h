@@ -21,7 +21,7 @@ public:
     int SetMemory(int memory);
     int SetRemote(bool setting);
     int SetRemoteConnectSetting(int port=5540);
-    void Start(bool unShown=false);
+    int Start(bool unShown=false);
     int Stop();
     int Delete();
     int SetDisplayMemory(int memory);
