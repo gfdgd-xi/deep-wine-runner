@@ -37,6 +37,13 @@ QString buildvbox::GetNet(){
 }
 
 buildvbox::buildvbox(QString isoPath, int id){
+    /*QDir vboxPath(QDir::homePath() + "/VirtualBox VMs/Windows");
+    if(vboxPath.exists()){
+        qDebug("虚拟机存在，直接启动！");
+        vbox vm("Windows");
+        vm.Start();
+        return;
+    }*/
     QString programPath = QCoreApplication::applicationDirPath();
     QString net = GetNet();
     qDebug() << "使用网卡：" << net << endl;

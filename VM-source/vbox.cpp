@@ -41,7 +41,6 @@ int vbox::SetCPU(int number){
     return system(("\"" + managerPath + "\" modifyvm \"" + name + "\" --cpus " + QString::number(number)).toLatin1());
 }
 int vbox::SetMemory(int memory){
-    QMessageBox::information(NULL, "", ("\"" + managerPath + "\" modifyvm \"" + name + "\" --memory " + QString::number(memory)).toLatin1());
     return system(("\"" + managerPath + "\" modifyvm \"" + name + "\" --memory " + QString::number(memory)).toLatin1());
 }
 int vbox::SetRemote(bool setting){

@@ -17,7 +17,7 @@ public:
 
 private slots:
     void on_browser_clicked();
-
+    QString GetRunCommand(QString command);
     void on_install_clicked();
 
 private:
