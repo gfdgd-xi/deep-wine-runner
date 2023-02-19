@@ -32,13 +32,15 @@ SOURCES += \
         mainwindow.cpp \
     buildvbox.cpp \
     vbox.cpp \
-    command.cpp
+    command.cpp \
+    infoutils.cpp
 
 HEADERS += \
         mainwindow.h \
     buildvbox.h \
     vbox.h \
-    command.h
+    command.h \
+    infoutils.h
 
 FORMS += \
         mainwindow.ui

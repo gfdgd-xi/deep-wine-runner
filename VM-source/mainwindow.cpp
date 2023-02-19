@@ -1,6 +1,7 @@
 /*
- * 归属 RacoonGX 团队，开发者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
-*/
+ * gfdgd xi、为什么您不喜欢熊出没和阿布呢
+ * 依照 GPLV3 开源
+ */
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "buildvbox.h"
@@ -9,6 +10,8 @@
 #include <QNetworkInterface>
 #include <QProcess>
 #include <QLoggingCategory>
+#include <infoutils.h>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -36,13 +39,20 @@ void MainWindow::on_browser_clicked()
 
 void MainWindow::on_install_clicked()
 {
+    /*long memory = 0;
+    long memoryAll = 0;
+    long swap = 0;
+    long swapAll = 0;
+    infoUtils::memoryRate(memory, memoryAll, swap, swapAll);
+    QMessageBox::information(this, "", QString::number(memoryAll));
+    return;*/
     buildvbox();
     return;
     //
-    QProcess progress;
+    /*QProcess progress;
     QStringList list;
     list << ui->isoPath->text() << QString::number(ui->systemVersion->currentIndex());
     qDebug() << QCoreApplication::applicationDirPath() + QString("/run.py");
     progress.startDetached(QCoreApplication::applicationDirPath() + QString("/run.py"), list);
-    ui->tabWidget->setCurrentIndex(1);
+    ui->tabWidget->setCurrentIndex(1);*/
 }
