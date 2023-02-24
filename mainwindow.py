@@ -2207,6 +2207,7 @@ try:
     for i in wine.keys():
         if not os.system(f"which '{wine[i]}'"):
             canUseWine.append(i)
+            
     if os.path.exists("/persistent/linglong/layers/"):  # 判断是否使用 linglong
         for i in os.listdir("/persistent/linglong/layers/"):
             try:
@@ -2253,6 +2254,9 @@ try:
     if change:
         write_txt(get_home() + "/.config/deepin-wine-runner/WineSetting.json", json.dumps(setting))
     try:
+        # Read /opt Wine
+        for i in os.listdir("/opt"):
+            pass
         # 不再从列表读取，直接读目录
         for i in os.listdir(f"{programPath}/wine/"):
         #for i in json.loads(readtxt(f"{programPath}/wine/winelist.json")):
