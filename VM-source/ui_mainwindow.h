@@ -20,6 +20,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
+#include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QVBoxLayout>
@@ -57,6 +58,7 @@ public:
     QLabel *label_3;
     QSpacerItem *verticalSpacer_2;
     QTextBrowser *textBrowser_2;
+    QStatusBar *CPUValue;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -209,10 +211,13 @@ public:
         horizontalLayout->addWidget(tabWidget);
 
         MainWindow->setCentralWidget(centralWidget);
+        CPUValue = new QStatusBar(MainWindow);
+        CPUValue->setObjectName(QString::fromUtf8("CPUValue"));
+        MainWindow->setStatusBar(CPUValue);
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(2);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -353,6 +358,9 @@ public:
 "<p style=\" margin-top:0px; margin-bott"
                         "om:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'Droid Sans Mono','monospace','monospace'; font-size:11pt; color:#6a9955;\">https://juejin.cn/post/7080484519328874510</span></p></body></html>", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QCoreApplication::translate("MainWindow", "\345\205\263\344\272\216", nullptr));
+#if QT_CONFIG(statustip)
+        CPUValue->setStatusTip(QString());
+#endif // QT_CONFIG(statustip)
     } // retranslateUi
 
 };

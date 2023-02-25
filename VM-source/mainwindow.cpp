@@ -12,6 +12,7 @@
 #include <QLoggingCategory>
 #include <infoutils.h>
 #include <QMessageBox>
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -27,6 +28,37 @@ MainWindow::MainWindow(QWidget *parent) :
             system("xdg-open https://www.virtualbox.org/wiki/Linux_Downloads");
         }
     }
+    // QTimer
+    QTimer *cpuGet = new QTimer(this);
+    connect(cpuGet, &QTimer::timeout, this, &MainWindow::ShowCPUMessage);
+    cpuGet->setInterval(600);
+    cpuGet->start();
+}
+
+void MainWindow::ShowCPUMessage(){
+    // 获取 CPU 占用率
+    long cpuAll = 0;
+    long cpuFree = 0;
+    infoUtils::cpuRate(cpuAll, cpuFree);
+    long cpu = ((cpuAll - m_cpuAll) - (cpuFree - m_cpuFree)) * 100 / (cpuAll - m_cpuAll);
+    if(cpu > 100){
+        // 处理异常值
+        cpu = 100;
+    }
+    // 获取内存占用率
+    long memory = 0;
+    long memoryAll = 0;
+    long swap = 0;
+    long swapAll = 0;
+
+    infoUtils::memoryRate(memory, memoryAll, swap, swapAll);
+
+    QString info = "CPU: " + QString::number(cpu) + "%  内存: " +
+            QString::number(memory * 100 / memoryAll) + "% " + QString::number(memory / 1024) + "MB/" + QString::number(memoryAll / 1024) + "MB";
+    qDebug() << cpuAll << "  " << cpuFree;
+    ui->CPUValue->showMessage(info, 5000);
+    m_cpuAll = cpuAll;
+    m_cpuFree = cpuFree;
 }
 
 QString MainWindow::GetRunCommand(QString command){

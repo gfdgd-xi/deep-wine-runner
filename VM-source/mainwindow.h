@@ -16,12 +16,16 @@ public:
     ~MainWindow();
 
 private slots:
+    void ShowCPUMessage();
     void on_browser_clicked();
     QString GetRunCommand(QString command);
     void on_install_clicked();
 
+
 private:
     Ui::MainWindow *ui;
+    long m_cpuAll;
+    long m_cpuFree;
 };
 
 #endif // MAINWINDOW_H
