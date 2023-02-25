@@ -13,6 +13,12 @@
 #include <infoutils.h>
 #include <QMessageBox>
 #include <QTimer>
+#include <QJsonParseError>
+#include <QJsonValue>
+#include <QJsonObject>
+#include <QtMath>
+#include <QJsonArray>
+#include <QDesktopServices>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -24,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QLoggingCategory::defaultCategory()->setEnabled(QtDebugMsg, true);
     // 判断是否安装 vbox
     if(system("which VBoxManage")){
-        if(QMessageBox::question(NULL, "提示", "检测到您似乎没有安装 VirtualBox，立即安装？") == QMessageBox::Yes){
+        if(QMessageBox::question(this, "提示", "检测到您似乎没有安装 VirtualBox，立即安装？") == QMessageBox::Yes){
             system("xdg-open https://www.virtualbox.org/wiki/Linux_Downloads");
         }
     }
@@ -33,6 +39,39 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(cpuGet, &QTimer::timeout, this, &MainWindow::ShowCPUMessage);
     cpuGet->setInterval(600);
     cpuGet->start();
+    // 读取程序版本号
+    // / 版本号文件是否存在
+    QFile fileinfo(QCoreApplication::applicationDirPath() + "/../information.json");
+    if(!fileinfo.exists()){
+        fileinfo.close();
+        return;
+    }
+    fileinfo.open(QIODevice::ReadOnly);
+    QJsonParseError error;
+    QJsonDocument doc = QJsonDocument::fromJson(fileinfo.readAll(), &error);
+    if(error.error != QJsonParseError::NoError){
+        QMessageBox::critical(this, "错误", "无法读取版本号！");
+        qDebug() << error.errorString();
+        fileinfo.close();
+        return;
+    }
+    QJsonObject versionObject = doc.object();
+    QJsonValue versionValue = versionObject.value("Version");
+    QJsonArray thank = versionObject.value("Thank").toArray();
+    QString thankText = "";
+    for (int i = 0; thank.count() > i; i++) {
+        thankText += "<p>" + thank.at(i).toString() + "</p>\n";
+        qDebug() << thank.at(i).toString();
+
+    }
+    // 设置程序标题
+    this->setWindowTitle("Windows 应用适配工具 " + versionValue.toString());
+    // 读取谢明列表
+    ui->textBrowser_2->setHtml("<p>程序版本号：" + versionValue.toString() + "</p>" + ui->textBrowser_2->toHtml() +
+                               "<hr/><h1>谢明列表</h1>" + thankText);
+    connect(ui->textBrowser_2, &QTextBrowser::anchorClicked, this, [=](const QUrl &link){
+        QDesktopServices::openUrl(link);
+    });
 }
 
 void MainWindow::ShowCPUMessage(){
@@ -53,9 +92,20 @@ void MainWindow::ShowCPUMessage(){
 
     infoUtils::memoryRate(memory, memoryAll, swap, swapAll);
 
+    // 获取开机时间
+    double run,idle;
+    infoUtils::uptime(run,idle);
+    int time = qFloor(run);
+    int ss = time % 60;
+    int MM = (time % 3600) / 60;
+    int hh = (time % 86400) / 3600;
+    int dd = time / 86400;
+
+
     QString info = "CPU: " + QString::number(cpu) + "%  内存: " +
-            QString::number(memory * 100 / memoryAll) + "% " + QString::number(memory / 1024) + "MB/" + QString::number(memoryAll / 1024) + "MB";
-    qDebug() << cpuAll << "  " << cpuFree;
+            QString::number(memory * 100 / memoryAll) + "% " + QString::number(memory / 1024) + "MB/" + QString::number(memoryAll / 1024) + "MB" +
+            " 开机时间: " + QString::number(dd) + "天 " + QString::number(hh) + ":" + QString::number(MM) + ":" + QString::number(ss);
+    //qDebug() << cpuAll << "  " << cpuFree;
     ui->CPUValue->showMessage(info, 5000);
     m_cpuAll = cpuAll;
     m_cpuFree = cpuFree;

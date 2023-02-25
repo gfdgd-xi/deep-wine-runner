@@ -1,3 +1,7 @@
+/*
+    来自：https://gitee.com/zinface/z-tools/tree/speedwidget-dev/src/SpeedWidget/infoUtils
+    依据 GPLV3 开源
+*/
 #include "infoutils.h"
 
 #include <QFile>

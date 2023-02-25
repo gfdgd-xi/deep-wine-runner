@@ -2427,10 +2427,10 @@ Qt 版本：{QtCore.qVersion()}
 <p>是由 @gfdgd xi 带头的团队，gfdgd xi开发了UEngine运行器等好用的开源软件。</p>
 <hr>
 <h1>友谊链接</h1>
-<pre>星火应用商店：https://spark-app.store/
-Deepin 官网：https://www.deepin.org
-Deepin 论坛：https://bbs.deepin.org
-论坛：https://gfdgdxi.flarum.cloud/</pre>
+<pre>星火应用商店：<a href="https://spark-app.store/">https://spark-app.store/</a>
+Deepin 官网：<a href="https://www.deepin.org">https://www.deepin.org</a>
+Deepin 论坛：<a href="https://bbs.deepin.org">https://bbs.deepin.org</a>
+论坛：<a href="https://bbs.racoongx.cn">https://bbs.racoongx.cn</a></pre>
 <hr>
 <h1>©2020~{time.strftime("%Y")} By gfdgd xi、为什么您不喜欢熊出没和阿布呢，RacoonGX 团队作品</h1>'''
 title = "Wine 运行器 {}".format(version)
