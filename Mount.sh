@@ -43,5 +43,12 @@ else
 fi
 # 挂载此内容以可以跨架构运行程序
 mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc
+# 判断是否有 Root 权限
+cat etc/sudoers | grep "$2"
+if [[ $? != 0 ]]; then
+    echo "$2 ALL=(ALL:ALL) ALL" >> etc/sudoers
+fi
+# 写入 DNS
+cat /etc/resolv.conf > etc/resolv.conf
 # 如果参数 3 存在
 "$programPath/pardus-chroot" "--userspec=$2:$2" . env "HOME=/home/$2" ${@:3}
