@@ -127,7 +127,7 @@ package:
 
 install:
 	make build -j$(nproc)
-	sudo apt update
+	sudo apt update | true
 	#sudo dpkg -i spark-deepin-wine-runner.deb
 	sudo apt reinstall ./spark-deepin-wine-runner.deb -y --allow-downgrades 
 
