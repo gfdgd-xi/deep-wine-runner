@@ -31,6 +31,7 @@ build:
 	echo "[]" > deb/opt/apps/deepin-wine-runner/wine/winelist.json
 	rm -rfv deb/opt/apps/deepin-wine-runner/wine/winelist.json
 	cp -rv req deb/opt/apps/deepin-wine-runner
+	cp -rv pardus-chroot deb/opt/apps/deepin-wine-runner
 	cp -rv BuildDesktop.py deb/opt/apps/deepin-wine-runner
 	cp -rv ChangePassword.sh deb/opt/apps/deepin-wine-runner
 	cp -rv trans deb/opt/apps/deepin-wine-runner
