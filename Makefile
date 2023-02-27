@@ -1,4 +1,7 @@
 build:
+	make package -j$(nproc)
+
+package:
 	#cd VM-source && qmake
 	#cd VM-source && make
 	#cd wine && make
@@ -95,6 +98,7 @@ build:
 	cp -rv key deb/opt/apps/deepin-wine-runner
 	python3 RemovePycacheFile.py
 	cp -rv deb /tmp/spark-deepin-wine-runner-builder
+	mkdir -rv /tmp/spark-deepin-wine-runner-builder/usr/bin
 	ln -s /opt/apps/deepin-wine-runner/deepin-wine-packager.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-package-builder 
 	ln -s /opt/apps/deepin-wine-runner/deepin-wine-easy-packager.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-packager-easy-builder
 	ln -s /opt/apps/deepin-wine-runner/deepin-wine-packager-with-script.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-packager-with-script
@@ -122,7 +126,7 @@ build:
 	
 
 install:
-	make build
+	make build -j$(nproc)
 	sudo apt update
 	#sudo dpkg -i spark-deepin-wine-runner.deb
 	sudo apt reinstall ./spark-deepin-wine-runner.deb -y --allow-downgrades 
