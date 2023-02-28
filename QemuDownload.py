@@ -254,7 +254,7 @@ class DownloadThread(QtCore.QThread):
                         #progressbar.update(int(part / show))
                         filePart.write(chunk)
                         bytesRead += 1024
-                        self.ChangeDialog.emit(self.dialog, bytesRead / allSize * 100, bytesRead / 1024 / 1024, allSize / 1024 / 1024)
+                        self.ChangeDialog.emit(self.dialog, int(bytesRead / allSize * 100), int(bytesRead / 1024 / 1024), int(allSize / 1024 / 1024))
             self.ChangeDialog.emit(self.dialog, 100, 100, 100)
             # 写入配置文件
             rfile = open(f"{homePath}/.deepin-wine-runner-ubuntu-images/lists.json", "r")
