@@ -51,4 +51,4 @@ fi
 # 写入 DNS
 cat /etc/resolv.conf > etc/resolv.conf
 # 如果参数 3 存在
-"$programPath/pardus-chroot" "--userspec=$2:$2" . env "HOME=/home/$2" ${@:3}
+"$programPath/pardus-chroot" --userspec=$2:$2 . env "HOME=/home/$2" ${@:3}
