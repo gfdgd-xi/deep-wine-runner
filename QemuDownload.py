@@ -349,8 +349,8 @@ def on_addButton_clicked():
 
 def on_delButton_clicked():
     if os.path.exists("/tmp/deepin-wine-runner-qemu-lock"):
-        if QtWidgets.QMessageBox.question(window, "提示", "检测到您的电脑已经运行了 Qemu/Chroot 容器，建议您重启电脑后再删除该容器，否则容易造成数据损失！\n是否取消操作？") == QtWidgets.QMessageBox.Yes:
-            return
+        QtWidgets.QMessageBox.question(window, "提示", "检测到您的电脑已经运行了 Qemu/Chroot 容器，请重启后再移除")
+        return
     if QtWidgets.QMessageBox.question(window, "提示", "你确定要删除吗？") == QtWidgets.QMessageBox.No:
         return
     if ui.localWineList.currentIndex().row() < 0:
