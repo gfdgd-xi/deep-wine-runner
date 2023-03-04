@@ -1,5 +1,5 @@
 #!/bin/bash
-if [[ `whoami` != `root` ]]; then
+if [[ `whoami` != root ]]; then
     echo 请以 root 权限运行
     echo 按任意键退出
     read
