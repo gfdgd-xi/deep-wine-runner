@@ -12,7 +12,8 @@ if [[ $PCArch != "aarch64" ]] && [[ $PCArch != "arm64" ]]; then
     read
     exit 1
 fi
-if [[ -f /etc/apt/sources.list.d/box86.list ]]; then
+which box86
+if [[ $? == 0 ]]; then
     echo 已安装，结束
     echo 按回车键退出
     read 
