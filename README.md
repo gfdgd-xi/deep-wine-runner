@@ -527,4 +527,60 @@ Gitlink：https://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner
 开发不易，原创艰难，给一个 Star 吧，你的 Star 是我继续开发的动力  
 ![star](https://gitee.com/gfdgd-xi/deep-wine-runner/badge/star.svg?theme=dark)  
 
+## 附：用于编译 Wine 的 Docker 容器（Debian10）
+内安装了编译 Wine 所需要的依赖，Wine 编译教程：https://wiki.winehq.org/Building_Wine  
+当然也可以到 http://wine.wine-runner.racoongx.cn/ 或 Wine 运行器内下载已经编译好的 Wine  
+### 拉取
+***（需要先安装 Docker 后再输入以下命令）***  
+```bash
+wget https://code.gitlink.org.cn/gfdgd_xi/wine-building-docker/raw/branch/master/wine-latest-debian10.tar.gz
+sudo docker load -i wine-latest-debian10.tar.gz
+```
+### 启用
+```bash
+sudo docker run -it wine /bin/bash
+```
+### 编译 Wine 例子（以 8.3 为例）
+```bash
+cd /root
+## 先编译 amd64 版本的 Wine
+# 安装依赖库（amd64 和 i386 的相互冲突）
+sudo apt install libpcsclite-dev libsdl2-dev:i386 samba-dev -y
+# 下载源码
+wget https://dl.winehq.org/wine/source/8.x/wine-8.3.tar.xz
+tar -xf wine-8.3.tar.xz
+# 编译
+mkdir build64
+cd build64
+../wine-8.3/configure --enable-win64
+make -j4
+## 编译 i386 版本的 Wine
+cd /root
+# 安装依赖库（amd64 和 i386 的相互冲突）
+sudo apt install libpcsclite-dev:i386 libsdl2-dev:i386 samba-dev:i386 -y
+# 编译（可以参考 https://wiki.winehq.org/Building_Wine#Shared_WoW64）
+mkdir build32
+cd build32
+PKG_CONFIG_PATH=/usr/lib32 ../wine-8.3/configure --with-wine64=../build64
+make -j4
+## 生成 7z 包（可选）
+# 生成可执行文件
+mkdir /root/program
+cd /root/build32
+make install DESTDIR=../program -j4
+cd /root/build64
+make install DESTDIR=../program -j4
+# 打包 7z 包
+cd /root/program/usr/local
+7z a /root/wine-staging-8.3-debian10-x86_64.7z *
+## 安装到 Docker 容器内（可选）
+# 安装 i386
+cd /root/build32
+make install -j4
+# 安装 amd64
+cd /root/build64
+make install -j4
+
+```
+
 # ©2020-Now
