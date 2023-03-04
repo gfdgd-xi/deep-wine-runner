@@ -1,6 +1,6 @@
 #!/bin/bash
-PCArch=`arch`
-if [[ $PCArch != "" ]] && [[ $PCArch != "" ]]; then
+PCArch=`dpkg --print-architecture`
+if [[ $PCArch != "aarch64" ]] && [[ $PCArch != "arm64" ]]; then
     echo 非 ARM 架构，无法继续
     echo 按任意键退出
     read
@@ -17,7 +17,7 @@ echo deb https://code.gitlink.org.cn/gfdgd_xi/weekly-box86-debs/raw/branch/main/
 echo "adding key..."
 wget -qO- https://code.gitlink.org.cn/gfdgd_xi/weekly-box86-debs/raw/branch/main/debian/KEY.gpg | sudo apt-key add -
 installBox=box86
-if [[ $PCArch == "" ]]; then
+if [[ $PCArch == "arm64" ]]; then
     installBox="box86 box64"
     sudo dpkg --add-architecture armhf
 fi
