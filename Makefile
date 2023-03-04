@@ -8,10 +8,8 @@ package:
 	cp -rv helperset deb/opt/apps/deepin-wine-runner/
 	cp -rv VM-source/VirtualMachine VM
 	cp -rv VM-source/deepin-wine-runner.svg VM
-	cp -rv VM-source/api VM
 	cp -rv VM-source/Windows7X64Auto.iso VM
 	cp -rv VM-source/Windows7X86Auto.iso VM
-	cp -rv VM-source/run.py VM
 	cp -rv wine/ deb/opt/apps/deepin-wine-runner/
 	cp -rv Test/ deb/opt/apps/deepin-wine-runner/
 	zip -v -q -r package-script.zip package-script

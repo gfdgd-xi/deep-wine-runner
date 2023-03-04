@@ -37,8 +37,9 @@ MainWindow::MainWindow(QWidget *parent) :
     // QTimer
     QTimer *cpuGet = new QTimer(this);
     connect(cpuGet, &QTimer::timeout, this, &MainWindow::ShowCPUMessage);
-    cpuGet->setInterval(600);
+    cpuGet->setInterval(1000);
     cpuGet->start();
+    MainWindow::ShowCPUMessage();
     // 读取程序版本号
     // / 版本号文件是否存在
     QFile fileinfo(QCoreApplication::applicationDirPath() + "/../information.json");
@@ -70,6 +71,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->textBrowser_2->setHtml("<p>程序版本号：" + versionValue.toString() + "</p>" + ui->textBrowser_2->toHtml() +
                                "<hr/><h1>谢明列表</h1>" + thankText);
     connect(ui->textBrowser_2, &QTextBrowser::anchorClicked, this, [=](const QUrl &link){
+        QDesktopServices::openUrl(link);
+    });
+    connect(ui->textBrowser, &QTextBrowser::anchorClicked, this, [=](const QUrl &link){
+        QDesktopServices::openUrl(link);
+    });
+    connect(ui->textBrowser_3, &QTextBrowser::anchorClicked, this, [=](const QUrl &link){
         QDesktopServices::openUrl(link);
     });
 }

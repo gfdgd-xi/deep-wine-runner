@@ -9,6 +9,7 @@ public:
     buildvbox(QString isoPath, int id=0);
     void CleanScreen();
     QString GetNet();
+    int Download(QString url, QString path, QString fileName);
 };
 
 #endif // BUILDVBOX_H

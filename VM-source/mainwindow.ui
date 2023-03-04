@@ -128,12 +128,16 @@
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;使用迅雷或者网盘下载以下任意一个链接然后在上面选择即可：&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;123 网盘链接：https://www.123pan.com/s/pDSKVv-oypWv&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;迅雷网盘：https://pan.xunlei.com/s/VNKMz3wgbYHg6JIh50ZKIc7pA1?pwd=35e5  提取码：35e5&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;百度网盘：https://pan.baidu.com/s/19WbvinITCQJFZpAdZutrjg?pwd=me4y 提取码: me4y&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;（如果下载这个，系统版本选第一项，一般推荐这个）ed2k://|file|cn_windows_7_ultimate_with_sp1_x86_dvd_u_677486.iso|2653276160|7503E4B9B8738DFCB95872445C72AEFB|/&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;（如果下载这个，系统版本选第二项）ed2k://|file|cn_windows_7_ultimate_with_sp1_x64_dvd_u_677408.iso|3420557312|B58548681854236C7939003B583A8078|/&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;123 网盘链接：&lt;/span&gt;&lt;a href=&quot;https://www.123pan.com/s/pDSKVv-oypWv&quot;&gt;&lt;span style=&quot; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;https://www.123pan.com/s/pDSKVv-oypWv&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;迅雷网盘：&lt;/span&gt;&lt;a href=&quot;https://pan.xunlei.com/s/VNKMz3wgbYHg6JIh50ZKIc7pA1?pwd=35e5&quot;&gt;&lt;span style=&quot; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;https://pan.xunlei.com/s/VNKMz3wgbYHg6JIh50ZKIc7pA1?pwd=35e5&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;  提取码：35e5&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;百度网盘：&lt;/span&gt;&lt;a href=&quot;https://pan.baidu.com/s/19WbvinITCQJFZpAdZutrjg?pwd=me4y&quot;&gt;&lt;span style=&quot; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;https://pan.baidu.com/s/19WbvinITCQJFZpAdZutrjg?pwd=me4y&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; 提取码: me4y&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;（如果下载这个，系统版本选第一项，一般推荐这个）&lt;/span&gt;&lt;a href=&quot;ed2k://|file|cn_windows_7_ultimate_with_sp1_x86_dvd_u_677486.iso|2653276160|7503E4B9B8738DFCB95872445C72AEFB|/&quot;&gt;&lt;span style=&quot; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;ed2k://|file|cn_windows_7_ultimate_with_sp1_x86_dvd_u_677486.iso|2653276160|7503E4B9B8738DFCB95872445C72AEFB|/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;（如果下载这个，系统版本选第二项）&lt;/span&gt;&lt;a href=&quot;ed2k://|file|cn_windows_7_ultimate_with_sp1_x64_dvd_u_677408.iso|3420557312|B58548681854236C7939003B583A8078|/&quot;&gt;&lt;span style=&quot; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;ed2k://|file|cn_windows_7_ultimate_with_sp1_x64_dvd_u_677408.iso|3420557312|B58548681854236C7939003B583A8078|/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;RacoonGX 资源镜像站：&lt;/span&gt;&lt;a href=&quot;https://n.racoongx.cn/&quot;&gt;&lt;span style=&quot; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;https://n.racoongx.cn/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;hr /&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="openLinks">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -211,6 +215,9 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/picture/截图/截图_VirtualBox Machine_20220712143044.png&quot; /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;6、等待安装完毕后，选择“Reboot now”然后点击“Finish”重启此虚拟机即可安装成功（选择“Reboot now”并点“Finish”会自动重新启动）&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/picture/截图/截图_VirtualBox Machine_20220712143103.png&quot; /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="openLinks">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
