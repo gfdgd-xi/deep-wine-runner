@@ -520,8 +520,8 @@ Gitlink：https://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner
 + https://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner
 
 ## 程序安装量/打开量（自动统计）
-![](https://gfdgd-xi.gitee.io/images/wine-runner.svg)   
-![](https://gfdgd-xi.gitee.io/images/wine-runner-open.svg)   
+![](https://gfdgd-xi.github.io/images/wine-runner.svg)   
+![](https://gfdgd-xi.github.io/images/wine-runner-open.svg)   
 
 ## Star 一下吧
 开发不易，原创艰难，给一个 Star 吧，你的 Star 是我继续开发的动力  
