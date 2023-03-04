@@ -1,4 +1,10 @@
 #!/bin/bash
+if [[ `whoami` != `root` ]]; then
+    echo 请以 root 权限运行
+    echo 按任意键退出
+    read
+    exit 1
+fi
 PCArch=`dpkg --print-architecture`
 if [[ $PCArch != "aarch64" ]] && [[ $PCArch != "arm64" ]]; then
     echo 非 ARM 架构，无法继续
@@ -8,7 +14,7 @@ if [[ $PCArch != "aarch64" ]] && [[ $PCArch != "arm64" ]]; then
 fi
 if [[ -f /etc/apt/sources.list.d/box86.list ]]; then
     echo 已安装，结束
-    echo 按任意键退出
+    echo 按回车键退出
     read 
     exit 1
 fi
@@ -24,5 +30,5 @@ fi
 echo " + sudo apt update"
 sudo apt update
 sudo apt install -y $installBox
-echo 安装完成！
+echo 安装完成！按回车键退出
 read
