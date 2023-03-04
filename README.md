@@ -44,6 +44,23 @@ env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 理论上支持全架构，如果 Python 能运行的话  
 非 X86 架构会利用到 `box86`、`exagear`、`qemu` 等技术  
 
+## 目前实现功能（部分）
+1. 用 Wine 运行 EXE
+2. 支持下载/安装 Wine
+3. 支持下载定制好的 Chroot 容器并使用 Qemu 调用运行
+4. 支持**半自动**安装 Windows 7 镜像至 VirtualBox（只限 x86_64）
+5. 支持打包 Wine 应用（简易打包器/基于生态适配脚本的打包器/高级打包器）
+6. 检测容器缺失 DLL 并下载
+7. 支持在线/本地拉取 Wine 容器配置方案并部署（初步应用商店）
+8. 支持安装 Windows 运行库（例如 .net framework、Mono、Gecko、Visual Studio C++）
+9. 支持 Wine 快捷键映射
+10. 支持调用 box86、exagear、Qemu 等工具跨架构运行 Wine
+11. 支持管理 Wine 自动生成的快捷方式
+12. 支持使用 Geek Uninstaller 卸载程序
+13. 支持自定义生成 .desktop 到桌面和启动器
+14. 支持下载适配常用字体
+15. 支持终止指定容器运行的所有程序
+
 ## 分支介绍
 ### main 分支
 主分支，稳定分支
