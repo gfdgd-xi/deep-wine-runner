@@ -300,10 +300,12 @@ class Runexebutton_threading(QtCore.QThread):
                 # 删除前后无用空格以防止出现问题
                 print(exePath)
                 exePath = exePath.strip()
-                l = exePath.index(" ")
-                exePath = f"{exePath[:l]}' {exePath[l:]} '"
-                print(l)
-                #print(i)
+                # 有空格再说
+                if " " in exePath:
+                    l = exePath.index(" ")
+                    exePath = f"{exePath[:l]}' {exePath[l:]} '"
+                    print(l)
+                    #print(i)
                 print(exePath)
         if o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable":
             wineUsingOption = ""
@@ -767,8 +769,9 @@ def RunWineProgram(wineProgram, history = False, Disbled = True):
     DisableButton(True)
     if not CheckProgramIsInstall(wine[o1.currentText()]) and o1.currentText() != "基于 linglong 的 deepin-wine6-stable（不推荐）" and o1.currentText() != "基于 UOS exagear 的 deepin-wine6-stable" and o1.currentText() != "基于 UOS box86 的 deepin-wine6-stable":
         if not CheckProgramIsInstall(wine[o1.currentText()]) and not o1.currentText() in untipsWine:
-            DisableButton(False)
-            return
+            if QtWidgets.QMessageBox.question(widget, "提示", "检查到您未安装这个 wine，是否继续使用这个 wine 运行？") == QtWidgets.QMessageBox.No:
+                DisableButton(False)
+                return
     returnText.setText("")
     runProgram = RunWineProgramThread(wineProgram, history, Disbled)
     runProgram.signal.connect(QT.ShowWineReturn)
@@ -2185,6 +2188,7 @@ try:
     wine = {
         "基于 UOS box86 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86 /opt/deepin-wine6-stable/bin/wine ",
         "基于 UOS exagear 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al -- /opt/deepin-wine6-stable/bin/wine ",
+        "使用 Flatpak 安装的 Wine": "flatpak run org.winehq.Wine",
         "deepin-wine6 stable": "deepin-wine6-stable", 
         "deepin-wine5 stable": "deepin-wine5-stable", 
         "spark-wine7-devel": "spark-wine7-devel", 
@@ -2196,7 +2200,7 @@ try:
         "mono（这不是 wine，但可以实现初步调用运行 .net 应用）": "mono",
         "基于 linglong 的 deepin-wine6-stable（不推荐）": f"ll-cli run '' --exec '/bin/deepin-wine6-stable'"
     }
-    untipsWine = ["基于 exagear 的 deepin-wine6-stable", "基于 UOS box86 的 deepin-wine6-stable", "基于 UOS exagear 的 deepin-wine6-stable", "基于 linglong 的 deepin-wine6-stable（不推荐）"]
+    untipsWine = ["使用 Flatpak 安装的 Wine", "基于 exagear 的 deepin-wine6-stable", "基于 UOS box86 的 deepin-wine6-stable", "基于 UOS exagear 的 deepin-wine6-stable", "基于 linglong 的 deepin-wine6-stable（不推荐）"]
     canUseWine = []
     if os.path.exists("/opt/deepin-box86/box86") and os.path.exists("/opt/deepin-wine6-stable/bin/wine"):
         canUseWine.append("基于 UOS box86 的 deepin-wine6-stable")
@@ -2207,6 +2211,8 @@ try:
     for i in wine.keys():
         if not os.system(f"which '{wine[i]}'"):
             canUseWine.append(i)
+    if not os.system("which flatpak") and os.path.exists("/var/lib/flatpak/app/org.winehq.Wine"):
+        canUseWine.append("使用 Flatpak 安装的 Wine")
             
     if os.path.exists("/persistent/linglong/layers/"):  # 判断是否使用 linglong
         for i in os.listdir("/persistent/linglong/layers/"):
@@ -2423,18 +2429,14 @@ Qt 版本：{QtCore.qVersion()}
 <pre>{tips}
 </pre>
 <hr>
-<h1>关于 RacoonGX 项目组</h1>
-<p>是由 @gfdgd xi 带头的团队，gfdgd xi开发了UEngine运行器等好用的开源软件。</p>
-<hr>
 <h1>友谊链接</h1>
 <pre>星火应用商店：<a href="https://spark-app.store/">https://spark-app.store/</a>
 Deepin 官网：<a href="https://www.deepin.org">https://www.deepin.org</a>
 Deepin 论坛：<a href="https://bbs.deepin.org">https://bbs.deepin.org</a>
-论坛：<a href="https://bbs.racoongx.cn">https://bbs.racoongx.cn</a></pre>
 <hr>
-<h1>©2020~{time.strftime("%Y")} By gfdgd xi、为什么您不喜欢熊出没和阿布呢，RacoonGX 团队作品</h1>'''
+<h1>©2020~{time.strftime("%Y")} By gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
 title = "Wine 运行器 {}".format(version)
-#<h1>©2020~{time.strftime("%Y")} <a href="https://gitee.com/gfdgd-xi">RacoonGX 团队，By gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
+#<h1>©2020~{time.strftime("%Y")} <a href="https://gitee.com/gfdgd-xi">By gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 try:
     threading.Thread(target=requests.get, args=[parse.unquote(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9vcGVuL0luc3RhbGwucGhw").decode("utf-8")) + "?Version=" + version]).start()
@@ -2598,7 +2600,7 @@ mainLayout.addWidget(returnText, 0, 1, 2, 1)
 
 # 版权
 copy = QtWidgets.QLabel(f"""\n程序版本：{version}，<b>提示：Wine 无法运行保证可以运行所有的 Windows 程序，如果想要运行更多可执行程序，可以考虑虚拟机和双系统</b><br>
-©2020~{time.strftime("%Y")} gfdgd xi、为什么您不喜欢熊出没和阿布呢，RacoonGX 团队作品""")
+©2020~{time.strftime("%Y")} gfdgd xi、为什么您不喜欢熊出没和阿布呢""")
 mainLayout.addWidget(copy, 2, 0, 1, 1)
 
 # 程序运行
@@ -2921,7 +2923,6 @@ fenUpload = QtWidgets.QAction(transla.transe("U", "程序评分"))
 h7 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(9), transla.transe("U", "关于这个程序"))
 h8 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(9), transla.transe("U", "关于 Qt"))
 gfdgdxiio = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "作者个人站"))
-forumWebsize = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "程序论坛"))
 gitee = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "Gitee"))
 github = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "Github"))
 gitlink = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "Gitlink"))
@@ -2934,7 +2935,6 @@ h1.addAction(gitlink)
 h1.addAction(gitlab)
 h1.addAction(jihu)
 help.addSeparator()
-help.addAction(forumWebsize)
 help.addAction(wineRunnerHelp)
 help.addAction(runStatusWebSize)
 help.addSeparator()
@@ -2942,11 +2942,6 @@ help.addAction(h2)
 help.addAction(h3)
 help.addAction(h4)
 help.addSeparator()
-
-zanShang = menu.addMenu("赞赏我们")
-zanShangAction = QtWidgets.QAction("赞赏我们")
-zanShang.addAction(zanShangAction)
-zanShangAction.triggered.connect(lambda: webbrowser.open_new_tab("http://dt.racoongx.cn/"))
 
 wikiHelp = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "程序 Wiki"))
 help.addAction(wikiHelp)
@@ -2973,7 +2968,6 @@ gitlink.triggered.connect(lambda: webbrowser.open_new_tab("https://gitlink.org.c
 gitlab.triggered.connect(lambda: webbrowser.open_new_tab("https://gitlab.com/gfdgd-xi/deep-wine-runner"))
 jihu.triggered.connect(lambda: webbrowser.open_new_tab("https://jihulab.com//gfdgd-xi/deep-wine-runner"))
 runStatusWebSize.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io/wine-runner-info"))
-forumWebsize.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgdxi.flarum.cloud/"))
 h2.triggered.connect(helps)
 h3.triggered.connect(UpdateThings)
 wineRunnerHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://bbs.deepin.org/post/246837"))
