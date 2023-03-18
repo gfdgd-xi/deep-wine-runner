@@ -545,7 +545,7 @@ sudo docker run -it wine /bin/bash
 cd /root
 ## 先编译 amd64 版本的 Wine
 # 安装依赖库（amd64 和 i386 的相互冲突）
-sudo apt install libpcsclite-dev libsdl2-dev:i386 samba-dev -y
+sudo apt install libpcsclite-dev libsdl2-dev samba-dev -y
 # 下载源码
 wget https://dl.winehq.org/wine/source/8.x/wine-8.3.tar.xz
 tar -xf wine-8.3.tar.xz
@@ -583,4 +583,4 @@ make install -j4
 
 ```
 
-# ©2020-Now
+# ©2020-Now gfdgd xi、为什么您不喜欢熊出没和阿布呢
