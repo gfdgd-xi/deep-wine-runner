@@ -34,6 +34,8 @@ mount -o bind /usr/share/fonts ./usr/share/fonts
 if [ ! -d "home/$2" ]; then
     # 新建用户，且密码为 123456，以便读写
     "$programPath/pardus-chroot" . bash /opt/apps/deepin-wine-runner/ChangePassword.sh "$2"
+    mkdir -p "home/$2"
+    chmod 777 -Rv "home/$2" 
 fi
 # 挂载用户目录到 /root（默认 $HOME 路径）
 if [[ $2 == "root" ]]; then
