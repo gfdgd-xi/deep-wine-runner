@@ -8,6 +8,7 @@ package:
 	#cd VM-source && qmake
 	#cd VM-source && make
 	#cd wine && make
+	make clean -j$(nproc)
 	cp -rv helperset deb/opt/apps/deepin-wine-runner/
 	cp -rv VM-source/VirtualMachine VM
 	cp -rv VM-source/deepin-wine-runner.svg VM
