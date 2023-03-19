@@ -7,6 +7,6 @@ if [[ !$? ]]; then
     exit 1
 fi
 sudo apt update
-sudo apt install binfmt-support qemu-user qemu-user-static -y
+sudo apt purge qemu-user -y
 echo 安装完成，按回车键后退出
 read

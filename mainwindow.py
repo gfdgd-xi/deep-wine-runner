@@ -2899,6 +2899,34 @@ log.addAction(saveLogText)
 log.addAction(transLogText)
 log.addAction(uploadLogText)
 
+actionList = []
+def AddLib(install: QtWidgets.QAction, uninstall, menu, info):
+    actionList.append(install)
+    actionList.append(uninstall)
+    install.triggered.connect(lambda: OpenTerminal(f"bash '{programPath}/InstallRuntime/{info}'"))
+    uninstall.triggered.connect(lambda: OpenTerminal(f"bash '{programPath}/InstallRuntime/remove/{info}'"))
+    menu.addAction(install)
+    menu.addAction(uninstall)
+
+if os.path.exists(f"{programPath}/InstallRuntime"):
+    installLib = menu.addMenu(transla.transe("U", "运行库"))
+    installQemuMenu = installLib.addMenu(transla.transe("U", "安装 Qemu User"))
+    installQemu = QtWidgets.QAction("安装 Qemu User")
+    removeQemu = QtWidgets.QAction("卸载 Qemu User")
+    installQemuMenu.addAction(installQemu)
+    installQemuMenu.addAction(removeQemu)
+    installQemu.triggered.connect(lambda: OpenTerminal(f"bash '{programPath}/InstallQemuUser.sh'"))
+    removeQemu.triggered.connect(lambda: OpenTerminal(f"bash '{programPath}/RemoveQemuUser.sh'"))
+    actionList = []
+    nameList = {}
+    for i in os.listdir(f"{programPath}/InstallRuntime"):
+        if i[-3:] == ".sh":
+            print(f"检测到库 {os.path.splitext(i)[0]}")
+            
+            AddLib(QtWidgets.QAction(f"安装 {os.path.splitext(i)[0]} 运行库"), QtWidgets.QAction(f"卸载 {os.path.splitext(i)[0]} 运行库"), installLib.addMenu(transla.transe("U", f"运行库 {os.path.splitext(i)[0]}")), i)
+
+
+
 qemuMenu = menu.addMenu(transla.transe("U", "容器(&C)"))
 unpackDeb = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(32), transla.transe("U", "解包 deb 提取容器"))
 qemuMenu.addAction(unpackDeb)
