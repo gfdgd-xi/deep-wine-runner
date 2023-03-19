@@ -2396,7 +2396,8 @@ updateThingsString = transla.transe("U", '''※1、Windows 应用适配工具新
 8、作者信息变更；
 9、支持禁用程序的多语言支持（默认禁用，因为是机翻的）；
 10、支持在程序本地翻译缺失的情况下自动机翻缺失语句；
-11、从此版本开始不再区分吾爱版、Spark 版和 UOS 版
+11、从此版本开始不再区分吾爱版、Spark 版和 UOS 版；
+12、新增下载量查询。
 ''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
@@ -2953,7 +2954,7 @@ wineRunnerHelp = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(2
 h3 = QtWidgets.QAction(transla.transe("U", "更新内容"))
 h4 = QtWidgets.QAction(transla.transe("U", "鸣谢名单"))
 h5 = QtWidgets.QAction(transla.transe("U", "更新这个程序"))
-programInformation = QtWidgets.QAction(transla.transe("U", "获取程序公告"))
+programInformation = QtWidgets.QAction(transla.transe("U", "获取程序公告（也可以在这里看程序安装/打开量）"))
 h6 = QtWidgets.QAction(transla.transe("U", "反馈这个程序的建议和问题"))
 fenUpload = QtWidgets.QAction(transla.transe("U", "程序评分"))
 h7 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(9), transla.transe("U", "关于这个程序"))

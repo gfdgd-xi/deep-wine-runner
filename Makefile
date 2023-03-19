@@ -1,6 +1,9 @@
 build:
 	make package -j$(nproc)
 
+clean:
+	python3 RemovePycacheFile.py
+
 package:
 	#cd VM-source && qmake
 	#cd VM-source && make
