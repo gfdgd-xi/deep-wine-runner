@@ -378,7 +378,7 @@ def UpdateFen():
     uploadList = []        
     for i in range(now + 2, now - 1, -1):
         print(f"第 {i + 1} 条评论：")
-        info = requests.get(f"https://code.gitlink.org.cn/gfdgd-xi-org/bashpinlun/raw/branch/master/{urllib.request.quote(fileName)}/pf-{i}.txt").text.strip()
+        info = requests.get(f"https://code.gitlink.org.cn/gfdgd-xi/bashpinlun/raw/branch/master/{urllib.request.quote(fileName)}/pf-{i}.txt").text.strip()
         print(info)
         uploadList.append([f"用户{i + 1}", i + 1, info])
     #ProgramRunStatusShow.pingLunLayout.removeItem(ProgramRunStatusShow.pingLunLayout.itemAt(2))
