@@ -6,7 +6,7 @@ import traceback
 
 class Trans():
     isTrans = False
-    unCloudTrans = True
+    unCloudTrans = False
     word = {}
     fileName = ""
 

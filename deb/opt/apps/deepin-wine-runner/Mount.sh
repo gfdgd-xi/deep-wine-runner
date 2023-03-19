@@ -34,6 +34,8 @@ mount -o bind /usr/share/fonts ./usr/share/fonts
 if [ ! -d "home/$2" ]; then
     # 新建用户，且密码为 123456，以便读写
     "$programPath/pardus-chroot" . bash /opt/apps/deepin-wine-runner/ChangePassword.sh "$2"
+    mkdir -p "home/$2"
+    chmod 777 -Rv "home/$2" 
 fi
 # 挂载用户目录到 /root（默认 $HOME 路径）
 if [[ $2 == "root" ]]; then
@@ -43,6 +45,7 @@ else
 fi
 # 挂载此内容以可以跨架构运行程序
 mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc
+systemctl restart binfmt-support.service
 # 判断是否有 Root 权限
 cat etc/sudoers | grep "$2"
 if [[ $? != 0 ]]; then
@@ -51,4 +54,5 @@ fi
 # 写入 DNS
 cat /etc/resolv.conf > etc/resolv.conf
 # 如果参数 3 存在
-"$programPath/pardus-chroot" "--userspec=$2:$2" . env "HOME=/home/$2" ${@:3}
+"$programPath/pardus-chroot" . #env "HOME=/home/$2" ${@:3}
+chroot "--userspec=$2:$2" . env "HOME=/home/$2" ${@:3}

@@ -21,12 +21,13 @@ mount -t devpts devpts "$DESTDIR/dev/pts"
 mount -t sysfs sysfs "$DESTDIR/sys"
 mount -t proc proc "$DESTDIR/proc"
 mount -t tmpfs tmpfs  "$DESTDIR/dev/shm"
+mount --bind /tmp "$DESTDIR/tmp"
 if [[ -d /sys/firmware/efi/ ]] ; then
     mount -t efivarfs efivarfs  "$DESTDIR/sys/firmware/efi/efivars"
 fi
 #cat /etc/resolv.conf > $DESTDIR/etc/resolv.conf
-SHELL=/bin/bash unshare --fork --pid chroot "$DESTDIR" "$@"
-exit
+#SHELL=/bin/bash unshare --fork --pid chroot "$DESTDIR" "$@"
+#exit
 # 下面的因为有问题，不使用
 #if [[ -d /sys/firmware/efi/ ]] ; then
 #    while umount "$DESTDIR/sys/firmware/efi/efivars" 2>/dev/null ; do : ;done
