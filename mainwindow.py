@@ -1920,11 +1920,12 @@ def GetNewInformation():
         text = requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/information/index.html").text
     except:
         traceback.print_exc()
-        text = """<p>无法连接到服务器</p>
+        text = f"""<p>无法连接到服务器</p>
             <hr/>
             <p>你可以尝试：</p>
             <p>1. 判断是否能正常连接网络</p>
-            <p>2. 作者的服务出问题了？（到这反馈：https://gitee.com/gfdgd-xi/deep-wine-runner/issues）</p>"""
+            <p>2. 作者的服务出问题了？（到这反馈：<a href='https://gitee.com/gfdgd-xi/deep-wine-runner/issues'>https://gitee.com/gfdgd-xi/deep-wine-runner/issues</a>）</p>
+            <p>3. 玩个<a href="file://{programPath}/2048/index.html">游戏</a>解闷下</p>"""
     global webInformation
     if bad:
         webInformation = QtWidgets.QTextBrowser()
@@ -2399,7 +2400,9 @@ updateThingsString = transla.transe("U", '''※1、Windows 应用适配工具新
 11、支持禁用程序的多语言支持（默认禁用，因为是机翻的）；
 12、支持在程序本地翻译缺失的情况下自动机翻缺失语句；
 13、从此版本开始不再区分吾爱版、Spark 版和 UOS 版；
-14、新增下载量查询。
+14、新增下载量查询；
+15、更新程序公告；
+16、新增断网彩蛋。
 ''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
