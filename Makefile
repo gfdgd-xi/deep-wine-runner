@@ -100,6 +100,10 @@ package:
 	cp -rv Model deb/opt/apps/deepin-wine-runner
 	cp -rv API deb/opt/apps/deepin-wine-runner
 	cp -rv key deb/opt/apps/deepin-wine-runner
+	cp -rv InstallQemuUser.sh deb/opt/apps/deepin-wine-runner
+	cp -rv RemoveQemuUser.sh deb/opt/apps/deepin-wine-runner
+	cp -rv InstallBox86.sh  deb/opt/apps/deepin-wine-runner
+	cp -rv InstallRuntime   deb/opt/apps/deepin-wine-runner
 	python3 RemovePycacheFile.py
 	cp -rv deb /tmp/spark-deepin-wine-runner-builder
 	mkdir -pv /tmp/spark-deepin-wine-runner-builder/usr/bin
