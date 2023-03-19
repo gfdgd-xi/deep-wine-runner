@@ -65,14 +65,14 @@ env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 ### main 分支
 主分支，稳定分支
 
-## 版本区分
+## 版本区分（从 3.1.0 版本开始不再区分）
 ### 无特殊标识
 普通版本（一般来自 Gitee、Github、Gitlink 等渠道）  
 ### 版本号带`-spark`
 星火应用商店版本  
 ### 版本号带`-uos`
 深度应用商店版本，一般带免开开发者模式签名  
-### 包名带`-52`
+### 包名带`-52`（已停止支持）
 吾爱论坛专版，只在吾爱论坛发布，功能会阉割（如更新、评分、bug反馈功能等等），一般建议使用上面的三个版本  
 ![image.png](https://storage.deepin.org/thread/202209251259142818_image.png)  
 （没人喜欢看到这个无法连接服务器吧）    
@@ -526,6 +526,18 @@ Gitlink：https://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner
 ## Star 一下吧
 开发不易，原创艰难，给一个 Star 吧，你的 Star 是我继续开发的动力  
 ![star](https://gitee.com/gfdgd-xi/deep-wine-runner/badge/star.svg?theme=dark)  
+
+## 运行库下载
+| 架构 | 运行库下载 |
+|-|-|
+| i386 | https://code.gitlink.org.cn/gfdgd_xi/runtime-for-qemu/raw/branch/master/i386-runtime-for-qemu_1.0.0_all.deb |
+| amd64 | https://code.gitlink.org.cn/gfdgd_xi/runtime-for-qemu/raw/branch/master/amd64-runtime-for-qemu_1.0.0_all.deb |
+| armhf | https://code.gitlink.org.cn/gfdgd_xi/runtime-for-qemu/raw/branch/master/armhf-runtime-for-qemu_1.0.0_all.deb |
+| arm64 | https://code.gitlink.org.cn/gfdgd_xi/runtime-for-qemu/raw/branch/master/arm64-runtime-for-qemu_1.0.0_all.deb |
+| mips64el | https://code.gitlink.org.cn/gfdgd_xi/runtime-for-qemu/raw/branch/master/mips64el-runtime-for-qemu_1.0.0_all.deb |
+| ppc64el | https://code.gitlink.org.cn/gfdgd_xi/runtime-for-qemu/raw/branch/master/ppc64el-runtime-for-qemu_1.0.0_all.deb |
+| riscv64 | https://code.gitlink.org.cn/gfdgd_xi/runtime-for-qemu/raw/branch/master/riscv64-runtime-for-qemu_1.0.0_all.deb |
+| s390x | https://code.gitlink.org.cn/gfdgd_xi/runtime-for-qemu/raw/branch/master/s390x-runtime-for-qemu_1.0.0_all.deb |
 
 ## 附：用于编译 Wine 的 Docker 容器（Debian10）
 内安装了编译 Wine 所需要的依赖，Wine 编译教程：https://wiki.winehq.org/Building_Wine  

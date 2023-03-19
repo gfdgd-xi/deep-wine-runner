@@ -2,10 +2,10 @@
 import requests
 
 unConnect = False
-with open("/var/lib/dpkg/status", "r") as i:
-    unConnect = "Package: spark-deepin-wine-runner-52" in open("/var/lib/dpkg/status", "r").read()
-if unConnect:
-    print("52专版，将会无法连接服务器")
+#with open("/var/lib/dpkg/status", "r") as i:
+#    unConnect = "Package: spark-deepin-wine-runner-52" in open("/var/lib/dpkg/status", "r").read()
+#if unConnect:
+#    print("52专版，将会无法连接服务器")
 
 class Respon:
     text = ""

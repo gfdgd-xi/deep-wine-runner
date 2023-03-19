@@ -1667,6 +1667,7 @@ class ProgramSetting():
     buildByBottleName = None
     autoPath = None
     qemuUnmountHome = None
+    chineseLanguage = None
     def ShowWindow():
         ProgramSetting.message = QtWidgets.QMainWindow()
         widget = QtWidgets.QWidget()
@@ -1684,6 +1685,7 @@ class ProgramSetting():
         widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "图标生成：")), 10, 0, 1, 1)
         widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "自动根据EXE名称生成路径：")), 11, 0, 1, 1)
         widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "Qemu + Chroot 挂载用户目录：")), 12, 0, 1, 1)
+        widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "程序翻译：")), 13, 0, 1, 1)
         ProgramSetting.wineBottonA = QtWidgets.QComboBox()
         ProgramSetting.wineDebug = QtWidgets.QCheckBox(transla.transe("U", "开启 DEBUG 输出"))
         ProgramSetting.defultWine = QtWidgets.QComboBox()
@@ -1705,6 +1707,7 @@ class ProgramSetting():
         ProgramSetting.buildByBottleName = QtWidgets.QCheckBox(transla.transe("U", "本软件构建的图标后面添加容器名"))
         ProgramSetting.autoPath = QtWidgets.QCheckBox(transla.transe("U", "自动根据文件名生成容器路径（开启后必须通过修改默认wine容器路径才可指定其它路径，重启程序后生效）"))
         ProgramSetting.qemuUnmountHome = QtWidgets.QCheckBox(transla.transe("U", "使用 Qemu + Chroot 时不挂载用户目录并与系统隔离（修改后重启操作系统生效）"))
+        ProgramSetting.chineseLanguage = QtWidgets.QCheckBox(transla.transe("U", "禁用程序界面翻译"))
         ProgramSetting.wineBottonA.addItems(["Auto", "win32", "win64"])
         ProgramSetting.wineBottonA.setCurrentText(setting["Architecture"])
         ProgramSetting.wineDebug.setChecked(setting["Debug"])
@@ -1719,6 +1722,7 @@ class ProgramSetting():
         ProgramSetting.buildByBottleName.setChecked(setting["BuildByBottleName"])
         ProgramSetting.autoPath.setChecked(setting["AutoPath"])
         ProgramSetting.qemuUnmountHome.setChecked(setting["QemuUnMountHome"])
+        ProgramSetting.chineseLanguage.setChecked(setting["Chinese"])
         # QemuUnMountHome
         widgetLayout.addWidget(ProgramSetting.wineBottonA, 0, 1, 1, 1)
         widgetLayout.addWidget(ProgramSetting.wineDebug, 1, 1, 1, 1)
@@ -1735,7 +1739,8 @@ class ProgramSetting():
         widgetLayout.addWidget(ProgramSetting.buildByBottleName, 10, 1, 1, 1)
         widgetLayout.addWidget(ProgramSetting.autoPath, 11, 1, 1, 2)
         widgetLayout.addWidget(ProgramSetting.qemuUnmountHome, 12, 1, 1, 2)
-        widgetLayout.addWidget(save, 13, 2, 1, 1)
+        widgetLayout.addWidget(ProgramSetting.chineseLanguage, 13, 1, 1, 2)
+        widgetLayout.addWidget(save, 14, 2, 1, 1)
         widget.setLayout(widgetLayout)
         ProgramSetting.message.setCentralWidget(widget)
         ProgramSetting.message.setWindowIcon(QtGui.QIcon(iconPath))
@@ -1766,6 +1771,7 @@ class ProgramSetting():
         setting["BuildByBottleName"] = ProgramSetting.buildByBottleName.isChecked()
         setting["AutoPath"] = ProgramSetting.autoPath.isChecked()
         setting["QemuUnMountHome"] = ProgramSetting.qemuUnmountHome.isChecked()
+        setting["Chinese"] = ProgramSetting.chineseLanguage.isChecked()
         try:
             write_txt(get_home() + "/.config/deepin-wine-runner/WineSetting.json", json.dumps(setting))
         except:
@@ -1917,8 +1923,8 @@ def GetNewInformation():
         text = """<p>无法连接到服务器</p>
             <hr/>
             <p>你可以尝试：</p>
-            <p>1. 判断使用的是否使用吾爱版本，如果使用吾爱版本则无法连接</p>
-            <p>2. 判断是否能正常连接网络</p>"""
+            <p>1. 判断是否能正常连接网络</p>
+            <p>2. 作者的服务出问题了？（到这反馈：https://gitee.com/gfdgd-xi/deep-wine-runner/issues）</p>"""
     global webInformation
     if bad:
         webInformation = QtWidgets.QTextBrowser()
@@ -1987,13 +1993,12 @@ class GetVersionThread(QtCore.QThread):
         # Gitee/Github……：正常版本
         # Docker 版本
         programVersionTypeLnk = {
-            "spark": "星火应用商店版本",
-            "uos": "deepin/UOS 应用商店版本<带签名>"
+            "spark": "普通版本",
+            "uos": "普通版本"
         }
         # 直接判断是不是 Docker 版本
         if os.path.exists(f"{programPath}/docker.txt") or os.path.exists("/.dockerenv"):
-            programVersionType = "Docker/Chroot 内置版本"
-            window.setWindowTitle(f"{title} （Docker/Chroot 内置版本）")
+            programVersionType = "普通版本"
             self.signal.emit("")
         else:
             programVersionType = "从源码运行的版本"
@@ -2005,14 +2010,12 @@ class GetVersionThread(QtCore.QThread):
                 package = False
                 for i in range(0, len(fileName)):
                     if fileName[i] == "Package: spark-deepin-wine-runner-docker":
-                        programVersionType = "Docker 内置版本"
-                        window.setWindowTitle(f"{title} （Docker 内置版本）")
+                        programVersionType = "普通版本"
                         #AddDockerMenu()
                         self.signal.emit("")
                         break
                     if fileName[i] == "Package: spark-deepin-wine-runner-52":
-                        programVersionType = "吾爱专版"
-                        window.setWindowTitle(f"{title}（吾爱专版）")
+                        programVersionType = "普通版本"
                         newPackage = False
                         break
                     if fileName[i] == "Package: spark-deepin-wine-runner":
@@ -2033,7 +2036,7 @@ class GetVersionThread(QtCore.QThread):
                             version = fileName[i][fileName[i].index(":") + 1:].strip()
                             print(f"版本号为：{version}")
                             if not "-" in version:
-                                programVersionType = "从Gitee/Github/Gitlink等平台获取的版本"
+                                programVersionType = "普通版本"
                                 break
                             programVersionType = version[version.index("-") + 1:]
                             print(programVersionType)
@@ -2043,7 +2046,7 @@ class GetVersionThread(QtCore.QThread):
                             try:
                                 programVersionType = programVersionTypeLnk[programVersionType]    
                             except:
-                                programVersionType = "从Gitee/Github/Gitlink等平台获取的版本"
+                                programVersionType = "普通版本"
                             break
                     except:
                         traceback.print_exc()
@@ -2151,7 +2154,8 @@ defultProgramList = {
     "MustRead": False,
     "BuildByBottleName": False,
     "AutoPath": False,
-    "QemuUnMountHome": False
+    "QemuUnMountHome": False,
+    "Chinese": True
 }
 if not os.path.exists(get_home() + "/.config/"):  # 如果没有配置文件夹
     os.mkdir(get_home() + "/.config/")  # 创建配置文件夹
@@ -2353,7 +2357,7 @@ print(wine)
 # 程序信息
 ###########################
 # 语言载入
-if not "zh_CN".lower() in get_now_lang().lower():
+if not "zh_CN".lower() in get_now_lang().lower() and not setting["Chinese"]:
     transla = Trans("en_US", f"{programPath}/trans/deepin-wine-runner.json")
 else:
     transla = Trans("zh_CN")
@@ -2382,20 +2386,21 @@ exe路径\' 参数 \'
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示；
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>''')
-updateThingsString = transla.transe("U", '''※1、不基于生态适配脚本打包器支持禁用 Mono/Gecko 打包器；
-※2、自动容器配置脚本新增命令 decompressionbottle、programforum、installmsi 以及上述命令的帮助；
-※3、自动容器配置脚本新增评论功能；
-※4、自动容器配置脚本新增许多应用安装脚本；
-※5、安装 Windows 虚拟机功能更换应答镜像图标并添加常用 Windows 组件安装功能；
-※6、安装 Windows 虚拟机功能提供镜像下载的网盘链接；
-※7、简易打包器支持自动添加宋体；
-8、修复 installfont 命令下载的字体目录错误问题；
-9、修复提交日志功能在提交成功时依旧提示提交失败问题；
-10、支持强制启用所有被禁用的组件（不推荐）。
+updateThingsString = transla.transe("U", '''※1、Windows 应用适配工具新增系统资源显示；
+※2、修复打包器（基于官方生态适配脚本）无法打开的问题；
+※3、新增运行库功能安装，以实现使用 Qemu User 跨架构运行 Wine 的功能；
+※4、修复 Chroot 容器的一些问题；
+※5、修复在 Debian11 安装时缺失依赖 rar 的问题；
+※6、新增安装 box86、box64 的功能；
+7、修改程序内的部分网址；
+8、作者信息变更；
+9、支持禁用程序的多语言支持（默认禁用，因为是机翻的）；
+10、支持在程序本地翻译缺失的情况下自动机翻缺失语句；
+11、从此版本开始不再区分吾爱版、Spark 版和 UOS 版
 ''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2023年01月06日"
+updateTime = "2023年03月19日"
 aboutProgram = transla.transe("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。</p>
 <p>它同时还内置了基于VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作。</p>
 <pre>
@@ -2628,6 +2633,7 @@ installWineOnDeepin23Alpha = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/
 installWineHQ = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine.png"), transla.transe("U", "安装 WineHQ"))
 installMoreWine = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/more-wine.png"), transla.transe("U", "安装更多 Wine"))
 downloadChrootBottle = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/CHROOT.png"), transla.transe("U", "下载 Chroot 容器"))
+installBox86 = QtWidgets.QAction(QtGui.QIcon.fromTheme("box"), transla.transe("U", "安装 Box86"))
 p2 = QtWidgets.QAction(QtGui.QIcon.fromTheme("settings"), transla.transe("U", "设置程序(&S)"))
 enabledAll = QtWidgets.QAction(transla.transe("U", "强制启用所有被禁用的组件（不推荐）"))
 p3 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(47), transla.transe("U", "清空软件历史记录(&C)"))
@@ -2640,6 +2646,7 @@ programmenu.addAction(installWineOnDeepin23Alpha)
 programmenu.addAction(installWineHQ)
 programmenu.addAction(installMoreWine)
 programmenu.addAction(downloadChrootBottle)
+programmenu.addAction(installBox86)
 programmenu.addSeparator()
 programmenu.addAction(p2)
 programmenu.addAction(enabledAll)
@@ -2657,6 +2664,7 @@ installMoreWine.triggered.connect(lambda: threading.Thread(target=os.system, arg
 downloadChrootBottle.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"'{programPath}/QemuDownload.py'"]).start())
 p2.triggered.connect(ProgramSetting.ShowWindow)
 enabledAll.triggered.connect(lambda: DisableButton(False))
+installBox86.triggered.connect(lambda: OpenTerminal(f"pkexec bash '{programPath}/InstallBox86.sh'"))
 p3.triggered.connect(CleanProgramHistory)
 cleanCache.triggered.connect(CleanProgramCache)
 cleanProgramUnuse.triggered.connect(CleanProgram)
@@ -2923,7 +2931,7 @@ if os.path.exists(f"{programPath}/InstallRuntime"):
         if i[-3:] == ".sh":
             print(f"检测到库 {os.path.splitext(i)[0]}")
             
-            AddLib(QtWidgets.QAction(f"安装 {os.path.splitext(i)[0]} 运行库"), QtWidgets.QAction(f"卸载 {os.path.splitext(i)[0]} 运行库"), installLib.addMenu(transla.transe("U", f"运行库 {os.path.splitext(i)[0]}")), i)
+            AddLib(QtWidgets.QAction(transla.transe("U", f"安装 {os.path.splitext(i)[0]} 运行库")), QtWidgets.QAction(transla.transe("U", f"卸载 {os.path.splitext(i)[0]} 运行库")), installLib.addMenu(transla.transe("U", f"运行库 {os.path.splitext(i)[0]}")), i)
 
 
 
