@@ -4,6 +4,13 @@ import json
 import requests
 import traceback
 
+typeList = [
+    "Auto",
+    "ZH_CN2JA",
+    "ZH_CN2KR",
+    "ZH_CN2EN"
+]
+
 class Trans():
     isTrans = False
     unCloudTrans = False

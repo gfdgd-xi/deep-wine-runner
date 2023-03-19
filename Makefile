@@ -19,6 +19,7 @@ package:
 	cp -rv information.json package-script
 	zip -v -q -r package-script.zip package-script
 	cp -rv VM deb/opt/apps/deepin-wine-runner
+	cp -rv 2048 deb/opt/apps/deepin-wine-runner/
 	cp -rv Download.py deb/opt/apps/deepin-wine-runner/
 	cp -rv AllInstall.py deb/opt/apps/deepin-wine-runner
 	cp -rv ShellList deb/opt/apps/deepin-wine-runner
@@ -130,7 +131,7 @@ package:
 
 install:
 	make build -j$(nproc)
-	sudo apt update | true
+	sudo apt update ; true
 	#sudo dpkg -i spark-deepin-wine-runner.deb
 	sudo apt reinstall ./spark-deepin-wine-runner.deb -y --allow-downgrades 
 

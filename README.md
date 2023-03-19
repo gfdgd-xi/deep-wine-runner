@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 3.1.0</h1>
+<h1 align="center">Wine 运行器 3.2.0</h1>
 <hr>
 
 ## 介绍
@@ -119,6 +119,28 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志 
+### 3.2.0（2023年03月19日）
+**※1、Windows 应用适配工具新增系统资源显示；**  
+**※2、Windows 应用适配工具使用 C++ 重写；**  
+**※3、修复打包器（基于官方生态适配脚本）无法打开的问题；**  
+**※4、新增运行库功能安装，以实现使用 Qemu User 跨架构运行 Wine 的功能（理论上支持 3a4000 了，但没试过）；**  
+**※5、修复 Chroot 容器的一些问题；**  
+**※6、修复在 Debian11 安装时缺失依赖 rar 的问题；**  
+**※7、新增安装 box86、box64 的功能；**  
+**※8、修复故障反馈功能错误的问题；**  
+**※9、支持调用 Flatpak 安装的 Wine；**  
+10、修改程序内的部分网址；  
+11、作者信息变更；  
+12、支持禁用程序的多语言支持（默认禁用，因为是机翻的）；  
+13、支持在程序本地翻译缺失的情况下自动机翻缺失语句；  
+14、从此版本开始不再区分吾爱版、Spark 版和 UOS 版；  
+15、新增下载量查询；  
+16、更新程序公告；  
+17、新增断网彩蛋。  
+
+![图片.png](https://storage.deepin.org/thread/202303191608011688_图片.png)
+
+
 ### 3.1.0（2023年01月06日）
 **※1、不基于生态适配脚本打包器支持禁用 Mono/Gecko 打包器；**  
 **※2、自动容器配置脚本新增命令 decompressionbottle、programforum、installmsi 以及上述命令的帮助；**  

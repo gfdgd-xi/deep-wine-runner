@@ -2332,6 +2332,18 @@ try:
                         wine[f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine64"] = f"{k[1]}{chrootProgramPath}/wine/{i}/bin/wine64"
                         canUseWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine64")
                         untipsWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine64")
+                    if os.path.exists(f"{programPath}/wine/{i}/bin/wine-i386"):
+                        wine[f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-i386"] = f"{k[1]}{chrootProgramPath}/wine/{i}/bin/wine-i386"
+                        canUseWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-i386")
+                        untipsWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-i386")
+                    if os.path.exists(f"{programPath}/wine/{i}/bin/wine-aarch64"):        
+                        wine[f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-aarch64"] = f"{k[1]}{chrootProgramPath}/wine/{i}/bin/wine-aarch64"
+                        canUseWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-aarch64")
+                        untipsWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-aarch64")
+                    if os.path.exists(f"{programPath}/wine/{i}/bin/wine-x86_64"):        
+                        wine[f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-x86_64"] = f"{k[1]}{chrootProgramPath}/wine/{i}/bin/wine-x86_64"
+                        canUseWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-x86_64")
+                        untipsWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-x86_64")
     except:
         pass
     try:
@@ -2395,14 +2407,15 @@ updateThingsString = transla.transe("U", '''※1、Windows 应用适配工具新
 ※6、修复在 Debian11 安装时缺失依赖 rar 的问题；
 ※7、新增安装 box86、box64 的功能；
 ※8、修复故障反馈功能错误的问题；
-9、修改程序内的部分网址；
-10、作者信息变更；
-11、支持禁用程序的多语言支持（默认禁用，因为是机翻的）；
-12、支持在程序本地翻译缺失的情况下自动机翻缺失语句；
-13、从此版本开始不再区分吾爱版、Spark 版和 UOS 版；
-14、新增下载量查询；
-15、更新程序公告；
-16、新增断网彩蛋。
+※9、支持调用 Flatpak 安装的 Wine；
+10、修改程序内的部分网址；
+11、作者信息变更；
+12、支持禁用程序的多语言支持（默认禁用，因为是机翻的）；
+13、支持在程序本地翻译缺失的情况下自动机翻缺失语句；
+14、从此版本开始不再区分吾爱版、Spark 版和 UOS 版；
+15、新增下载量查询；
+16、更新程序公告；
+17、新增断网彩蛋。
 ''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
@@ -2444,6 +2457,7 @@ Qt 版本：{QtCore.qVersion()}
 <pre>星火应用商店：<a href="https://spark-app.store/">https://spark-app.store/</a>
 Deepin 官网：<a href="https://www.deepin.org">https://www.deepin.org</a>
 Deepin 论坛：<a href="https://bbs.deepin.org">https://bbs.deepin.org</a>
+gfdgd xi：<a href="https://gfdgd-xi.github.io">https://gfdgd-xi.github.io</a>
 <hr>
 <h1>©2020~{time.strftime("%Y")} By gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
 title = "Wine 运行器 {}".format(version)
