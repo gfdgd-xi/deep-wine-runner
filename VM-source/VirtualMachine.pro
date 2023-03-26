@@ -33,14 +33,16 @@ SOURCES += \
     buildvbox.cpp \
     vbox.cpp \
     command.cpp \
-    infoutils.cpp
+    infoutils.cpp \
+    qemu.cpp
 
 HEADERS += \
         mainwindow.h \
     buildvbox.h \
     vbox.h \
     command.h \
-    infoutils.h
+    infoutils.h \
+    qemu.h
 
 FORMS += \
         mainwindow.ui

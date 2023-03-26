@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QCoreApplication>
 #include <infoutils.h>
+#include "qemu.h"
 // 懒得用 QThread 了（要继承）
 #include <thread>
 using namespace std;
@@ -63,7 +64,9 @@ buildvbox::buildvbox(QString isoPath, int id){
     QString net = GetNet();
     qDebug() << "使用网卡：" << net << endl;
     //vbox *box = new vbox("Window");
-    vbox vm("Windows");
+    //vbox vm("Windows");
+    qemu vm("Windows");
+
     switch (id) {
         case 0:
             vm.Create("Windows7");
@@ -75,9 +78,18 @@ buildvbox::buildvbox(QString isoPath, int id){
     }
     vm.CreateDiskControl();
     //vm.CreateDiskControl("storage_controller_2");
-    vm.CreateDisk(QDir::homePath() + "/VirtualBox VMs/Windows/Windows.vdi", 131072);
-    vm.MountDisk(QDir::homePath() + "/VirtualBox VMs/Windows/Windows.vdi");
+    vm.CreateDisk(QDir::homePath() + "/Qemu/Windows/Windows.qcow2", 131072);
+    vm.MountDisk(QDir::homePath() + "/Qemu/Windows/Windows.qcow2");
     vm.MountISO(isoPath, "storage_controller_1", 0, 1);
+    switch (id) {
+        case 0:
+            vm.MountISO(programPath + "/Windows7X86Auto.iso", "storage_controller_1", 1, 2);
+            break;
+        case 1:
+            vm.MountISO(programPath + "/Windows7X64Auto.iso", "storage_controller_1", 1, 2);
+            break;
+    }
+    /*vm.MountISO(isoPath, "storage_controller_1", 0, 1);
     switch (id) {
         case 0:
             vm.MountISO(programPath + "/Windows7X86Auto.iso", "storage_controller_1", 1, 0);
@@ -85,12 +97,12 @@ buildvbox::buildvbox(QString isoPath, int id){
         case 1:
             vm.MountISO(programPath + "/Windows7X64Auto.iso", "storage_controller_1", 1, 0);
             break;
-    }
+    }*/
     // 判断 VirtualBox Guest ISO 是否存在
     // 在的话直接挂载
-    if(QFile::exists("/usr/share/virtualbox/VBoxGuestAdditions.iso")){
+    /*if(QFile::exists("/usr/share/virtualbox/VBoxGuestAdditions.iso")){
         vm.MountISO("/usr/share/virtualbox/VBoxGuestAdditions.iso", "storage_controller_1", 1, 1);
-    }
+    }*/
 
     vm.SetCPU(1);
     long memory = 0;
