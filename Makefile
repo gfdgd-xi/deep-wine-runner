@@ -28,6 +28,7 @@ package:
 	cp -rv QemuDownload.py deb/opt/apps/deepin-wine-runner
 	cp -rv QemuRun.py deb/opt/apps/deepin-wine-runner
 	cp -rv kill.sh deb/opt/apps/deepin-wine-runner
+	cp -rv updatekiller.py deb/opt/apps/deepin-wine-runner
 	cp -rv InstallWineOnDeepin23Alpha.py deb/opt/apps/deepin-wine-runner
 	cp -rv wrestool deb/opt/apps/deepin-wine-runner
 	cp -rv Mount.sh deb/opt/apps/deepin-wine-runner
@@ -142,7 +143,7 @@ install:
 	sudo apt reinstall ./spark-deepin-wine-runner.deb -y --allow-downgrades 
 
 remove:
-	sudo apt purge spark-deepin-wine-runner 
+	sudo apt purge spark-deepin-wine-runner  -y
 
 run:
 	python3 mainwindow.py

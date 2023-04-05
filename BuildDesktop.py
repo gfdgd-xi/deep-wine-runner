@@ -13,6 +13,7 @@
 import os
 import sys
 import traceback
+import updatekiller
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets

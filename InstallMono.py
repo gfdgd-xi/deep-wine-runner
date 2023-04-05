@@ -12,6 +12,7 @@
 #################
 import os
 import sys
+import updatekiller
 import traceback
 import pyquery
 

@@ -3,6 +3,7 @@ import os
 import sys
 import json
 import time
+import updatekiller
 import random
 import xpinyin
 import traceback

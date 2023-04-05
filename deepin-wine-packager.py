@@ -15,6 +15,7 @@ import json
 import shutil
 import random
 import pathlib
+import updatekiller
 import threading
 import traceback
 import subprocess

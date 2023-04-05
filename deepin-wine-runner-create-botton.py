@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import sys
+import updatekiller
 import threading
 import PyQt5.QtGui as QtGui
 import PyQt5.QtWidgets as QtWidgets

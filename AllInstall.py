@@ -11,6 +11,7 @@
 # 引入所需的库
 #################
 import os
+import updatekiller
 
 def AddSparkStoreSource():
     # Download and install key

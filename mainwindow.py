@@ -22,6 +22,7 @@ import platform
 import threading
 import traceback
 import webbrowser
+import updatekiller
 import subprocess
 import req as requests
 import urllib.parse as parse
@@ -1122,7 +1123,7 @@ class UpdateWindow():
         updateWidgetLayout = QtWidgets.QGridLayout()
         versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：未知\n更新内容：")
         updateText = QtWidgets.QTextBrowser()
-        ok = QtWidgets.QPushButton(transla.transe("U", "更新（更新后需要自行手动重启程序）"))
+        ok = QtWidgets.QPushButton(transla.transe("U", "更新（更新时会自动关闭 Wine 运行器）"))
         ok.clicked.connect(UpdateWindow.Update)
         cancel = QtWidgets.QPushButton("取消")
         cancel.clicked.connect(UpdateWindow.update.close)
@@ -1177,8 +1178,8 @@ class UpdateWindow():
             write_txt("/tmp/spark-deepin-wine-runner/update.sh", f"""#!/bin/bash
 echo 删除多余的安装包
 rm -rfv /tmp/spark-deepin-wine-runner/update/*
-#echo 关闭“Wine 运行器”以及其它“Python 应用”
-#killall python3
+echo 关闭“Wine 运行器”
+python3 "{programPath}/updatekiller.py"
 echo 下载安装包
 wget -P /tmp/spark-deepin-wine-runner/update {UpdateWindow.data["Url"][0]}
 echo 安装安装包

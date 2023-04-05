@@ -13,6 +13,7 @@ import os
 import shutil
 import random
 import sys
+import updatekiller
 import json
 import traceback
 import requests

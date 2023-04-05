@@ -15,6 +15,7 @@ import sys
 import base64
 import json
 import traceback
+import updatekiller
 import urllib.request
 import req as requests
 import PyQt5.QtWidgets as QtWidgets

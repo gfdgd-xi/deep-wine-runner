@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import updatekiller
 
 if __name__ == "__main__":
     print('''                                   

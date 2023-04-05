@@ -14,6 +14,7 @@ import os
 import sys
 import json
 import pyquery
+import updatekiller
 import req as requests
 import urllib.parse as parse
 
