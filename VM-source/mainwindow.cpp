@@ -28,12 +28,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tabWidget->setTabPosition(QTabWidget::West);  // 标签靠左
     // 允许输出 qDebug 信息
     QLoggingCategory::defaultCategory()->setEnabled(QtDebugMsg, true);
-    // 判断是否安装 vbox
-    if(system("which VBoxManage")){
+    // 判断是否安装 vbox（无需判断）
+    /*if(system("which VBoxManage")){
         if(QMessageBox::question(this, "提示", "检测到您似乎没有安装 VirtualBox，立即安装？") == QMessageBox::Yes){
             system("xdg-open https://www.virtualbox.org/wiki/Linux_Downloads");
         }
-    }
+    }*/
     // QTimer
     QTimer *cpuGet = new QTimer(this);
     connect(cpuGet, &QTimer::timeout, this, &MainWindow::ShowCPUMessage);

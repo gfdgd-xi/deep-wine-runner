@@ -1,3 +1,6 @@
+/*
+ * gfdgd xi、为什么您不喜欢熊出没和阿布呢
+ */
 #include "vbox.h"
 #include "command.h"
 #include <QMessageBox>

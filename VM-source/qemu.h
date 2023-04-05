@@ -1,3 +1,7 @@
+/*
+ * gfdgd xi、为什么您不喜欢熊出没和阿布呢
+ * 依照 GPLV3 开源
+ */
 #ifndef QEMU_H
 #define QEMU_H
 #include <QString>

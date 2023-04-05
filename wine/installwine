@@ -78,17 +78,24 @@ class Ui_MainWindow(object):
         self.menu = MainWindow.menuBar()
         self.changeSources = self.menu.addMenu(_translate("MainWindow", "更换源"))
         self.gitlinkAction = QtWidgets.QAction(_translate("MainWindow", "Gitlink 源（推荐）"))
-        self.ipv6Action = QtWidgets.QAction(_translate("MainWindow", "备用源（只支持 IPv6 用户）"))
+        self.kgithubAction = QtWidgets.QAction(_translate("MainWindow", "KGithub 源"))
+        self.ipv6Action = QtWidgets.QAction(_translate("MainWindow", "Github 源1（国内访问不稳定）"))
+        self.githubAction = QtWidgets.QAction(_translate("MainWindow", "Github 源2（国内访问不稳定）"))
+        
         self.localAction = QtWidgets.QAction(_translate("MainWindow", "本地测试源（127.0.0.1）"))
         self.changeSources.addAction(self.gitlinkAction)
+        self.changeSources.addAction(self.kgithubAction)
         self.changeSources.addAction(self.ipv6Action)
+        self.changeSources.addAction(self.githubAction)
         self.changeSources.addAction(self.localAction)
-        for i in [self.gitlinkAction, self.ipv6Action, self.localAction]:
+        for i in [self.gitlinkAction, self.ipv6Action, self.localAction, self.kgithubAction, self.githubAction]:
             i.setCheckable(True)
         self.gitlinkAction.setChecked(True)
         self.changeSourcesGroup = QtWidgets.QActionGroup(MainWindow)
         self.changeSourcesGroup.addAction(self.gitlinkAction)
+        self.changeSourcesGroup.addAction(self.kgithubAction)
         self.changeSourcesGroup.addAction(self.ipv6Action)
+        self.changeSourcesGroup.addAction(self.githubAction)
         self.changeSourcesGroup.addAction(self.localAction)
 
         self.retranslateUi(MainWindow)
@@ -153,7 +160,7 @@ def InstallOtherWine():
 def ChangeSources():
     global urlSources
     global internetWineSource
-    sources = [ui.gitlinkAction, ui.ipv6Action, ui.localAction]
+    sources = [ui.gitlinkAction, ui.kgithubAction, ui.ipv6Action, ui.githubAction, ui.localAction]
     for i in range(0, len(sources)):
         if sources[i].isChecked():
             urlSources = internetWineSourceList[i]
@@ -171,6 +178,7 @@ def ReadInternetInformation():
     try:
         internetJsonList = json.loads(requests.get(f"{internetWineSource}/information.json").text)
     except:
+        traceback.print_exc()
         QtWidgets.QMessageBox.critical(window, "错误", "无法连接服务器！")
         return
     nmodel = QtGui.QStandardItemModel(window)
@@ -292,7 +300,11 @@ def on_addButton_clicked():
     if(ui.deleteZip.isChecked() + ui.unzip.isChecked() == 2):
         ui.deleteZip.setChecked(False)
         ui.unzip.setChecked(False)
-    downloadUrl = internetWineSource + downloadName
+    #downloadUrl = internetWineSource + downloadName
+    if "://" in downloadName:
+        downloadUrl = downloadName
+    else:
+        downloadUrl = internetWineSource + downloadName
     dialog = QtWidgets.QProgressDialog()
     cancel = QtWidgets.QPushButton("取消")
     cancel.setDisabled(True)
@@ -346,7 +358,9 @@ if __name__ == "__main__":
     internetJsonList = []
     internetWineSourceList = [
         "https://code.gitlink.org.cn/gfdgd_xi/wine-mirrors/raw/branch/master/",
-        "http://gfdgdxi.msns.cn/wine-mirrors/", # 备用源，纯 IPv6 源
+        "https://kgithub.com/gfdgd-xi/wine-mirrors-websize/raw/master/",
+        "http://wine.wine-runner.gfdgdxi.top/",
+        "https://github.com/gfdgd-xi/wine-mirrors-websize/raw/master/",
         "http://127.0.0.1/wine-mirrors/"  # 本地测试源
         ]
     internetWineSource = internetWineSourceList[0]

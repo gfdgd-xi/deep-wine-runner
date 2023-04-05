@@ -1,3 +1,7 @@
+/*
+ * gfdgd xi、为什么您不喜欢熊出没和阿布呢
+ * 依照 GPLV3 开源
+ */
 #include "mainwindow.h"
 #include <QApplication>
 #include <QTranslator>
@@ -23,11 +27,11 @@ int main(int argc, char *argv[])
     trans->load("virtualmachine-en_US.qm");
 
     a.installTranslator(trans);
-    // 判断是否为 !amd64
-    if(GetRunCommand("arch").replace(" ", "").replace("\n", "") != QString("x86_64")){
+    // 判断是否为 !amd64（无需判断了）
+    /*if(GetRunCommand("arch").replace(" ", "").replace("\n", "") != QString("x86_64")){
         QMessageBox::critical(NULL, "错误", "此程序不支持非 X86 架构，立即退出");
         return 0;
-    }
+    }*/
     MainWindow w;
 
     w.show();

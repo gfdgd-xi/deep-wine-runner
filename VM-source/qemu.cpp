@@ -1,3 +1,6 @@
+/*
+ * gfdgd xi、为什么您不喜欢熊出没和阿布呢
+ */
 #include "qemu.h"
 #include <QDir>
 #include <QFile>
@@ -30,7 +33,7 @@ int qemu::CreateDisk(QString path, int size){
     if(QFile::exists(path)){
         return 0;
     }
-    return system(("qemu-img create '" + path + "' " + QString::number(size) + "M").toLatin1());
+    return system(("qemu-img create -f qcow2 '" + path + "' " + QString::number(size) + "M").toLatin1());
 }
 int qemu::CreateDiskControl(QString controlName){
     return 0;

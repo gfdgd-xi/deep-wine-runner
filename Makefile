@@ -3,6 +3,8 @@ build:
 
 clean:
 	python3 RemovePycacheFile.py
+	cd VM-source ; make clean
+	rm VM-source/VirtualMachine
 
 package:
 	#cd VM-source && qmake
