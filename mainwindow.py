@@ -1126,34 +1126,38 @@ class UpdateWindow():
         ok.clicked.connect(UpdateWindow.Update)
         cancel = QtWidgets.QPushButton("取消")
         cancel.clicked.connect(UpdateWindow.update.close)
-        if "从源码运行的版本" == programVersionType:
-            versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：未知（从源码运行不提供更新）\n更新内容：")
-            updateText.setText("从源码运行不提供更新")
-            ok.setDisabled(True)
-        else:
-            if 1 == 0:
-                url = ""
-            else:
-                if "deepin/UOS 应用商店版本<带签名>" == programVersionType:
-                    url = "aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy93aW5lLXJ1bm5lci11cGRhdGUtaW5mb3JtYXRpb24vcmF3L2JyYW5jaC9tYXN0ZXIvdXBkYXRlLXVvcy5qc29u"
-                elif "星火应用商店版本" == programVersionType:
-                    url = "aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy93aW5lLXJ1bm5lci11cGRhdGUtaW5mb3JtYXRpb24vcmF3L2JyYW5jaC9tYXN0ZXIvdXBkYXRlLXNwYXJrLmpzb24="
-                else: 
-                    url = "aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy93aW5lLXJ1bm5lci11cGRhdGUtaW5mb3JtYXRpb24vcmF3L2JyYW5jaC9tYXN0ZXIvdXBkYXRlLmpzb24="
-            
-            try:
-                UpdateWindow.data = json.loads(requests.get(base64.b64decode(url).decode("utf-8")).text)
-                versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：{UpdateWindow.data['Version']}\n更新内容：")
-                if UpdateWindow.data["Version"] == version:
-                    updateText.setText(transla.transe("U", "此为最新版本，无需更新"))
-                    ok.setDisabled(True)
-                else:
-                    updateText.setText(UpdateWindow.data["New"].replace("\\n", "\n"))
-            except:
-                traceback.print_exc()
-                QtWidgets.QMessageBox.critical(updateWidget, transla.transe("U", "错误"), transla.transe("U", "无法连接服务器！"))
-                updateText.setText("无法连接服务器，无法更新")
+        url = "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-update-information/raw/branch/master/update.json"
+        try:
+            UpdateWindow.data = json.loads(requests.get(url).text)
+            versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：{UpdateWindow.data['Version']}\n更新内容：")
+            if UpdateWindow.data["Version"] == version:
+                updateText.setText("此为最新版本，无需更新")
                 ok.setDisabled(True)
+            else:
+                # 版本号读取（防止出现高版本号提示要“升级”到低版本号的问题）
+                localVersionList = version.split(".")
+                webVersionList = UpdateWindow.data['Version'].split(".")
+                for i in range(len(localVersionList)):
+                    local = int(localVersionList[i])
+                    web = int(webVersionList[i])
+                    if web < local:
+                        updateText.setHtml(f"""<p>此为最新版本，无需更新，但似乎您当前使用的程序版本比云端版本还要高。</p>
+<p>出现这个问题可能会有如下几种情况：</p>
+<p>1、使用编译或者内测版本</p>
+<p>2、自己修改了程序版本</p>
+<p>3、作者忘记更新云端上的更新信息了</p>
+<p>如果是第三种情况，请反馈到此：https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I6T3FG</p>
+<p><img src='{programPath}/Icon/doge.png'></p>""")
+                        ok.setDisabled(True)
+                        break
+                    if web > local:
+                        updateText.setText(UpdateWindow.data["New"].replace("\\n", "\n"))
+                        ok.setEnabled(True)
+                        break
+                
+        except:
+            traceback.print_exc()
+            QtWidgets.QMessageBox.critical(updateWidget, "错误", "无法连接服务器！")
         updateWidgetLayout.addWidget(versionLabel, 0, 0, 1, 1)
         updateWidgetLayout.addWidget(updateText, 1, 0, 1, 3)
         updateWidgetLayout.addWidget(ok, 2, 2, 1, 1)
