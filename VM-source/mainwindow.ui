@@ -146,6 +146,20 @@
            </spacer>
           </item>
           <item>
+           <widget class="QPushButton" name="getQemu">
+            <property name="text">
+             <string>安装 Qemu</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="getvbox">
+            <property name="text">
+             <string>获取VirtualBox</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="install">
             <property name="text">
              <string>安装</string>
@@ -228,7 +242,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;3、在这里修改即可&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/picture/截图/截图_VirtualBox_20220712223705.png&quot; /&gt;&lt;/p&gt;
 &lt;hr /&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:26pt; font-weight:600;&quot;&gt;安装加强功能有什么好处？&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:26pt; font-weight:600;&quot;&gt;安装加强功能有什么好处？（只限使用 VirtualBox）&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;1、支持鼠标自由从虚拟机和实体机切换&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;2、支持虚拟机根据窗口大小自动设置分辨率&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;3、支持文件共享、剪切板共享、文件拖放&lt;/p&gt;

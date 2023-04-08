@@ -95,6 +95,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_KGuiAddons.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_KI18n.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_KIconThemes.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_KIdleTime.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_KIOCore.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_KIOFileWidgets.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_KIOGui.pri \
@@ -287,6 +288,7 @@ Makefile: VirtualMachine.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qma
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_KGuiAddons.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_KI18n.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_KIconThemes.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_KIdleTime.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_KIOCore.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_KIOFileWidgets.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_KIOGui.pri \
@@ -459,6 +461,7 @@ Makefile: VirtualMachine.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qma
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_KGuiAddons.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_KI18n.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_KIconThemes.pri:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_KIdleTime.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_KIOCore.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_KIOFileWidgets.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_KIOGui.pri:

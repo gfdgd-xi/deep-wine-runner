@@ -38,6 +38,8 @@ package:
 	cp -rv IconList.json deb/opt/apps/deepin-wine-runner
 	cp -rv GetEXEVersion.exe deb/opt/apps/deepin-wine-runner
 	cp -rv MountWithoutHome.sh deb/opt/apps/deepin-wine-runner
+	cp -rv RunCommandWithTerminal.py deb/opt/apps/deepin-wine-runner
+	cp -rv QemuSystemInstall.sh deb/opt/apps/deepin-wine-runner
 	echo "[]" > deb/opt/apps/deepin-wine-runner/wine/winelist.json
 	rm -rfv deb/opt/apps/deepin-wine-runner/wine/winelist.json
 	cp -rv req deb/opt/apps/deepin-wine-runner

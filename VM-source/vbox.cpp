@@ -13,9 +13,13 @@ vbox::vbox(QString name, QString managerPath) {
 }
 
 int vbox::Create(QString type){
-    return system(("\"" + managerPath + "\" createvm --name \""
+    system(("\"" + managerPath + "\" createvm --name \""
                    + name + "\" --ostype \"" + type +
                    "\" --register").toLatin1());
+    return system(("\"" + managerPath + "\" modifyvm \""
+                   + name + "\" --ostype \"" + type +
+                   "\" ").toLatin1());
+    //vboxmanage modifyvm testvm --ostype
 }
 int vbox::CreateDisk(QString path, int size){
     return system(("\"" + managerPath + "\" createvdi --filename \"" + path + "\" --size \"" + QString::number(size) + "\"").toLatin1());

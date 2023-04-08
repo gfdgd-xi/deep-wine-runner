@@ -28,11 +28,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->tabWidget->setTabPosition(QTabWidget::West);  // 标签靠左
     // 选择最优虚拟机
-    if(!system("which qemu-x86_64")){
+    if(!system("which qemu-system-x86_64")){
         ui->vmChooser->setCurrentIndex(0);
     }
     if(!system("which vboxmanage")){
         ui->vmChooser->setCurrentIndex(1);
+    }
+    if(!QFile::exists(QCoreApplication::applicationDirPath() + "/../RunCommandWithTerminal.py")){
+        ui->getQemu->setDisabled(true);
     }
     // 允许输出 qDebug 信息
     QLoggingCategory::defaultCategory()->setEnabled(QtDebugMsg, true);
@@ -76,7 +79,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // 设置程序标题
     this->setWindowTitle("Windows 应用适配工具 " + versionValue.toString());
     // 读取谢明列表
-    ui->textBrowser_2->setHtml("<p>程序版本号：" + versionValue.toString() + "</p>" + ui->textBrowser_2->toHtml() +
+    ui->textBrowser_2->setHtml("<p>程序版本号：" + versionValue.toString() + ", " + GetRunCommand("arch") + "</p>" + ui->textBrowser_2->toHtml() +
                                "<hr/><h1>谢明列表</h1>" + thankText);
     connect(ui->textBrowser_2, &QTextBrowser::anchorClicked, this, [=](const QUrl &link){
         QDesktopServices::openUrl(link);
@@ -156,7 +159,7 @@ void MainWindow::on_install_clicked()
 {
     switch (ui->vmChooser->currentIndex()) {
     case 0:
-        if(system("which qemu-x86_64")){
+        if(system("which qemu-system-x86_64")){
             if(QMessageBox::question(this, "提示", "您似乎没有安装 Qemu，是否继续创建虚拟机？") == QMessageBox::No){
                 return;
             }
@@ -172,4 +175,14 @@ void MainWindow::on_install_clicked()
     }
     buildvbox(ui->isoPath->text(), ui->systemVersion->currentIndex(), ui->vmChooser->currentIndex());
     return;
+}
+
+void MainWindow::on_getvbox_clicked()
+{
+    QDesktopServices::openUrl(QUrl("https://www.virtualbox.org/wiki/Linux_Downloads"));
+}
+
+void MainWindow::on_getQemu_clicked()
+{
+    system(("python3 '" + QCoreApplication::applicationDirPath() + "/../RunCommandWithTerminal.py' '" + QCoreApplication::applicationDirPath() + "/../QemuSystemInstall.sh'").toLatin1());
 }

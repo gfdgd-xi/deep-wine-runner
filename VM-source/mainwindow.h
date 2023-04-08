@@ -26,6 +26,10 @@ private slots:
     void on_install_clicked();
 
 
+    void on_getvbox_clicked();
+
+    void on_getQemu_clicked();
+
 private:
     Ui::MainWindow *ui;
     long m_cpuAll;
