@@ -19,6 +19,7 @@
 #include <QtMath>
 #include <QJsonArray>
 #include <QDesktopServices>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -26,6 +27,13 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->tabWidget->setTabPosition(QTabWidget::West);  // 标签靠左
+    // 选择最优虚拟机
+    if(!system("which qemu-x86_64")){
+        ui->vmChooser->setCurrentIndex(0);
+    }
+    if(!system("which vboxmanage")){
+        ui->vmChooser->setCurrentIndex(1);
+    }
     // 允许输出 qDebug 信息
     QLoggingCategory::defaultCategory()->setEnabled(QtDebugMsg, true);
     // 判断是否安装 vbox（无需判断）
@@ -79,6 +87,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->textBrowser_3, &QTextBrowser::anchorClicked, this, [=](const QUrl &link){
         QDesktopServices::openUrl(link);
     });
+
 }
 
 void MainWindow::ShowCPUMessage(){
@@ -145,6 +154,22 @@ void MainWindow::on_browser_clicked()
 
 void MainWindow::on_install_clicked()
 {
-    buildvbox(ui->isoPath->text(), ui->systemVersion->currentIndex());
+    switch (ui->vmChooser->currentIndex()) {
+    case 0:
+        if(system("which qemu-x86_64")){
+            if(QMessageBox::question(this, "提示", "您似乎没有安装 Qemu，是否继续创建虚拟机？") == QMessageBox::No){
+                return;
+            }
+        }
+        break;
+    case 1:
+        if(system("which vboxmanage")){
+            if(QMessageBox::question(this, "提示", "您似乎没有安装 VBox，是否继续创建虚拟机？") == QMessageBox::No){
+                return;
+            }
+        }
+        break;
+    }
+    buildvbox(ui->isoPath->text(), ui->systemVersion->currentIndex(), ui->vmChooser->currentIndex());
     return;
 }

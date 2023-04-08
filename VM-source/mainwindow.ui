@@ -25,7 +25,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -97,6 +97,40 @@
          </layout>
         </item>
         <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="0,1">
+          <item>
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>虚拟机（建议默认）：</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="vmChooser">
+            <property name="currentText">
+             <string>qemu/kvm</string>
+            </property>
+            <property name="currentIndex">
+             <number>0</number>
+            </property>
+            <property name="duplicatesEnabled">
+             <bool>false</bool>
+            </property>
+            <item>
+             <property name="text">
+              <string>qemu/kvm</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>VirtualBox</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
            <spacer name="horizontalSpacer">
@@ -158,9 +192,10 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:26pt; font-weight:600;&quot;&gt;给小白的一段话&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;其实本质上跑完安装程序就没有然后了，顶多如果想要运行舒服一点点，可以安装加强功能，直接拉到最底下看就可以了&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;其实本质上跑完安装程序就没有然后了，顶多如果想要运行舒服一点点，可以安装加强功能，直接拉到最底下看就可以了，&lt;span style=&quot; font-weight:600; font-style:italic; text-decoration: underline;&quot;&gt;只限使用 VirtualBox&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600; font-style:italic; text-decoration: underline;&quot;&gt;如果你是用非 X86 PC，那暂时只能使用 qemu（没 kvm），且跨架构的性能损失很大，推荐使用 Windows XP 而非 Windows 7&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;如果爱折腾的话，下面的都看看也无所谓的，想看往下翻就可以了&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;（如果鼠标被锁定到里面了按下键盘右边的“Ctrl”键就可以了）&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;（如果鼠标被锁定到里面了按下键盘右边的“Ctrl”键就可以了，&lt;span style=&quot; font-weight:600; font-style:italic; text-decoration: underline;&quot;&gt;qemu则是 Ctrl+Alt+G&lt;/span&gt; ）&lt;/p&gt;
 &lt;hr /&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:26pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;

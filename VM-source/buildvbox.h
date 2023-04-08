@@ -10,7 +10,7 @@ class buildvbox
 {
 //    Q_OBJECT
 public:
-    buildvbox(QString isoPath, int id=0);
+    buildvbox(QString isoPath, int id=0, int vm=0);
     void CleanScreen();
     QString GetNet();
     int Download(QString url, QString path, QString fileName);

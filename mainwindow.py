@@ -381,14 +381,14 @@ def OpenUrl(url):
     print(url.url())
     # 判断是否可以使用小窗打开
     if not bad:
-        Temp.webWindow = QtWidgets.QMainWindow()
+        '''Temp.webWindow = QtWidgets.QMainWindow()
         web = QtWebEngineWidgets.QWebEngineView()
         web.setUrl(url)
         Temp.webWindow.setWindowTitle("浏览页面")
         Temp.webWindow.setCentralWidget(web)
         Temp.webWindow.setWindowIcon(QtGui.QIcon(iconPath))
         Temp.webWindow.show()
-        return
+        return'''
     webbrowser.open_new_tab(url.url())
         
     #QtCore.QUrl().url()
@@ -1123,6 +1123,8 @@ class UpdateWindow():
         updateWidgetLayout = QtWidgets.QGridLayout()
         versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：未知\n更新内容：")
         updateText = QtWidgets.QTextBrowser()
+        updateText.anchorClicked.connect(OpenUrl)
+        updateText.setOpenExternalLinks(False)
         ok = QtWidgets.QPushButton(transla.transe("U", "更新（更新时会自动关闭 Wine 运行器）"))
         ok.clicked.connect(UpdateWindow.Update)
         cancel = QtWidgets.QPushButton("取消")
@@ -1147,7 +1149,7 @@ class UpdateWindow():
 <p>1、使用编译或者内测版本</p>
 <p>2、自己修改了程序版本</p>
 <p>3、作者忘记更新云端上的更新信息了</p>
-<p>如果是第三种情况，请反馈到此：https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I6T3FG</p>
+<p>如果是第三种情况，请反馈到此：<a href='https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I6T3FG'>https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I6T3FG</a></p>
 <p><img src='{programPath}/Icon/doge.png'></p>""")
                         ok.setDisabled(True)
                         break
@@ -2942,7 +2944,7 @@ def AddLib(install: QtWidgets.QAction, uninstall, menu, info):
     menu.addAction(uninstall)
 
 if os.path.exists(f"{programPath}/InstallRuntime"):
-    installLib = menu.addMenu(transla.transe("U", "运行库"))
+    installLib = menu.addMenu(transla.transe("U", "运行库(&R)"))
     installQemuMenu = installLib.addMenu(transla.transe("U", "安装 Qemu User"))
     installQemu = QtWidgets.QAction("安装 Qemu User")
     removeQemu = QtWidgets.QAction("卸载 Qemu User")
