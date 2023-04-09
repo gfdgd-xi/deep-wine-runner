@@ -8,13 +8,30 @@
 # 基于 Python3 的 tkinter 构建
 ###########################################################################################
 VBoxManage showvminfo Windows
-if test 0 == $?; then
+if [[ 0 == $? ]]; then
     # 检测到虚拟机存在，启动虚拟机
     VBoxManage startvm Windows
     exit
 fi
+# 检查是否有 QEMU
+if [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
+    # 查看逻辑CPU的个数
+    CpuCount=`cat /proc/cpuinfo| grep "processor"| wc -l`
+ 
+    # 总内存大小GB
+    MemTotal=`awk '($1 == "MemTotal:"){printf "%.2f\n",$2/1024/1024}' /proc/meminfo`
+    use=$(echo "scale=4; $MemTotal / 3" | bc)
+    if [[ `arch` != "x86_64" ]]; then
+        echo X86 架构，使用 kvm 加速
+        kvm --hda "$HOME/Qemu/Windows/Windows.qcow2" -soundhw all -smp $CpuCount -m ${use}G
+        exit
+    fi
+    echo 非 X86 架构，不使用 kvm 加速
+    qemu-system-x86_64 --hda "$HOME/Qemu/Windows/Windows.qcow2" -soundhw all -smp $CpuCount -m ${use}G
+    exit
+fi
 zenity --question --no-wrap --text="检查到您未创建所指定的虚拟机，是否创建虚拟机并继续？\n如果不创建将无法使用"
-if test 1 == $?; then
+if [[ 1 == $? ]]; then
     # 用户不想创建虚拟机，结束
     exit
 fi
