@@ -21,7 +21,7 @@ if [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
     # 总内存大小GB
     MemTotal=`awk '($1 == "MemTotal:"){printf "%.2f\n",$2/1024/1024}' /proc/meminfo`
     use=$(echo "scale=4; $MemTotal / 3" | bc)
-    if [[ `arch` != "x86_64" ]]; then
+    if [[ `arch` == "x86_64" ]]; then
         echo X86 架构，使用 kvm 加速
         kvm --hda "$HOME/Qemu/Windows/Windows.qcow2" -soundhw all -smp $CpuCount -m ${use}G
         exit
