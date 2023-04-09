@@ -25,7 +25,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -72,10 +72,10 @@
           <item>
            <widget class="QComboBox" name="systemVersion">
             <property name="currentText">
-             <string/>
+             <string>Windows 7 32 位（支持自动安装）</string>
             </property>
             <property name="placeholderText">
-             <string>请选择系统类型（如果识别不了请自行选择，如果选择错误或不支持将无法进行自动安装）</string>
+             <string/>
             </property>
             <item>
              <property name="text">
