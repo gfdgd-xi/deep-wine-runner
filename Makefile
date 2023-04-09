@@ -13,7 +13,7 @@ package:
 	#cd wine && make
 	make clean -j$(nproc)
 	cp -rv helperset deb/opt/apps/deepin-wine-runner/
-	cp -rv VM-source/VirtualMachine VM
+	#cp -rv VM-source/VirtualMachine VM
 	cp -rv VM-source/deepin-wine-runner.svg VM
 	cp -rv VM-source/Windows7X64Auto.iso VM
 	cp -rv VM-source/Windows7X86Auto.iso VM
