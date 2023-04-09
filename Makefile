@@ -5,6 +5,7 @@ clean:
 	python3 RemovePycacheFile.py
 	cd VM-source ; make clean
 	rm VM-source/VirtualMachine -rfv
+	rm -rfv VM-source/.qmake.stash
 
 package:
 	#cd VM-source && qmake
