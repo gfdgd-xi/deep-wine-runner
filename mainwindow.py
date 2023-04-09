@@ -2444,6 +2444,7 @@ a:link, a:active {{
 
 版本：{version}
 适用平台：{goodRunSystem}（@VersionForType@）
+安装包构建时间：{information['Time']}
 Qt 版本：{QtCore.qVersion()}
 程序官网：{programUrl}
 当前程序占用体积：@programSize@MB</pre>

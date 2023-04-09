@@ -68,6 +68,7 @@ MainWindow::MainWindow(QWidget *parent) :
         return;
     }
     QJsonObject versionObject = doc.object();
+    QJsonValue buildTime = versionObject.value("Time");
     QJsonValue versionValue = versionObject.value("Version");
     QJsonArray thank = versionObject.value("Thank").toArray();
     QString thankText = "";
@@ -79,7 +80,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // 设置程序标题
     this->setWindowTitle("Windows 应用适配工具 " + versionValue.toString());
     // 读取谢明列表
-    ui->textBrowser_2->setHtml("<p>程序版本号：" + versionValue.toString() + ", " + GetRunCommand("arch") + "</p>" + ui->textBrowser_2->toHtml() +
+    ui->textBrowser_2->setHtml("<p>程序版本号：" + versionValue.toString() + ", " + GetRunCommand("arch") + "</p><p>安装包构建时间：" + buildTime.toString() + "</p><p>该组件构建时间："
+                               + __DATE__ + " " + __TIME__ + "</p>" + ui->textBrowser_2->toHtml() +
                                "<hr/><h1>谢明列表</h1>" + thankText);
     connect(ui->textBrowser_2, &QTextBrowser::anchorClicked, this, [=](const QUrl &link){
         QDesktopServices::openUrl(link);
