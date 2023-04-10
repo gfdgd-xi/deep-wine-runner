@@ -2632,7 +2632,7 @@ mainLayout.setColumnStretch(1, 1)
 mainLayout.addWidget(returnText, 0, 1, 2, 1)
 
 # 版权
-copy = QtWidgets.QLabel(f"""\n程序版本：{version}，<b>提示：Wine 无法运行保证可以运行所有的 Windows 程序，如果想要运行更多可执行程序，可以考虑虚拟机和双系统</b><br>
+copy = QtWidgets.QLabel(f"""\n程序版本：{version}，<b>提示：Wine 无法保证可以运行所有的 Windows 程序，如果想要运行更多 Windows 程序，可以考虑虚拟机和双系统</b><br>
 ©2020~{time.strftime("%Y")} gfdgd xi、为什么您不喜欢熊出没和阿布呢""")
 mainLayout.addWidget(copy, 2, 0, 1, 1)
 
