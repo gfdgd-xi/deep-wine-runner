@@ -2033,12 +2033,12 @@ bottleNameLock = False
 ###############
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 # 如果要添加其他 wine，请在字典添加其名称和执行路径
-wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable": "deepin-wine6-stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine"}
-wineValue = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5-stable": "deepin-wine5 stable", "deepin-wine6-stable": "deepin-wine6 stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine"}
+wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable": "deepin-wine6-stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine", "spark-wine8": "spark-wine8"}
+wineValue = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5-stable": "deepin-wine5 stable", "deepin-wine6-stable": "deepin-wine6 stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine", "spark-wine8": "spark-wine8"}
 # 读取 wine 本地列表
-for i in ["/opt/wine-staging", "/opt/wine-dev", "/opt/wine-stable", "/opt/spark-wine7-devel"]:
-    if os.path.exists(i):
-        wine[i] = i
+for i in os.listdir("/opt"):
+    if os.path.exists(f"/opt/{i}/bin/wine"):
+        wine[f"/opt/{i}/bin/wine"] = f"/opt/{i}/bin/wine"
 try:
     for i in os.listdir(f"{get_home()}/.deepinwine"):
         if os.path.exists(f"{get_home()}/.deepinwine/{i}/bin/wine"):
