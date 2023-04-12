@@ -2204,6 +2204,7 @@ try:
         "deepin-wine6 stable": "deepin-wine6-stable", 
         "deepin-wine5 stable": "deepin-wine5-stable", 
         "spark-wine7-devel": "spark-wine7-devel", 
+        "spark-wine8": "spark-wine8",
         "deepin-wine": "deepin-wine", 
         "deepin-wine5": "deepin-wine5", 
         "wine": "wine", 
