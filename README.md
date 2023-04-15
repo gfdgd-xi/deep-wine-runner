@@ -564,6 +564,7 @@ Gitlink：https://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner
 ## 附：用于编译 Wine 的 Docker 容器（Debian10）
 内安装了编译 Wine 所需要的依赖，Wine 编译教程：https://wiki.winehq.org/Building_Wine  
 当然也可以到 http://wine.wine-runner.racoongx.cn/ 或 Wine 运行器内下载已经编译好的 Wine  
+（屏蔽微信在Wine中运行时产生的水印/黑块？可以参考：https://12101111.github.io/block-wine-wechat-black-window/ 和 https://blog.csdn.net/ericden/article/details/122118443 ）
 ### 拉取
 ***（需要先安装 Docker 后再输入以下命令）***  
 ```bash
