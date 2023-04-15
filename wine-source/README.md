@@ -8,4 +8,12 @@ Wine 运行器地址：https://gitee.com/gfdgd-xi/wine-installer-tools-for-wine-
 
 ![图片.png](https://storage.deepin.org/thread/20230415194520355_图片.png)
 
+## 如何编译？
+```bash
+git clone https://gitee.com/gfdgd-xi/wine-installer-tools-for-wine-runner
+cd wine-installer-tools-for-wine-runner
+qmake .
+make -j4
+```
+
 ## ©2020~Now gfdgd xi、为什么您不喜欢熊出没和阿布呢
