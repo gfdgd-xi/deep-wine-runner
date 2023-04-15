@@ -74,9 +74,6 @@
             <property name="currentText">
              <string>Windows 7 32 位（支持自动安装）</string>
             </property>
-            <property name="placeholderText">
-             <string/>
-            </property>
             <item>
              <property name="text">
               <string>Windows 7 32 位（支持自动安装）</string>
@@ -146,6 +143,13 @@
            </spacer>
           </item>
           <item>
+           <widget class="QPushButton" name="qemuSetting">
+            <property name="text">
+             <string>Qemu虚拟机设置</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="getQemu">
             <property name="text">
              <string>安装 Qemu</string>
@@ -209,6 +213,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;其实本质上跑完安装程序就没有然后了，顶多如果想要运行舒服一点点，可以安装加强功能，直接拉到最底下看就可以了，&lt;span style=&quot; font-weight:600; font-style:italic; text-decoration: underline;&quot;&gt;只限使用 VirtualBox&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600; font-style:italic; text-decoration: underline;&quot;&gt;如果你是用非 X86 PC，那暂时只能使用 qemu（没 kvm），且跨架构的性能损失很大，推荐使用 Windows XP 而非 Windows 7&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;如果爱折腾的话，下面的都看看也无所谓的，想看往下翻就可以了&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;（这里的帮助更新可能不会那么及时，更详细/新的帮助可以看：https://gitee.com/gfdgd-xi/deep-wine-runner/wikis 或 https://gitee.com/gfdgd-xi/wine-runner-wiki）&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;（如果鼠标被锁定到里面了按下键盘右边的“Ctrl”键就可以了，&lt;span style=&quot; font-weight:600; font-style:italic; text-decoration: underline;&quot;&gt;qemu则是 Ctrl+Alt+G&lt;/span&gt; ）&lt;/p&gt;
 &lt;hr /&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;

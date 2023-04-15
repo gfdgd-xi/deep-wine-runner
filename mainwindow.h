@@ -30,6 +30,10 @@ private slots:
 
     void on_getQemu_clicked();
 
+    void on_vmChooser_currentIndexChanged(int index);
+
+    void on_qemuSetting_clicked();
+
 private:
     Ui::MainWindow *ui;
     long m_cpuAll;
