@@ -14,6 +14,7 @@ import os
 import sys
 import time
 import json
+import pyperclip
 import random
 import base64
 import shutil
@@ -1880,7 +1881,10 @@ class ValueCheck():
         if file == "":
             return
         try:
-            QtWidgets.QInputDialog.getText(window, "值", "计算得到的值", QtWidgets.QLineEdit.Normal, self.link[types](self, file))
+            value = self.link[types](self, file)
+            if QtWidgets.QInputDialog.getText(window, "值", "下面是计算得到的值，<b>是否要复制到剪切板？</b>", QtWidgets.QLineEdit.Normal, value)[1]:
+                pyperclip.copy(value)
+                QtWidgets.QMessageBox.information(window, "提示", "复制成功！")
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(window, "错误", traceback.format_exc())
