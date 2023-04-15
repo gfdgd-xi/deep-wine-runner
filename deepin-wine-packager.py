@@ -41,7 +41,7 @@ def button2_cl(number):
         mapLink[number].setText(path)
 
 def button4_cl():
-    path = QtWidgets.QFileDialog.getSaveFileName(widget, transla.transe("U", "保存 deb 包"), get_home(), "deb 文件(*.deb);;所有文件(*.*)", "{}_{}_i386.deb".format(e1_text.text(), e2_text.text()))[0]
+    path = QtWidgets.QFileDialog.getSaveFileName(widget, transla.transe("U", "保存 deb 包"), get_home(), "deb 文件(*.deb);;所有文件(*.*)", "{}_{}_all.deb".format(e1_text.text(), e2_text.text()))[0]
     if path != "":
         e12_text.setText(path)
 
@@ -396,7 +396,7 @@ class make_deb_threading(QtCore.QThread):
                 {
                     # I386 wine 打包配置文件
                     "Wine": wine[wineVersion.currentText()],
-                    "Architecture": "i386",
+                    "Architecture": debFirstArch.currentText(),
                     "Depends": [
                         f"{wine[wineVersion.currentText()]}, deepin-wine-helper (>= 5.1.30-1), fonts-wqy-microhei, fonts-wqy-zenhei",
                         f"{wine[wineVersion.currentText()]}, spark-dwine-helper | store.spark-app.spark-dwine-helper, fonts-wqy-microhei, fonts-wqy-zenhei"
@@ -589,7 +589,7 @@ fi"""
     "appid": "{e1_text.text()}",
     "name": "{e8_text.text()}",
     "version": "{e2_text.text()}",
-    "arch": ["i386"],
+    "arch": ["{debFirstArch.currentText()}"],
     "permissions": {{
         "autostart": false,
         "notification": false,
@@ -1658,7 +1658,11 @@ def ChangeArchCombobox():
     #rmBash.setEnabled(option)
     if debArch.currentIndex() == 0:
         ChangeWine()
+        debFirstArch.setEnabled(True)
+        debFirstArch.setCurrentIndex(0)
     else:
+        debFirstArch.setCurrentIndex(2)
+        debFirstArch.setDisabled(True)
         debDepends.setText("com.deepin-wine6-stable.deepin (>= 6.0deepin31), com.wine-helper.deepin (>= 0.0.8), com.deepin-box86.deepin (>= 0.2.6deepin3), deepin-elf-verify (>= 1.1.1-1)")
 
 def InstallDeb():
@@ -1698,7 +1702,7 @@ autoChange = True  # 有第一次的路径自动设置
 def AutoPathSet():
     global autoChange
     autoChange = True
-    architecture = ["i386", "arm64", "arm64"]
+    architecture = [debFirstArch.currentText(), "arm64", "arm64"]
     if not change:
         e12_text.setText(f"{get_desktop_path()}/{e1_text.text()}_{e2_text.text()}_{architecture[debArch.currentIndex()]}.deb")
 
@@ -2116,7 +2120,7 @@ rmBash = QtWidgets.QCheckBox(transla.transe("U", "设置卸载该 deb 后自动�
 cleanBottonByUOS = QtWidgets.QCheckBox(transla.transe("U", "使用统信 Wine 生态适配活动容器清理脚本"))
 disabledMono = QtWidgets.QCheckBox(transla.transe("U", "禁用 Mono 和 Gecko 安装器"))
 debArch = QtWidgets.QComboBox()
-debArch.addItems(["i386", "arm64(box86+exagear)"])
+debArch.addItems(["默认选项", "arm64(box86+exagear)"])
 #debArch.addItems(["i386", "arm64(box86+exagear)", "all(crossover)"])
 textbox1 = QtWidgets.QTextBrowser()
 option1_text.addItems(["Network", "Chat", "Audio", "Video", "Graphics", "Office", "Translation", "Development", "Utility"])
@@ -2193,6 +2197,10 @@ widgetLayout.addWidget(textbox1, 18, 0, 1, 3)
 moreSetting = QtWidgets.QGroupBox(transla.transe("U", "高级设置"))
 debDepends = QtWidgets.QLineEdit()
 debRecommend = QtWidgets.QLineEdit()
+debFirstArch = QtWidgets.QComboBox()
+debFirstArch.addItems(["all", "i386", "arm64"])
+debFirstArch.setCurrentIndex(0)
+debFirstArch.currentIndexChanged.connect(AutoPathSet)
 debDepends.setPlaceholderText(transla.transe("U", "deb 包的依赖(如无特殊需求默认即可)"))
 debDepends.setText("deepin-wine6-stable, deepin-wine-helper (>= 5.1.30-1), fonts-wqy-microhei, fonts-wqy-zenhei")
 debRecommend.setPlaceholderText(transla.transe("U", "deb 包的推荐依赖(非强制，一般默认即可)"))
@@ -2215,6 +2223,8 @@ moreSettingLayout.addWidget(debRecommend)
 moreSettingLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "要显示的 .desktop 文件的 MimeType：")))
 moreSettingLayout.addWidget(e10_text)
 moreSettingLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "打包 deb 架构：")))
+moreSettingLayout.addWidget(debFirstArch)
+moreSettingLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "打包选项：")))
 moreSettingLayout.addWidget(debArch)
 moreSetting.setLayout(moreSettingLayout)
 widgetLayout.addWidget(moreSetting, 0, 3, 16, 2)
@@ -2274,7 +2284,7 @@ rmBash.setChecked(True)
 disabledMono.setChecked(True)
 cleanBottonByUOS.setChecked(True)
 chooseWineHelperValue.setChecked(True)
-e12_text.setText(f"{get_desktop_path()}/demo_1.0.0_i386.deb")
+e12_text.setText(f"{get_desktop_path()}/demo_1.0.0_all.deb")
 widget.setLayout(widgetLayout)
 window.setCentralWidget(widget)
 window.setWindowTitle(f"wine 应用打包器 {version}")
