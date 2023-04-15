@@ -13,6 +13,7 @@
 import os
 import sys
 import json
+import updatekiller
 import threading
 import PyQt5.QtWidgets as QtWidgets
 

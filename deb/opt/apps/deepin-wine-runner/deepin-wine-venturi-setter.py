@@ -12,6 +12,7 @@
 #################
 import os
 import sys
+import updatekiller
 
 ###################
 # 程序所需事件

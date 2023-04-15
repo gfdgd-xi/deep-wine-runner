@@ -2,6 +2,7 @@
 import os
 import sys
 import getpass
+import updatekiller
 import PyQt5.QtWidgets as QtWidgets
 
 if __name__ == "__main__":

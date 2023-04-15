@@ -16,5 +16,6 @@ fi
 aria2c -x 16 -s 16 -c $url -d /tmp -o $fileName
 sudo apt update
 sudo dpkg -i /tmp/$fileName
+sudo apt install qemu-user qemu-user-static binfmt-support -y
 echo 安装完成，按回车键退出
 read

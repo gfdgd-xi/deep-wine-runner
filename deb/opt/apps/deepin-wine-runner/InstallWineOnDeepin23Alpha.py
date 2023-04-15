@@ -12,6 +12,7 @@
 #################
 import os
 import webbrowser
+import updatekiller
 
 def YesOrNo():
     if input().replace(" ", "").upper() == "N":

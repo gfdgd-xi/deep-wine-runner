@@ -1,5 +1,6 @@
 {
-    "Version": "3.2.0",
+    "Version": "3.2.1",
+    "Time": "2023-04-15 18:37:38 Linux-5.15.77-amd64-desktop-x86_64-with-Deepin-20.8-apricot",
     "Thank": [
         "感谢 RacoonGX 的付出与贡献",
         "感谢 @Amber 编写的《使用wine运行器打包无安装包的软件》：https://bbs.deepin.org/post/247720",
@@ -21,7 +22,7 @@
         "感谢 @统信UCARE服务 https://mp.weixin.qq.com/s/iOdfNv6phc8F4inackFFTw",
         "感谢 @星火应用商店 提供部分安装包的源以及本程序的下载地址",
         "感谢 @delsin 和 @神末shenmo 在 deepin 论坛提供打包器打包的 deb 包自动删除容器的建议",
-	    "感谢 @shenmo 反馈的 2.1.0 打包器问题和 2.1.0-1 终端调用问题",
+        "感谢 @shenmo 反馈的 2.1.0 打包器问题和 2.1.0-1 终端调用问题",
         "感谢 @GershonWang 在 https://github.com/gfdgd-xi/deep-wine-runner/issues/1 提供窗口居中的建议",
         "感谢 @134******28 和 @sgb76 提供的新程序 GUI 布局和实现代码",
         "感谢 @sgb76 为 Wine 打包器（非生态适配脚本）打包的 i386 deb 提供建议",

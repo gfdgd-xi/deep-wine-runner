@@ -13,6 +13,7 @@
 import os
 import sys
 import json
+import updatekiller
 import req as requests
 try:
     sourcesList = [

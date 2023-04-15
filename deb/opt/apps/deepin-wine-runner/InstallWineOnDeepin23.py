@@ -11,6 +11,7 @@
 # 引入所需的库
 #################
 import os
+import updatekiller
 
 def InstallWithDeepinSource(program):
     os.system(f"sudo cp '{programPath}/deepin.list' /etc/apt/sources.list.d/deepin20-withwinerunner.list")

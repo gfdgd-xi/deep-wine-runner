@@ -3,6 +3,7 @@ import os
 import sys
 import base64
 import traceback
+import updatekiller
 import req as requests
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore

@@ -2407,23 +2407,9 @@ exe路径\' 参数 \'
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示；
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>''')
-updateThingsString = transla.transe("U", '''※1、Windows 应用适配工具新增系统资源显示；
-※2、Windows 应用适配工具使用 C++ 重写；
-※3、修复打包器（基于官方生态适配脚本）无法打开的问题；
-※4、新增运行库功能安装，以实现使用 Qemu User 跨架构运行 Wine 的功能（理论上支持 3a4000 了，但没试过）；
-※5、修复 Chroot 容器的一些问题；
-※6、修复在 Debian11 安装时缺失依赖 rar 的问题；
-※7、新增安装 box86、box64 的功能；
-※8、修复故障反馈功能错误的问题；
-※9、支持调用 Flatpak 安装的 Wine；
-10、修改程序内的部分网址；
-11、作者信息变更；
-12、支持禁用程序的多语言支持（默认禁用，因为是机翻的）；
-13、支持在程序本地翻译缺失的情况下自动机翻缺失语句；
-14、从此版本开始不再区分吾爱版、Spark 版和 UOS 版；
-15、新增下载量查询；
-16、更新程序公告；
-17、新增断网彩蛋。
+updateThingsString = transla.transe("U", '''※1、Windows 虚拟机安装工具支持非 X86 架构；
+※2、应用打包器可以与星火应用商店配合构建 arm/all 全架构的 Wine 包；
+3、运行器和打包器支持调用 spark-wine8；
 ''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
