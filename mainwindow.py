@@ -1880,7 +1880,7 @@ class ValueCheck():
         if file == "":
             return
         try:
-            QtWidgets.QInputDialog.getMultiLineText(window, "值", "计算得到的值", self.link[types](self, file))
+            QtWidgets.QInputDialog.getText(window, "值", "计算得到的值", QtWidgets.QLineEdit.Normal, self.link[types](self, file))
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(window, "错误", traceback.format_exc())
