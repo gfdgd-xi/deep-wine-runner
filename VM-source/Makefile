@@ -58,9 +58,11 @@ SOURCES       = main.cpp \
 		vbox.cpp \
 		command.cpp \
 		infoutils.cpp \
-		qemu.cpp qrc_图标.cpp \
+		qemu.cpp \
+		qemusetting.cpp qrc_图标.cpp \
 		moc_mainwindow.cpp \
-		moc_infoutils.cpp
+		moc_infoutils.cpp \
+		moc_qemusetting.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		buildvbox.o \
@@ -68,9 +70,11 @@ OBJECTS       = main.o \
 		command.o \
 		infoutils.o \
 		qemu.o \
+		qemusetting.o \
 		qrc_图标.o \
 		moc_mainwindow.o \
-		moc_infoutils.o
+		moc_infoutils.o \
+		moc_qemusetting.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -245,13 +249,15 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		vbox.h \
 		command.h \
 		infoutils.h \
-		qemu.h main.cpp \
+		qemu.h \
+		qemusetting.h main.cpp \
 		mainwindow.cpp \
 		buildvbox.cpp \
 		vbox.cpp \
 		command.cpp \
 		infoutils.cpp \
-		qemu.cpp
+		qemu.cpp \
+		qemusetting.cpp
 QMAKE_TARGET  = VirtualMachine
 DESTDIR       = 
 TARGET        = VirtualMachine
@@ -260,7 +266,7 @@ TARGET        = VirtualMachine
 first: all
 ####### Build rules
 
-VirtualMachine: ui_mainwindow.h $(OBJECTS)  
+VirtualMachine: ui_mainwindow.h ui_qemusetting.h $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
 Makefile: VirtualMachine.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
@@ -622,9 +628,9 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents 图标.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents mainwindow.h buildvbox.h vbox.h command.h infoutils.h qemu.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp mainwindow.cpp buildvbox.cpp vbox.cpp command.cpp infoutils.cpp qemu.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents mainwindow.ui $(DISTDIR)/
+	$(COPY_FILE) --parents mainwindow.h buildvbox.h vbox.h command.h infoutils.h qemu.h qemusetting.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp mainwindow.cpp buildvbox.cpp vbox.cpp command.cpp infoutils.cpp qemu.cpp qemusetting.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents mainwindow.ui qemusetting.ui $(DISTDIR)/
 	$(COPY_FILE) --parents zh_CN.ts en_US.ts $(DISTDIR)/
 
 
@@ -679,9 +685,9 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -std=gnu++11 -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_infoutils.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_infoutils.cpp moc_qemusetting.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_infoutils.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_infoutils.cpp moc_qemusetting.cpp
 moc_mainwindow.cpp: mainwindow.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
@@ -692,16 +698,25 @@ moc_infoutils.cpp: infoutils.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/gfdgd_xi/Desktop/deep-wine-runner/VM-source/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/gfdgd_xi/Desktop/deep-wine-runner/VM-source -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/8 -I/usr/include/x86_64-linux-gnu/c++/8 -I/usr/include/c++/8/backward -I/usr/lib/gcc/x86_64-linux-gnu/8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include infoutils.h -o moc_infoutils.cpp
 
+moc_qemusetting.cpp: qemusetting.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/gfdgd_xi/Desktop/deep-wine-runner/VM-source/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/gfdgd_xi/Desktop/deep-wine-runner/VM-source -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/8 -I/usr/include/x86_64-linux-gnu/c++/8 -I/usr/include/c++/8/backward -I/usr/lib/gcc/x86_64-linux-gnu/8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include qemusetting.h -o moc_qemusetting.cpp
+
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
-compiler_uic_make_all: ui_mainwindow.h
+compiler_uic_make_all: ui_mainwindow.h ui_qemusetting.h
 compiler_uic_clean:
-	-$(DEL_FILE) ui_mainwindow.h
+	-$(DEL_FILE) ui_mainwindow.h ui_qemusetting.h
 ui_mainwindow.h: mainwindow.ui \
 		/usr/lib/qt5/bin/uic
 	/usr/lib/qt5/bin/uic mainwindow.ui -o ui_mainwindow.h
+
+ui_qemusetting.h: qemusetting.ui \
+		/usr/lib/qt5/bin/uic
+	/usr/lib/qt5/bin/uic qemusetting.ui -o ui_qemusetting.h
 
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
@@ -719,7 +734,8 @@ main.o: main.cpp mainwindow.h
 mainwindow.o: mainwindow.cpp mainwindow.h \
 		ui_mainwindow.h \
 		buildvbox.h \
-		infoutils.h
+		infoutils.h \
+		qemusetting.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o mainwindow.cpp
 
 buildvbox.o: buildvbox.cpp buildvbox.h \
@@ -742,6 +758,10 @@ qemu.o: qemu.cpp qemu.h \
 		command.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qemu.o qemu.cpp
 
+qemusetting.o: qemusetting.cpp qemusetting.h \
+		ui_qemusetting.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qemusetting.o qemusetting.cpp
+
 qrc_图标.o: qrc_图标.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_图标.o qrc_图标.cpp
 
@@ -750,6 +770,9 @@ moc_mainwindow.o: moc_mainwindow.cpp
 
 moc_infoutils.o: moc_infoutils.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_infoutils.o moc_infoutils.cpp
+
+moc_qemusetting.o: moc_qemusetting.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_qemusetting.o moc_qemusetting.cpp
 
 ####### Install
 

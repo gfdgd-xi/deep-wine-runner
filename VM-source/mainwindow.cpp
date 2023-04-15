@@ -20,6 +20,7 @@
 #include <QJsonArray>
 #include <QDesktopServices>
 #include <QMessageBox>
+#include "qemusetting.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -187,4 +188,16 @@ void MainWindow::on_getvbox_clicked()
 void MainWindow::on_getQemu_clicked()
 {
     system(("python3 '" + QCoreApplication::applicationDirPath() + "/../RunCommandWithTerminal.py' '" + QCoreApplication::applicationDirPath() + "/../QemuSystemInstall.sh'").toLatin1());
+}
+
+void MainWindow::on_vmChooser_currentIndexChanged(int index)
+{
+    ui->qemuSetting->setDisabled(index);
+}
+
+void MainWindow::on_qemuSetting_clicked()
+{
+    QemuSetting show;
+    show.show();
+    show.exec();
 }

@@ -34,7 +34,8 @@ SOURCES += \
     vbox.cpp \
     command.cpp \
     infoutils.cpp \
-    qemu.cpp
+    qemu.cpp \
+    qemusetting.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -42,10 +43,12 @@ HEADERS += \
     vbox.h \
     command.h \
     infoutils.h \
-    qemu.h
+    qemu.h \
+    qemusetting.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    qemusetting.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
