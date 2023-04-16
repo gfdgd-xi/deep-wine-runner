@@ -1,19 +1,22 @@
 #ifndef QEMUSETTING_H
 #define QEMUSETTING_H
 
-#include <QDialog>
+#include <QWidget>
+#include <QCheckBox>
+#include <QSpinBox>
 
 namespace Ui {
 class QemuSetting;
 }
 
-class QemuSetting : public QDialog
+class QemuSetting : public QWidget
 {
     Q_OBJECT
 
 public:
     explicit QemuSetting(QWidget *parent = nullptr);
     ~QemuSetting();
+
 
 private slots:
     void on_buttonBox_accepted();
@@ -25,6 +28,7 @@ private slots:
     void on_getrunner_clicked();
 
 private:
+    void SetDefaultValue();
     Ui::QemuSetting *ui;
 };
 

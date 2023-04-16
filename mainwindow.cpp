@@ -197,7 +197,7 @@ void MainWindow::on_vmChooser_currentIndexChanged(int index)
 
 void MainWindow::on_qemuSetting_clicked()
 {
-    QemuSetting show;
-    show.show();
-    show.exec();
+    QemuSetting *show = new QemuSetting();
+    show->show();
+
 }
