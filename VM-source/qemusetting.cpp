@@ -15,6 +15,8 @@ QemuSetting::QemuSetting(QWidget *parent) :
     ui(new Ui::QemuSetting)
 {
     ui->setupUi(this);
+    // 判断是否安装了 Wine 运行器
+    ui->getrunner->setHidden(QFile::exists(QCoreApplication::applicationDirPath() + "/../mainwindow.py"));
     // 设置变量
     if(QFile::exists(QDir::homePath() + "/.config/deepin-wine-runner/QemuSetting.json")){
         // 读取配置文件
@@ -89,6 +91,10 @@ void QemuSetting::on_save_clicked()
     object.insert("CPU", ui->cpuNumber->value());
     qDebug() << QJsonDocument(object).toJson();
     // 读取配置文件
+    QDir dir(QDir::homePath() + "/.config/deepin-wine-runner/");
+    if(!dir.exists()){
+        dir.mkpath(QDir::homePath() + "/.config/deepin-wine-runner/");
+    }
     QFile file(QDir::homePath() + "/.config/deepin-wine-runner/QemuSetting.json");
     file.open(QIODevice::WriteOnly);
     file.write(QJsonDocument(object).toJson());
@@ -104,4 +110,20 @@ void QemuSetting::on_cancel_clicked()
 void QemuSetting::on_getrunner_clicked()
 {
     QDesktopServices::openUrl(QUrl("https://gitee.com/gfdgd-xi/deep-wine-runner/"));
+}
+
+void QemuSetting::on_enableVnc_stateChanged(int arg1)
+{
+    // 控件的开启/关闭
+    ui->vncNumber->setEnabled(ui->enableVnc->isChecked());
+}
+
+void QemuSetting::on_setDefault_clicked()
+{
+    if(QMessageBox::question(this, "提示", "你确定要重置为默认？重置后将无法恢复") == QMessageBox::No){
+        return;
+    }
+    QFile::remove(QDir::homePath() + "/.config/deepin-wine-runner/QemuSetting.json");
+    this->SetDefaultValue();
+    QMessageBox::information(this, "提示", "设置完成！");
 }

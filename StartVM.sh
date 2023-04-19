@@ -15,6 +15,12 @@ if [[ 0 == $? ]]; then
 fi
 # 检查是否有 QEMU
 if [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
+    if [[ -f "$HOME/.config/deepin-wine-runner/QemuSetting.json" ]]; then
+        echo 有设置文件，读设置文件
+        cd `dirname $0`
+        python3 ./VM/StartQemu.py
+        exit
+    fi
     # 查看逻辑CPU的个数
     CpuCount=`cat /proc/cpuinfo| grep "processor"| wc -l`
  
