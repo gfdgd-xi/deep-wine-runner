@@ -27,6 +27,10 @@ private slots:
 
     void on_getrunner_clicked();
 
+    void on_enableVnc_stateChanged(int arg1);
+
+    void on_setDefault_clicked();
+
 private:
     void SetDefaultValue();
     Ui::QemuSetting *ui;
