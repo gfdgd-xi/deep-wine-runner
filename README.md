@@ -618,4 +618,4 @@ make install -j4
 
 ```
 
-# ©2020-Now gfdgd xi、为什么您不喜欢熊出没和阿布呢
+# ©2020-Now gfdgd xi
