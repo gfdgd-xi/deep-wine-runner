@@ -88,6 +88,12 @@ void QemuSetting::on_save_clicked()
     object.insert("VNC", ui->vncNumber->value());
     object.insert("CPU", ui->cpuNumber->value());
     qDebug() << QJsonDocument(object).toJson();
+    // 读取配置文件
+    QFile file(QDir::homePath() + "/.config/deepin-wine-runner/QemuSetting.json");
+    file.open(QIODevice::WriteOnly);
+    file.write(QJsonDocument(object).toJson());
+    file.close();
+    QMessageBox::information(this, "提示", "保存完成！");
 }
 
 void QemuSetting::on_cancel_clicked()
