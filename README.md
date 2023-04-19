@@ -48,7 +48,7 @@ env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 1. 用 Wine 运行 EXE
 2. 支持下载/安装 Wine
 3. 支持下载定制好的 Chroot 容器并使用 Qemu 调用运行
-4. 支持**半自动**安装 Windows 7 镜像至 VirtualBox（只限 x86_64）
+4. 支持**半自动**安装 Windows 7 镜像至 VirtualBox/Qemu
 5. 支持打包 Wine 应用（简易打包器/基于生态适配脚本的打包器/高级打包器）
 6. 检测容器缺失 DLL 并下载
 7. 支持在线/本地拉取 Wine 容器配置方案并部署（初步应用商店）
@@ -60,6 +60,17 @@ env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 13. 支持自定义生成 .desktop 到桌面和启动器
 14. 支持下载适配常用字体
 15. 支持终止指定容器运行的所有程序
+
+## 上架到的应用商店
+> 可以从下列应用商店获取 Wine 运行器
+### Deepin/UOS 应用商店
+![图片.png](https://storage.deepin.org/thread/202304192211278050_图片.png)  
+
+### 星火应用商店
+![图片.png](https://storage.deepin.org/thread/202304192212308212_图片.png)  
+
+### 龙芯应用合作社
+（找时间再补图）
 
 ## 分支介绍
 ### main 分支
