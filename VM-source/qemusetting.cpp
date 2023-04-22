@@ -9,6 +9,7 @@
 #include "infoutils.h"
 #include <QDir>
 #include <sys/sysinfo.h>
+#include <QDebug>
 
 QemuSetting::QemuSetting(QWidget *parent) :
     QWidget(parent),
