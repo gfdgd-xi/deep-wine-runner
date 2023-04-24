@@ -23,4 +23,4 @@ make -j4
 ## 预编译版本
 https://gitee.com/gfdgd-xi/deep-wine-runner/tree/main/VM
 
-# ©2020~2023 gfdgd xi、为什么您不喜欢熊出没和阿布呢
+# ©2020~2023 gfdgd xi
