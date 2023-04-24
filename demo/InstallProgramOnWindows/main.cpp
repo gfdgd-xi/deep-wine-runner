@@ -1,5 +1,5 @@
 /*
-  归属 RacoonGX 团队，开发者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
+  归属 RacoonGX 团队，开发者：gfdgd xi
  */
 #include <iostream>
 #include <vector>
