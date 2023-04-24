@@ -1,5 +1,5 @@
 /*
- * gfdgd xi、为什么您不喜欢熊出没和阿布呢
+ * gfdgd xi
  */
 #include "qemu.h"
 #include <QDir>
