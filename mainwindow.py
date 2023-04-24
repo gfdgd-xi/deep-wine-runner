@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # 使用系统默认的 python3 运行
 #################################################################################################################
-# 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
+# 作者：gfdgd xi
 # 版本：3.0.0
 # 更新时间：2022年12月10日
 # 感谢：感谢 wine、deepin-wine 以及星火团队，提供了 wine、deepin-wine、spark-wine-devel 给大家使用，让我能做这个程序
@@ -2458,9 +2458,9 @@ Deepin 官网：<a href="https://www.deepin.org">https://www.deepin.org</a>
 Deepin 论坛：<a href="https://bbs.deepin.org">https://bbs.deepin.org</a>
 gfdgd xi：<a href="https://gfdgd-xi.github.io">https://gfdgd-xi.github.io</a>
 <hr>
-<h1>©2020~{time.strftime("%Y")} By gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
+<h1>©2020~{time.strftime("%Y")} By gfdgd xi</h1>'''
 title = "Wine 运行器 {}".format(version)
-#<h1>©2020~{time.strftime("%Y")} <a href="https://gitee.com/gfdgd-xi">By gfdgd xi、为什么您不喜欢熊出没和阿布呢</h1>'''
+#<h1>©2020~{time.strftime("%Y")} <a href="https://gitee.com/gfdgd-xi">By gfdgd xi</h1>'''
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 try:
     threading.Thread(target=requests.get, args=[parse.unquote(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9vcGVuL0luc3RhbGwucGhw").decode("utf-8")) + "?Version=" + version]).start()
@@ -2624,7 +2624,7 @@ mainLayout.addWidget(returnText, 0, 1, 2, 1)
 
 # 版权
 copy = QtWidgets.QLabel(f"""\n程序版本：{version}，<b>提示：Wine 无法保证可以运行所有的 Windows 程序，如果想要运行更多 Windows 程序，可以考虑虚拟机和双系统</b><br>
-©2020~{time.strftime("%Y")} gfdgd xi、为什么您不喜欢熊出没和阿布呢""")
+©2020~{time.strftime("%Y")} gfdgd xi""")
 mainLayout.addWidget(copy, 2, 0, 1, 1)
 
 # 程序运行

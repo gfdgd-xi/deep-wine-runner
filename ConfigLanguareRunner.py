@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # 使用系统默认的 python3 运行
 ###########################################################################################
-# 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
+# 作者：gfdgd xi
 # 版本：3.0.1
 # 更新时间：2022年10月05日
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
@@ -43,8 +43,8 @@ programEnv = [
     ["($PROGRAMPATH)", programPath],
     ["($VERSION)", version],
     ["($THANK)", thankText],
-    ["($MAKER)", "RacoonGX 团队，By gfdgd xi、为什么您不喜欢熊出没和阿布呢"],
-    ["($COPYRIGHT)", f"©2020~{time.strftime('%Y')} RacoonGX 团队，By gfdgd xi、为什么您不喜欢熊出没和阿布呢"],
+    ["($MAKER)", "RacoonGX 团队，By gfdgd xi"],
+    ["($COPYRIGHT)", f"©2020~{time.strftime('%Y')} RacoonGX 团队，By gfdgd xi"],
     ["($?)", "0"],
     ["($PLATFORM)", platform.system()],
     ["($DEBUG)", "1"]
@@ -301,7 +301,7 @@ class Command():
 
         def Version(self):
             print(f"版本：{version}")
-            print(f"©2020~{time.strftime('%Y')} RacoonGX 团队，By gfdgd xi、为什么您不喜欢熊出没和阿布呢")
+            print(f"©2020~{time.strftime('%Y')} RacoonGX 团队，By gfdgd xi")
             return 0
 
         def Pause(self) -> int:
@@ -650,7 +650,7 @@ if __name__ == "__main__":
     if len(sys.argv) - optionAll < 2:
         print("Wine 运行器自动配置文件解析器交互环境")
         print(f"版本：{version}")
-        print(f"©2020~{time.strftime('%Y')} RacoonGX 团队，By gfdgd xi、为什么您不喜欢熊出没和阿布呢")
+        print(f"©2020~{time.strftime('%Y')} RacoonGX 团队，By gfdgd xi")
         print("--------------------------------------------------------------")
         while True:
             commandLine = input(">")
@@ -669,7 +669,7 @@ if __name__ == "__main__":
         sys.exit(1)
     print("Wine 运行器自动配置文件解析器")
     print(f"版本：{version}")
-    print(f"©2020~{time.strftime('%Y')} gfdgd xi、为什么您不喜欢熊出没和阿布呢")
+    print(f"©2020~{time.strftime('%Y')} gfdgd xi")
     print("--------------------------------------------------------------")
     com.Run(com.GetCommandList(), programEnv[0][1], programEnv[1][1])
     sys.exit(int(programEnv[9][1]))
