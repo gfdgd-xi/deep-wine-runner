@@ -24,8 +24,8 @@ programEnv = [
     ["PROGRAMPATH", programPath],
     ["VERSION", version],
     ["THANK", thankText.replace("\n", "\\n")],
-    ["MAKER", "gfdgd xi、为什么您不喜欢熊出没和阿布呢"],
-    ["COPYRIGHT", f"©2020~{time.strftime('%Y')} gfdgd xi、为什么您不喜欢熊出没和阿布呢"],
+    ["MAKER", "gfdgd xi"],
+    ["COPYRIGHT", f"©2020~{time.strftime('%Y')} gfdgd xi"],
     ["PLATFORM", platform.system()],
     ["DEBUG", str(int("--debug" in sys.argv))]
 ]
@@ -37,8 +37,8 @@ programEnv = [
     ["($PROGRAMPATH)", programPath],
     ["($VERSION)", version],
     ["($THANK)", thankText],
-    ["($MAKER)", "gfdgd xi、为什么您不喜欢熊出没和阿布呢"],
-    ["($COPYRIGHT)", f"©2020~{time.strftime('%Y')} gfdgd xi、为什么您不喜欢熊出没和阿布呢"],
+    ["($MAKER)", "gfdgd xi"],
+    ["($COPYRIGHT)", f"©2020~{time.strftime('%Y')} gfdgd xi"],
     ["?", "0"],
     ["PLATFORM)", platform.system()],
     ["DEBUG)", str(int("--debug" in sys.argv))]
@@ -61,7 +61,7 @@ commandEnv += f"PATH=\"{programPath}/command:$PATH\" "
 if len(sys.argv) - optionAll < 2:
     print("Wine 运行器自动配置文件解析器交互环境（基于 Bash）")
     print(f"版本：{version}")
-    print(f"©2020~{time.strftime('%Y')} gfdgd xi、为什么您不喜欢熊出没和阿布呢")
+    print(f"©2020~{time.strftime('%Y')} gfdgd xi")
     print("--------------------------------------------------------------")
     os.system(f"{commandEnv} bash ")
     exit()
@@ -70,6 +70,6 @@ for i in sys.argv[1:]:
     command += f"\"{i}\" "
 print("Wine 运行器自动配置文件解析器（基于 Bash）")
 print(f"版本：{version}")
-print(f"©2020~{time.strftime('%Y')} gfdgd xi、为什么您不喜欢熊出没和阿布呢")
+print(f"©2020~{time.strftime('%Y')} gfdgd xi")
 print("--------------------------------------------------------------")
 os.system(f"{commandEnv} bash {command}")
