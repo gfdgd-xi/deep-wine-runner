@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # 使用系统默认的 python3 运行
 ###########################################################################################
-# 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
+# 作者：gfdgd xi
 # 版本：2.1.0
 # 更新时间：2022年08月25日
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
@@ -47,7 +47,7 @@ def Download(wineBotton: str, id: int, wine: str) -> int:
 
 if __name__ == "__main__":
     if "--help" in sys.argv:
-        print("作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢")
+        print("作者：gfdgd xi")
         print("版本：1.0.0")
         print("本程序可以更方便的在 wine 容器中安装 Visual Studio C++")
         sys.exit()

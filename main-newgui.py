@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # 使用系统默认的 python3 运行
 ###########################################################################################
-# 作者：gfdgd xi、为什么您不喜欢熊出没和阿布呢
+# 作者：gfdgd xi
 # 版本：1.6.1
 # 更新时间：2022年07月11日
 # 感谢：感谢 wine 以及 deepin-wine 团队，提供了 wine 和 deepin-wine 给大家使用，让我能做这个程序
@@ -879,7 +879,7 @@ about = '''一个基于 Python3 的 tkinter 制作的 wine 运行器
 适用平台：{}
 tkinter 版本：{}
 程序官网：{}
-©2020-{} gfdgd xi、为什么您不喜欢熊出没和阿布呢'''.format(version, goodRunSystem, tk.TkVersion, programUrl, time.strftime("%Y"))
+©2020-{} gfdgd xi'''.format(version, goodRunSystem, tk.TkVersion, programUrl, time.strftime("%Y"))
 tips = '''提示：
 1、使用终端运行该程序，可以看到 wine 以及程序本身的提示和报错;
 2、wine 32 位和 64 位的容器互不兼容;
