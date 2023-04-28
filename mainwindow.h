@@ -34,6 +34,10 @@ private slots:
 
     void on_qemuSetting_clicked();
 
+    void on_addQemuDisk_triggered();
+
+    void on_delQemuDisk_triggered();
+
 private:
     Ui::MainWindow *ui;
     long m_cpuAll;

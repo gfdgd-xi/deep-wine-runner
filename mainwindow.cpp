@@ -20,6 +20,7 @@
 #include <QJsonArray>
 #include <QDesktopServices>
 #include <QMessageBox>
+#include <iostream>
 #include "qemusetting.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -200,4 +201,36 @@ void MainWindow::on_qemuSetting_clicked()
     QemuSetting *show = new QemuSetting();
     show->show();
 
+}
+
+void MainWindow::on_addQemuDisk_triggered()
+{
+    if(QFile::exists(QDir::homePath() + "/Qemu/Windows/Windows.qcow2")){
+        if(QMessageBox::question(this, "提示", "磁盘文件已存在，是否覆盖？\n覆盖后将无法恢复！") == QMessageBox::No){
+            return;
+        }
+    }
+    QString path = QFileDialog::getOpenFileName(this, "选择 Qemu 镜像", QDir::homePath(), "Qemu镜像(*.qcow2 *.img *.raw *.qcow *.qed *.vdi *.vhdx *.vmdk);;所有文件(*.*)");
+    qDebug() << path;
+    if(path == ""){
+        return;
+    }
+    QDir dir(QDir::homePath() + "/Qemu/Windows/Windows.qcow2");
+    if(!dir.exists()){
+        dir.mkpath(QDir::homePath() + "/Qemu/Windows/Windows.qcow2");
+    }
+    if(!QFile::remove(QDir::homePath() + "/Qemu/Windows/Windows.qcow2") | !QFile::copy(path, QDir::homePath() + "/Qemu/Windows/Windows.qcow2")){
+        QMessageBox::critical(this, "提示", "添加错误！");
+        return;
+    }
+    QMessageBox::information(this, "提示", "添加完成！");
+}
+
+void MainWindow::on_delQemuDisk_triggered()
+{
+    if(!QFile::exists(QDir::homePath() + "/Qemu/Windows/Windows.qcow2")){
+        QMessageBox::information(this, "提示", "不存在磁盘文件，无法导出");
+        return;
+    }
+    std::system(("xdg-open \"" + QDir::homePath() + "/Qemu/Windows/\"").toUtf8());
 }
