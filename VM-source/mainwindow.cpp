@@ -215,13 +215,21 @@ void MainWindow::on_addQemuDisk_triggered()
     if(path == ""){
         return;
     }
-    QDir dir(QDir::homePath() + "/Qemu/Windows/Windows.qcow2");
+    QDir dir(QDir::homePath() + "/Qemu/Windows");
     if(!dir.exists()){
-        dir.mkpath(QDir::homePath() + "/Qemu/Windows/Windows.qcow2");
+        dir.mkpath(QDir::homePath() + "/Qemu/Windows");
     }
-    if(!QFile::remove(QDir::homePath() + "/Qemu/Windows/Windows.qcow2") | !QFile::copy(path, QDir::homePath() + "/Qemu/Windows/Windows.qcow2")){
-        QMessageBox::critical(this, "提示", "添加错误！");
-        return;
+    if(QFile::exists(QDir::homePath() + "/Qemu/Windows/Windows.qcow2")){
+        if(!QFile::remove(QDir::homePath() + "/Qemu/Windows/Windows.qcow2") | !QFile::copy(path, QDir::homePath() + "/Qemu/Windows/Windows.qcow2")){
+            QMessageBox::critical(this, "提示", "添加错误！");
+            return;
+        }
+    }
+    else{
+        if(!QFile::copy(path, QDir::homePath() + "/Qemu/Windows/Windows.qcow2")){
+            QMessageBox::critical(this, "提示", "添加错误！");
+            return;
+        }
     }
     QMessageBox::information(this, "提示", "添加完成！");
 }
@@ -233,4 +241,30 @@ void MainWindow::on_delQemuDisk_triggered()
         return;
     }
     std::system(("xdg-open \"" + QDir::homePath() + "/Qemu/Windows/\"").toUtf8());
+}
+
+void MainWindow::on_addQemuDiskButton_clicked()
+{
+    MainWindow::on_addQemuDisk_triggered();
+}
+
+void MainWindow::on_saveQemuDiskButton_clicked()
+{
+    MainWindow::on_delQemuDisk_triggered();
+}
+
+void MainWindow::on_delQemuDiskButton_clicked()
+{
+    if(!QFile::exists(QDir::homePath() + "/Qemu/Windows/Windows.qcow2")){
+        QMessageBox::information(this, "提示", "不存在磁盘文件，无法移除");
+        return;
+    }
+    if(QMessageBox::question(this, "提示", "是否删除？\n删除后将无法恢复！") == QMessageBox::No){
+        return;
+    }
+    if(!QFile::remove(QDir::homePath() + "/Qemu/Windows/Windows.qcow2")){
+        QMessageBox::critical(this, "提示", "移除失败");
+        return;
+    }
+    QMessageBox::information(this, "提示", "移除成功");
 }

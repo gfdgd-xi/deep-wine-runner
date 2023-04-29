@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>807</width>
-    <height>429</height>
+    <width>1058</width>
+    <height>512</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,7 +25,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -143,6 +143,13 @@
            </spacer>
           </item>
           <item>
+           <widget class="QPushButton" name="getQemu">
+            <property name="text">
+             <string>安装 Qemu</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="qemuSetting">
             <property name="text">
              <string>Qemu虚拟机设置</string>
@@ -150,9 +157,23 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="getQemu">
+           <widget class="QPushButton" name="addQemuDiskButton">
             <property name="text">
-             <string>安装 Qemu</string>
+             <string>添加/覆盖Qemu磁盘</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="saveQemuDiskButton">
+            <property name="text">
+             <string>导出Qemu磁盘</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="delQemuDiskButton">
+            <property name="text">
+             <string>移除Qemu磁盘</string>
             </property>
            </widget>
           </item>
@@ -373,24 +394,6 @@ p, li { white-space: pre-wrap; }
    <property name="statusTip">
     <string/>
    </property>
-  </widget>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>807</width>
-     <height>36</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuQemu">
-    <property name="title">
-     <string>Qemu磁盘镜像</string>
-    </property>
-    <addaction name="addQemuDisk"/>
-    <addaction name="delQemuDisk"/>
-   </widget>
-   <addaction name="menuQemu"/>
   </widget>
   <action name="action">
    <property name="text">
