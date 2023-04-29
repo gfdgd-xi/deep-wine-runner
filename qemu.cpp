@@ -72,7 +72,7 @@ int qemu::Start(bool unShown){
     if(Command().GetCommand("arch").replace("\n", "").replace(" ", "") == "x86_64"){
         return system(("kvm " + commandOption + " &").toLatin1());
     }
-    return system(("qemu-system-x86_64 " + commandOption + " &").toLatin1());
+    return system(("qemu-system-x86_64 -nic model=rtl8139 " + commandOption + " &").toLatin1());
 }
 int qemu::Stop(){
     system("killall qemu-system-x86_64 -9");
