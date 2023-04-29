@@ -21,7 +21,7 @@ except:
     print("无法读取配置")
     traceback.print_exc()
     sys.exit(1)
-option = f"--hda \"$HOME/Qemu/Windows/Windows.qcow2\" -usb -m {setting['Memory']}M -smp {setting['CPU']} "
+option = f"-nic model=rtl8139 --hda \"$HOME/Qemu/Windows/Windows.qcow2\" -usb -m {setting['Memory']}M -smp {setting['CPU']} "
 if setting["EnableKVM"]:
     command = "kvm"
 if setting["EnableRDP"]:
