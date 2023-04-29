@@ -2413,11 +2413,13 @@ exe路径\' 参数 \'
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>''')
 updateThingsString = transla.transe("U", '''※1、Windows 虚拟机安装工具支持非 X86 架构；
 ※2、应用打包器可以与星火应用商店配合构建 arm/all 全架构的 Wine 包；
-3、运行器和打包器支持调用 spark-wine8；
+※3、Windows 虚拟机安装工具支持调用 Qemu；
+※4、新增 Qemu User 运行 Wine 的帮助；
+5、运行器和打包器支持调用 spark-wine8；
 ''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2023年03月19日"
+updateTime = "2023年04月29日"
 aboutProgram = transla.transe("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。</p>
 <p>它同时还内置了基于VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作。</p>
 <pre>
@@ -2936,10 +2938,13 @@ def AddLib(install: QtWidgets.QAction, uninstall, menu, info):
     menu.addAction(uninstall)
 
 if os.path.exists(f"{programPath}/InstallRuntime"):
-    installLib = menu.addMenu(transla.transe("U", "运行库(&R)"))
+    installLib = menu.addMenu(transla.transe("U", "应用运行库(&R)"))
+    howtouseQemuUser = QtWidgets.QAction(transla.transe("U", "Qemu User 使用教程（配合运行库实现在非 X86 架构运行 X86 Wine）"))
+    howtouseQemuUser.triggered.connect(lambda: webbrowser.open_new_tab("https://gitee.com/gfdgd-xi/deep-wine-runner/wikis/%E4%BD%BF%E7%94%A8%E5%B8%AE%E5%8A%A9/%E9%9D%9EX86%E6%9E%B6%E6%9E%84PC/%E4%BD%BF%E7%94%A8Qemu%20User%E8%BF%90%E8%A1%8CWine%EF%BC%88%E6%94%AF%E6%8C%81%E5%85%A8%E6%9E%B6%E6%9E%84%EF%BC%89"))
+    installLib.addAction(howtouseQemuUser)
     installQemuMenu = installLib.addMenu(transla.transe("U", "安装 Qemu User"))
-    installQemu = QtWidgets.QAction("安装 Qemu User")
-    removeQemu = QtWidgets.QAction("卸载 Qemu User")
+    installQemu = QtWidgets.QAction(transla.transe("U", "安装 Qemu User"))
+    removeQemu = QtWidgets.QAction(transla.transe("U", "卸载 Qemu User"))
     installQemuMenu.addAction(installQemu)
     installQemuMenu.addAction(removeQemu)
     installQemu.triggered.connect(lambda: OpenTerminal(f"bash '{programPath}/InstallQemuUser.sh'"))
