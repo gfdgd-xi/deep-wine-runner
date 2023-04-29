@@ -414,6 +414,7 @@ exit
 fi
 
 /opt/deepinwine/tools/kill.sh $CONTAINER_NAME
+/opt/deepinwine/tools/spark_kill.sh $CONTAINER_NAME
 ###这里注意，如果没写CONTAINER_NAME,会把QQ杀了
 
 for username in $(ls /home)  
@@ -949,6 +950,7 @@ exit
 fi
 
 /opt/apps/{e1_text.text()}/kill.sh $CONTAINER_NAME
+/opt/deepinwine/tools/spark_kill.sh $CONTAINER_NAME
 ###这里注意，如果没写CONTAINER_NAME,会把QQ杀了
 
 for username in $(ls /home)  
