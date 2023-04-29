@@ -1,8 +1,8 @@
 Package: spark-deepin-wine-runner
-Version: 3.2.1~alpha2
+Version: 3.2.1
 Maintainer: gfdgd xi <3025613752@qq.com>
-Homepage: https://gitee.com/gfdgd-xi-org/deep-wine-runner
-Architecture: all
+Homepage: https://gitee.com/gfdgd-xi/deep-wine-runner
+Architecture: amd64
 Severity: serious
 Certainty: possible
 Check: binaries
