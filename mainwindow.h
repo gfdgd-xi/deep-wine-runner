@@ -38,6 +38,12 @@ private slots:
 
     void on_delQemuDisk_triggered();
 
+    void on_addQemuDiskButton_clicked();
+
+    void on_saveQemuDiskButton_clicked();
+
+    void on_delQemuDiskButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     long m_cpuAll;
