@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 3.2.0</h1>
+<h1 align="center">Wine 运行器 3.2.1</h1>
 <hr>
 
 ## 介绍
@@ -130,6 +130,22 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志 
+### 3.2.1（2023年04月29日）
+**※1、Windows 虚拟机安装工具支持非 X86 架构；**  
+**※2、应用打包器可以与星火应用商店配合构建 arm/all 全架构的 Wine 包；**  
+**※3、Windows 虚拟机安装工具支持调用 Qemu；**  
+**※4、新增 Qemu User 运行 Wine 的帮助入口；**  
+**※5、修复 Windows 虚拟机的自动配置镜像缺少 aria2c.exe 的故障；**  
+**※6、支持在更新程序版本时自动关闭程序进程；**  
+7、运行器和打包器支持调用 spark-wine8；  
+8、修改作者信息；  
+9、新增安装包构建时间；  
+10、优化 Wine 运行器更新策略。  
+
+![图片.png](https://storage.deepin.org/thread/20230429210452509_图片.png)
+
+
+
 ### 3.2.0（2023年03月19日）
 **※1、Windows 应用适配工具新增系统资源显示；**  
 **※2、Windows 应用适配工具使用 C++ 重写；**  

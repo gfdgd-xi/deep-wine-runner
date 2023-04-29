@@ -13,24 +13,18 @@ Recommends: winbind, wimtools, python3-pyqt5.qtwebengine, qemu-user, binfmt-supp
 Section: utils
 Conflicts: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, spark-deepin-wine-runner-52, spark-deepin-wine-runner
 Replaces: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, spark-deepin-wine-runner-52, spark-deepin-wine-runner
-Installed-Size: 25856
+Installed-Size: 76512
 Description: gfdgd xi 制作的 wine 运行器
- 3.2.0 更新内容：
- ※1、Windows 应用适配工具新增系统资源显示；
- ※2、Windows 应用适配工具使用 C++ 重写；
- ※3、修复打包器（基于官方生态适配脚本）无法打开的问题；
- ※4、新增运行库功能安装，以实现使用 Qemu User 跨架构运行 Wine 的功能（理论上支持 3a4000 了，但没试过）；
- ※5、修复 Chroot 容器的一些问题；
- ※6、修复在 Debian11 安装时缺失依赖 rar 的问题；
- ※7、新增安装 box86、box64 的功能；
- ※8、修复故障反馈功能错误的问题；
- 9、修改程序内的部分网址；
- 10、作者信息变更；
- 11、支持禁用程序的多语言支持（默认禁用，因为是机翻的）；
- 12、支持在程序本地翻译缺失的情况下自动机翻缺失语句；
- 13、从此版本开始不再区分吾爱版、Spark 版和 UOS 版；
- 14、新增下载量查询；
- 15、更新程序公告；
- 16、新增断网彩蛋。
- 更新时间：2023年01月19日
+ 3.2.1 更新内容：
+ ※1、Windows 虚拟机安装工具支持非 X86 架构；
+ ※2、应用打包器可以与星火应用商店配合构建 arm/all 全架构的 Wine 包；
+ ※3、Windows 虚拟机安装工具支持调用 Qemu；
+ ※4、新增 Qemu User 运行 Wine 的帮助入口；
+ ※5、修复 Windows 虚拟机的自动配置镜像缺少 aria2c.exe 的故障；
+ ※6、支持在更新程序版本时自动关闭程序进程；
+ 7、运行器和打包器支持调用 spark-wine8；
+ 8、修改作者信息；
+ 9、新增安装包构建时间；
+ 10、优化 Wine 运行器更新策略。
+ 更新时间：2023年04月29日
  作者：gfdgd xi

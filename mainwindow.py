@@ -2414,13 +2414,13 @@ exe路径\' 参数 \'
 updateThingsString = transla.transe("U", '''※1、Windows 虚拟机安装工具支持非 X86 架构；
 ※2、应用打包器可以与星火应用商店配合构建 arm/all 全架构的 Wine 包；
 ※3、Windows 虚拟机安装工具支持调用 Qemu；
-※4、新增 Qemu User 运行 Wine 的帮助；
+※4、新增 Qemu User 运行 Wine 的帮助入口；
 ※5、修复 Windows 虚拟机的自动配置镜像缺少 aria2c.exe 的故障；
 ※6、支持在更新程序版本时自动关闭程序进程；
-6、运行器和打包器支持调用 spark-wine8；
-7、修改作者信息；
-8、新增安装包构建时间；
-9、优化 Wine 运行器更新策略。
+7、运行器和打包器支持调用 spark-wine8；
+8、修改作者信息；
+9、新增安装包构建时间；
+10、优化 Wine 运行器更新策略。
 ''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
