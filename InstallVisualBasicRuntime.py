@@ -17,17 +17,17 @@ import updatekiller
 import req as requests
 try:
     sourcesList = [
-        "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/vb/list.json",
-        "http://gfdgdxi.msns.cn/wine-runner-list/vb/list.json"
+        "http://vb.wine-runner.gfdgdxi.top/list.json",
+        "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/vb/list.json"
     ]
     netList = json.loads(requests.get().text)
 except:
     netList = [
-        ["Visual Basic 1(DOS application)", "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/vb/vbrun100.exe", "vbrun100.exe"],
-        ["Visual Basic 2(DOS application)", "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/vb/vbrun200.exe", "vbrun200.exe"],
-        ["Visual Basic 3", "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/vb/vb3run.exe", "vb3run.exe"], 
-        ["Visual Basic 4", "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/vb/vb4run.exe", "vb4run.exe"], 
-        ["Visual Basic 6", "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/vb/vbrun60sp4.exe", "vbrun60sp4.exe"]
+        ["Visual Basic 1", "http://vb.wine-runner.gfdgdxi.top/vbrun100.exe", "vbrun100.exe"],
+        ["Visual Basic 2", "http://vb.wine-runner.gfdgdxi.top/vbrun200.exe", "vbrun200.exe"],
+        ["Visual Basic 3", "http://vb.wine-runner.gfdgdxi.top/vb3run.exe", "vb3run.exe"], 
+        ["Visual Basic 4", "http://vb.wine-runner.gfdgdxi.top/vb4run.exe", "vb4run.exe"], 
+        ["Visual Basic 6", "http://vb.wine-runner.gfdgdxi.top/vbrun60sp4.exe", "vbrun60sp4.exe"]
     ]
 def Download(wineBotton: str, id: int, wine: str) -> int:
     try:

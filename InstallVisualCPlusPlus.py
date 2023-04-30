@@ -17,13 +17,13 @@ import updatekiller
 import req as requests
 try:
     sourcesList = [
-        "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/vscpp/list.json",
-        "http://gfdgdxi.msns.cn/wine-runner-list/vscpp/list.json"
+        "http://vcpp.wine-runner.gfdgdxi.top/list.json",
+        "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/vscpp/list.json"
     ]
     netList = json.loads(requests.get(sourcesList[0]).text)
 except:
     netList = [
-        ["VC6 运行库", "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/vscpp/VC6RedistSetup_deu.exe", "VC6RedistSetup_deu.exe"],
+        ["VC6 运行库", "http://vcpp.wine-runner.gfdgdxi.top/VC6RedistSetup_deu.exe", "VC6RedistSetup_deu.exe"],
         ["2005 Service Pack 1 Redistributable Package MFC 安全更新", "https://download.microsoft.com/download/4/A/2/4A22001F-FA3B-4C13-BF4E-42EC249D51C4/vcredist_x86.EXE", "vcredist05_x86.exe"],
         ["2008 (VC++ 9.0) SP1 (不再支持) X86", "https://download.microsoft.com/download/5/D/8/5D8C65CB-C849-4025-8E95-C3966CAFD8AE/vcredist_x86.exe", "vcredist08_x86.exe"], 
         ["2008 (VC++ 9.0) SP1 (不再支持) X64", "https://download.microsoft.com/download/5/D/8/5D8C65CB-C849-4025-8E95-C3966CAFD8AE/vcredist_x64.exe", "vcredist08_x86.exe"], 
