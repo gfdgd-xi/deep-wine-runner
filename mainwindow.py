@@ -1130,7 +1130,7 @@ class UpdateWindow():
         ok.clicked.connect(UpdateWindow.Update)
         cancel = QtWidgets.QPushButton("取消")
         cancel.clicked.connect(UpdateWindow.update.close)
-        url = "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-update-information/raw/branch/master/update.json"
+        url = "http://update.gfdgdxi.top/update.json"
         try:
             UpdateWindow.data = json.loads(requests.get(url).text)
             versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：{UpdateWindow.data['Version']}\n更新内容：")
@@ -3027,7 +3027,6 @@ hm1.addAction(hm1_1)
 gfdgdxiio.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io"))
 gitee.triggered.connect(lambda: webbrowser.open_new_tab("https://gitee.com/gfdgd-xi/deep-wine-runner"))
 github.triggered.connect(lambda: webbrowser.open_new_tab("https://github.com/gfdgd-xi/deep-wine-runner"))
-gitlink.triggered.connect(lambda: webbrowser.open_new_tab("https://gitlink.org.cn/gfdgd_xi/deep-wine-runner"))
 gitlab.triggered.connect(lambda: webbrowser.open_new_tab("https://gitlab.com/gfdgd-xi/deep-wine-runner"))
 jihu.triggered.connect(lambda: webbrowser.open_new_tab("https://jihulab.com//gfdgd-xi/deep-wine-runner"))
 runStatusWebSize.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io/wine-runner-info"))
