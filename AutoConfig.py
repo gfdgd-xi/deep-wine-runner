@@ -139,7 +139,7 @@ class InformationWindow():
             about = f"<h1>关于“{choose}”的介绍</h1>\n<p>暂无此程序的介绍</p>"
         try:
             import requests as r
-            fenlists = requests.get(base64.b64decode("aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy93aW5lLXJ1bm5lci1kb3dubG9hZHMtb2YtcnVubmVyL3Jhdy9icmFuY2gvbWFzdGVyL0Jhc2hBcHBGZW4v").decode("utf-8") + urllib.request.quote(fileName) + base64.b64decode("L2FsbC5qc29u").decode("utf-8"), timeout=1000).json()
+            fenlists = requests.get("http://data.download.gfdgdxi.top/BashAppFen/" + urllib.request.quote(fileName) + base64.b64decode("L2FsbC5qc29u").decode("utf-8"), timeout=1000).json()
             tipsInfo = ""
         except:
             fenlists = [0, 0, 0, 0, 0]
@@ -159,19 +159,19 @@ class InformationWindow():
         if maxHead > 5:
             for i in range(end):
                 if webeng:
-                    starHtml += f"<img src='https://code.gitlink.org.cn/gfdgd_xi/deep-wine-runner/raw/branch/main/Icon/BadStar.svg' width=50>\n"
+                    starHtml += f"<img src='http://wine-runner.gfdgdxi.top/BadStar.svg' width=50>\n"
                 else:
                     starHtml += f"<img src='{programPath}/Icon/BadStar.svg' width=50>\n"
         else:
             for i in range(maxHead):
                 if webeng:
-                    starHtml += f"<img src='https://code.gitlink.org.cn/gfdgd_xi/deep-wine-runner/raw/branch/main/Icon/Star.svg' width=50>\n"
+                    starHtml += f"<img src='http://wine-runner.gfdgdxi.top/Star.svg' width=50>\n"
                 else:
                     starHtml += f"<img src='{programPath}/Icon/Star.svg' width=50>\n"
             head = maxHead
             for i in range(head, end):
                 if webeng:
-                    starHtml += f"<img src='https://code.gitlink.org.cn/gfdgd_xi/deep-wine-runner/raw/branch/main/Icon/UnStar.svg' width=50>"
+                    starHtml += f"<img src='http://wine-runner.gfdgdxi.top/UnStar.svg' width=50>"
                 else:
                     starHtml += f"<img src='{programPath}/Icon/UnStar.svg' width=50>"
         about += f"\n<hr/><h1>评分情况</h1>\n<p align='center'>{starHtml}</p>\n<p align='center'>{tipsInfo}</p>"
@@ -253,7 +253,7 @@ class ProgramRunStatusShow():
                 fileName = i[1]
                 break
         try:
-            fenlists = requests.get(base64.b64decode("aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy93aW5lLXJ1bm5lci1kb3dubG9hZHMtb2YtcnVubmVyL3Jhdy9icmFuY2gvbWFzdGVyL0Jhc2hBcHBGZW4v").decode("utf-8") + urllib.request.quote(fileName) + base64.b64decode("L2FsbC5qc29u").decode("utf-8")).json()
+            fenlists = requests.get("http://data.download.gfdgdxi.top/BashAppFen/" + urllib.request.quote(fileName) + base64.b64decode("L2FsbC5qc29u").decode("utf-8")).json()
             tipsInfo = ""
         except:
             #traceback.print_exc()
@@ -311,7 +311,7 @@ class ProgramRunStatusShow():
         else:
             # 显示最新的3条评论
             try:
-                all = int(requests.get(f"{base64.b64decode('aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy9iYXNocGlubHVuL3Jhdy9icmFuY2gvbWFzdGVyLw==').decode('utf-8')}{urllib.request.quote(fileName)}/data.txt").text)
+                all = int(requests.get(f"http://bashpinlun.gfdgdxi.top/{urllib.request.quote(fileName)}/data.txt").text)
                 now = all - 3
                 print(all)
                 if all < 3:
@@ -322,7 +322,7 @@ class ProgramRunStatusShow():
                 uploadList = []
                 for i in range(all - 1, start - 1, -1):
                     print(f"第 {i + 1} 条评论：")
-                    info = requests.get(f"{base64.b64decode('aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy9iYXNocGlubHVuL3Jhdy9icmFuY2gvbWFzdGVyLw==').decode('utf-8')}{urllib.request.quote(fileName)}/pf-{i}.txt").text.strip()
+                    info = requests.get(f"http://bashpinlun.gfdgdxi.top/{urllib.request.quote(fileName)}/pf-{i}.txt").text.strip()
                     print(info)
                     uploadList.append([f"用户{i + 1}", i + 1, info])
                 Add(uploadList)
@@ -379,7 +379,7 @@ def UpdateFen():
     uploadList = []        
     for i in range(now + 2, now - 1, -1):
         print(f"第 {i + 1} 条评论：")
-        info = requests.get(f"https://code.gitlink.org.cn/gfdgd-xi/bashpinlun/raw/branch/master/{urllib.request.quote(fileName)}/pf-{i}.txt").text.strip()
+        info = requests.get(f"http://bashpinlun.gfdgdxi.top/{urllib.request.quote(fileName)}/pf-{i}.txt").text.strip()
         print(info)
         uploadList.append([f"用户{i + 1}", i + 1, info])
     #ProgramRunStatusShow.pingLunLayout.removeItem(ProgramRunStatusShow.pingLunLayout.itemAt(2))
