@@ -2,7 +2,7 @@
 arch=s390x
 libPath=/usr/lib/s390x-linux-gnu/
 version=1.0.0
-url="https://code.gitlink.org.cn/gfdgd_xi/runtime-for-qemu/raw/branch/master/$arch-runtime-for-qemu_${version}_all.deb"
+url="https://github.com/rain-gfd/wine-download/releases/download/${version}-$arch-runtime-for-qemu/$arch-runtime-for-qemu_${version}_all.deb"
 fileName=`basename $url`
 
 if [[ -d $libPath ]]; then
