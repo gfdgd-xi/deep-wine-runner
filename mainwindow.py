@@ -1928,7 +1928,7 @@ def SaveLog():
 
 def GetNewInformation():
     try:
-        text = requests.get("https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/information/index.html").text
+        text = requests.get("http://wine-runner.gfdgdxi.top/info/").text
     except:
         traceback.print_exc()
         text = f"""<p>无法连接到服务器</p>
@@ -2388,7 +2388,7 @@ else:
     transla = Trans("zh_CN")
 iconPath = "{}/deepin-wine-runner.svg".format(programPath)
 #iconPath = "{}/Icon/Program/wine运行器.png".format(programPath)
-programUrl = "https://gitee.com/gfdgd-xi/deep-wine-runner\nhttps://github.com/gfdgd-xi/deep-wine-runner\nhttps://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner\nhttps://gfdgd-xi.github.io"
+programUrl = "https://gitee.com/gfdgd-xi/deep-wine-runner\nhttps://github.com/gfdgd-xi/deep-wine-runner\nhttps://gfdgd-xi.github.io"
 information = json.loads(readtxt(f"{programPath}/information.json"))
 version = information["Version"]
 goodRunSystem = transla.transe("U", "常见 Linux 发行版")
@@ -2990,13 +2990,11 @@ h8 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(9), transla.t
 gfdgdxiio = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "作者个人站"))
 gitee = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "Gitee"))
 github = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "Github"))
-gitlink = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "Gitlink"))
 gitlab = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "Gitlab"))
 jihu = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "极狐"))
 h1.addAction(gfdgdxiio)
 h1.addAction(gitee)
 h1.addAction(github)
-h1.addAction(gitlink)
 h1.addAction(gitlab)
 h1.addAction(jihu)
 help.addSeparator()
