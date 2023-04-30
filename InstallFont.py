@@ -19,18 +19,48 @@ import req as requests
 homePath = os.path.expanduser('~')
 try:
     sources = [
-        "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/fonts/list.json",
-        "http://gfdgdxi.msns.cn/wine-runner-list/fonts/list.json"
+        "http://fonts.wine-runner.gfdgdxi.top/list.json",
+        "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/fonts/list.json"
         ]
     fontList = json.loads(requests.get(sources[0]).text)
 except:
     fontList = [
-    ["fake_simsun.ttc", "https://gitlink.org.cn/api/attachments/392168", "simsun.ttc", "fake_simsun.ttc（会替换容器内的宋体，且与 deepin 有问题）"],
-    ["simsun.ttc", "https://gitlink.org.cn/api/attachments/392181", "simsun.ttc", "simsun.ttc"],
-    ["simsunb.ttf", "https://gitlink.org.cn/api/attachments/392180", "simsunb.ttf", "simsunb.ttf"],
-    ["msyh.ttc", "https://gitlink.org.cn/api/attachments/392182", "msyh.ttc", "msyh.ttc"],
-    ["msyhl.ttc", "https://gitlink.org.cn/api/attachments/392184", "msyhl.ttc", "msyhl.ttc"],
-    ["msyhbd.ttc", "https://gitlink.org.cn/api/attachments/392183", "msyhbd.ttc", "msyhbd.ttc"]
+    [
+        "fake_simsun.ttc",
+        "http://fonts.wine-runner.gfdgdxi.top/fake_simsun.ttc",
+        "simsun.ttc",
+        "fake_simsun.ttc（会替换容器内的宋体）"
+    ],
+    [
+        "simsun.ttc",
+        "http://fonts.wine-runner.gfdgdxi.top/simsun.ttc",
+        "simsun.ttc",
+        "simsun.ttc"
+    ],
+    [
+        "simsunb.ttf",
+        "http://fonts.wine-runner.gfdgdxi.top/simsunb.ttf",
+        "simsunb.ttf",
+        "simsunb.ttf"
+    ],
+    [
+        "msyh.ttc",
+        "http://fonts.wine-runner.gfdgdxi.top/msyh.ttc",
+        "msyh.ttc",
+        "msyh.ttc"
+    ],
+    [
+        "msyhl.ttc",
+        "http://fonts.wine-runner.gfdgdxi.top/msyhl.ttc",
+        "msyhl.ttc",
+        "msyhl.ttc"
+    ],
+    [
+        "msyhbd.ttc",
+        "http://fonts.wine-runner.gfdgdxi.top/msyhbd.ttc",
+        "msyhbd.ttc",
+        "msyhbd.ttc"
+    ]
 ]
 def Download(wineBotton: str, id: int) -> int:
     return os.system(f"aria2c -x 16 -s 16 -d '{wineBotton}/drive_c/windows/Fonts/' -o '{fontList[id][0]}' \"{fontList[id][1]}\"")
