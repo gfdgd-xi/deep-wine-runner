@@ -17,16 +17,18 @@ import updatekiller
 import req as requests
 try:
     sourcesList = [
-        "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/msxml/list.json",
-        "http://gfdgdxi.msns.cn/wine-runner-list/msxml/list.json"
+        "http://msxml.wine-runner.gfdgdxi.top/list.json",
+        "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/msxml/list.json"
     ]
     msxmlList = json.loads(requests.get(sourcesList[0]).text)
 except:
     msxmlList = [
-        ["MSXML 4.0 SP2", "https://www.gitlink.org.cn/api/attachments/390679?gfdgd_xi", "msxml6.0.msi"],
-        ["MSXML 4.0 SP3", "https://www.gitlink.org.cn/api/attachments/390678?gfdgd_xi", "msxml4.0SP3.msi"],
-        ["MSXML 6.0", "https://www.gitlink.org.cn/api/attachments/390681?gfdgd_xi", "msxml6_x64.msi"]    
+        ["MSXML 4.0 SP2", "http://msxml.wine-runner.gfdgdxi.top/msxml6.0.msi", "msxml6.0.msi"],
+        ["MSXML 4.0 SP3", "http://msxml.wine-runner.gfdgdxi.top/msxml4.0SP3.msi", "msxml4.0SP3.msi"],
+        ["MSXML 6.0", "http://msxml.wine-runner.gfdgdxi.top/msxml6_x64.msi", "msxml6_x64.msi"],
+        ["MSXML 3.0", "http://msxml.wine-runner.gfdgdxi.top/msxml3.msi", "msxml3.msi"]    
     ]
+
 
 def Download(wineBotton: str, id: int, wine: str):
     os.system(f"aria2c -x 16 -s 16 -d \"/tmp/deepin-wine-runner-msxml/\" -o \"{msxmlList[id][2]}\" \"{msxmlList[id][1]}\"")
