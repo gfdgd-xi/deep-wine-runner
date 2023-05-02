@@ -11,7 +11,7 @@ env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 ```
 让你可以简易方便的使用 wine  
 是使用 Python3 的 PyQt5 构建的    
-（测试平台：deepin 20.8；UOS 家庭版 21.3.1；Ubuntu 22.04；Ubuntu 20.04；UOS 专业版 1050；openkylin）    
+（测试平台：deepin 20.8；UOS 家庭版 22；Ubuntu 22.04；Ubuntu 20.04；Ubuntu 23.04；UOS 专业版 1050；openkylin；cuteos；yoyo os）    
 ![截图_选择区域_20221002221112.png](https://storage.deepin.org/thread/202210022215217037_截图_选择区域_20221002221112.png)  
 而打包器可以方便的把您的 wine 容器打包成 deb 包供他人使用，程序创建的 deb 构建临时文件夹目录树如下：  
 ```bash
