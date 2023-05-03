@@ -315,7 +315,7 @@ def on_addButton_clicked():
         dialog, 
         downloadUrl, 
         "", 
-        internetJsonList[choose][1],
+        os.path.basename(internetJsonList[choose][1]),
         ui.localWineList,
         ui.deleteZip.isChecked(),
         not ui.unzip.isChecked(),
