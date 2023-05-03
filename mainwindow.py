@@ -3079,8 +3079,8 @@ if subprocess.getoutput("arch").lower() != "x86_64":
     p1.setDisabled(True)
     installWineOnDeepin23.setDisabled(True)
     installMoreWine.setEnabled(True)
-    virtualMachine.setDisabled(True)
-    v1.setDisabled(True)
+    #virtualMachine.setDisabled(True)
+    #v1.setDisabled(True)
     installWineHQ.setDisabled(True)
     pass
 o1.setCurrentText(setting["DefultWine"])
