@@ -2883,7 +2883,7 @@ netDemo.triggered.connect(lambda: RunWineProgram(f"{programPath}/Test/net.exe"))
 netIEDemo.triggered.connect(lambda: RunWineProgram(f"{programPath}/Test/netandie.exe"))
 
 virtualMachine = menu.addMenu(transla.transe("U", "虚拟机(&V)"))
-v1 = QtWidgets.QAction(QtGui.QIcon.fromTheme("virtualbox"), transla.transe("U", "使用 Virtualbox 虚拟机运行 Windows 应用"))
+v1 = QtWidgets.QAction(QtGui.QIcon.fromTheme("virtualbox"), transla.transe("U", "使用虚拟机运行 Windows 应用"))
 virtualMachine.addAction(v1)
 v1.triggered.connect(RunVM)
 
