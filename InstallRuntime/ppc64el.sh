@@ -2,7 +2,7 @@
 arch=ppc64el
 libPath=/usr/lib/powerpc64le-linux-gnu/
 version=1.0.0
-url="https://github.com/rain-gfd/wine-download/releases/download/${version}-$arch-runtime-for-qemu/$arch-runtime-for-qemu_${version}_all.deb"
+url="https://jihulab.com/gfdgd-xi/qemu-runtime/-/raw/main/$arch-runtime-for-qemu_${version}_all.deb"
 fileName=`basename $url`
 
 if [[ -d $libPath ]]; then
