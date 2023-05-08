@@ -1,5 +1,5 @@
 Package: spark-deepin-wine-runner
-Version: 3.2.1
+Version: 3.2.2
 Maintainer: gfdgd xi <3025613752@qq.com>
 Homepage: https://gitee.com/gfdgd-xi/deep-wine-runner
 Architecture: all
@@ -15,6 +15,10 @@ Conflicts: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, s
 Replaces: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, spark-deepin-wine-runner-52, spark-deepin-wine-runner
 Installed-Size: 76512
 Description: gfdgd xi 制作的 wine 运行器
+ 3.2.2 更新内容：
+ ※1. 修改源地址；
+ ※2. 修复非 X86 架构运行器主页面虚拟机工具禁用的问题。
+
  3.2.1 更新内容：
  ※1、Windows 虚拟机安装工具支持非 X86 架构；
  ※2、应用打包器可以与星火应用商店配合构建 arm/all 全架构的 Wine 包；

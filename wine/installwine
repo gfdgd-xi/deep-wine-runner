@@ -83,14 +83,15 @@ class Ui_MainWindow(object):
         self.githubAction = QtWidgets.QAction(_translate("MainWindow", "Github 源2（国内访问不稳定）"))
         
         self.localAction = QtWidgets.QAction(_translate("MainWindow", "本地测试源（127.0.0.1）"))
-        self.changeSources.addAction(self.gitlinkAction)
-        self.changeSources.addAction(self.kgithubAction)
         self.changeSources.addAction(self.ipv6Action)
+        
+        self.changeSources.addAction(self.kgithubAction)
+        self.changeSources.addAction(self.gitlinkAction)
         self.changeSources.addAction(self.githubAction)
         self.changeSources.addAction(self.localAction)
         for i in [self.gitlinkAction, self.ipv6Action, self.localAction, self.kgithubAction, self.githubAction]:
             i.setCheckable(True)
-        self.gitlinkAction.setChecked(True)
+        self.ipv6Action.setChecked(True)
         self.changeSourcesGroup = QtWidgets.QActionGroup(MainWindow)
         self.changeSourcesGroup.addAction(self.gitlinkAction)
         self.changeSourcesGroup.addAction(self.kgithubAction)
@@ -160,7 +161,7 @@ def InstallOtherWine():
 def ChangeSources():
     global urlSources
     global internetWineSource
-    sources = [ui.gitlinkAction, ui.kgithubAction, ui.ipv6Action, ui.githubAction, ui.localAction]
+    sources = [ui.ipv6Action, ui.kgithubAction, ui.gitlinkAction, ui.githubAction, ui.localAction]
     for i in range(0, len(sources)):
         if sources[i].isChecked():
             urlSources = internetWineSourceList[i]
@@ -357,9 +358,9 @@ if __name__ == "__main__":
     localJsonList = []
     internetJsonList = []
     internetWineSourceList = [
-        "https://code.gitlink.org.cn/gfdgd_xi/wine-mirrors/raw/branch/master/",
-        "https://kgithub.com/gfdgd-xi/wine-mirrors-websize/raw/master/",
         "http://wine.wine-runner.gfdgdxi.top/",
+        "https://kgithub.com/gfdgd-xi/wine-mirrors-websize/raw/master/",
+        "https://code.gitlink.org.cn/gfdgd_xi/wine-mirrors/raw/branch/master/",
         "https://github.com/gfdgd-xi/wine-mirrors-websize/raw/master/",
         "http://127.0.0.1/wine-mirrors/"  # 本地测试源
         ]

@@ -15,7 +15,7 @@ class ProgramRunStatusShow():
         try:
             fenlists = []
             for i in range(6):
-                fenlists.append(int(requests.get(base64.b64decode("aHR0cHM6Ly9jb2RlLmdpdGxpbmsub3JnLmNuL2dmZGdkLXhpLW9yZy93aW5lLXJ1bm5lci1kb3dubG9hZHMtb2YtcnVubmVyL3Jhdy9icmFuY2gvbWFzdGVyL0Zlbi9GZW4=").decode("utf-8") + f"{i}.txt").text))
+                fenlists.append(int(requests.get("http://data.download.gfdgdxi.top/Fen/Fen" + f"{i}.txt").text))
             tipsInfo = ""
         except:
             traceback.print_exc()

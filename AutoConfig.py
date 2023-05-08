@@ -29,9 +29,9 @@ except:
     webeng = False
 
 urlSourcesList = [
-    "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/auto",  # Gitlink 源
+    "http://www.gfdgdxi.top/deep-wine-runner-auto-configuration-script/",  # Github 源
     "https://gitee.com/gfdgd-xi/deep-wine-runner-auto-configuration-script/raw/master/",  # Gitee 源
-    "https://gfdgd-xi.github.io/deep-wine-runner-auto-configuration-script/",  # Github 源
+    "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/auto",  # Gitlink 源
     "http://gfdgdxi.msns.cn/wine-runner-list/auto/",  # 备用源1，纯 IPv6 源
     "http://gfdgdxi.free.idcfengye.com/deep-wine-runner-auto-configuration-script/",  # 备用源2
     "http://gfdgdxi.free.idcfengye.com/wine-runner-list/auto/",  # 备用源 3
@@ -516,7 +516,7 @@ def readtxt(path):
 
 def ChangeSources():
     global urlSources
-    sources = [ui.actionGitlink, ui.actionGitee, ui.actionGithub, ui.action_IPv6, ui.action_2, ui.action_3, ui.action]
+    sources = [ui.actionGitee, ui.actionGithub, ui.actionGitlink, ui.action_IPv6, ui.action_2, ui.action_3, ui.action]
     for i in range(0, len(sources)):
         if sources[i].isChecked():
             urlSources = urlSourcesList[i]
@@ -557,9 +557,10 @@ if __name__ == "__main__":
     window.show()
     #ui.actionGitlink.setExclusive(True)
     sourcesGroup = QtWidgets.QActionGroup(window)
-    sourcesGroup.addAction(ui.actionGitlink)
+    
     sourcesGroup.addAction(ui.actionGitee)
     sourcesGroup.addAction(ui.actionGithub)
+    sourcesGroup.addAction(ui.actionGitlink)
     sourcesGroup.addAction(ui.action_IPv6)
     sourcesGroup.addAction(ui.action_2)
     sourcesGroup.addAction(ui.action_3)

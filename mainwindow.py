@@ -2411,16 +2411,8 @@ exe路径\' 参数 \'
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示；
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>''')
-updateThingsString = transla.transe("U", '''※1、Windows 虚拟机安装工具支持非 X86 架构；
-※2、应用打包器可以与星火应用商店配合构建 arm/all 全架构的 Wine 包；
-※3、Windows 虚拟机安装工具支持调用 Qemu；
-※4、新增 Qemu User 运行 Wine 的帮助入口；
-※5、修复 Windows 虚拟机的自动配置镜像缺少 aria2c.exe 的故障；
-※6、支持在更新程序版本时自动关闭程序进程；
-7、运行器和打包器支持调用 spark-wine8；
-8、修改作者信息；
-9、新增安装包构建时间；
-10、优化 Wine 运行器更新策略。
+updateThingsString = transla.transe("U", '''※1. 修改源地址；
+※2. 修复非 X86 架构运行器主页面虚拟机工具禁用的问题。
 ''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
