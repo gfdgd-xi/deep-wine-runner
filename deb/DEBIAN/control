@@ -16,7 +16,7 @@ Replaces: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, sp
 Installed-Size: 76512
 Description: gfdgd xi 制作的 wine 运行器
  3.2.2 更新内容：
- ※1. 修改源地址；
+ ※1. 修改源地址，脱离 Gitlink；
  ※2. 修复非 X86 架构运行器主页面虚拟机工具禁用的问题。
 
  3.2.1 更新内容：

@@ -2411,7 +2411,7 @@ exe路径\' 参数 \'
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示；
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>''')
-updateThingsString = transla.transe("U", '''※1. 修改源地址；
+updateThingsString = transla.transe("U", '''※1. 修改源地址，脱离 Gitlink；
 ※2. 修复非 X86 架构运行器主页面虚拟机工具禁用的问题。
 ''')
 for i in information["Thank"]:
