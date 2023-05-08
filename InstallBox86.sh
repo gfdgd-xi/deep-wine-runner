@@ -20,9 +20,9 @@ if [[ $? == 0 ]]; then
     exit 1
 fi
 #sudo wget https://itai-nelken.github.io/weekly-box86-debs/debian/box86.list -O /etc/apt/sources.list.d/box86.list
-echo deb https://code.gitlink.org.cn/gfdgd_xi/weekly-box86-debs/raw/branch/main/debian / > /etc/apt/sources.list.d/box86.list
+echo deb http://box86.gfdgdxi.top / > /etc/apt/sources.list.d/box86.list
 echo "adding key..."
-wget -qO- https://code.gitlink.org.cn/gfdgd_xi/weekly-box86-debs/raw/branch/main/debian/KEY.gpg | sudo apt-key add -
+wget -qO- http://box86.gfdgdxi.top/KEY.gpg | sudo apt-key add -
 installBox=box86
 if [[ $PCArch == "arm64" ]]; then
     installBox="box86 box64"
