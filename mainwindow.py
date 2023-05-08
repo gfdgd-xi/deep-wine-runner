@@ -2416,7 +2416,7 @@ updateThingsString = transla.transe("U", '''※1. 修改源地址；
 ''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2023年04月29日"
+updateTime = "2023年05月08日"
 aboutProgram = transla.transe("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。</p>
 <p>它同时还内置了基于VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作。</p>
 <pre>
