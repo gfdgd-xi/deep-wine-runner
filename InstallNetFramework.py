@@ -18,10 +18,21 @@ import req as requests
 try:
     sourcesList = [
         "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/net/list.json",
+        "http://net.gfdgdxi.top/list.json",
         "http://gfdgdxi.msns.cn/wine-runner-list/net/list.json"
     ]
-    netList = json.loads(requests.get(sourcesList[0]).text)
+    change = False
+    for i in sourcesList:
+        try:
+            netList = json.loads(requests.get(i).text)
+            change = True
+            break
+        except:
+            pass
+    if not change:
+        netList = json.loads(requests.get(sourcesList[0]).text)
 except:
+    print("使用离线列表")
     netList = [
         ["Microsoft® .NET Framework 1.1 版可转散发套件", "https://download.microsoft.com/download/8/2/7/827bb1ef-f5e1-4464-9788-40ef682930fd/dotnetfx.exe"],
         ["Microsoft .NET Framework 2.0 Service Pack 1 (x86)", "https://download.microsoft.com/download/0/8/c/08c19fa4-4c4f-4ffb-9d6c-150906578c9e/NetFx20SP1_x86.exe"],

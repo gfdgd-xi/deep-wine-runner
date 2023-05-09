@@ -20,8 +20,18 @@ try:
         "http://msxml.wine-runner.gfdgdxi.top/list.json",
         "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/msxml/list.json"
     ]
-    msxmlList = json.loads(requests.get(sourcesList[0]).text)
+    change = False
+    for i in sourcesList:
+        try:
+            msxmlList = json.loads(requests.get(i).text)
+            change = True
+            break
+        except:
+            pass
+    if not change:
+        msxmlList = json.loads(requests.get(sourcesList[0]).text)
 except:
+    print("使用离线列表")
     msxmlList = [
         ["MSXML 4.0 SP2", "http://msxml.wine-runner.gfdgdxi.top/msxml6.0.msi", "msxml6.0.msi"],
         ["MSXML 4.0 SP3", "http://msxml.wine-runner.gfdgdxi.top/msxml4.0SP3.msi", "msxml4.0SP3.msi"],
