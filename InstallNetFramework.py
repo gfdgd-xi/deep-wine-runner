@@ -18,7 +18,7 @@ import req as requests
 try:
     sourcesList = [
         "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/net/list.json",
-        "http://net.gfdgdxi.top/list.json",
+        "http://net.wine-runner.gfdgdxi.top/list.json",
         "http://gfdgdxi.msns.cn/wine-runner-list/net/list.json"
     ]
     change = False

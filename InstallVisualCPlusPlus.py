@@ -20,7 +20,16 @@ try:
         "http://vcpp.wine-runner.gfdgdxi.top/list.json",
         "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/vscpp/list.json"
     ]
-    netList = json.loads(requests.get(sourcesList[0]).text)
+    change = False
+    for i in sourcesList:
+        try:
+            netList = json.loads(requests.get(i).text)
+            change = True
+            break
+        except:
+            pass
+    if not change:
+        netList = json.loads(requests.get(sourcesList[0]).text)
 except:
     netList = [
         ["VC6 运行库", "http://vcpp.wine-runner.gfdgdxi.top/VC6RedistSetup_deu.exe", "VC6RedistSetup_deu.exe"],

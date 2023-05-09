@@ -17,11 +17,22 @@ import updatekiller
 import req as requests
 try:
     sourcesList = [
+        "http://other.wine-runner.gfdgdxi.top/list.json",
         "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/other/list.json",
         "http://gfdgdxi.msns.cn/wine-runner-list/other/list.json"
     ]
-    msxmlList = json.loads(requests.get(sourcesList[0]).text)
+    change = False
+    for i in sourcesList:
+        try:
+            msxmlList = json.loads(requests.get(i).text)
+            change = True
+            break
+        except:
+            pass
+    if not change:
+        msxmlList = json.loads(requests.get(sourcesList[0]).text)
 except:
+    print("使用离线列表")
     msxmlList = [
         ["Windows Script 5.7 for Windows XP", "https://download.microsoft.com/download/f/f/e/ffea3abf-b55f-4924-b5a5-bde0805ad67c/scripten.exe", "exe", "scripten.exe"],
         ["Windows Management Instrumentation 1.50.1131", "https://www.gitlink.org.cn/api/attachments/390680", "exe", "WMITools.exe"]  
@@ -66,6 +77,8 @@ if __name__ == "__main__":
     while True:
         try:
             choose = input("请输入要选择要安装的应用（输入“exit”退出）：").lower()
+            if choose == "exit":
+                break
             choose = int(choose)
         except:
             print("输入错误，请重新输入")
