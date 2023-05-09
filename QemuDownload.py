@@ -92,7 +92,7 @@ class Ui_MainWindow(object):
         
         self.menu = MainWindow.menuBar()
         self.changeSources = self.menu.addMenu(_translate("MainWindow", "更换源"))
-        self.gitlinkAction = QtWidgets.QAction(_translate("MainWindow", "Gitlink 源（推荐）"))
+        self.gitlinkAction = QtWidgets.QAction(_translate("MainWindow", "Github 源（推荐）"))
         self.ipv6Action = QtWidgets.QAction(_translate("MainWindow", "备用源（只支持 IPv6 用户）"))
         self.localAction = QtWidgets.QAction(_translate("MainWindow", "本地测试源（127.0.0.1）"))
         self.changeSources.addAction(self.gitlinkAction)
@@ -324,7 +324,10 @@ def on_addButton_clicked():
      #   ui.deleteZip.setChecked(False)
       #  ui.unzip.setChecked(False)
     arch = internetJsonList[choose][2]
-    downloadUrl = f"{internetWineSource}/{arch}/{downloadName}"
+    if "://" in downloadName:
+        downloadUrl = downloadName
+    else:
+        downloadUrl = f"{internetWineSource}/{arch}/{downloadName}"
     dialog = QtWidgets.QProgressDialog()
     cancel = QtWidgets.QPushButton("取消")
     cancel.setDisabled(True)
@@ -393,7 +396,7 @@ if __name__ == "__main__":
     localJsonList = []
     internetJsonList = []
     internetWineSourceList = [
-        "https://code.gitlink.org.cn/gfdgd_xi/deepin-wine-runner-ubuntu-image/raw/branch/master/Sandbox",
+        "http://chroot.gfdgdxi.top",
         "http://gfdgdxi.msns.cn/deepin-wine-runner-ubuntu-image/Sandbox", # 备用源，纯 IPv6 源
         "http://127.0.0.1/deepin-wine-runner-ubuntu-image/Sandbox/"  # 本地测试源
         ]
