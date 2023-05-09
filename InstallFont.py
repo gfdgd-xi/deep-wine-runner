@@ -18,12 +18,22 @@ import updatekiller
 import req as requests
 homePath = os.path.expanduser('~')
 try:
-    sources = [
+    sourcesList = [
         "http://fonts.wine-runner.gfdgdxi.top/list.json",
         "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/fonts/list.json"
         ]
-    fontList = json.loads(requests.get(sources[0]).text)
+    change = False
+    for i in sourcesList:
+        try:
+            fontList = json.loads(requests.get(i).text)
+            change = True
+            break
+        except:
+            pass
+    if not change:
+        fontList = json.loads(requests.get(sourcesList[0]).text)
 except:
+    print("使用离线列表")
     fontList = [
     [
         "fake_simsun.ttc",

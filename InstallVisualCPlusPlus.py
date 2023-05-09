@@ -31,6 +31,7 @@ try:
     if not change:
         netList = json.loads(requests.get(sourcesList[0]).text)
 except:
+    print("使用离线列表")
     netList = [
         ["VC6 运行库", "http://vcpp.wine-runner.gfdgdxi.top/VC6RedistSetup_deu.exe", "VC6RedistSetup_deu.exe"],
         ["2005 Service Pack 1 Redistributable Package MFC 安全更新", "https://download.microsoft.com/download/4/A/2/4A22001F-FA3B-4C13-BF4E-42EC249D51C4/vcredist_x86.EXE", "vcredist05_x86.exe"],
