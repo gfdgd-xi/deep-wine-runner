@@ -20,8 +20,18 @@ try:
         "http://vb.wine-runner.gfdgdxi.top/list.json",
         "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/vb/list.json"
     ]
-    netList = json.loads(requests.get().text)
+    change = False
+    for i in sourcesList:
+        try:
+            netList = json.loads(requests.get(i).text)
+            change = True
+            break
+        except:
+            pass
+    if not change:
+        netList = json.loads(requests.get(sourcesList[0]).text)
 except:
+    print("使用离线列表")
     netList = [
         ["Visual Basic 1", "http://vb.wine-runner.gfdgdxi.top/vbrun100.exe", "vbrun100.exe"],
         ["Visual Basic 2", "http://vb.wine-runner.gfdgdxi.top/vbrun200.exe", "vbrun200.exe"],
