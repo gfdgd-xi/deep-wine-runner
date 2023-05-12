@@ -12,6 +12,7 @@ package:
 	#cd VM-source && make
 	#cd wine && make
 	make clean -j$(nproc)
+	mkdir deb/opt/apps/deepin-wine-runner/LANG -pv
 	cp -rv helperset deb/opt/apps/deepin-wine-runner/
 	#cp -rv VM-source/VirtualMachine VM
 	cp -rv VM-source/deepin-wine-runner.svg VM
@@ -112,7 +113,10 @@ package:
 	cp -rv InstallRuntime   deb/opt/apps/deepin-wine-runner
 	python3 UpdateTime.py
 	python3 RemovePycacheFile.py
+	sudo rm -rfv /tmp/spark-deepin-wine-runner-builder/
 	cp -rv deb /tmp/spark-deepin-wine-runner-builder
+	rm -rfv deb/opt/apps/deepin-wine-runner/*
+	rm -rfv package-script.zip
 	mkdir -pv /tmp/spark-deepin-wine-runner-builder/usr/bin
 	ln -s /opt/apps/deepin-wine-runner/deepin-wine-packager.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-package-builder 
 	ln -s /opt/apps/deepin-wine-runner/deepin-wine-easy-packager.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-packager-easy-builder
