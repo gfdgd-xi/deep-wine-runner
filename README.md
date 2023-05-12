@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 3.2.1</h1>
+<h1 align="center">Wine 运行器 3.2.2</h1>
 <hr>
 
 ## 介绍
@@ -130,6 +130,15 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志 
+### 3.2.2（2023年05月12日）
+**※1. 修改源地址（迁出 Gitlink）；**  
+**※2. 修复非 X86 架构运行器主页面虚拟机工具禁用的问题；**  
+3、部分组件支持选择最优源。  
+
+![图片.png](https://storage.deepin.org/thread/202305122231441391_图片.png)
+
+
+
 ### 3.2.1（2023年04月29日）
 **※1、Windows 虚拟机安装工具支持非 X86 架构；**  
 **※2、应用打包器可以与星火应用商店配合构建 arm/all 全架构的 Wine 包；**  
