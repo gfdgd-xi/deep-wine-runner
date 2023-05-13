@@ -111,6 +111,8 @@ package:
 	cp -rv RemoveQemuUser.sh deb/opt/apps/deepin-wine-runner
 	cp -rv InstallBox86.sh  deb/opt/apps/deepin-wine-runner
 	cp -rv InstallRuntime   deb/opt/apps/deepin-wine-runner
+	mkdir -pv deb/opt/apps/deepin-wine-runner/entries/
+	cp -rv deb/usr/share/applications deb/opt/apps/deepin-wine-runner/entries/applications
 	python3 UpdateTime.py
 	python3 RemovePycacheFile.py
 	sudo rm -rfv /tmp/spark-deepin-wine-runner-builder/
