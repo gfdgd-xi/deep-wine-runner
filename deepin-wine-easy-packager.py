@@ -539,7 +539,7 @@ class RunThread(QtCore.QThread):
                 ["@@@Maintainer@@@", debMaintainer],
                 ["@@@Depends@@@", debDepends],
                 ["@@@Description@@@", debDescription],
-                ["@@@Installed-Size@@@", str(buildProgramSize)],
+                ["@@@Installed-Size@@@", str(int(buildProgramSize))],
                 ["@@@Name@@@", exeName],
                 ["@@@EXEC_PATH@@@", exePathInBottle],
                 ["@@@Icon@@@", programIconPath]
