@@ -23,6 +23,7 @@ def exit():
     sys.exit()
 # 获取云列表
 sourcesList = [
+    "http://dll.wine-runner.gfdgdxi.top",
     "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/dlls",
     "http://gfdgdxi.msns.cn/wine-runner-list/dlls"
 ]
@@ -31,7 +32,8 @@ print("获取列表中……", end="")
 try:
     lists = json.loads(requests.get(f"{url}/list.json").text)
 except:
-    print("\r列表获取失败！")
+    print("\r列表获取失败！按回车键退出")
+    input()
     exit()
 print("\r列表获取成功！")
 
