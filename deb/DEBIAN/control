@@ -13,6 +13,7 @@ Recommends: winbind, wimtools, python3-pyqt5.qtwebengine, qemu-user, binfmt-supp
 Section: utils
 Conflicts: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, spark-deepin-wine-runner-52
 Replaces: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, spark-deepin-wine-runner-52
+Provides: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, spark-deepin-wine-runner-52
 Installed-Size: 76512
 Description: gfdgd xi 制作的 wine 运行器
  3.2.2 更新内容：
