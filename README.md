@@ -588,14 +588,14 @@ Gitlink：https://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner
 ## 运行库下载
 | 架构 | 运行库下载 |
 |-|-|
-| i386 | https://code.gitlink.org.cn/gfdgd_xi/runtime-for-qemu/raw/branch/master/i386-runtime-for-qemu_1.0.0_all.deb |
-| amd64 | https://code.gitlink.org.cn/gfdgd_xi/runtime-for-qemu/raw/branch/master/amd64-runtime-for-qemu_1.0.0_all.deb |
-| armhf | https://code.gitlink.org.cn/gfdgd_xi/runtime-for-qemu/raw/branch/master/armhf-runtime-for-qemu_1.0.0_all.deb |
-| arm64 | https://code.gitlink.org.cn/gfdgd_xi/runtime-for-qemu/raw/branch/master/arm64-runtime-for-qemu_1.0.0_all.deb |
-| mips64el | https://code.gitlink.org.cn/gfdgd_xi/runtime-for-qemu/raw/branch/master/mips64el-runtime-for-qemu_1.0.0_all.deb |
-| ppc64el | https://code.gitlink.org.cn/gfdgd_xi/runtime-for-qemu/raw/branch/master/ppc64el-runtime-for-qemu_1.0.0_all.deb |
-| riscv64 | https://code.gitlink.org.cn/gfdgd_xi/runtime-for-qemu/raw/branch/master/riscv64-runtime-for-qemu_1.0.0_all.deb |
-| s390x | https://code.gitlink.org.cn/gfdgd_xi/runtime-for-qemu/raw/branch/master/s390x-runtime-for-qemu_1.0.0_all.deb |
+| i386 | https://jihulab.com/gfdgd-xi/qemu-runtime/-/raw/main/i386-runtime-for-qemu_1.0.0_all.deb |
+| amd64 | https://jihulab.com/gfdgd-xi/qemu-runtime/-/raw/main/amd64-runtime-for-qemu_1.0.0_all.deb |
+| armhf | https://jihulab.com/gfdgd-xi/qemu-runtime/-/raw/main/armhf-runtime-for-qemu_1.0.0_all.deb |
+| arm64 | https://jihulab.com/gfdgd-xi/qemu-runtime/-/raw/main/arm64-runtime-for-qemu_1.0.0_all.deb |
+| mips64el | https://jihulab.com/gfdgd-xi/qemu-runtime/-/raw/main/mips64el-runtime-for-qemu_1.0.0_all.deb |
+| ppc64el | https://jihulab.com/gfdgd-xi/qemu-runtime/-/raw/main/ppc64el-runtime-for-qemu_1.0.0_all.deb |
+| riscv64 | https://jihulab.com/gfdgd-xi/qemu-runtime/-/raw/main/riscv64-runtime-for-qemu_1.0.0_all.deb |
+| s390x | https://jihulab.com/gfdgd-xi/qemu-runtime/-/raw/main/s390x-runtime-for-qemu_1.0.0_all.deb |
 
 ## 附：用于编译 Wine 的 Docker 容器（Debian10）
 内安装了编译 Wine 所需要的依赖，Wine 编译教程：https://wiki.winehq.org/Building_Wine  
