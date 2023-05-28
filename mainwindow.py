@@ -1892,6 +1892,13 @@ class ValueCheck():
 def ChangePath():
     e1.setCurrentText(f'{setting["DefultBotton"]}/{os.path.splitext(os.path.basename(e2.currentText()))[0]}')
 
+def ConnectRemoteWindowsPC(ip: str):
+    if os.system("which rdesktop"):
+        if QtWidgets.QMessageBox.question(window, "提示", "未检测到 rdesktop，是否立即安装？") == QtWidgets.QMessageBox.Yes:
+            OpenTerminal("sudo apt install rdesktop -y")
+        return
+    os.system(f"rdesktop '{ip}'")
+
 def UploadLog():
     if QtWidgets.QMessageBox.question(window, "提示", "您确定要上传吗？上传内容将不会公开，将用于加强日志分析功能") == QtWidgets.QMessageBox.Yes:
         text = QtWidgets.QInputDialog.getMultiLineText(window, "输入内容", "输入描述信息")
