@@ -70,7 +70,10 @@ env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 ![图片.png](https://storage.deepin.org/thread/202304192212308212_图片.png)  
 
 ### 龙芯应用合作社
-（找时间再补图）
+
+![图片.png](https://storage.deepin.org/thread/20230603201852396_图片.png)
+
+
 
 ## 分支介绍
 ### main 分支
