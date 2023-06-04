@@ -23,7 +23,7 @@ version=`cat /wine-version.txt`
 type=`cat /wine-type.txt`
 cpu=$(cat /proc/cpuinfo | grep processor | wc -l)
 aria2c -x 16 -s 16 $url
-tar -xvf `dirname $url`
+tar -xvf `basename $url`
 #cd wine-$version
 ## 编译64位
 mkdir build64
