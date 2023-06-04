@@ -10,8 +10,8 @@ sudo apt update
 # 编译
 mkdir /wine
 cd /wine
-sudo apt build-dep aria2 -y
-sudo apt source aria2
+sudo apt build-dep wget -y
+sudo apt source wget
 #sudo apt build-dep wine -y
 #sudo apt source wine
 #sudo apt install fakeroot -y
