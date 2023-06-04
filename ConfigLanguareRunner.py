@@ -43,8 +43,8 @@ programEnv = [
     ["($PROGRAMPATH)", programPath],
     ["($VERSION)", version],
     ["($THANK)", thankText],
-    ["($MAKER)", "RacoonGX 团队，By gfdgd xi"],
-    ["($COPYRIGHT)", f"©2020~{time.strftime('%Y')} RacoonGX 团队，By gfdgd xi"],
+    ["($MAKER)", "gfdgd xi"],
+    ["($COPYRIGHT)", f"©2020~{time.strftime('%Y')} gfdgd xi"],
     ["($?)", "0"],
     ["($PLATFORM)", platform.system()],
     ["($DEBUG)", "1"]
@@ -301,7 +301,7 @@ class Command():
 
         def Version(self):
             print(f"版本：{version}")
-            print(f"©2020~{time.strftime('%Y')} RacoonGX 团队，By gfdgd xi")
+            print(f"©2020~{time.strftime('%Y')} gfdgd xi")
             return 0
 
         def Pause(self) -> int:
@@ -650,7 +650,7 @@ if __name__ == "__main__":
     if len(sys.argv) - optionAll < 2:
         print("Wine 运行器自动配置文件解析器交互环境")
         print(f"版本：{version}")
-        print(f"©2020~{time.strftime('%Y')} RacoonGX 团队，By gfdgd xi")
+        print(f"©2020~{time.strftime('%Y')} By gfdgd xi")
         print("--------------------------------------------------------------")
         while True:
             commandLine = input(">")
