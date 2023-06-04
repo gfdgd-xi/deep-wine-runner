@@ -6,6 +6,7 @@ sudo apt update
 # 添加源
 sudo wget -nc -O /usr/share/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
 echo "deb-src [signed-by=/usr/share/keyrings/winehq-archive.key] https://dl.winehq.org/wine-builds/ubuntu/ focal main" > /etc/apt/sources.list.d/winehq-bionic.list
+sed -i 's/#deb-src/deb-src/g' /etc/apt/sources.list
 sudo apt update
 # 编译
 mkdir /wine
