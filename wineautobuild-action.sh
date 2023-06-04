@@ -18,5 +18,5 @@ sudo apt install flex:i386 bison:i386 qt4-qmake:i386 libfreetype6-dev:i386 libjp
 cd */
 dpkg-buildpackage -b -nc
 # 移除无用包
-rm ../*dbg*.deb -v
-rm ../*dbgsym*.deb -v
+rm ../*dbg*.deb -vrf
+rm ../*dbgsym*.deb -vrf
