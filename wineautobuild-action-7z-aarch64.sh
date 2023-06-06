@@ -11,7 +11,7 @@ mkdir /wine
 cd /wine
 #sudo apt build-dep wget -y
 #sudo apt source wget
-sudo apt build-dep wine -y
+
 #sudo apt source wine
 sudo apt install fakeroot p7zip-full aptitude lld -y
 sudo aptitude install flex bison libfreetype6-dev libjpeg-dev libpng-dev libxslt1-dev libxml2-dev libxrender-dev libgl1-mesa-dev libglu1-mesa-dev freeglut3-dev prelink libasound2-dev -y
@@ -20,6 +20,7 @@ sudo aptitude install libdbus-1-dev libdbus-1-dev libfontconfig1-dev libfontconf
 sudo aptitude install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-base1.0-dev libmpg123-dev libmpg123-dev libosmesa6-dev libosmesa6-dev libudev-dev libudev-dev libvkd3d-dev libvkd3d-dev libvulkan-dev libvulkan-dev libcapi20-dev libcapi20-dev liblcms2-dev liblcms2-dev libcups2-dev libcups2-dev libgphoto2-dev libgphoto2-dev libsane-dev libsane-dev libgsm1-dev libgsm1-dev libkrb5-dev libkrb5-dev libldap2-dev libldap2-dev samba-dev ocl-icd-opencl-dev ocl-icd-opencl-dev libpcap-dev libpcap-dev libusb-1.0-0-dev libusb-1.0-0-dev libv4l-dev libv4l-dev libopenal-dev libopenal-dev libxcomposite-dev libxcomposite-dev libxcursor-dev libxcursor-dev libxi-dev libxi-dev libxrandr-dev libxrandr-dev libxinerama-dev libxinerama-dev -y
 sudo apt install clang llvm -y
 sudo apt install "llvm*" -y
+sudo apt build-dep wine -y
 # 获取数据
 url=`cat /wine-url.txt`
 version=`cat /wine-version.txt`
@@ -31,7 +32,7 @@ tar -xvf `basename $url`
 ## 编译64位
 mkdir build64
 cd build64
-sudo apt install libpcsclite-dev libsdl2-dev samba-dev -y
+sudo aptitude install libpcsclite-dev libsdl2-dev samba-dev -y
 ../wine-$version/configure 
 make -j$cpu
 mkdir ../program
