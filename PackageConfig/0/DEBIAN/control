@@ -1,0 +1,10 @@
+Package: @@PACKAGE@@
+Version: @@VERSION@@
+Architecture: @@ARCH@@
+Maintainer: @@MAKER@@
+Depends: @@DEPENDS@@
+Section: non-free/otherosfs
+Priority: optional
+Multi-Arch: foreign
+Installed-Size: @@SIZE@@
+Description: @@DESCRIPTION@@

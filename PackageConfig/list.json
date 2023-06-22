@@ -1,0 +1,13 @@
+[
+    "@@PACKAGE@@",
+    "@@VERSION@@",
+    "@@ARCH@@",
+    "@@MAKER@@",
+    "@@DEPENDS@@",
+    "@@SIZE@@",
+    "@@DESCRIPTION@@"
+    "@@ICONLIST@@",
+    "@@NAME@@",
+    "@@MIMETYPE@@",
+    "@@CATEGORIES@@"
+]
