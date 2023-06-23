@@ -76,6 +76,12 @@ make_icon()
             make_png
         fi
     else
+	cp deepin-wine-runner.svg "$tmp"
+	if command -v inkscape > /dev/null 2>&1; then
+	    make_svg
+	else
+	    make_png
+	fi
         echo "wrestool failed"
     fi
     rm $tmp
