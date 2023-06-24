@@ -33,4 +33,4 @@ make -j$cpu
 mkdir ../program
 make install -j$cpu DESTDIR=../program
 cd ../program/usr/local/
-7z a /wine/wine-$type-wow64-$version-debian10-x86_64.7z *
+7z a /wine/wine-$type-wow64-$version-debian10-amd64.7z *
