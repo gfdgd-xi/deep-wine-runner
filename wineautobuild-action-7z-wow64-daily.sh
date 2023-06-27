@@ -1,7 +1,7 @@
 #!/bin/bash
 dpkg --add-architecture i386
 apt update
-apt install sudo gpg wget dpkg-dev aria2 -y
+apt install git sudo gpg wget dpkg-dev aria2 -y
 sudo apt update
 # 添加源
 sudo wget -nc -O /usr/share/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
