@@ -1,6 +1,6 @@
 #!/bin/sh
 if [ $WINE = "" ]; then
-	WINE_CMD="deepin-wine5"
+	WINE_CMD="deepin-wine6-stable"
 else
 	WINE_CMD=$WINE
 fi
@@ -55,7 +55,6 @@ clean_common_temp()
     #remove_file "$BottleBase/users/${USER}"
     purge_dir   "$BottleBase/users/Public/Temp"
     remove_file "$BottleBase/../PACKAGE_VERSION"
-    remove_file "$BottleBase/../update.policy"
     purge_dir   "$BottleBase/deepin"
 }
 

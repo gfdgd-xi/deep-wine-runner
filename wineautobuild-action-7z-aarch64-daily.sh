@@ -42,6 +42,7 @@ mkdir ../program
 make install -j$cpu DESTDIR=../program
 cd ../program/usr/local/
 # 打7z包
+echo Building Time: `date`, source from git://source.winehq.org/git/wine.git > info.txt
 7z a /wine/wine-daily-ubuntu22.04-aarch64.7z *
 cd /wine
 rm -rfv program
