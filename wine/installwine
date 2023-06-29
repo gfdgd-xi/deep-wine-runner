@@ -77,7 +77,7 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         self.menu = MainWindow.menuBar()
         self.changeSources = self.menu.addMenu(_translate("MainWindow", "更换源"))
-        self.gitlinkAction = QtWidgets.QAction(_translate("MainWindow", "Gitlink 源（推荐）"))
+        self.gitlinkAction = QtWidgets.QAction(_translate("MainWindow", "Gitee 源（推荐）"))
         self.kgithubAction = QtWidgets.QAction(_translate("MainWindow", "KGithub 源"))
         self.ipv6Action = QtWidgets.QAction(_translate("MainWindow", "Github 源1（国内访问不稳定）"))
         self.githubAction = QtWidgets.QAction(_translate("MainWindow", "Github 源2（国内访问不稳定）"))
@@ -177,7 +177,9 @@ def ReadInternetInformation():
     global internetJsonList
     # C++ 版本是用 curl 的，考虑到 Python 用 requests 反而方便，于是不用 curl
     try:
-        internetJsonList = json.loads(requests.get(f"{internetWineSource}/information.json").text)
+        text = requests.get(f"{internetWineSource}/information.json").text
+        print(text)
+        internetJsonList = json.loads(text)
     except:
         traceback.print_exc()
         QtWidgets.QMessageBox.critical(window, "错误", "无法连接服务器！")
@@ -360,7 +362,7 @@ if __name__ == "__main__":
     internetWineSourceList = [
         "http://wine.wine-runner.gfdgdxi.top/",
         "https://kgithub.com/gfdgd-xi/wine-mirrors-websize/raw/master/",
-        "https://code.gitlink.org.cn/gfdgd_xi/wine-mirrors/raw/branch/master/",
+        "https://gitee.com/gfdgd-xi/wine-mirrors-websize/raw/master/",
         "https://github.com/gfdgd-xi/wine-mirrors-websize/raw/master/",
         "http://127.0.0.1/wine-mirrors/"  # 本地测试源
         ]
