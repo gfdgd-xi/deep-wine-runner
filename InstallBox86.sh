@@ -19,13 +19,15 @@ if [[ $? == 0 ]]; then
     read 
     exit 1
 fi
-#sudo wget https://itai-nelken.github.io/weekly-box86-debs/debian/box86.list -O /etc/apt/sources.list.d/box86.list
-echo deb http://box86.gfdgdxi.top / > /etc/apt/sources.list.d/box86.list
+#sudo wget https://ryanfortner.github.io/box86-debs/box86.list -O /etc/apt/sources.list.d/box86.list
+sudo bash -c "echo deb http://jihulab.com/gfdgd-xi/box64-debs/-/raw/master/debian ./ > /etc/apt/sources.list.d/box86.list"
+wget -qO- https://ryanfortner.github.io/box86-debs/KEY.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/box86-debs-archive-keyring.gpg 
 echo "adding key..."
-wget -qO- http://box86.gfdgdxi.top/KEY.gpg | sudo apt-key add -
-installBox=box86
+installBox=box86-generic-arm
 if [[ $PCArch == "arm64" ]]; then
-    installBox="box86 box64"
+    sudo bash -c "echo deb http://jihulab.com/gfdgd-xi/box86-debs/-/raw/master/debian ./ > /etc/apt/sources.list.d/box64.list"
+    wget -qO- https://ryanfortner.github.io/box64-debs/KEY.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg
+    installBox="box86-generic-arm box64-generic-arm"
     sudo dpkg --add-architecture armhf
 fi
 echo " + sudo apt update"

@@ -2438,10 +2438,13 @@ updateThingsString = transla.transe("U", '''※1、简易打包器支持选择 W
 ※3、在安装更多 Wine 处安装 Wine 后主窗口 Wine 版本下拉框自动更新
 ※4、设置打包器在 Ubuntu 依旧打包 xz 格式的 deb 包
 ※5、修复 Wine 简易打包器 control 文件 Installed-Size 格式不规范的问题
-6、新增自动构建：https://github.com/gfdgd-xi/deep-wine-runner/actions/workflows/auto-building.yml（只供尝鲜）
-7、新增 Wine 日构建（在“安装更多 Wine”处可以获取，目前有 i386、amd64、i386+amd64、amd64+wow64 mode、aarch64）
-8、优化容器清理脚本
-9、修复部分组件没完全换源的问题，部分组件支持自动换可用源''')
+※6、更换 Box86 源并支持安装 Box64（如果为 aarch64 架构）
+※7、新增 Wine 自建源（支持 Debian10、Deepin20）
+※8、修改 WineHQ 安装器使其支持选择国内清华大学镜像源或 WineHQ 官方源
+9、新增自动构建：https://github.com/gfdgd-xi/deep-wine-runner/actions/workflows/auto-building.yml（只供尝鲜）
+10、新增 Wine 日构建（在“安装更多 Wine”处可以获取，目前有 i386、amd64、i386+amd64、amd64+wow64 mode、aarch64）
+11、优化容器清理脚本
+12、修复部分组件没完全换源的问题，部分组件支持自动换可用源''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
 updateTime = "2023年07月06日"
@@ -2676,10 +2679,11 @@ programmenu = menu.addMenu(transla.transe("U", "程序(&P)"))
 p1 = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine.png"), transla.transe("U", "安装 wine(&I)"))
 installWineOnDeepin23 = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine23P.png"), transla.transe("U", "安装 wine(只限Deepin23 Preview)"))
 installWineOnDeepin23Alpha = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine23A.png"), transla.transe("U", "安装 wine(只限Deepin23 Alpha)"))
-installWineHQ = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine.png"), transla.transe("U", "安装 WineHQ"))
+installWineHQOrg = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine.png"), transla.transe("U", "安装 WineHQ（官方源）"))
+installWineHQ = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine.png"), transla.transe("U", "安装 WineHQ（国内清华大学镜像源）"))
 installMoreWine = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/more-wine.png"), transla.transe("U", "安装更多 Wine"))
 downloadChrootBottle = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/CHROOT.png"), transla.transe("U", "下载 Chroot 容器"))
-installBox86 = QtWidgets.QAction(QtGui.QIcon.fromTheme("box"), transla.transe("U", "安装 Box86"))
+installBox86 = QtWidgets.QAction(QtGui.QIcon.fromTheme("box"), transla.transe("U", "安装 Box86/Box64"))
 addWineDebMirrorForDeepin20 = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine.png"), transla.transe("U", "添加 Wine 运行器源以安装较新版本的 WineHQ（支持 Deepin20/Debian10）"))
 p2 = QtWidgets.QAction(QtGui.QIcon.fromTheme("settings"), transla.transe("U", "设置程序(&S)"))
 enabledAll = QtWidgets.QAction(transla.transe("U", "强制启用所有被禁用的组件（不推荐）"))
@@ -2691,6 +2695,7 @@ programmenu.addAction(p1)
 programmenu.addAction(installWineOnDeepin23)
 programmenu.addAction(installWineOnDeepin23Alpha)
 programmenu.addAction(installWineHQ)
+programmenu.addAction(installWineHQOrg)
 programmenu.addAction(addWineDebMirrorForDeepin20)
 programmenu.addAction(installMoreWine)
 programmenu.addAction(downloadChrootBottle)
@@ -2708,6 +2713,7 @@ p1.triggered.connect(InstallWine)
 installWineOnDeepin23.triggered.connect(InstallWineOnDeepin23)
 installWineOnDeepin23Alpha.triggered.connect(InstallWineOnDeepin23Alpha)
 installWineHQ.triggered.connect(InstallWineHQ)
+installWineHQOrg.triggered.connect(lambda: threading.Thread(target=OpenTerminal, args=[f"{programPath}/InstallNewWineHQOrg.sh"]).start())
 addWineDebMirrorForDeepin20.triggered.connect(lambda: threading.Thread(target=OpenTerminal, args=[f"bash '{programPath}/AddWineDebMirrorForDeepin20.sh'"]).start())
 def InstallMoreWine():
     os.system(f"'{programPath}/wine/installwine'")
@@ -3098,7 +3104,7 @@ else:
     o1.addItems(wine.keys())
 # 禁用被精简掉的控件
 for i in [
-    [[p1, installWineOnDeepin23, installWineHQ, installMoreWine], f"{programPath}/InstallWineOnDeepin23.py"],
+    [[p1, installWineOnDeepin23, installWineHQ, installWineHQOrg, installMoreWine], f"{programPath}/InstallWineOnDeepin23.py"],
     [[w5], f"{programPath}/deepin-wine-packager.py"],
     [[w6], f"{programPath}/deepin-wine-packager-with-script.py"],
     [[p1, v1], f"{programPath}/RunVM.sh"],
@@ -3115,6 +3121,7 @@ if subprocess.getoutput("arch").lower() != "x86_64":
     #virtualMachine.setDisabled(True)
     #v1.setDisabled(True)
     installWineHQ.setDisabled(True)
+    installWineHQOrg.setDisabled(True)
     pass
 o1.setCurrentText(setting["DefultWine"])
 e1.setEditText(setting["DefultBotton"])
