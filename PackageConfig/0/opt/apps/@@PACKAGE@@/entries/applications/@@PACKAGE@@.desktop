@@ -1,14 +1,14 @@
-#!/usr/bin/env xdg-open
 [Desktop Entry]
+Categories=;
+Comment=@@NAME@@
 Encoding=UTF-8
+Exec="/opt/apps/@@PACKAGE@@/files/run.sh" --uri
+GenericName=@@NAME@@
+Icon=@@ICONLIST@@
+MimeType=@@MIMETYPE@@
+Name=@@NAME@@.desktop
+StartupNotify=false
+Terminal=false
 Type=Application
 X-Created-By=
-Categories=;
-Icon=@@ICONLIST@@
-Exec="/opt/apps/@@PACKAGE@@/files/run.sh" --uri 
-Name=@@NAME@@
-Comment=@@NAME@@
-MimeType=@@MIMETYPE@@
-GenericName=@@NAME@@
-Terminal=false
-StartupNotify=false
+X-Deepin-Vendor=user-custom

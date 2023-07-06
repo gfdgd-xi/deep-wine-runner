@@ -31,6 +31,7 @@ package:
 	cp -rv QemuRun.py deb/opt/apps/deepin-wine-runner
 	cp -rv kill.sh deb/opt/apps/deepin-wine-runner
 	cp -rv updatekiller.py deb/opt/apps/deepin-wine-runner
+	cp -rv AddWineDebMirrorForDeepin20.sh deb/opt/apps/deepin-wine-runner
 	cp -rv InstallWineOnDeepin23Alpha.py deb/opt/apps/deepin-wine-runner
 	cp -rv wrestool deb/opt/apps/deepin-wine-runner
 	cp -rv Mount.sh deb/opt/apps/deepin-wine-runner
