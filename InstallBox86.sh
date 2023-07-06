@@ -32,6 +32,7 @@ if [[ $PCArch == "arm64" ]]; then
 fi
 echo " + sudo apt update"
 sudo apt update
+sudo apt install binfmt-support -y
 echo apt 源添加完毕！按回车键继续安装 Box86/Box64，若想要停止安装，则请按 Ctrl+C 或按终端右上角 ×（叉叉）退出
 echo 按回车键后将会自动安装包名为 box86-generic-arm、box64-generic-arm（box64 要在 aarch64 系统才可安装）的 Box86/Box64 包（适用于通用 ARM 系统）
 echo 其他特殊版本及其包名可见如下链接（如适用于 rk3399 的版本）：
