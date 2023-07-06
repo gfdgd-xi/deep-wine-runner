@@ -2433,13 +2433,18 @@ exe路径\' 参数 \'
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示；
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>''')
-updateThingsString = transla.transe("U", '''※1. 修改源地址（迁出 Gitlink）；
-※2. 修复非 X86 架构运行器主页面虚拟机工具禁用的问题；
-3、部分组件支持选择最优源。
-''')
+updateThingsString = transla.transe("U", '''※1、简易打包器支持选择 Wine 版本以及修改打包生成的 deb 包的架构为 all；
+※2、修改容器自动配置脚本的 Gitlink 源为 Gitee 源
+※3、在安装更多 Wine 处安装 Wine 后主窗口 Wine 版本下拉框自动更新
+※4、设置打包器在 Ubuntu 依旧打包 xz 格式的 deb 包
+※5、修复 Wine 简易打包器 control 文件 Installed-Size 格式不规范的问题
+6、新增自动构建：https://github.com/gfdgd-xi/deep-wine-runner/actions/workflows/auto-building.yml（只供尝鲜）
+7、新增 Wine 日构建（在“安装更多 Wine”处可以获取，目前有 i386、amd64、i386+amd64、amd64+wow64 mode、aarch64）
+8、优化容器清理脚本
+9、修复部分组件没完全换源的问题，部分组件支持自动换可用源''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2023年05月10日"
+updateTime = "2023年07月06日"
 aboutProgram = transla.transe("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。</p>
 <p>它同时还内置了基于VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作。</p>
 <pre>
