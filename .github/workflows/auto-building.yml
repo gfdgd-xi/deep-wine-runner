@@ -15,7 +15,7 @@ jobs:
         run: |
           # 配置环境
           sudo apt update
-          sudo apt install git dpkg-dev qt5-default qt5-qmake -y
+          sudo apt install git dpkg-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools qt5-qmake -y
           git clone https://github.com/gfdgd-xi/deep-wine-runner
           cd deep-wine-runner
           make build
