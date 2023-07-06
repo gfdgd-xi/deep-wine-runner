@@ -105,7 +105,7 @@ def ReplaceText(string: str, lists: list):
 
 control = '''Package: @@@Package@@@
 Version: @@@Version@@@
-Architecture: i386
+Architecture: all
 Maintainer: @@@Maintainer@@@
 Depends: @@@Depends@@@
 Section: non-free/otherosfs
@@ -119,7 +119,7 @@ info = f'''{{
     "appid": "@@@Package@@@",
     "name": "@@@Name@@@",
     "version": "@@@Version@@@",
-    "arch": ["i386"],
+    "arch": ["all"],
     "permissions": {{
         "autostart": false,
         "notification": false,
@@ -204,7 +204,7 @@ export MIME_TYPE=""
 #####没什么用
 export DEB_PACKAGE_NAME="@@@Package@@@"
 ####这里写包名才能在启动的时候正确找到files.7z,似乎也和杀残留进程有关
-export APPRUN_CMD="deepin-wine6-stable"
+export APPRUN_CMD="{chooseWine}"
 #####wine启动指令，建议
 EXPORT_ENVS=""
 
@@ -312,9 +312,9 @@ def ReadTxt(path):
         things = file.read()
     return things
 
-def GetEXEVersion(exePath):
+def GetEXEVersion(exePath, bottlePath=get_home() + "/.wine"):
     versionPath = f"/tmp/wine-runner-exe-version-{random.randint(0, 1000)}.txt"
-    if os.system(f"deepin-wine6-stable '{programPath}/GetEXEVersion.exe' '{exePath}' '{versionPath}'"):
+    if os.system(f"WINEPREFIX='{bottlePath}' {chooseWine} '{programPath}/GetEXEVersion.exe' '{exePath}' '{versionPath}'"):
         return "1.0.0"
     try:
         exeVersion = ReadTxt(versionPath).replace("\n", "")
@@ -376,9 +376,9 @@ class RunThread(QtCore.QThread):
     def __init__(self) -> None:
         super().__init__()
     
-    def GetEXEVersion(self, exePath):
+    def GetEXEVersion(self, exePath, bottlePath=get_home() + "/.wine"):
         versionPath = f"/tmp/wine-runner-exe-version-{random.randint(0, 1000)}.txt"
-        self.RunCommand(f"deepin-wine6-stable '{programPath}/GetEXEVersion.exe' '{exePath}' '{versionPath}'")
+        self.RunCommand(f"WINEPREFIX='{bottlePath}' {chooseWine} '{programPath}/GetEXEVersion.exe' '{exePath}' '{versionPath}'")
         try:
             exeVersion = ReadTxt(versionPath).replace("\n", "")
             if exeVersion.replace(" ", "") == "":
@@ -433,7 +433,7 @@ class RunThread(QtCore.QThread):
                 self.RunCommand(f"mkdir -pv '{bottlePath}'")
                 self.RunCommand(f"chmod 777 -Rv '{bottlePath}'")
                 # 禁止生成 .desktop 文件
-                self.RunCommand(f"WINEPREFIX='{bottlePath}' deepin-wine6-stable 'reg' 'add' 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v winemenubuilder.exe '/f'")
+                self.RunCommand(f"WINEPREFIX='{bottlePath}' {chooseWine} 'reg' 'add' 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v winemenubuilder.exe '/f'")
                 # 写入字体
                 self.RunCommand(f"WINEPREFIX='{bottlePath}' '{programPath}/AutoShell/command/installfont' 1")
                 # 安装包
@@ -441,7 +441,7 @@ class RunThread(QtCore.QThread):
                 global pressCompleteDownload
                 pressCompleteDownload = False
                 installCmpleteButton.setEnabled(True)
-                self.RunCommand(f"WINEPREFIX='{bottlePath}' deepin-wine6-stable '{exePath.text()}' &")  # 非堵塞线程
+                self.RunCommand(f"WINEPREFIX='{bottlePath}' {chooseWine} '{exePath.text()}' &")  # 非堵塞线程
                 
                 # 安装锁，锁解除后才可继续
                 while not pressCompleteDownload:
@@ -481,7 +481,7 @@ class RunThread(QtCore.QThread):
                 exePathInBottle = rightLnk[1]
                 exeName = os.path.splitext(os.path.basename(folderExePath))[0]
                 exePathInSystem = rightLnk[1].replace("\\", "/").replace("c:", f"{bottlePath}/drive_c")
-                debPackageVersion = self.GetEXEVersion(exePathInSystem)
+                debPackageVersion = self.GetEXEVersion(exePathInSystem, bottlePath)
                 cpNow = False
                 for i in iconList:
                     path = i[1].replace("wineBottonPath", bottlePath).lower()
@@ -497,7 +497,7 @@ class RunThread(QtCore.QThread):
                 # 绿色软件
                 self.RunCommand(f"mkdir -pv '{bottlePath}'")
                 self.RunCommand(f"chmod 777 -Rv '{bottlePath}'")
-                self.RunCommand(f"WINEPREFIX='{bottlePath}' deepin-wine6-stable exit")
+                self.RunCommand(f"WINEPREFIX='{bottlePath}' {chooseWine} exit")
                 folderExePath = os.path.dirname(exePath.text())               
                 exePathInBottle = f"c:/Program Files/{os.path.basename(folderExePath)}/{exeName}"
                 exeName = os.path.splitext(os.path.basename(os.path.basename(exePath.text())))[0]
@@ -505,9 +505,9 @@ class RunThread(QtCore.QThread):
                 self.RunCommand(f"'{programPath}/wrestool' '{exePath.text()}' -x -t 14 > '{debBuildPath}/{programIconPath}'")
                 # 拷贝文件到容器
                 self.RunCommand(f"cp -rv '{folderExePath}' '{bottlePath}/drive_c/Program Files'")
-                debPackageVersion = self.GetEXEVersion(exePath.text())
+                debPackageVersion = self.GetEXEVersion(exePath.text(), bottlePath)
             debDescription = f"{exeName} By Deepin Wine 6 Stable And Build By Wine Runner Easy Packager"
-            debDepends = "deepin-wine6-stable, spark-dwine-helper | store.spark-app.spark-dwine-helper, fonts-wqy-microhei, fonts-wqy-zenhei"
+            debDepends = f"{chooseWine}, spark-dwine-helper | store.spark-app.spark-dwine-helper, fonts-wqy-microhei, fonts-wqy-zenhei"
             self.RunCommand(f"mkdir -pv '{debBuildPath}/DEBIAN'")
             self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/files'")
             self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/entries/applications'")
@@ -562,7 +562,7 @@ class RunThread(QtCore.QThread):
             self.RunCommand(f"chmod -Rv 755 '{debBuildPath}/opt/apps/{debPackageName}/entries/applications/'*.desktop")
             ########### 打包 deb
             print(debPackageVersion)
-            self.RunCommand(f"dpkg-deb -Z xz -b '{debBuildPath}' '{desktopPath}/{debPackageName}_{debPackageVersion}_i386.deb'")
+            self.RunCommand(f"dpkg-deb -Z xz -b '{debBuildPath}' '{desktopPath}/{debPackageName}_{debPackageVersion}_all.deb'")
             self.info.emit("打包完成！")
             self.disbledAll.emit(False)
             ########### 移除临时文件
@@ -580,6 +580,8 @@ class RunThread(QtCore.QThread):
 #/home/gfdgd_xi/Downloads/XPcalc.exe
 def RunBuildThread():
     global buildThread
+    global chooseWine
+    chooseWine = wineList[wineChooser.currentIndex()]
     buildThread = RunThread()
     buildThread.showLogText.connect(ShowText)
     buildThread.error.connect(ErrorMessage)
@@ -602,6 +604,7 @@ def BrowserExe():
     if filePath[0] != "" or filePath[0] != None:
         exePath.setText(filePath[0])
 
+chooseWine = ""
 if __name__ == "__main__":
     programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
     iconPath = "{}/deepin-wine-runner.svg".format(programPath)
@@ -616,12 +619,31 @@ if __name__ == "__main__":
     widget = QtWidgets.QWidget()
     layout = QtWidgets.QGridLayout()
     exePath = QtWidgets.QLineEdit()
+    wineChooser = QtWidgets.QComboBox()
     browserExeButton = QtWidgets.QPushButton("浏览……")
     logText = QtWidgets.QTextBrowser()
     logText.setStyleSheet("""
         background-color: black;
         color: white;
     """)
+    wineChooserList = [
+        "使用 Spark Wine8 打包应用",
+        "使用 Spark Wine7 Devel 打包应用",
+        "使用 Deepin Wine6 Stable 打包应用",
+        "使用 Deepin Wine5 Stable 打包应用",
+        "使用 Deepin Wine5 打包应用",
+        "使用 Deepin Wine2 打包应用"
+    ]
+    wineChooserIndex = 0
+    wineList = ["spark-wine8", "spark-wine7-devel", "deepin-wine6-stable", "deepin-wine5-stable", "deepin-wine5", "deepin-wine"]
+    for i in range(len(wineList)):
+        if not os.system(f"which '{wineList[i]}'"):
+            wineChooserIndex = i
+            break
+    chooseWine = wineList[wineChooserIndex]
+    wineChooserList[wineChooserIndex] = f"{wineChooserList[wineChooserIndex]}（推荐，如无特殊需求不建议更换）"
+    wineChooser.addItems(wineChooserList)
+    wineChooser.setCurrentIndex(wineChooserIndex)
     controlLayout = QtWidgets.QHBoxLayout()
     buildButton = QtWidgets.QPushButton("现在打包……")
     installCmpleteButton = QtWidgets.QPushButton("安装程序执行完成")
@@ -637,8 +659,9 @@ if __name__ == "__main__":
     layout.addWidget(QtWidgets.QLabel("选择 EXE："), 0, 0)
     layout.addWidget(exePath, 0, 1)
     layout.addWidget(browserExeButton, 0, 2)
-    layout.addLayout(controlLayout, 1, 1)
-    layout.addWidget(logText, 2, 0, 1, 3)
+    layout.addWidget(wineChooser, 1, 1)
+    layout.addLayout(controlLayout, 2, 1)
+    layout.addWidget(logText, 3, 0, 1, 3)
     widget.setLayout(layout)
     window.setCentralWidget(widget)
     window.setWindowTitle(f"Wine 运行器 {version}——简易打包器")
