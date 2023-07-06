@@ -142,7 +142,7 @@ package:
 	
 	sudo chown -R root:root /tmp/spark-deepin-wine-runner-builder
 	
-	dpkg -b /tmp/spark-deepin-wine-runner-builder spark-deepin-wine-runner.deb
+	dpkg-deb -Z xz -b /tmp/spark-deepin-wine-runner-builder spark-deepin-wine-runner.deb
 	sudo rm -rfv /tmp/spark-deepin-wine-runner-builder
 	
 
