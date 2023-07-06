@@ -44,6 +44,9 @@ env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 理论上支持全架构，如果 Python 能运行的话  
 非 X86 架构会利用到 `box86`、`exagear`、`qemu` 等技术  
 
+## Wine 运行器自动构建（Newest）
+此只供尝鲜，不保证能用：https://github.com/gfdgd-xi/deep-wine-runner/actions/workflows/auto-building.yml  
+
 ## 目前实现功能（部分）
 1. 用 Wine 运行 EXE
 2. 支持下载/安装 Wine
