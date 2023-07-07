@@ -2330,18 +2330,25 @@ def CheckWine():
                                     f"box64  "
                                 ]
                             )
-                        if os.system("which exagear") == 0:
+                        if os.path.exists("/opt/exagear/bin/ubt_x64a64_al") and os.path.exists(f"{get_home()}/.deepinwine/debian-buster"):
                             nameValue.append(
                                 [
-                                    "基于 exagear 的 ",
-                                    f"exagear  "
+                                    "基于 UOS exagear 的 ",
+                                    f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al --  "
                                 ]
                             )
                         if os.path.exists("/opt/exagear/bin/ubt_x64a64_al"):
                             nameValue.append(
                                 [
-                                    "基于 UOS exagear 的 ",
-                                    f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al --  "
+                                    "使用 64 位 exagear 运行",
+                                    "/opt/exagear/bin/ubt_x64a64_al -- "
+                                ]
+                            )
+                        if os.path.exists("/opt/exagear/bin/ubt_x32a64_al"):
+                            nameValue.append(
+                                [
+                                    "使用 32 位 exagear 运行",
+                                    "/opt/exagear/bin/ubt_x32a64_al -- "
                                 ]
                             )
                         for g in qemuBottleList:
