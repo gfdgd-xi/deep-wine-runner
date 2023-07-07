@@ -15,6 +15,7 @@ package:
 	mkdir deb/opt/apps/deepin-wine-runner/LANG -pv
 	cp -rv helperset deb/opt/apps/deepin-wine-runner/
 	#cp -rv VM-source/VirtualMachine VM
+	
 	cp -rv VM-source/deepin-wine-runner.svg VM
 	cp -rv VM-source/Windows7X64Auto.iso VM
 	cp -rv VM-source/Windows7X86Auto.iso VM
@@ -22,6 +23,7 @@ package:
 	cp -rv Test/ deb/opt/apps/deepin-wine-runner/
 	cp -rv information.json package-script
 	zip -v -q -r package-script.zip package-script
+	cp -rv InstallBox86-cn.sh deb/opt/apps/deepin-wine-runner/
 	cp -rv VM deb/opt/apps/deepin-wine-runner
 	cp -rv 2048 deb/opt/apps/deepin-wine-runner/
 	cp -rv Download.py deb/opt/apps/deepin-wine-runner/
