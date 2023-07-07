@@ -28,7 +28,7 @@ installBox=box86-generic-arm
 if [[ $PCArch == "arm64" ]]; then
     sudo bash -c "echo deb http://seafile.jyx2048.com:2345/spark-deepin-wine-runner/data/box64-debs/debian ./ > /etc/apt/sources.list.d/box64.list"
     wget -qO- http://seafile.jyx2048.com:2345/spark-deepin-wine-runner/data/box64-debs/KEY.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg
-    installBox="box86-generic-arm box64-generic-arm"
+    installBox="box86-generic-arm box64-generic-arm libc6:armhf"
     sudo dpkg --add-architecture armhf
 fi
 echo " + sudo apt update"
