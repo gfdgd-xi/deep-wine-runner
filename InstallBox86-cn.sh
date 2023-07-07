@@ -19,15 +19,15 @@ if [[ $? == 0 ]]; then
     read 
     exit 1
 fi
-echo 使用 Github 源
+echo 使用国内源
 #sudo wget https://ryanfortner.github.io/box86-debs/box86.list -O /etc/apt/sources.list.d/box86.list
-sudo wget https://ryanfortner.github.io/box86-debs/box86.list -O /etc/apt/sources.list.d/box86.list
-wget -qO- https://ryanfortner.github.io/box86-debs/KEY.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/box86-debs-archive-keyring.gpg 
+sudo bash -c "echo deb http://jihulab.com/gfdgd-xi/box86-debs/-/raw/master/debian ./ > /etc/apt/sources.list.d/box86.list"
+wget -qO- http://jihulab.com/gfdgd-xi/box86-debs/-/raw/master/KEY.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/box86-debs-archive-keyring.gpg 
 echo "adding key..."
 installBox=box86-generic-arm
 if [[ $PCArch == "arm64" ]]; then
-    sudo wget https://ryanfortner.github.io/box64-debs/box64.list -O /etc/apt/sources.list.d/box64.list
-    wget -qO- https://ryanfortner.github.io/box64-debs/KEY.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg 
+    sudo bash -c "echo deb https://atomgit.com/gfdgd-xi/box64-debs/raw/master/debian ./ > /etc/apt/sources.list.d/box64.list"
+    wget -qO- https://atomgit.com/gfdgd-xi/box64-debs/raw/master/KEY.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg
     installBox="box86-generic-arm box64-generic-arm"
     sudo dpkg --add-architecture armhf
 fi
