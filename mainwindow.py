@@ -2351,6 +2351,13 @@ def CheckWine():
                                     "/opt/exagear/bin/ubt_x32a64_al -- "
                                 ]
                             )
+                        if os.path.exists(f"{programPath}/WineLib/usr/lib/ld-linux-x86-64.so.2"):
+                            nameValue.append(
+                                [
+                                    "使用运行器的运行库运行",
+                                    f"bash '{programPath}/WineLib/run.sh' "
+                                ]
+                            )
                         for g in qemuBottleList:
                             nameValue.append([
                                 f"使用qemu-{g[0]}-static 调用容器{g[1]}运行 ",
@@ -2991,11 +2998,31 @@ def AddLib(install: QtWidgets.QAction, uninstall, menu, info):
     menu.addAction(install)
     menu.addAction(uninstall)
 
+installLib = menu.addMenu(transla.transe("U", "应用运行库(&R)"))
+howtouseQemuUser = QtWidgets.QAction(transla.transe("U", "Qemu User 使用教程（配合运行库实现在非 X86 架构运行 X86 Wine）"))
+howtouseQemuUser.triggered.connect(lambda: webbrowser.open_new_tab("https://www.bilibili.com/read/cv23185651"))
+runnerlibinfo = QtWidgets.QAction("只在运行器使用的运行库（不与其他运行库以及兼容层冲突）")
+installRunnerLib = QtWidgets.QAction("安装运行库")
+statusRunnerLib = QtWidgets.QAction("当前状态：未安装")
+removeRunnerLib = QtWidgets.QAction("移除运行库")
+runnerlibinfo.setDisabled(True)
+statusRunnerLib.setDisabled(True)
+removeRunnerLib.setDisabled(True)
+installLib.addAction(howtouseQemuUser)
+installLib.addSeparator()
+installLib.addAction(runnerlibinfo)
+installLib.addAction(statusRunnerLib)
+installLib.addAction(installRunnerLib)
+installLib.addAction(removeRunnerLib)
+if os.path.exists(f"{programPath}/WineLib/usr/lib/ld-linux-x86-64.so.2"):
+    installRunnerLib.setDisabled(True)
+    removeRunnerLib.setEnabled(True)
+    statusRunnerLib.setText("当前状态：已安装")
 if os.path.exists(f"{programPath}/InstallRuntime"):
-    installLib = menu.addMenu(transla.transe("U", "应用运行库(&R)"))
-    howtouseQemuUser = QtWidgets.QAction(transla.transe("U", "Qemu User 使用教程（配合运行库实现在非 X86 架构运行 X86 Wine）"))
-    howtouseQemuUser.triggered.connect(lambda: webbrowser.open_new_tab("https://gitee.com/gfdgd-xi/deep-wine-runner/wikis/%E4%BD%BF%E7%94%A8%E5%B8%AE%E5%8A%A9/%E9%9D%9EX86%E6%9E%B6%E6%9E%84PC/%E4%BD%BF%E7%94%A8Qemu%20User%E8%BF%90%E8%A1%8CWine%EF%BC%88%E6%94%AF%E6%8C%81%E5%85%A8%E6%9E%B6%E6%9E%84%EF%BC%89"))
-    installLib.addAction(howtouseQemuUser)
+    installLib.addSeparator()
+    systemalllibinfo = QtWidgets.QAction("全局运行库（与其他运行库以及部分兼容层冲突）")    
+    systemalllibinfo.setDisabled(True)
+    installLib.addAction(systemalllibinfo)
     installQemuMenu = installLib.addMenu(transla.transe("U", "安装 Qemu User"))
     installQemu = QtWidgets.QAction(transla.transe("U", "安装 Qemu User"))
     removeQemu = QtWidgets.QAction(transla.transe("U", "卸载 Qemu User"))
