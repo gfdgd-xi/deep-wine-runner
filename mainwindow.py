@@ -3076,10 +3076,11 @@ if os.path.exists(f"{programPath}/WineLib/usr"):
         global diyRunnerLib
         action = QtWidgets.QAction(f"{name}")
         mapLink.append(action)
-        action.triggered.connect(lambda: AddRunnerLib(int(str(number))))
+        action.triggered.connect(lambda: DelRunnerLib(int(str(number))))
         diyRunnerLib.addAction(action)    
     def DelRunnerLib(number):
         os.system(f"rm -rf '{libPathList[number]}'")
+        QtWidgets.QMessageBox.information(window, "提示", "删除完成！")
         mapLink[number].setDisabled(True)
     for libPath in [f"{programPath}/WineLib/usr/lib", f"{programPath}/WineLib/usr/lib64"]:
         for i in os.listdir(libPath):

@@ -28,26 +28,28 @@ do
         fi
     fi
 done
-if [[ -L /usr/lib64 ]] && [[ ! -d "$CURRENT_DIR/usr/lib64" ]]; then
+if [[ -d /usr/lib64 ]] && [[ ! -d "$CURRENT_DIR/usr/lib64" ]]; then
     mkdir -p "$CURRENT_DIR/usr/lib64"
 fi
-for libr in `ls /usr/lib64/ld*.so*`
-do
-    if [[ -f $libr ]]; then
-        if [[ ! -f "$CURRENT_DIR/$libr" ]]; then
-            systemNeedCommand="$systemNeedCommand --ro-bind $libr $libr "        
-            touch "$CURRENT_DIR/$libr"
-        else
-            if [[ ! -s "$CURRENT_DIR/$libr" ]]; then
+if [[ -d /usr/lib64/ ]]; then
+    for libr in `ls /usr/lib64/ld*.so*`
+    do
+        if [[ -f $libr ]]; then
+            if [[ ! -f "$CURRENT_DIR/$libr" ]]; then
                 systemNeedCommand="$systemNeedCommand --ro-bind $libr $libr "        
+                touch "$CURRENT_DIR/$libr"
+            else
+                if [[ ! -s "$CURRENT_DIR/$libr" ]]; then
+                    systemNeedCommand="$systemNeedCommand --ro-bind $libr $libr "        
+                fi
             fi
         fi
-    fi
-done
+    done
+fi
 if [[ ! -d "$CURRENT_DIR/usr/lib/locale" ]]; then
     systemNeedCommand="$systemNeedCommand --ro-bind /usr/lib/locale /usr/lib/locale "      
 fi
-echo $systemNeedCommand
+
 if [[ ! -d "$CURRENT_DIR/usr/lib64" ]]; then
     bwrap --dev-bind / / \
         --bind "$CURRENT_DIR/usr/lib" /lib \
