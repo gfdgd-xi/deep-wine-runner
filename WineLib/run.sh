@@ -4,7 +4,7 @@ if [[ ! -d "$CURRENT_DIR/usr" ]]; then
     zenity --info --text=未安装运行库，无法运行 --no-wrap
     exit
 fi
-if [[ ! -d /lib64 ]]; then
+if [[ ! -f /lib64 ]] && [[ ! -d /lib64 ]] && [[ ! -L /lib64 ]]; then
     pkexec mkdir /lib64 -p
 fi
 bwrap --dev-bind / / \
