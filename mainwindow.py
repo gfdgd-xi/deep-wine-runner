@@ -3071,10 +3071,16 @@ if os.path.exists(f"{programPath}/WineLib/usr"):
     diyRunnerLib.setEnabled(True)
     statusRunnerLib.setText("当前状态：已安装")
     libPathList = []
-    def AddLib(number, name):
+    mapLink = []
+    def AddRunnerLib(number, name):
+        global diyRunnerLib
         action = QtWidgets.QAction(f"{name}")
-        action.triggered.connect(lambda: print(int(str(number))))
+        mapLink.append(action)
+        action.triggered.connect(lambda: AddRunnerLib(int(str(number))))
         diyRunnerLib.addAction(action)    
+    def DelRunnerLib(number):
+        os.system(f"rm -rf '{libPathList[number]}'")
+        mapLink[number].setDisabled(True)
     for libPath in [f"{programPath}/WineLib/usr/lib", f"{programPath}/WineLib/usr/lib64"]:
         for i in os.listdir(libPath):
             if not os.path.isdir(f"{libPath}/{i}"):
@@ -3084,12 +3090,12 @@ if os.path.exists(f"{programPath}/WineLib/usr"):
                 except:
                     continue
                 libPathList.append(f"{libPath}/{i}")
-                AddLib(len(libPathList), f"{i}")
+                AddRunnerLib(len(libPathList) - 1, f"{i}")
             else:
                 if not os.path.exists(f"{libPath}/{i}/libc.so.6"):
                     continue
                 libPathList.append(f"{libPath}/{i}/")
-                AddLib(len(libPathList), f"{i}/")
+                AddRunnerLib(len(libPathList) - 1, f"{i}/")
     print(libPathList)
 if os.path.exists(f"{programPath}/InstallRuntime"):
     installLib.addSeparator()
