@@ -3015,7 +3015,7 @@ installLib.addAction(statusRunnerLib)
 installLib.addAction(installRunnerLib)
 installLib.addAction(removeRunnerLib)
 installRunnerLib.triggered.connect(lambda: threading.Thread(target=OpenTerminal, args=[f"bash '{programPath}/WineLib/install.sh'"]).start())
-removeRunnerLib.triggered.connect(lambda: threading.Thread(target=OpenTerminal, args=[f"bash '{programPath}/WineLib/install.sh'"]).start())
+removeRunnerLib.triggered.connect(lambda: threading.Thread(target=OpenTerminal, args=[f"bash '{programPath}/WineLib/remove.sh'"]).start())
 if os.path.exists(f"{programPath}/WineLib/usr/lib/ld-linux-x86-64.so.2"):
     installRunnerLib.setDisabled(True)
     removeRunnerLib.setEnabled(True)
