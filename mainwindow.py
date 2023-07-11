@@ -2242,8 +2242,8 @@ def CheckWine():
             canUseWine.append("基于 UOS box86 的 deepin-wine6-stable")
         if os.path.exists("/opt/exagear/bin/ubt_x64a64_al") and os.path.exists("/opt/deepin-wine6-stable/bin/wine"):
             canUseWine.append("基于 UOS exagear 的 deepin-wine6-stable")
-        if not os.system("which exagear") and os.path.exists("/opt/deepin-wine6-stable/bin/wine"):
-            canUseWine.append("基于 exagear 的 deepin-wine6-stable")
+        #if not os.system("which exagear") and os.path.exists("/opt/deepin-wine6-stable/bin/wine"):
+            #canUseWine.append("基于 exagear 的 deepin-wine6-stable")
         for i in wine.keys():
             if not os.system(f"which '{wine[i]}'"):
                 canUseWine.append(i)
@@ -2391,13 +2391,9 @@ def CheckWine():
                             wine[f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-x86_64"] = f"{k[1]}{chrootProgramPath}/wine/{i}/bin/wine-x86_64"
                             canUseWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-x86_64")
                             untipsWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-x86_64")
-            for i in canUseWine[:]:
-                if os.path.exists(f"{programPath}/WineLib/usr/lib/ld-linux-x86-64.so.2"):
-                    wine[f"使用运行器的运行库运行 {i}"] = f"bash '{programPath}/WineLib/run.sh' {wine[i]}"
-                    canUseWine.append(f"使用运行器的运行库运行 {i}")
-                    untipsWine.append(f"使用运行器的运行库运行 {i}")
+            
         except:
-            pass
+            traceback.print_exc()
         try:
             for i in os.listdir(f"{get_home()}/.deepinwine/"):
                 if os.path.exists(f"{get_home()}/.deepinwine/{i}/bin/wine"):
@@ -2407,7 +2403,12 @@ def CheckWine():
                     wine[f"{get_home()}/.deepinwine/{i}/bin/wine64"] = f"{get_home()}/.deepinwine/{i}/bin/wine64"
                     canUseWine.append(f"{get_home()}/.deepinwine/{i}/bin/wine64")
         except:
-            pass
+            traceback.print_exc()
+        for i in canUseWine[:]:
+            if os.path.exists(f"{programPath}/WineLib/usr/lib/ld-linux-x86-64.so.2"):
+                wine[f"使用运行器的运行库运行 {i}"] = f"bash '{programPath}/WineLib/run.sh' {wine[i]}"
+                canUseWine.append(f"使用运行器的运行库运行 {i}")
+                untipsWine.append(f"使用运行器的运行库运行 {i}")
     except:
         traceback.print_exc()
         app = QtWidgets.QApplication(sys.argv)
