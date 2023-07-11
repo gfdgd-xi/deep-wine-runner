@@ -2347,14 +2347,14 @@ def CheckWine():
                         if os.path.exists("/opt/exagear/bin/ubt_x64a64_al"):
                             nameValue.append(
                                 [
-                                    "使用 64 位 exagear 运行",
+                                    "使用 ubt_x64a64_al 运行",
                                     "/opt/exagear/bin/ubt_x64a64_al -- "
                                 ]
                             )
                         if os.path.exists("/opt/exagear/bin/ubt_x32a64_al"):
                             nameValue.append(
                                 [
-                                    "使用 32 位 exagear 运行",
+                                    "使用 ubt_x32a64_al 运行",
                                     "/opt/exagear/bin/ubt_x32a64_al -- "
                                 ]
                             )
@@ -2404,11 +2404,23 @@ def CheckWine():
                     canUseWine.append(f"{get_home()}/.deepinwine/{i}/bin/wine64")
         except:
             traceback.print_exc()
-        for i in canUseWine[:]:
-            if os.path.exists(f"{programPath}/WineLib/usr/lib/ld-linux-x86-64.so.2"):
-                wine[f"使用运行器的运行库运行 {i}"] = f"bash '{programPath}/WineLib/run.sh' {wine[i]}"
-                canUseWine.append(f"使用运行器的运行库运行 {i}")
-                untipsWine.append(f"使用运行器的运行库运行 {i}")
+        try:
+            canUseWineOld = canUseWine[:]
+            for i in canUseWineOld:
+                if os.path.exists(f"{programPath}/WineLib/usr/lib/ld-linux-x86-64.so.2"):
+                    wine[f"使用运行器的运行库运行 {i}"] = f"bash '{programPath}/WineLib/run.sh' {wine[i]}"
+                    canUseWine.append(f"使用运行器的运行库运行 {i}")
+                    untipsWine.append(f"使用运行器的运行库运行 {i}")
+            if os.path.exists("/opt/exagear/images"):
+                for k in os.listdir("/opt/exagear/images"):
+                    if not os.path.isdir(f"/opt/exagear/images/{k}"):
+                        continue
+                for i in canUseWineOld:
+                    wine[f"使用Exagear容器运行库运行 {i}"] = f"bash '{programPath}/WineLib/run-more.sh' '/opt/exagear/images/{k}' {wine[i]}"
+                    canUseWine.append(f"使用Exagear容器运行库运行 {i}")
+                    untipsWine.append(f"使用Exagear容器运行库运行 {i}")
+        except:
+            traceback.print_exc()
     except:
         traceback.print_exc()
         app = QtWidgets.QApplication(sys.argv)
