@@ -14,12 +14,12 @@ import os
 import sys
 import time
 import json
-import pyperclip
 import random
 import base64
 import shutil
 import hashlib
 import platform
+import pyperclip
 import threading
 import traceback
 import webbrowser
@@ -3014,6 +3014,8 @@ installLib.addAction(runnerlibinfo)
 installLib.addAction(statusRunnerLib)
 installLib.addAction(installRunnerLib)
 installLib.addAction(removeRunnerLib)
+installRunnerLib.triggered.connect(lambda: threading.Thread(target=OpenTerminal, args=[f"bash '{programPath}/WineLib/install.sh'"]))
+removeRunnerLib.triggered.connect(lambda: threading.Thread(target=OpenTerminal, args=[f"bash '{programPath}/WineLib/install.sh'"]))
 if os.path.exists(f"{programPath}/WineLib/usr/lib/ld-linux-x86-64.so.2"):
     installRunnerLib.setDisabled(True)
     removeRunnerLib.setEnabled(True)
