@@ -2421,7 +2421,7 @@ def CheckWine():
         try:
             canUseWineOld = canUseWine[:]
             for i in canUseWineOld:
-                if os.path.exists(f"{programPath}/WineLib/usr/lib/ld-linux-x86-64.so.2"):
+                if os.path.exists(f"{programPath}/WineLib/usr"):
                     wine[f"使用运行器的运行库运行 {i}"] = f"bash '{programPath}/WineLib/run.sh' {wine[i]}"
                     canUseWine.append(f"使用运行器的运行库运行 {i}")
                     untipsWine.append(f"使用运行器的运行库运行 {i}")
@@ -3058,12 +3058,30 @@ installLib.addAction(runnerlibinfo)
 installLib.addAction(statusRunnerLib)
 installLib.addAction(installRunnerLib)
 installLib.addAction(removeRunnerLib)
+diyRunnerLib = installLib.addMenu("定制运行库")
+diyRunnerLib.setDisabled(True)
 installRunnerLib.triggered.connect(lambda: threading.Thread(target=OpenTerminal, args=[f"bash '{programPath}/WineLib/install.sh'"]).start())
 removeRunnerLib.triggered.connect(lambda: threading.Thread(target=OpenTerminal, args=[f"bash '{programPath}/WineLib/remove.sh'"]).start())
-if os.path.exists(f"{programPath}/WineLib/usr/lib/ld-linux-x86-64.so.2"):
+if os.path.exists(f"{programPath}/WineLib/usr"):
     installRunnerLib.setDisabled(True)
     removeRunnerLib.setEnabled(True)
+    diyRunnerLib.setEnabled(True)
     statusRunnerLib.setText("当前状态：已安装")
+    libPathList = []
+    for libPath in [f"{programPath}/WineLib/usr/lib", f"{programPath}/WineLib/usr/lib64"]:
+        for i in os.listdir(libPath):
+            if not os.path.exists(f"{libPath}/{i}/libc.so.6"):
+                continue
+            if not os.path.isdir(f"{libPath}/{i}"):
+                try:
+                    if not os.path.getsize(f"{libPath}/{i}"):
+                        continue
+                except:
+                    continue
+                libPathList.append(f"{libPath}/{i}")
+            else:
+                libPathList.append(f"{libPath}/{i}/")
+    print(libPathList)
 if os.path.exists(f"{programPath}/InstallRuntime"):
     installLib.addSeparator()
     systemalllibinfo = QtWidgets.QAction("全局运行库（与其他运行库以及部分兼容层冲突）")    
