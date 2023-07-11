@@ -2415,10 +2415,10 @@ def CheckWine():
                 for k in os.listdir("/opt/exagear/images"):
                     if not os.path.isdir(f"/opt/exagear/images/{k}"):
                         continue
-                for i in canUseWineOld:
-                    wine[f"使用Exagear容器运行库运行 {i}"] = f"bash '{programPath}/WineLib/run-more.sh' '/opt/exagear/images/{k}' {wine[i]}"
-                    canUseWine.append(f"使用Exagear容器运行库运行 {i}")
-                    untipsWine.append(f"使用Exagear容器运行库运行 {i}")
+                    for i in canUseWineOld:
+                        wine[f"使用Exagear容器运行库运行 {i}"] = f"bash '{programPath}/WineLib/run-more.sh' '/opt/exagear/images/{k}' {wine[i]}"
+                        canUseWine.append(f"使用Exagear容器运行库运行 {i}")
+                        untipsWine.append(f"使用Exagear容器运行库运行 {i}")
         except:
             traceback.print_exc()
     except:
