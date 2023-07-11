@@ -899,6 +899,13 @@ def InstallVB():
         wineBottonPath = e1.currentText()
     OpenTerminal(f"'{programPath}/InstallVisualBasicRuntime.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
 
+def InstallFoxPro():
+    if e1.currentText() == "":
+        wineBottonPath = setting["DefultBotton"]
+    else:
+        wineBottonPath = e1.currentText()
+    OpenTerminal(f"'{programPath}/InstallFoxpro.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
+
 def InstallVisualStudioCPlusPlus():
     if e1.currentText() == "":
         wineBottonPath = setting["DefultBotton"]
@@ -2455,13 +2462,15 @@ updateThingsString = transla.transe("U", '''※1、简易打包器支持选择 W
 ※6、更换 Box86 源并支持安装 Box64（如果为 aarch64 架构）
 ※7、新增 Wine 自建源（支持 Debian10、Deepin20）
 ※8、修改 WineHQ 安装器使其支持选择国内清华大学镜像源或 WineHQ 官方源
-9、新增自动构建：https://github.com/gfdgd-xi/deep-wine-runner/actions/workflows/auto-building.yml（只供尝鲜）
-10、新增 Wine 日构建（在“安装更多 Wine”处可以获取，目前有 i386、amd64、i386+amd64、amd64+wow64 mode、aarch64）
-11、优化容器清理脚本
-12、修复部分组件没完全换源的问题，部分组件支持自动换可用源''')
+※9、新增 Visual FoxPro 安装器
+※10、新增安装局部运行库以解决部分低版本系统运行高版本 Wine 的问题且不与其他运行库和兼容层冲突
+11、新增自动构建：https://github.com/gfdgd-xi/deep-wine-runner/actions/workflows/auto-building.yml（只供尝鲜）
+12、新增 Wine 日构建（在“安装更多 Wine”处可以获取，目前有 i386、amd64、i386+amd64、amd64+wow64 mode、aarch64）
+13、优化容器清理脚本
+14、修复部分组件没完全换源的问题，部分组件支持自动换可用源''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2023年07月06日"
+updateTime = "2023年07月11日"
 aboutProgram = transla.transe("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。</p>
 <p>它同时还内置了基于VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作。</p>
 <pre>
@@ -2788,6 +2797,7 @@ wineOption.addSeparator()
 wm1 = wineOption.addMenu(transla.transe("U", "在指定 Wine、容器安装组件"))
 wm1_1 = QtWidgets.QAction(transla.transe("U", "在指定wine、指定容器安装 .net framework"))
 wm1_2 = QtWidgets.QAction(transla.transe("U", "在指定wine、指定容器安装 Visual Studio C++"))
+wm1_8 = QtWidgets.QAction(transla.transe("U", "在指定wine、指定容器安装 Visual FoxPro"))
 wm1_3 = QtWidgets.QAction(transla.transe("U", "在指定wine、指定容器安装 MSXML"))
 wm1_4 = QtWidgets.QAction(transla.transe("U", "在指定wine、指定容器安装 gecko"))
 wm1_5 = QtWidgets.QAction(QtGui.QIcon.fromTheme("mono"), transla.transe("U", "在指定wine、指定容器安装 mono"))
@@ -2795,6 +2805,7 @@ wm1_7 = QtWidgets.QAction(transla.transe("U", "在指定wine、指定容器安�
 wm1_6 = QtWidgets.QAction(transla.transe("U", "在指定wine、指定容器安装其它运行库"))
 wm1.addAction(wm1_1)
 wm1.addAction(wm1_2)
+wm1.addAction(wm1_8)
 wm1.addAction(wm1_3)
 wm1.addAction(wm1_4)
 wm1.addAction(wm1_5)
@@ -2902,6 +2913,7 @@ w10.triggered.connect(SetDeepinFileDialogRecovery)
 w11.triggered.connect(lambda: RunWinetricks())
 wm1_1.triggered.connect(lambda: threading.Thread(target=InstallNetFramework).start())
 wm1_2.triggered.connect(lambda: threading.Thread(target=InstallVisualStudioCPlusPlus).start())
+wm1_8.triggered.connect(lambda: threading.Thread(target=InstallFoxPro).start())
 wm1_3.triggered.connect(lambda: threading.Thread(target=InstallMSXML).start())
 wm1_4.triggered.connect(lambda: threading.Thread(target=InstallMonoGecko, args=["gecko"]).start())
 wm1_5.triggered.connect(lambda: threading.Thread(target=InstallMonoGecko, args=["mono"]).start())

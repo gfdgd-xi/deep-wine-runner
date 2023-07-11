@@ -10,3 +10,5 @@ sudo rm -rfv lib
 sudo rm -rfv lib64
 sudo rm -rfv usr
 sudo chmod 777 -Rv .
+echo 删除完成！按回车键退出
+read
