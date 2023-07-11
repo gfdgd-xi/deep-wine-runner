@@ -2337,6 +2337,20 @@ def CheckWine():
                                     f"box64  "
                                 ]
                             )
+                        if os.system("which qemu-i386") == 0 and subprocess.getoutput("arch") != "x86_64" and subprocess.getoutput("arch") != "i386" and subprocess.getoutput("arch") != "i686":
+                            nameValue.append(
+                                [
+                                    "基于 qemu-i386 的 ",
+                                    f"qemu-i386  "
+                                ]
+                            )
+                        if os.system("which qemu-x86_64") == 0 and subprocess.getoutput("arch") != "x86_64" and subprocess.getoutput("arch") != "i386" and subprocess.getoutput("arch") != "i686":
+                            nameValue.append(
+                                [
+                                    "基于 qemu-x86_64 的 ",
+                                    f"qemu-x86_64  "
+                                ]
+                            )
                         if os.path.exists("/opt/exagear/bin/ubt_x64a64_al") and os.path.exists(f"{get_home()}/.deepinwine/debian-buster"):
                             nameValue.append(
                                 [
@@ -2419,11 +2433,11 @@ def CheckWine():
                         wine[f"使用Exagear容器运行库运行 {i}"] = f"bash '{programPath}/WineLib/run-more.sh' '/opt/exagear/images/{k}' {wine[i]}"
                         canUseWine.append(f"使用Exagear容器运行库运行 {i}")
                         untipsWine.append(f"使用Exagear容器运行库运行 {i}")
-            if os.path.exists(f"{get_home()}/.deepinwine/debian-buster"):
-                for i in canUseWineOld:
-                    wine[f"使用UOS Exagear容器运行库运行 {i}"] = f"bash '{programPath}/WineLib/run-more.sh' '{get_home()}/.deepinwine/debian-buster' {wine[i]}"
-                    canUseWine.append(f"使用UOS Exagear容器运行库运行 {i}")
-                    untipsWine.append(f"使用UOS Exagear容器运行库运行 {i}")
+            #if os.path.exists(f"{get_home()}/.deepinwine/debian-buster"):
+                #for i in canUseWineOld:
+                    #wine[f"使用UOS Exagear容器运行库运行 {i}"] = f"bash '{programPath}/WineLib/run-more.sh' '{get_home()}/.deepinwine/debian-buster' {wine[i]}"
+                    #canUseWine.append(f"使用UOS Exagear容器运行库运行 {i}")
+                    #untipsWine.append(f"使用UOS Exagear容器运行库运行 {i}")
         except:
             traceback.print_exc()
     except:
@@ -2480,7 +2494,7 @@ updateThingsString = transla.transe("U", '''※1、简易打包器支持选择 W
 ※8、修改 WineHQ 安装器使其支持选择国内清华大学镜像源或 WineHQ 官方源
 ※9、新增 Visual FoxPro 安装器
 ※10、新增安装局部运行库以解决部分低版本系统运行高版本 Wine 的问题且不与其他运行库和兼容层冲突
-※11、支持调用原版的 Exagear 运行 Wine
+※11、支持调用原版的 Exagear 以及 Qemu User（i386、x86_64） 运行 Wine
 12、新增自动构建：https://github.com/gfdgd-xi/deep-wine-runner/actions/workflows/auto-building.yml（只供尝鲜）
 13、新增 Wine 日构建（在“安装更多 Wine”处可以获取，目前有 i386、amd64、i386+amd64、amd64+wow64 mode、aarch64）
 14、优化容器清理脚本
@@ -2694,7 +2708,7 @@ mainLayout.addWidget(returnText, 0, 1, 2, 1)
 
 # 版权
 copy = QtWidgets.QLabel(f"""程序版本：{version}，<b>提示：Wine 无法保证可以运行所有的 Windows 程序，如果想要运行更多 Windows 程序，可以考虑虚拟机和双系统</b><br/>
-<b>注：部分二进制兼容层会自动添加 binfmt-support（如原版的 Box86/64、Qemu User Static），则无需在 Wine 版本那里特别指定兼容层，直接指定 Wine 即可</b><br/>
+<b>注：部分二进制兼容层会自动注册 binfmt（如原版的 Box86/64、Qemu User Static），则意味着无需在 Wine 版本那里特别指定兼容层，直接指定 Wine 即可</b><br/>
 ©2020~{time.strftime("%Y")} gfdgd xi""")
 mainLayout.addWidget(copy, 2, 0, 1, 1)
 
