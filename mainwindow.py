@@ -2392,7 +2392,7 @@ def CheckWine():
                             canUseWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-x86_64")
                             untipsWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-x86_64")
             for i in canUseWine[:]:
-                if not os.path.exists(f"{programPath}/WineLib/usr/lib/ld-linux-x86-64.so.2"):
+                if os.path.exists(f"{programPath}/WineLib/usr/lib/ld-linux-x86-64.so.2"):
                     wine[f"使用运行器的运行库运行 {i}"] = f"bash '{programPath}/WineLib/run.sh' {wine[i]}"
                     canUseWine.append(f"使用运行器的运行库运行 {i}")
                     untipsWine.append(f"使用运行器的运行库运行 {i}")
