@@ -17,7 +17,7 @@ import updatekiller
 import req as requests
 try:
     sourcesList = [
-        "http://Visual FoxPro.wine-runner.gfdgdxi.top/list.json",
+        "http://foxpro.wine-runner.gfdgdxi.top/list.json",
         "https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/Visual FoxPro/list.json"
     ]
     change = False
@@ -33,15 +33,15 @@ try:
 except:
     print("使用离线列表")
     netList = [
-        ["3.0 Runtime Service Pack 1", "http://FoxPro.wine-runner.gfdgdxi.top/VFP3SP1RT.exe", "VFP3SP1RT.exe"],
-        ["5.0 Runtime Service Pack 1", "http://FoxPro.wine-runner.gfdgdxi.top/VFP5SP1RT.exe", "VFP5SP1RT.exe"],
-        ["6.0 Runtime Service Pack 5", "http://FoxPro.wine-runner.gfdgdxi.top/VFP6SP5RT.exe", "VFP6SP5RT.exe"],
-        ["7.0 Runtime Service Pack 0", "http://FoxPro.wine-runner.gfdgdxi.top/VFP7SP0RT.exe", "VFP7SP0RT.exe"],
-        ["7.0 Runtime Service Pack 1", "http://FoxPro.wine-runner.gfdgdxi.top/VFP7SP1RT.exe", "VFP7SP1RT.exe"],
-        ["8.0 Runtime Service Pack 0", "http://FoxPro.wine-runner.gfdgdxi.top/VFP8SP0RT.exe", "VFP8SP0RT.exe"],
-        ["8.0 Runtime Service Pack 1", "http://FoxPro.wine-runner.gfdgdxi.top/VFP8SP1RT.exe", "VFP8SP1RT.exe"],
-        ["9.0 Runtime Service Pack 1", "http://FoxPro.wine-runner.gfdgdxi.top/VFP9SP1RT.exe", "VFP9SP1RT.exe"],
-        ["9.0 Runtime Service Pack 2 with Hotfixes", "http://FoxPro.wine-runner.gfdgdxi.top/VFP9SP2RT.exe", "VFP9SP2RT.exe"]
+        ["3.0 Runtime Service Pack 1", "http://foxpro.wine-runner.gfdgdxi.top/VFP3SP1RT.EXE", "VFP3SP1RT.EXE"],
+        ["5.0 Runtime Service Pack 1", "http://foxpro.wine-runner.gfdgdxi.top/VFP5SP1RT.EXE", "VFP5SP1RT.EXE"],
+        ["6.0 Runtime Service Pack 5", "http://foxpro.wine-runner.gfdgdxi.top/VFP6SP5RT.EXE", "VFP6SP5RT.EXE"],
+        ["7.0 Runtime Service Pack 0", "http://foxpro.wine-runner.gfdgdxi.top/VFP7SP0RT.EXE", "VFP7SP0RT.EXE"],
+        ["7.0 Runtime Service Pack 1", "http://foxpro.wine-runner.gfdgdxi.top/VFP7SP1RT.EXE", "VFP7SP1RT.EXE"],
+        ["8.0 Runtime Service Pack 0", "http://foxpro.wine-runner.gfdgdxi.top/VFP8SP0RT.EXE", "VFP8SP0RT.EXE"],
+        ["8.0 Runtime Service Pack 1", "http://foxpro.wine-runner.gfdgdxi.top/VFP8SP1RT.EXE", "VFP8SP1RT.EXE"],
+        ["9.0 Runtime Service Pack 1", "http://foxpro.wine-runner.gfdgdxi.top/VFP9SP1RT.EXE", "VFP9SP1RT.EXE"],
+        ["9.0 Runtime Service Pack 2 with Hotfixes", "http://foxpro.wine-runner.gfdgdxi.top/VFP9SP2RT.EXE", "VFP9SP2RT.EXE"]
     ]
 def Download(wineBotton: str, id: int, wine: str) -> int:
     try:
