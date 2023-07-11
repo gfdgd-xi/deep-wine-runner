@@ -3060,6 +3060,9 @@ installLib.addAction(installRunnerLib)
 installLib.addAction(removeRunnerLib)
 diyRunnerLib = installLib.addMenu("定制运行库")
 diyRunnerLib.setDisabled(True)
+diyRunnerLibRemoveTips = QtWidgets.QAction("移除库")
+diyRunnerLibRemoveTips.setDisabled(True)
+diyRunnerLib.addAction(diyRunnerLibRemoveTips)
 installRunnerLib.triggered.connect(lambda: threading.Thread(target=OpenTerminal, args=[f"bash '{programPath}/WineLib/install.sh'"]).start())
 removeRunnerLib.triggered.connect(lambda: threading.Thread(target=OpenTerminal, args=[f"bash '{programPath}/WineLib/remove.sh'"]).start())
 if os.path.exists(f"{programPath}/WineLib/usr"):
@@ -3068,6 +3071,10 @@ if os.path.exists(f"{programPath}/WineLib/usr"):
     diyRunnerLib.setEnabled(True)
     statusRunnerLib.setText("当前状态：已安装")
     libPathList = []
+    def AddLib(number, name):
+        action = QtWidgets.QAction(f"{name}")
+        action.triggered.connect(lambda: print(int(str(number))))
+        diyRunnerLib.addAction(action)    
     for libPath in [f"{programPath}/WineLib/usr/lib", f"{programPath}/WineLib/usr/lib64"]:
         for i in os.listdir(libPath):
             if not os.path.isdir(f"{libPath}/{i}"):
@@ -3077,10 +3084,12 @@ if os.path.exists(f"{programPath}/WineLib/usr"):
                 except:
                     continue
                 libPathList.append(f"{libPath}/{i}")
+                AddLib(len(libPathList), f"{i}")
             else:
                 if not os.path.exists(f"{libPath}/{i}/libc.so.6"):
                     continue
                 libPathList.append(f"{libPath}/{i}/")
+                AddLib(len(libPathList), f"{i}/")
     print(libPathList)
 if os.path.exists(f"{programPath}/InstallRuntime"):
     installLib.addSeparator()
