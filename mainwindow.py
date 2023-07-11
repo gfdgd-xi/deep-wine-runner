@@ -3070,8 +3070,6 @@ if os.path.exists(f"{programPath}/WineLib/usr"):
     libPathList = []
     for libPath in [f"{programPath}/WineLib/usr/lib", f"{programPath}/WineLib/usr/lib64"]:
         for i in os.listdir(libPath):
-            if not os.path.exists(f"{libPath}/{i}/libc.so.6"):
-                continue
             if not os.path.isdir(f"{libPath}/{i}"):
                 try:
                     if not os.path.getsize(f"{libPath}/{i}"):
@@ -3080,6 +3078,8 @@ if os.path.exists(f"{programPath}/WineLib/usr"):
                     continue
                 libPathList.append(f"{libPath}/{i}")
             else:
+                if not os.path.exists(f"{libPath}/{i}/libc.so.6"):
+                    continue
                 libPathList.append(f"{libPath}/{i}/")
     print(libPathList)
 if os.path.exists(f"{programPath}/InstallRuntime"):
