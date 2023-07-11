@@ -2419,6 +2419,11 @@ def CheckWine():
                         wine[f"使用Exagear容器运行库运行 {i}"] = f"bash '{programPath}/WineLib/run-more.sh' '/opt/exagear/images/{k}' {wine[i]}"
                         canUseWine.append(f"使用Exagear容器运行库运行 {i}")
                         untipsWine.append(f"使用Exagear容器运行库运行 {i}")
+            if os.path.exists(f"{get_home()}/.deepinwine/debian-buster"):
+                for i in canUseWineOld:
+                    wine[f"使用UOS Exagear容器运行库运行 {i}"] = f"bash '{programPath}/WineLib/run-more.sh' '{get_home()}/.deepinwine/debian-buster' {wine[i]}"
+                    canUseWine.append(f"使用UOS Exagear容器运行库运行 {i}")
+                    untipsWine.append(f"使用UOS Exagear容器运行库运行 {i}")
         except:
             traceback.print_exc()
     except:
@@ -2475,10 +2480,11 @@ updateThingsString = transla.transe("U", '''※1、简易打包器支持选择 W
 ※8、修改 WineHQ 安装器使其支持选择国内清华大学镜像源或 WineHQ 官方源
 ※9、新增 Visual FoxPro 安装器
 ※10、新增安装局部运行库以解决部分低版本系统运行高版本 Wine 的问题且不与其他运行库和兼容层冲突
-11、新增自动构建：https://github.com/gfdgd-xi/deep-wine-runner/actions/workflows/auto-building.yml（只供尝鲜）
-12、新增 Wine 日构建（在“安装更多 Wine”处可以获取，目前有 i386、amd64、i386+amd64、amd64+wow64 mode、aarch64）
-13、优化容器清理脚本
-14、修复部分组件没完全换源的问题，部分组件支持自动换可用源''')
+※11、支持调用原版的 Exagear 运行 Wine
+12、新增自动构建：https://github.com/gfdgd-xi/deep-wine-runner/actions/workflows/auto-building.yml（只供尝鲜）
+13、新增 Wine 日构建（在“安装更多 Wine”处可以获取，目前有 i386、amd64、i386+amd64、amd64+wow64 mode、aarch64）
+14、优化容器清理脚本
+15、修复部分组件没完全换源的问题，部分组件支持自动换可用源''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
 updateTime = "2023年07月11日"
