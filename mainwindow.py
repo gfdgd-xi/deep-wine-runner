@@ -2358,13 +2358,6 @@ def CheckWine():
                                     "/opt/exagear/bin/ubt_x32a64_al -- "
                                 ]
                             )
-                        if os.path.exists(f"{programPath}/WineLib/usr/lib/ld-linux-x86-64.so.2"):
-                            nameValue.append(
-                                [
-                                    "使用运行器的运行库运行",
-                                    f"bash '{programPath}/WineLib/run.sh' "
-                                ]
-                            )
                         for g in qemuBottleList:
                             nameValue.append([
                                 f"使用qemu-{g[0]}-static 调用容器{g[1]}运行 ",
@@ -2398,6 +2391,11 @@ def CheckWine():
                             wine[f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-x86_64"] = f"{k[1]}{chrootProgramPath}/wine/{i}/bin/wine-x86_64"
                             canUseWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-x86_64")
                             untipsWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-x86_64")
+            for i in canUseWine[:]:
+                if not os.path.exists(f"{programPath}/WineLib/usr/lib/ld-linux-x86-64.so.2"):
+                    wine[f"使用运行器的运行库运行 {i}"] = f"bash '{programPath}/WineLib/run.sh' {wine[i]}"
+                    canUseWine.append(f"使用运行器的运行库运行 {i}")
+                    untipsWine.append(f"使用运行器的运行库运行 {i}")
         except:
             pass
         try:
@@ -2676,7 +2674,8 @@ mainLayout.setColumnStretch(1, 1)
 mainLayout.addWidget(returnText, 0, 1, 2, 1)
 
 # 版权
-copy = QtWidgets.QLabel(f"""\n程序版本：{version}，<b>提示：Wine 无法保证可以运行所有的 Windows 程序，如果想要运行更多 Windows 程序，可以考虑虚拟机和双系统</b><br>
+copy = QtWidgets.QLabel(f"""程序版本：{version}，<b>提示：Wine 无法保证可以运行所有的 Windows 程序，如果想要运行更多 Windows 程序，可以考虑虚拟机和双系统</b><br/>
+<b>注：部分二进制兼容层会自动添加 binfmt-support（如原版的 Box86/64、Qemu User Static），则无需在 Wine 版本那里特别指定兼容层，直接指定 Wine 即可</b><br/>
 ©2020~{time.strftime("%Y")} gfdgd xi""")
 mainLayout.addWidget(copy, 2, 0, 1, 1)
 
