@@ -1,5 +1,5 @@
 Package: spark-deepin-wine-runner
-Version: 3.2.2.1
+Version: 3.3.0
 Maintainer: gfdgd xi <3025613752@qq.com>
 Homepage: https://gitee.com/gfdgd-xi/deep-wine-runner
 Architecture: all
@@ -9,26 +9,11 @@ Check: binaries
 Type: binary, udeb
 Priority: optional
 Depends: python3, python3-pil, libc6, python3-pil.imagetk, python3-pyquery, aria2, curl, unrar | unrar-free , unzip, python3-requests, python3-pyqt5, python3-psutil, deepin-terminal | mate-terminal | gnome-terminal | xfce4-terminal, python3-dbus, python3-pip, p7zip-full, sudo, python3-pyperclip, bubblewrap, zenity
-Recommends: winbind, wimtools, python3-pyqt5.qtwebengine, qemu-user, binfmt-support, qemu-user-static
+Recommends: winbind, wimtools, python3-pyqt5.qtwebengine, binfmt-support, libc6:i386
 Section: utils
 Conflicts: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, spark-deepin-wine-runner-52
 Replaces: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, spark-deepin-wine-runner-52
 Provides: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, spark-deepin-wine-runner-52
 Installed-Size: 76512
-Description: gfdgd xi 制作的 wine 运行器
- 3.2.2 更新内容：
- ※1. 修改源地址，脱离 Gitlink；
- ※2. 修复非 X86 架构运行器主页面虚拟机工具禁用的问题。
- 3.2.1 更新内容：
- ※1、Windows 虚拟机安装工具支持非 X86 架构；
- ※2、应用打包器可以与星火应用商店配合构建 arm/all 全架构的 Wine 包；
- ※3、Windows 虚拟机安装工具支持调用 Qemu；
- ※4、新增 Qemu User 运行 Wine 的帮助入口；
- ※5、修复 Windows 虚拟机的自动配置镜像缺少 aria2c.exe 的故障；
- ※6、支持在更新程序版本时自动关闭程序进程；
- 7、运行器和打包器支持调用 spark-wine8；
- 8、修改作者信息；
- 9、新增安装包构建时间；
- 10、优化 Wine 运行器更新策略。
- 更新时间：2023年04月29日
- 作者：gfdgd xi
+Description: Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。
+ 它同时还内置了基于Qemu/VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作，也能在非 X86 架构安装 X86 架构的 Windows 操作系统（但是效率较低）。

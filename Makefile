@@ -157,6 +157,7 @@ install:
 	sudo apt update ; true
 	#sudo dpkg -i spark-deepin-wine-runner.deb
 	sudo apt reinstall ./spark-deepin-wine-runner.deb -y --allow-downgrades 
+	rm spark-deepin-wine-runner.deb -vf
 
 remove:
 	sudo apt purge spark-deepin-wine-runner  -y
