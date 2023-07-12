@@ -2358,6 +2358,14 @@ def CheckWine():
                                     f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al --  "
                                 ]
                             )
+                        if os.system("which exagear") == 0:
+                            nameValue.append(
+                                [
+                                    "运行 exagear 容器内的 ",
+                                    f"exagear -- "
+                                ]
+                            )
+
                         if os.path.exists("/opt/exagear/bin/ubt_x64a64_al"):
                             nameValue.append(
                                 [
@@ -2365,6 +2373,7 @@ def CheckWine():
                                     "/opt/exagear/bin/ubt_x64a64_al -- "
                                 ]
                             )
+                        
                         if os.path.exists("/opt/exagear/bin/ubt_x32a64_al"):
                             nameValue.append(
                                 [
