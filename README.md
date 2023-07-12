@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 3.2.2</h1>
+<h1 align="center">Wine 运行器 3.3.0</h1>
 <hr>
 
 ## 介绍
@@ -136,6 +136,24 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志 
+### 3.3.0（2023年07月12日）
+**※1、简易打包器支持选择 Wine 版本以及修改打包生成的 deb 包的架构为 all；**  
+**※2、修改容器自动配置脚本的 Gitlink 源为 Gitee 源**  
+**※3、在安装更多 Wine 处安装 Wine 后主窗口 Wine 版本下拉框自动更新**  
+**※4、设置打包器在 Ubuntu 依旧打包 xz 格式的 deb 包**  
+**※5、修复 Wine 简易打包器 control 文件 Installed-Size 格式不规范的问题**  
+**※6、更换 Box86 源并支持安装 Box64（如果为 aarch64 架构）**  
+**※7、新增 Wine 自建源（支持 Debian10、Deepin20）**  
+**※8、修改 WineHQ 安装器使其支持选择国内清华大学镜像源或 WineHQ 官方源**  
+**※9、新增 Visual FoxPro 安装器**  
+**※10、新增安装局部运行库以解决部分低版本系统运行高版本 Wine 的问题且不与其他运行库和兼容层冲突**  
+**※11、支持调用原版的 Exagear 以及 Qemu User（i386、x86_64） 运行 Wine**  
+12、新增自动构建：https://github.com/gfdgd-xi/deep-wine-runner/actions/workflows/auto-building.yml（只供尝鲜）  
+13、新增 Wine 日构建（在“安装更多 Wine”处可以获取，目前有 i386、amd64、i386+amd64、amd64+wow64 mode、aarch64）  
+14、优化容器清理脚本  
+15、修复部分组件没完全换源的问题，部分组件支持自动换可用源  
+![图片.png](https://storage.deepin.org/thread/202307121216143835_图片.png)  
+![图片.png](https://storage.deepin.org/thread/202307121221299140_图片.png)  
 ### 3.2.2（2023年05月12日）
 **※1. 修改源地址（迁出 Gitlink）；**  
 **※2. 修复非 X86 架构运行器主页面虚拟机工具禁用的问题；**  
