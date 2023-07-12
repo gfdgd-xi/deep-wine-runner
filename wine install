@@ -74,4 +74,17 @@ if not choose == "N":
     os.system("apt update -o Dir::Etc::sourcelist=\"sources.list.d/sparkstore.list\"     -o Dir::Etc::sourceparts=\"-\" -o APT::Get::List-Cleanup=\"0\"")
     os.system("sudo apt update")
     os.system("sudo apt install spark-wine7-devel -y")
+print("请问是否要安裝 spark-wine8-wow及其套件？（需要添加星火应用商店的仓库）[Y/N]", end=' ')
+choose = input().upper()
+if not choose == "N":
+    if os.path.exists("/etc/apt/sources.list.d/sparkstore.list"):
+        os.system("sudo apt install spark-wine8-wow -y")
+    os.system("sudo touch /etc/apt/sources.list.d/sparkstore.list")
+    os.system("echo 'deb [by-hash=force] https://d.store.deepinos.org.cn/ /' | sudo tee '/etc/apt/sources.list.d/sparkstore.list'")
+    os.system("mkdir -p /tmp/spark-store-install")
+    os.system("wget -O /tmp/spark-store-install/spark-store.asc https://d.store.deepinos.org.cn/dcs-repo.gpg-key.asc")
+    os.system("cp -f /tmp/spark-store-install/spark-store.asc.gpg /etc/apt/trusted.gpg.d/spark-store.gpg")
+    os.system("apt update -o Dir::Etc::sourcelist=\"sources.list.d/sparkstore.list\"     -o Dir::Etc::sourceparts=\"-\" -o APT::Get::List-Cleanup=\"0\"")
+    os.system("sudo apt update")
+    os.system("sudo apt install spark-wine8-wow -y")
 print("全部完成！")
