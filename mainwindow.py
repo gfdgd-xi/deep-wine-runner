@@ -54,6 +54,14 @@ if sys.version_info[1] < 6:
 # 程序所需事件
 ###################
 
+def MiniMode(mode):
+    for i in [sparkWineSetting, qemuMenu, installLib, log, safeWebsize,
+              checkValue, virtualMachine, killProgram, killBottonProgram,
+              fontAppStore, wineConfig, trasButton, button5,
+              saveDesktopFileOnLauncher, label_r_2, combobox1,
+              leftDown]:
+        i.setVisible(not mode)
+
 # 打开程序官网
 def OpenProgramURL():
     webbrowser.open_new_tab(programUrl)
@@ -2694,6 +2702,9 @@ programManager.addWidget(sparkWineSetting, 3, 6, 1, 1)
 wineAutoConfig = QtWidgets.QPushButton(transla.transe("U", "自动/手动配置 Wine 容器"))
 wineAutoConfig.clicked.connect(WineBottonAutoConfig)
 programManager.addWidget(wineAutoConfig, 3, 8, 1, 1)
+wineBottleReboot = QtWidgets.QPushButton(transla.transe("U", "重启指定Wine容器"))
+wineBottleReboot.clicked.connect(lambda: RunWineProgram(f"wineboot' '-k"))
+programManager.addWidget(wineBottleReboot, 3, 10, 1, 1)
 # 权重
 button5.setSizePolicy(size)
 saveDesktopFileOnLauncher.setSizePolicy(size)
@@ -3264,5 +3275,6 @@ if o1.currentText() == "":
     canUseWine.append("没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用")
     o1.addItem("没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用")
 
-
+# Mini 模式
+# MiniMode(True)
 sys.exit(app.exec_())
