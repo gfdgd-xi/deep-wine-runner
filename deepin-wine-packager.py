@@ -1670,12 +1670,22 @@ def ChangeArchCombobox():
 def InstallDeb():
     os.system(f"xdg-open '{e12_text.text()}'")
 
+def BrowserHelperConfigPathText():
+    global helperConfigPath
+    path = QtWidgets.QFileDialog.getOpenFileUrl(window, "选择 sh 文件", get_home(), "shell 脚本(*.sh);;所有文件(*.*)")[0]
+    if path == "" or path == None:
+        return
+    helperConfigPath = path
+    helperConfigPathText.setText(os.path.basename(path))
+
 def ChangeWine():
     useInstallWineArch.setEnabled(os.path.exists(wine[wineVersion.currentText()]))
     debDepends.setText([f"{wine[wineVersion.currentText()]}, deepin-wine-helper (>= 5.1.30-1), fonts-wqy-microhei, fonts-wqy-zenhei",
                         f"{wine[wineVersion.currentText()]}, spark-dwine-helper | store.spark-app.spark-dwine-helper, fonts-wqy-microhei, fonts-wqy-zenhei"
                         ][int(chooseWineHelperValue.isChecked())])
     debRecommend.setText("")
+    helperConfigPathText.setEnabled(chooseWineHelperValue.isChecked())
+    helperConfigPathButton.setEnabled(chooseWineHelperValue.isChecked())
     if os.path.exists(wine[wineVersion.currentText()]):
         debDepends.setText(["deepin-wine-helper (>= 5.1.30-1)",
                         "spark-dwine-helper | store.spark-app.spark-dwine-helper"
@@ -2062,6 +2072,7 @@ except:
     pass
 os.chdir("/")
 iconUiList = []
+helperConfigPath = None
 iconPath = "{}/deepin-wine-runner.svg".format(programPath)
 information = json.loads(readtxt(f"{programPath}/information.json"))
 version = information["Version"]
@@ -2129,6 +2140,11 @@ option1_text.addItems(["Network", "Chat", "Audio", "Video", "Graphics", "Office"
 option1_text.setCurrentText("Network")
 wineFrame = QtWidgets.QHBoxLayout()
 chooseWineHelperValue = QtWidgets.QCheckBox(transla.transe("U", "使用星火wine helper\n（如不勾选默认为deepin-wine-helper）"))
+helperConfigPathLayout = QtWidgets.QHBoxLayout()
+helperConfigPathButton = QtWidgets.QPushButton("浏览")
+helperConfigPathText = QtWidgets.QLabel("点击浏览按钮指定软件包适配脚本")
+helperConfigPathLayout.addWidget(helperConfigPathButton)
+helperConfigPathLayout.addWidget(helperConfigPathText)
 button1.clicked.connect(button1_cl)
 button2.clicked.connect(lambda: button2_cl(0))
 mapLink.append(e9_text)
@@ -2217,6 +2233,7 @@ moreSettingLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "deb 包选项�
 moreSettingLayout.addWidget(rmBash)
 moreSettingLayout.addWidget(cleanBottonByUOS)
 moreSettingLayout.addWidget(chooseWineHelperValue)
+moreSettingLayout.addLayout(helperConfigPathLayout)
 moreSettingLayout.addWidget(disabledMono)
 moreSettingLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "deb 的依赖(强制，如无特殊需求默认即可)：")))
 moreSettingLayout.addWidget(debDepends)
