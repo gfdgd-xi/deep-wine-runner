@@ -1979,6 +1979,8 @@ def getFileFolderSize(fileOrFolderPath):
         if os.path.isfile(fileOrFolderPath):
             totalSize = os.path.getsize(fileOrFolderPath)  # 5041481
             return totalSize
+        if os.path.islink(fileOrFolderPath):
+            return 0
         if os.path.isdir(fileOrFolderPath):
             with os.scandir(fileOrFolderPath) as dirEntryList:
                 for curSubEntry in dirEntryList:
@@ -2227,7 +2229,6 @@ def CheckWine():
     global untipsWine
     global canUseWine
     try:
-        
         wine = {
             "基于 UOS box86 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86 /opt/deepin-wine6-stable/bin/wine ",
             "基于 UOS exagear 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al -- /opt/deepin-wine6-stable/bin/wine ",
