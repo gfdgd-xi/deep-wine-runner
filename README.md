@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 3.3.0</h1>
+<h1 align="center">Wine 运行器 3.3.0.1</h1>
 <hr>
 
 ## 介绍
@@ -136,6 +136,10 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志 
+### 3.3.0.1（2023年07月25日）
+**※1、修复运行器打开主界面不进行任何操作但 CPU 占用率过高的问题**  
+**※2、修复运行器运行器（局部）无法正常移除的问题**  
+
 ### 3.3.0（2023年07月12日）
 **※1、简易打包器支持选择 Wine 版本以及修改打包生成的 deb 包的架构为 all；**  
 **※2、修改容器自动配置脚本的 Gitlink 源为 Gitee 源**  
