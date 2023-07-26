@@ -1561,6 +1561,12 @@ StartupNotify=false
                         #write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/{os.path.splitext(os.path.basename(i[0].text().replace(line, '/')))[0]}_with_exagear.sh", ReplaceText(debInformation[debArch.currentIndex()]["run_with_exagear.sh"], replaceMap))
             if debArch.currentIndex() != 2:                    
                 write_txt("{}/opt/apps/{}/info".format(debPackagePath, e1_text.text()), debInformation[debArch.currentIndex()]["info"])
+            if helperConfigPath != None and helperConfigPath != "":
+                os.makedirs(f"{debPackagePath}/opt/deepinwine/tools/spark_run_v4_app_configs")
+                if e6_text.text()[-3: ] == ".7z":
+                    shutil.copy(helperConfigPath, f"{debPackagePath}/opt/deepinwine/tools/spark_run_v4_app_configs/{os.path.splitext(e6_text.text())[0]}")
+                else:
+                    shutil.copy(helperConfigPath, f"{debPackagePath}/opt/deepinwine/tools/spark_run_v4_app_configs/{e6_text.text()}")
             ################
             # 修改文件权限
             ################
@@ -1675,9 +1681,14 @@ def ChangeArchCombobox():
 def InstallDeb():
     os.system(f"xdg-open '{e12_text.text()}'")
 
+def ClearHelperConfigPathText():
+    global helperConfigPath
+    helperConfigPath = None
+    helperConfigPathText.setText("点击浏览按钮指定软件包适配脚本")
+
 def BrowserHelperConfigPathText():
     global helperConfigPath
-    path = QtWidgets.QFileDialog.getOpenFileUrl(window, "选择 sh 文件", get_home(), "shell 脚本(*.sh);;所有文件(*.*)")[0]
+    path = QtWidgets.QFileDialog.getOpenFileName(window, "选择 sh 文件", get_home(), "shell 脚本(*.sh);;所有文件(*.*)")[0]
     if path == "" or path == None:
         return
     helperConfigPath = path
@@ -2048,6 +2059,9 @@ def LockBottleName():
 def get_now_lang()->"获取当前语言":
     return os.getenv('LANG')
 
+
+
+
 bottleNameLock = False
 ###############
 # 程序信息
@@ -2150,6 +2164,13 @@ helperConfigPathButton = QtWidgets.QPushButton("浏览")
 helperConfigPathText = QtWidgets.QLabel("点击浏览按钮指定软件包适配脚本")
 helperConfigPathLayout.addWidget(helperConfigPathButton)
 helperConfigPathLayout.addWidget(helperConfigPathText)
+helperConfigPathButton.clicked.connect(BrowserHelperConfigPathText)
+helperConfigPathButton.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+helperConfigPathMenu = QtWidgets.QMenu(window)
+delHelperConfigPath = QtWidgets.QAction("取消选择")
+delHelperConfigPath.triggered.connect(ClearHelperConfigPathText)
+helperConfigPathMenu.addAction(delHelperConfigPath)
+helperConfigPathButton.customContextMenuRequested.connect(lambda: helperConfigPathMenu.exec_(QtGui.QCursor.pos()))
 button1.clicked.connect(button1_cl)
 button2.clicked.connect(lambda: button2_cl(0))
 mapLink.append(e9_text)
