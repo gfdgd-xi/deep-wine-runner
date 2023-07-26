@@ -497,10 +497,13 @@ Get_Dist_Name()
         DISTRO='Deepin'
     elif grep -Eqi "UnionTech" /etc/issue || grep -Eq "UnionTech" /etc/*-release; then
         DISTRO='UniontechOS'
+    elif grep -Eqi "UOS" /etc/issue || grep -Eq "UOS" /etc/*-release; then
+        DISTRO='UniontechOS'
     else
 	 DISTRO='OtherOS'
 	fi
 }}
+
 
 
 ####获得发行版名称
@@ -514,13 +517,18 @@ APPVER="@@@APPVER@@@"
 EXEC_PATH="@@@EXEC_PATH@@@"
 ##### 软件在wine中的启动路径
 START_SHELL_PATH="/opt/deepinwine/tools/spark_run_v4.sh"
+{['''ENABLE_DOT_NET=true''', 'ENABLE_DOT_NET=""'][int(disabledMono.isChecked())]}
+####若使用spark-wine时需要用到.net，则请把ENABLE_DOT_NET设为true，同时在依赖中写spark-wine7-mono
 export MIME_TYPE=""
-#####没什么用
+
+
 export DEB_PACKAGE_NAME="@@@DEB_PACKAGE_NAME@@@"
 ####这里写包名才能在启动的时候正确找到files.7z,似乎也和杀残留进程有关
 export APPRUN_CMD="@@@APPRUN_CMD@@@"
 #####wine启动指令，建议
-EXPORT_ENVS=""
+#EXPORT_ENVS="wine的动态链接库路径"
+##例如我的wine应用是使用的dwine6的32位容器，那么我要填LD_LIBRARY_PATH=$LD_LIBRARY;/opt/deepin-wine6-stable/lib
+## 如果用不到就不填，不要删除前面的注释用的#
 
 export SPECIFY_SHELL_DIR=`dirname $START_SHELL_PATH`
 
@@ -538,7 +546,7 @@ DISABLE_ATTACH_FILE_DIALOG=""
 
 ##############<<<<<<<<<禁用文件选择工具开始
 Get_Dist_Name
-#此功能实现参见结尾函数段
+#此功能实现参见开头函数段
 if [ "$DISTRO" != "Deepin" ] && [ "$DISTRO" != "UniontechOS" ];then
 DISABLE_ATTACH_FILE_DIALOG="1"
 echo "非deepin/UOS，默认关闭系统自带的文件选择工具，使用Wine的"
@@ -550,17 +558,13 @@ fi
 
 ##############<<<<<<<<<屏蔽mono和gecko安装器开始
 ##默认屏蔽mono和gecko安装器
-{['''#if [ "$APPRUN_CMD" = "spark-wine7-devel" ];then
+if [ "$APPRUN_CMD" = "spark-wine7-devel" ] || [ "$APPRUN_CMD" = "spark-wine" ]|| [ "$APPRUN_CMD" = "spark-wine8" ] && [ -z "$ENABLE_DOT_NET" ];then
 
-#export WINEDLLOVERRIDES="mscoree,mshtml="
-#echo "为了降低打包体积，默认关闭gecko和momo，如有需要，注释此行（仅对spark-wine7-devel有效）"
+export WINEDLLOVERRIDES="mscoree=d,mshtml=d"
+export WINEDLLOVERRIDES="control.exe=d"
+#### "为了降低打包体积，默认关闭gecko和momo，如有需要，注释此行（仅对spark-wine7-devel有效）"
 
-#fi''', '''if [ "$APPRUN_CMD" = "spark-wine7-devel" ];then
-
-export WINEDLLOVERRIDES="mscoree,mshtml="
-echo "为了降低打包体积，默认关闭gecko和momo，如有需要，注释此行（仅对spark-wine7-devel有效）"
-
-fi'''][int(disabledMono.isChecked())]}
+fi
 ##############>>>>>>>>>屏蔽mono和gecko安装器结束
 
 #########################执行段
@@ -584,7 +588,8 @@ if [ -n "$EXEC_PATH" ];then
     fi
 else
     $START_SHELL_PATH $BOTTLENAME $APPVER "uninstaller.exe" "$@"
-fi"""
+fi
+"""
                         ][chooseWineHelperValue.isChecked()],
                         "info": f'''{{
     "appid": "{e1_text.text()}",
