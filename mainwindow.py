@@ -2235,6 +2235,7 @@ def CheckWine():
             "使用 Flatpak 安装的 Wine": "flatpak run org.winehq.Wine",
             "deepin-wine6 stable": "deepin-wine6-stable", 
             "deepin-wine5 stable": "deepin-wine5-stable", 
+            "spark-wine": "spark-wine",
             "spark-wine7-devel": "spark-wine7-devel", 
             "spark-wine8": "spark-wine8",
             "deepin-wine": "deepin-wine", 
