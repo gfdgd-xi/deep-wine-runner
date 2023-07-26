@@ -3,14 +3,15 @@ import sys
 import os
 import atexit
 
-PIDFILE = '/tmp/deepin-wine-runner.pid'
+PIDFILE = '/tmp/uengine-runner.pid'
 
 #程序结束时清理pid
 @atexit.register
 def remove_pid():
+    '''程序结束时清理pid'''
     with open(PIDFILE) as pidfile:
         pidlst = pidfile.readlines()
-    pidlst.remove(str(PID)+'\n')
+    pidlst.remove(str(PID)+'\n')    #移除记录中的pid
     with open(PIDFILE,'w') as pidfile:
         pidfile.writelines(pidlst)
 
@@ -21,7 +22,7 @@ def main():
             os.kill(int(i),15)
         except ProcessLookupError:
             pass
-    os.remove(PIDFILE)
+##    os.remove(PIDFILE)    #因修复#I6ZRZX而注释
 
 #当该程序被直接执行时，执行结束进程操作。如果是导入的形式，则只是记录pid
 if __name__ == '__main__':
