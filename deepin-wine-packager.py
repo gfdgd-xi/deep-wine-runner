@@ -1564,9 +1564,9 @@ StartupNotify=false
             if helperConfigPath != None and helperConfigPath != "":
                 os.makedirs(f"{debPackagePath}/opt/deepinwine/tools/spark_run_v4_app_configs")
                 if e6_text.text()[-3: ] == ".7z":
-                    shutil.copy(helperConfigPath, f"{debPackagePath}/opt/deepinwine/tools/spark_run_v4_app_configs/{os.path.splitext(e6_text.text())[0]}")
+                    shutil.copy(helperConfigPath, f"{debPackagePath}/opt/deepinwine/tools/spark_run_v4_app_configs/{os.path.splitext(e6_text.text())[0]}.sh")
                 else:
-                    shutil.copy(helperConfigPath, f"{debPackagePath}/opt/deepinwine/tools/spark_run_v4_app_configs/{e6_text.text()}")
+                    shutil.copy(helperConfigPath, f"{debPackagePath}/opt/deepinwine/tools/spark_run_v4_app_configs/{e6_text.text()}.sh")
             ################
             # 修改文件权限
             ################
