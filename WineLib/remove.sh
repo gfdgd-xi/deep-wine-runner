@@ -9,6 +9,6 @@ fi
 rm -rfv lib
 rm -rfv lib64
 rm -rfv usr
-chmod 777 -Rv ../WineLib
+chmod 777 -Rv .
 echo 删除完成！按回车键退出
 read
