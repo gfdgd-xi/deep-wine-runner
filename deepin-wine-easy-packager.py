@@ -515,8 +515,8 @@ class RunThread(QtCore.QThread):
                 # 拷贝文件到容器
                 self.RunCommand(f"cp -rv '{folderExePath}' '{bottlePath}/drive_c/Program Files'")
                 debPackageVersion = self.GetEXEVersion(exePath.text(), bottlePath)
-            debDescription = f"{exeName} By Deepin Wine 6 Stable And Build By Wine Runner Easy Packager"
-            debDepends = f"{chooseWine}, spark-dwine-helper | store.spark-app.spark-dwine-helper, fonts-wqy-microhei, fonts-wqy-zenhei"
+            debDescription = f"{exeName} By Build By Wine Runner Easy Packager"
+            debDepends = f"{chooseWine} | {chooseWine}-bcm | {chooseWine}-dcm, spark-dwine-helper | store.spark-app.spark-dwine-helper, fonts-wqy-microhei, fonts-wqy-zenhei"
             self.RunCommand(f"mkdir -pv '{debBuildPath}/DEBIAN'")
             self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/files'")
             self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/entries/applications'")
@@ -644,7 +644,7 @@ if __name__ == "__main__":
         "使用 Deepin Wine2 打包应用"
     ]
     wineChooserIndex = 0
-    wineList = ["spark-wine8", "spark-wine7-devel", "deepin-wine6-stable", "deepin-wine5-stable", "deepin-wine5", "deepin-wine"]
+    wineList = ["spark-wine7-devel", "deepin-wine6-stable", "deepin-wine5-stable", "deepin-wine5", "deepin-wine"]
     for i in range(len(wineList)):
         if not os.system(f"which '{wineList[i]}'"):
             wineChooserIndex = i

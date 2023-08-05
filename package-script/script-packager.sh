@@ -2,7 +2,7 @@
 #export elephant_deb_package_name=""
 run_sh_dir=""
 elephant_run_sh_dir=""
-start_shell="/opt/deepinwine/tools/run_v4.sh"
+start_shell="/opt/deepinwine/tools/spark_run_v4.sh"
 if [[ -n "$SPECIFY_SHELL_PATH" ]] && [[ "$SPECIFY_SHELL_PATH" == "/opt/apps"* ]];then
     start_shell="$SPECIFY_SHELL_PATH"
 fi

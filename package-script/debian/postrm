@@ -2,24 +2,55 @@
 if [ "$1" = "remove" ] || [ "$1" = "purge" ];then
 
 echo "清理卸载残留"
-CONTAINER_NAME="@deb_package_name@"
+BOTTLE_NAME="@public_bottle_name@" #在引号中填写容器名
+PACK_NAME="@deb_package_name@"   #在引号中填写软件包名
+ACTIVEX_NAME="" #activex相关，若未使用，可不设置
+MAKE_AUTOSTART="" #如果先前设置了开机自启，则在此处填写1
 
-if [ -z $CONTAINER_NAME ];then
+
+
+### 以下为功能段，若只用于打包则以下内容可不看，只填写上方即可
+
+make_autostart()
+{
+for username in $(ls /home)  
+    do
+      echo /home/$username
+        if [ -d "/home/$username/.config/autostart" ]
+        then
+            rm /home/$username/.config/autostart/$PACK_NAME.desktop
+        fi
+    done
+}
+
+
+
+if [ -n "$MAKE_AUTOSTART" ]; then
+    make_autostart
+fi
+
+
+if [ -n "$ACTIVEX_NAME" ]; then
+    rm /usr/lib/mozilla/plugins/libpipelight-$ACTIVEX_NAME.so
+fi
+
+
+if [ -z $BOTTLE_NAME ];then
 echo "W: 没有指定容器，跳过清理容器。请手动前往 ~/.deepinwine/ 下删除"
 exit
 fi
 
-if [ -e /opt/deepinwine/tools/kill.sh ];then
-/opt/deepinwine/tools/kill.sh $CONTAINER_NAME
-###这里注意，如果没写CONTAINER_NAME,会把QQ杀了
+if [ -e /opt/deepinwine/tools/spark_kill.sh ];then
+/opt/deepinwine/tools/spark_kill.sh $BOTTLE_NAME
+###这里注意，如果没写BOTTLE_NAME,会把QQ杀了
 fi
 
 for username in $(ls /home)  
     do
       echo /home/$username
-        if [ -d /home/$username/.deepinwine/$CONTAINER_NAME ]  
+        if [ -d /home/$username/.deepinwine/$BOTTLE_NAME ]  
         then
-        rm -rf /home/$username/.deepinwine/$CONTAINER_NAME
+        rm -rf /home/$username/.deepinwine/$BOTTLE_NAME
         fi
     done
 else
