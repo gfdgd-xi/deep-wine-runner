@@ -790,7 +790,9 @@ def RunWineProgram(wineProgram, history = False, Disbled = True):
 
 class RunWinetricksThread(QtCore.QThread):
     signal = QtCore.pyqtSignal(str)
-    def __init__(self):
+    bwrap = QtCore.pyqtSignal(str)
+    def __init__(self, bwrap):
+        self.bwrap = bwrap
         super().__init__()
 
     def run(self):
@@ -811,13 +813,36 @@ class RunWinetricksThread(QtCore.QThread):
                     QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
                     return
                 os.remove(f"{programPath}/dlls-arm.7z")
+        ## 获取 WineServer 路径
+        wineServer = None
+        winePath = wine[o1.currentText()]
+        # 判断类似 xxx-server 的 WineServer
+        if not os.system(f"{winePath}-server") >> 8:
+            wineServer = f"{winePath}-server"
+        # 判断类似 deepin-wine6-stable 的 WineServer
+        elif os.path.exists(f"/opt/{winePath}/bin/wineserver"):
+            wineServer = f"/opt/{winePath}/bin/wineserver"
+        elif os.path.exists(winePath):
+            wineServer = f"{winePath}/bin/wineserver"
+        runtime = ""
+        if self.bwrap:
+            runtime = f"'{programPath}/WineLib/run.sh'"
+        winetricksPath = "winetricks"
+        if os.system("which winetricks") >> 8:
+            winetricksPath = f"'{programPath}/winetricks'"
         if setting["TerminalOpen"]:
             res = ""
             # 用终端开应该不用返回输出内容了
-            OpenTerminal(f"WINEPREFIX='{wineBottonPath}' {option} WINE=" + subprocess.getoutput(f"which {wine[o1.currentText()]}").replace(" ", "").replace("\n", "") + f" winetricks --gui {wineUsingOption}")
+            if wineServer == None:
+                OpenTerminal(f"WINEPREFIX='{wineBottonPath}' {option} WINE=" + subprocess.getoutput(f"which {wine[o1.currentText()]}").replace(" ", "").replace("\n", "") + f" {runtime} {winetricksPath} --gui {wineUsingOption}")
+            else:
+                OpenTerminal(f"WINEPREFIX='{wineBottonPath}' {option} WINESERVER='{wineServer}' WINE='" + subprocess.getoutput(f"which {wine[o1.currentText()]}").replace(" ", "").replace("\n", "") + f"' {runtime} {winetricksPath} --gui {wineUsingOption}")
             #res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='{wineBottonPath}' {option} WINE=" + subprocess.getoutput(f"which {wine[o1.currentText()]}").replace(" ", "").replace("\n", "") + f" winetricks --gui {wineUsingOption}\" --keep-open"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         else:    
-            res = subprocess.Popen([f"WINEPREFIX='{wineBottonPath}' {option} WINE='" + subprocess.getoutput(f"which {wine[o1.currentText()]}").replace(" ", "").replace("\n", "") + "' winetricks --gui"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            if wineServer == None:
+                res = subprocess.Popen([f"WINEPREFIX='{wineBottonPath}' {option} WINE='" + subprocess.getoutput(f"which {wine[o1.currentText()]}").replace(" ", "").replace("\n", "") + f"' {runtime} {winetricksPath} --gui"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            else:
+                res = subprocess.Popen([f"WINEPREFIX='{wineBottonPath}' {option} WINESERVER='{wineServer}' WINE='" + subprocess.getoutput(f"which {wine[o1.currentText()]}").replace(" ", "").replace("\n", "") + f"' {runtime} {winetricksPath} --gui"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         # 实时读取程序返回
         while res.poll() is None:
             try:
@@ -831,6 +856,24 @@ class RunWinetricksThread(QtCore.QThread):
         DisableButton(False)
 
 runWinetricks = None
+def RunWinetricksWithWineLib():
+    global runWinetricks
+    DisableButton(True)
+    if not CheckProgramIsInstall(wine[o1.currentText()]) and o1.currentText() != "基于 linglong 的 deepin-wine6-stable（不推荐）" and o1.currentText() != "基于 UOS exagear 的 deepin-wine6-stable" and o1.currentText() != "基于 UOS box86 的 deepin-wine6-stable":
+        if not CheckProgramIsInstall(wine[o1.currentText()]) and not o1.currentText() in untipsWine:
+            DisableButton(False)
+            return
+    if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable":
+        if not os.path.exists(f"{programPath}/dlls-arm"):
+            if os.system(f"7z x -y \"{programPath}/dlls-arm.7z\" -o\"{programPath}\""):
+                QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
+                return
+            os.remove(f"{programPath}/dlls-arm.7z")
+    returnText.setText("")
+    runWinetricks = RunWinetricksThread(False)
+    runWinetricks.signal.connect(QT.ShowWineReturn)
+    runWinetricks.start()
+
 def RunWinetricks():
     global runWinetricks
     DisableButton(True)
@@ -845,7 +888,7 @@ def RunWinetricks():
                 return
             os.remove(f"{programPath}/dlls-arm.7z")
     returnText.setText("")
-    runWinetricks = RunWinetricksThread()
+    runWinetricks = RunWinetricksThread(False)
     runWinetricks.signal.connect(QT.ShowWineReturn)
     runWinetricks.start()
 
@@ -2889,11 +2932,14 @@ w8 = QtWidgets.QAction(transla.transe("U", "设置 run_v3.sh 的文管为 Deepin
 w9 = QtWidgets.QAction(transla.transe("U", "设置 run_v3.sh 的文管为 Wine 默认文管"))
 w10 = QtWidgets.QAction(transla.transe("U", "重新安装 deepin-wine-helper"))
 w11 = QtWidgets.QAction(QtGui.QIcon.fromTheme("winetricks"), transla.transe("U", "使用winetricks打开指定容器"))
+w11WithWineLib = QtWidgets.QAction(QtGui.QIcon.fromTheme("winetricks"), transla.transe("U", "使用winetricks打开指定容器（使用Wine运行器运行库）"))
+w11WithWineLib.setDisabled(True)
 settingRunV3Sh.addAction(w8)
 settingRunV3Sh.addAction(w9)
 settingRunV3Sh.addAction(w10)
 wineOption.addSeparator()
 wineOption.addAction(w11)
+wineOption.addAction(w11WithWineLib)
 wineOption.addSeparator()
 optionCheckDemo = wineOption.addMenu(transla.transe("U", "组件功能测试"))
 vbDemo = QtWidgets.QAction(transla.transe("U", "测试 Visual Basic 6 程序"))
@@ -2970,6 +3016,7 @@ w8.triggered.connect(SetDeepinFileDialogDeepin)
 w9.triggered.connect(SetDeepinFileDialogDefult)
 w10.triggered.connect(SetDeepinFileDialogRecovery)
 w11.triggered.connect(lambda: RunWinetricks())
+w11WithWineLib.triggered.connect(lambda: RunWinetricksWithWineLib())
 wm1_1.triggered.connect(lambda: threading.Thread(target=InstallNetFramework).start())
 wm1_2.triggered.connect(lambda: threading.Thread(target=InstallVisualStudioCPlusPlus).start())
 wm1_8.triggered.connect(lambda: threading.Thread(target=InstallFoxPro).start())
@@ -3096,6 +3143,7 @@ if os.path.exists(f"{programPath}/WineLib/usr"):
     installRunnerLib.setDisabled(True)
     removeRunnerLib.setEnabled(True)
     diyRunnerLib.setEnabled(True)
+    w11WithWineLib.setEnabled(True)
     statusRunnerLib.setText("当前状态：已安装")
     libPathList = []
     mapLink = []
