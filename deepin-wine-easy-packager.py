@@ -209,7 +209,7 @@ export MIME_TYPE=""
 
 export DEB_PACKAGE_NAME="@@@Package@@@"
 ####这里写包名才能在启动的时候正确找到files.7z,似乎也和杀残留进程有关
-export APPRUN_CMD="{chooseWine}"
+export APPRUN_CMD="@@Wine@@"
 #####wine启动指令，建议
 #EXPORT_ENVS="wine的动态链接库路径"
 ##例如我的wine应用是使用的dwine6的32位容器，那么我要填LD_LIBRARY_PATH=$LD_LIBRARY;/opt/deepin-wine6-stable/lib
@@ -551,7 +551,8 @@ class RunThread(QtCore.QThread):
                 ["@@@Installed-Size@@@", str(int(buildProgramSize))],
                 ["@@@Name@@@", exeName],
                 ["@@@EXEC_PATH@@@", exePathInBottle],
-                ["@@@Icon@@@", programIconPath]
+                ["@@@Icon@@@", programIconPath],
+                ["@@@Wine@@@", chooseWine]
             ]
             debControl = ReplaceText(control, replaceMap)
             debPostrm = ReplaceText(postrm, replaceMap)
