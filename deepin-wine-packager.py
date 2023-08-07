@@ -2059,7 +2059,14 @@ def LockBottleName():
 def get_now_lang()->"获取当前语言":
     return os.getenv('LANG')
 
-
+def SetFont(size):
+    font = QtGui.QFont(defaultFont)
+    if size == 1:
+        window.setFont(defaultFont)    
+        return
+    font.setPixelSize(int(defaultFont.pixelSize() / size))
+    font.setPointSize(int(defaultFont.pointSize() / size))
+    window.setFont(font)
 
 
 bottleNameLock = False
@@ -2119,6 +2126,11 @@ tips = transla.transe("U", """提示：
 app = QtWidgets.QApplication(sys.argv)
 window = QtWidgets.QMainWindow()
 widget = QtWidgets.QWidget()
+defaultFont = window.font()
+#hScroll = QtWidgets.QScrollArea()
+#hScroll.setWidget(widget)
+#hScroll.verticalScrollBar().setValue(hScroll.verticalScrollBar().maximum())
+#hScroll.horizontalScrollBar().setValue(hScroll.horizontalScrollBar().maximum())
 widgetLayout = QtWidgets.QGridLayout()
 # 设置变量以修改和获取值项
 wineVersion = QtWidgets.QComboBox()
@@ -2293,6 +2305,8 @@ programmenu = menu.addMenu(transla.transe("U", "程序"))
 debMenu = menu.addMenu(transla.transe("U", "deb 包"))
 uploadSparkStore = menu.addMenu(transla.transe("U", "投稿到星火应用商店"))
 help = menu.addMenu(transla.transe("U", "帮助"))
+setMiniFont = QtWidgets.QAction(transla.transe("U", "使用小字体"))
+setDefaultFont = QtWidgets.QAction(transla.transe("U", "使用默认大小字体"))
 exit = QtWidgets.QAction(transla.transe("U", "退出程序"))
 debE = QtWidgets.QAction(transla.transe("U", "只读取 Control 信息"))
 debX = QtWidgets.QAction(transla.transe("U", "读取所有（需解包，时间较久）"))
@@ -2304,8 +2318,13 @@ else:
     uploadSparkStoreProgram.setDisabled(True)
 tip = QtWidgets.QAction(transla.transe("U", "小提示"))
 getPdfHelp = QtWidgets.QAction(transla.transe("U", "Wine运行器和Wine打包器傻瓜式使用教程（小白专用）\nBy @雁舞白沙"))
+setMiniFont.triggered.connect(lambda: SetFont(1.2))
+setDefaultFont.triggered.connect(lambda: SetFont(1))
 exit.triggered.connect(window.close)
 tip.triggered.connect(helps)
+programmenu.addAction(setMiniFont)
+programmenu.addAction(setDefaultFont)
+programmenu.addSeparator()
 programmenu.addAction(exit)
 debMenu.addAction(debE)
 debMenu.addAction(debX)
