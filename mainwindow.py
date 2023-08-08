@@ -2546,29 +2546,11 @@ exe路径\' 参数 \'
 <b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
 以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示；
 <code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>''')
-updateThingsString = transla.transe("U", '''<b>3.3.0.1：</b>
-※1、修复运行器打开主界面不进行任何操作但 CPU 占用率过高的问题
-※2、修复运行器运行器（局部）无法正常移除的问题
-
-<b>3.0.0.0：</b>
-※1、简易打包器支持选择 Wine 版本以及修改打包生成的 deb 包的架构为 all；
-※2、修改容器自动配置脚本的 Gitlink 源为 Gitee 源
-※3、在安装更多 Wine 处安装 Wine 后主窗口 Wine 版本下拉框自动更新
-※4、设置打包器在 Ubuntu 依旧打包 xz 格式的 deb 包
-※5、修复 Wine 简易打包器 control 文件 Installed-Size 格式不规范的问题
-※6、更换 Box86 源并支持安装 Box64（如果为 aarch64 架构）
-※7、新增 Wine 自建源（支持 Debian10、Deepin20）
-※8、修改 WineHQ 安装器使其支持选择国内清华大学镜像源或 WineHQ 官方源
-※9、新增 Visual FoxPro 安装器
-※10、新增安装局部运行库以解决部分低版本系统运行高版本 Wine 的问题且不与其他运行库和兼容层冲突
-※11、支持调用原版的 Exagear 以及 Qemu User（i386、x86_64） 运行 Wine
-12、新增自动构建：https://github.com/gfdgd-xi/deep-wine-runner/actions/workflows/auto-building.yml（只供尝鲜）
-13、新增 Wine 日构建（在“安装更多 Wine”处可以获取，目前有 i386、amd64、i386+amd64、amd64+wow64 mode、aarch64）
-14、优化容器清理脚本
-15、修复部分组件没完全换源的问题，部分组件支持自动换可用源''')
+updateThingsString = transla.transe("U", '''※1、修复简易打包器无法打开的问题
+※2、高级打包器支持多 .desktop 分别设置不同的 MimeType''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2023年07月25日"
+updateTime = "2023年08月08日"
 aboutProgram = transla.transe("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。</p>
 <p>它同时还内置了基于VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作。</p>
 <pre>
