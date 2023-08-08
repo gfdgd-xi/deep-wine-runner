@@ -11,8 +11,8 @@
 # 程序版本号
 version=3.3.0
 echo 安装组件
-python3 -m pip install --upgrade pynput --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple > /dev/null 2>&1 | true
-python3 -m pip install --upgrade xpinyin --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple > /dev/null 2>&1 | true
+python3 -m pip install --upgrade pynput --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple --break-system-packages > /dev/null 2>&1 | true
+python3 -m pip install --upgrade xpinyin --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple --break-system-packages > /dev/null 2>&1 | true
 echo 执行完成
 echo 移除旧组件
 if [ -d /opt/apps/deepin-wine-runner/arm-package ]; then
