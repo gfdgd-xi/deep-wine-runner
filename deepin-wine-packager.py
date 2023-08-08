@@ -1681,6 +1681,91 @@ def ChangeArchCombobox():
 def InstallDeb():
     os.system(f"xdg-open '{e12_text.text()}'")
 
+def OpenConfigFile():
+    path = QtWidgets.QFileDialog.getOpenFileName(window, "打开列表", get_home(), "JSON 文件(*.json);;所有文件(*.*)")
+    try:
+        if path[0] == "" and path[0] == None:
+            return
+        try:
+            with open(path[0], "r") as file:
+                openInfo = json.loads(file.read())
+        except:
+            traceback.print_exc()
+            QtWidgets.QMessageBox.critical(window, "错误", traceback.format_exc())
+            return
+        for i in openInfo:
+            option = openInfo[i][0]
+            if option == "L":
+                allInfoList[i][1].setText(openInfo[i][1])
+            elif option == "Co":
+                allInfoList[i][1].setCurrentIndex(openInfo[i][1])
+            elif option == "Ch":
+                allInfoList[i][1].setChecked(openInfo[i][1])
+            elif option == "Str-SparkHelperConfigPath":
+                allInfoList[i][1] = openInfo[i][1]
+                if openInfo[i][1] != None:
+                    helperConfigPathText.setText(os.path.basename(openInfo[i][1]))
+            elif option == "List-Desktop":
+                if len(openInfo[i][1]) > 1:
+                    for k in openInfo[i][1][1:]:
+                        AddTab(k)
+            
+                for k in range(len(openInfo[i][1][0])):
+                    try:
+                        iconUiList[0][k].setText(openInfo[i][1][0][k])
+                    except:
+                        try:
+                            iconUiList[0][k].setCurrentIndex(openInfo[i][1][0][k])
+                        except:
+                            print(k)
+                            traceback.print_exc()
+    except:
+        traceback.print_exc()
+        QtWidgets.QMessageBox.critical(window, "错误", traceback.format_exc())
+
+def SaveConfigList():
+    saveInfo = {}
+    try:
+        for i in allInfoList:
+            option = allInfoList[i][0]
+            print(i)
+            if option == "L":
+                saveInfo[i] = ["L", allInfoList[i][1].text()]
+            elif option == "Co":
+                saveInfo[i] = ["Co", allInfoList[i][1].currentIndex()]
+            elif option == "Ch":
+                saveInfo[i] = ["Ch", allInfoList[i][1].isChecked()]
+            elif option == "Str-SparkHelperConfigPath":
+                saveInfo[i] = ["Str-SparkHelperConfigPath", allInfoList[i][1]]
+            elif option == "List-Desktop":
+                print("aaa")
+                desktopTabList = []
+            
+                for d in allInfoList[i][1]:
+                    desktopInfoList = []
+                    for k in d:
+                        try:
+                            desktopInfoList.append(k.text())
+                        except:
+                            try:
+                                desktopInfoList.append(k.currentIndex())
+                            except:
+                                traceback.print_exc()
+                    desktopTabList.append(desktopInfoList)
+                saveInfo[i] = ["List-Desktop", desktopTabList]
+        path = QtWidgets.QFileDialog.getSaveFileName(window, "保存列表", get_home(), "JSON 文件(*.json);;所有文件(*.*)")
+        print(path)
+        if path[0] != "" and path[0] != None:
+            try:
+                with open(path[0], "w") as file:
+                    file.write(json.dumps(saveInfo, ensure_ascii=False, indent=4))
+            except:
+                traceback.print_exc()
+                QtWidgets.QMessageBox.critical(window, "错误", traceback.format_exc())
+    except:
+        traceback.print_exc()
+        QtWidgets.QMessageBox.critical(window, "错误", traceback.format_exc())
+
 def ClearHelperConfigPathText():
     global helperConfigPath
     helperConfigPath = None
@@ -1979,7 +2064,7 @@ def ChangeTapTitle():
 
 mapLink = []
 
-def AddTab():
+def AddTab(defaultValue=[]):
     global mapLink
     button2 = QtWidgets.QPushButton(transla.transe("U", "浏览……"))
     e7_text = QtWidgets.QLineEdit()
@@ -2031,6 +2116,15 @@ Utility=工具软件或其他应用。
     e9_text.setPlaceholderText(transla.transe("U", "支持 png 和 svg 格式，不支持 ico 格式"))
     e10_text.setWhatsThis(transla.transe("U", "快捷方式的 MimeType 项，一般为空即可"))
     iconUiList.append([e7_text, option1_text, e15_text, e8_text, e9_text, e10_text])
+    if defaultValue != []:
+        for i in range(len(iconUiList[-1])):
+            try:
+                iconUiList[-1][i].setText(defaultValue[i])
+            except:
+                try:
+                    iconUiList[-1][i].setCurrentIndex(defaultValue[i])
+                except:
+                    traceback.print_exc()
     print(iconUiList)
 
 def DelTab():
@@ -2309,6 +2403,8 @@ programmenu = menu.addMenu(transla.transe("U", "程序（&P）"))
 debMenu = menu.addMenu(transla.transe("U", "deb 包"))
 uploadSparkStore = menu.addMenu(transla.transe("U", "投稿到星火应用商店"))
 help = menu.addMenu(transla.transe("U", "帮助"))
+openFile = QtWidgets.QAction(transla.transe("U", "打开配置文件"))
+saveFile = QtWidgets.QAction(transla.transe("U", "保存配置文件"))
 setMiniFont = QtWidgets.QAction(transla.transe("U", "使用小字体"))
 setDefaultFont = QtWidgets.QAction(transla.transe("U", "使用默认大小字体"))
 hideShowText = QtWidgets.QAction(transla.transe("U", "隐藏输出框"))
@@ -2324,11 +2420,16 @@ else:
     uploadSparkStoreProgram.setDisabled(True)
 tip = QtWidgets.QAction(transla.transe("U", "小提示"))
 getPdfHelp = QtWidgets.QAction(transla.transe("U", "Wine运行器和Wine打包器傻瓜式使用教程（小白专用）\nBy @雁舞白沙"))
+openFile.triggered.connect(OpenConfigFile)
+saveFile.triggered.connect(SaveConfigList)
 setMiniFont.triggered.connect(lambda: SetFont(1.2))
 setDefaultFont.triggered.connect(lambda: SetFont(1))
 hideShowText.triggered.connect(lambda: textbox1.setHidden(hideShowText.isChecked()))
 exit.triggered.connect(window.close)
 tip.triggered.connect(helps)
+programmenu.addAction(openFile)
+programmenu.addAction(saveFile)
+programmenu.addSeparator()
 programmenu.addAction(setMiniFont)
 programmenu.addAction(setDefaultFont)
 programmenu.addAction(hideShowText)
@@ -2399,6 +2500,28 @@ buildDebDir.setWhatsThis(transla.transe("U", "构建 deb 包目录，但不打�
 textbox1.setWhatsThis(transla.transe("U", "查看打包过程中命令返回内容"))
 button5.setWhatsThis(transla.transe("U", "点击该按钮打包生成 deb"))
 installDeb.setWhatsThis(transla.transe("U", "调用默认的 deb 安装工具安装生成的 deb"))
+
+allInfoList = {
+    "Package": ["L", e1_text],
+    "Version": ["L", e2_text],
+    "Description": ["L", e3_text],
+    "Maintainer": ["L", e4_text],
+    "BottleName": ["L", e5_text],
+    "BottlePath": ["L", e6_text],
+    "WineVersion": ["Co", wineVersion],
+    "DebSavePath": ["L", e12_text],
+    "Desktop": ["List-Desktop", iconUiList],
+    "UseInstallWineArch": ["Co", useInstallWineArch],
+    "RemoveBash": ["Ch", rmBash],
+    "CleanBottleByUOS": ["Ch", cleanBottonByUOS],
+    "ChooseWineHelperValue": ["Ch", chooseWineHelperValue],
+    "DisabledMono": ["Ch", disabledMono],
+    "DebDepends": ["L", debDepends],
+    "DebRecommend": ["L", debRecommend],
+    "DebFirstArch": ["Co", debFirstArch],
+    "DebArch": ["Co", debArch],
+    "SparkHelperConfigPath": ["Str-SparkHelperConfigPath", helperConfigPath]
+}
 #window.setWindowFlag(QtGui.Qt)
 window.show()
 sys.exit(app.exec_())
