@@ -816,6 +816,7 @@ class RunWinetricksThread(QtCore.QThread):
         ## 获取 WineServer 路径
         wineServer = None
         winePath = wine[o1.currentText()]
+        winePath = winePath.replace(f"bash '{programPath}/WineLib/run.sh'", "").strip()
         # 判断类似 xxx-server 的 WineServer
         if not os.system(f"{winePath}-server") >> 8:
             wineServer = f"{winePath}-server"
@@ -823,26 +824,29 @@ class RunWinetricksThread(QtCore.QThread):
         elif os.path.exists(f"/opt/{winePath}/bin/wineserver"):
             wineServer = f"/opt/{winePath}/bin/wineserver"
         elif os.path.exists(winePath):
-            wineServer = f"{winePath}/bin/wineserver"
+            wineServer = os.path.normpath(f"{winePath}/../wineserver")
         runtime = ""
         if self.bwrap:
             runtime = f"'{programPath}/WineLib/run.sh'"
         winetricksPath = "winetricks"
         if os.system("which winetricks") >> 8:
             winetricksPath = f"'{programPath}/winetricks'"
+        print(wineServer)
+        wineProgramP = wine[o1.currentText()].replace(f"bash '{programPath}/WineLib/run.sh'", "").strip()
+        wineProgramP = subprocess.getoutput(f"which {wineProgramP}").strip()
         if setting["TerminalOpen"]:
             res = ""
             # 用终端开应该不用返回输出内容了
             if wineServer == None:
-                OpenTerminal(f"WINEPREFIX='{wineBottonPath}' {option} WINE=" + subprocess.getoutput(f"which {wine[o1.currentText()]}").replace(" ", "").replace("\n", "") + f" {runtime} {winetricksPath} --gui {wineUsingOption}")
+                OpenTerminal(f"WINEPREFIX='{wineBottonPath}' {option} WINE='{wineProgramP}' {runtime} {winetricksPath} --gui {wineUsingOption}")
             else:
-                OpenTerminal(f"WINEPREFIX='{wineBottonPath}' {option} WINESERVER='{wineServer}' WINE='" + subprocess.getoutput(f"which {wine[o1.currentText()]}").replace(" ", "").replace("\n", "") + f"' {runtime} {winetricksPath} --gui {wineUsingOption}")
+                OpenTerminal(f"WINEPREFIX='{wineBottonPath}' {option} WINESERVER='{wineServer}' WINE='{wineProgramP}' {runtime} {winetricksPath} --gui {wineUsingOption}")
             #res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='{wineBottonPath}' {option} WINE=" + subprocess.getoutput(f"which {wine[o1.currentText()]}").replace(" ", "").replace("\n", "") + f" winetricks --gui {wineUsingOption}\" --keep-open"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         else:    
             if wineServer == None:
-                res = subprocess.Popen([f"WINEPREFIX='{wineBottonPath}' {option} WINE='" + subprocess.getoutput(f"which {wine[o1.currentText()]}").replace(" ", "").replace("\n", "") + f"' {runtime} {winetricksPath} --gui"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                res = subprocess.Popen([f"WINEPREFIX='{wineBottonPath}' {option} WINE='{wineProgramP}' {runtime} {winetricksPath} --gui"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             else:
-                res = subprocess.Popen([f"WINEPREFIX='{wineBottonPath}' {option} WINESERVER='{wineServer}' WINE='" + subprocess.getoutput(f"which {wine[o1.currentText()]}").replace(" ", "").replace("\n", "") + f"' {runtime} {winetricksPath} --gui"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                res = subprocess.Popen([f"WINEPREFIX='{wineBottonPath}' {option} WINESERVER='{wineServer}' WINE='{wineProgramP}' {runtime} {winetricksPath} --gui"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         # 实时读取程序返回
         while res.poll() is None:
             try:
@@ -2537,15 +2541,7 @@ exe路径\' 参数 \'
 即可（单引号需要输入）；
 5、wine 容器如果没有指定，则会默认为 ~/.wine；
 6、如果可执行文件比较大的话，会出现点击“获取该程序运行情况”出现假死的情况，因为正在后台读取 SHA1，只需要等一下即可（读取速度依照您电脑处理速度、读写速度、可执行文件大小等有关）；
-7、对于非 X86 的用户来说，请不要使用本程序自带的 Wine 安装程序和 Windows 虚拟机安装功能（检测到为非 X86 架构会自动禁用）；
-8、如果非 X86 的用户的 UOS 专业版用户想要使用的话，只需要在应用商店安装一个 Wine 版本微信即可在本程序选择正确的 Wine 运行程序；
-9、在使用 linglong 包的 Wine 应用时，必须安装至少一个 linglong 的使用 Wine 软件包才会出现该选项，
-而程序识别到的 Wine 是按 linglong 的使用 Wine 软件包名的字母排序第一个的 Wine，且生成的容器不在用户目录下，而是在容器的用户目录下（~/.deepinwine、/tmp、桌面、下载、文档等被映射的目录除外），
-同理需要运行的 EXE 也必须在被映射的目录内；
-10、如果是使用 Deepin 23 的 Wine 安装脚本，请切记——安装过程会临时添加 Deepin 20 的 apt 源，不要中断安装以及
-<b>千万不要中断后不删除源的情况下 apt upgrade ！！！</b>中断后只需重新打开脚本输入 repair 或者随意安装一个 Wine（会自动执行恢复操作）即可
-以及此脚本安装的 Wine 无法保证 100% 能使用，以及副作用是会提示；
-<code>N: 鉴于仓库 'https://community-packages.deepin.com/beige beige InRelease' 不支持 'i386' 体系结构，跳过配置文件 'main/binary-i386/Packages' 的获取。</code>''')
+7、如果非 X86 的用户的 UOS 专业版用户想要使用的话，只需要在应用商店安装一个 Wine 版本微信即可在本程序选择正确的 Wine 运行程序；''')
 updateThingsString = transla.transe("U", '''※1、修复简易打包器无法打开的问题
 ※2、高级打包器支持多 .desktop 分别设置不同的 MimeType''')
 for i in information["Thank"]:
@@ -2921,7 +2917,7 @@ settingRunV3Sh.addAction(w9)
 settingRunV3Sh.addAction(w10)
 wineOption.addSeparator()
 wineOption.addAction(w11)
-wineOption.addAction(w11WithWineLib)
+#wineOption.addAction(w11WithWineLib)
 wineOption.addSeparator()
 optionCheckDemo = wineOption.addMenu(transla.transe("U", "组件功能测试"))
 vbDemo = QtWidgets.QAction(transla.transe("U", "测试 Visual Basic 6 程序"))
