@@ -25,7 +25,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -86,7 +86,12 @@
             </item>
             <item>
              <property name="text">
-              <string>其它 Windows 系统（不支持自动安装）</string>
+              <string>其它 Windows 系统（不支持自动安装，传统启动）</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>其他 Windows 系统（不支持自动安装，UEFI 启动）</string>
              </property>
             </item>
            </widget>

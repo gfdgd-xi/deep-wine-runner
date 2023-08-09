@@ -177,6 +177,14 @@ void MainWindow::on_install_clicked()
         }
         break;
     }
+    switch (ui->systemVersion->currentIndex()) {
+        case 3:
+            if(QFile::exists("/usr/share/qemu/OVMF.fd")){
+                if(QMessageBox::question(this, "提示", "似乎无法找到 UEFI 固件，是否继续创建虚拟机？\nQemu 固件可以在“安装 Qemu”处安装") == QMessageBox::No){
+                    return;
+                }
+            }
+    }
     buildvbox(ui->isoPath->text(), ui->systemVersion->currentIndex(), ui->vmChooser->currentIndex());
     return;
 }
@@ -188,7 +196,7 @@ void MainWindow::on_getvbox_clicked()
 
 void MainWindow::on_getQemu_clicked()
 {
-    system(("python3 '" + QCoreApplication::applicationDirPath() + "/../RunCommandWithTerminal.py' '" + QCoreApplication::applicationDirPath() + "/../QemuSystemInstall.sh'").toLatin1());
+    system(("python3 '" + QCoreApplication::applicationDirPath() + "/../RunCommandWithTerminal.py' pkexec '" + QCoreApplication::applicationDirPath() + "/../QemuSystemInstall.sh'").toLatin1());
 }
 
 void MainWindow::on_vmChooser_currentIndexChanged(int index)

@@ -1,5 +1,6 @@
 #!/bin/bash
-pkexec apt update
-pkexec apt install qemu-system qemu-user qemu-user-static -y
+sudo apt update
+sudo apt install qemu-system qemu-user qemu-efi -y
+sudo apt install qemu-user-static binfmt-support -y
 echo 安装完成！按回车键退出
 read

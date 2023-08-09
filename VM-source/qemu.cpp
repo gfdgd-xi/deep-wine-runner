@@ -119,6 +119,9 @@ int qemu::SetKeyboardPS2(){
 int qemu::OpenUSB(){
     return 0;
 }
-int EnabledUEFI(bool status){
-
+int qemu::EnabledUEFI(bool status){
+    if(status){
+        commandOption += "--bios /usr/share/qemu/OVMF.fd ";
+    }
+    return 0;
 }

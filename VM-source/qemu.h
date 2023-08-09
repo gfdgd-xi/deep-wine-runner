@@ -40,7 +40,7 @@ public:
     int OpenUSB();
     int EnabledUEFI(bool status);
 private:
-    QString commandOption;
+    QString commandOption = "";
 
 };
 

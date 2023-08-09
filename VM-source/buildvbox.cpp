@@ -114,8 +114,12 @@ buildvbox::buildvbox(QString isoPath, int id, int vm){
             case 1:
                 vm.Create("Windows7_64");
                 break;
-            default:
+            case 2:
                 vm.Create("WindowsNT_64");
+                break;
+            case 3:
+                vm.Create("WindowsNT_64");
+                vm.EnabledUEFI(true);
                 break;
         }
         vm.CreateDiskControl();
@@ -180,8 +184,12 @@ buildvbox::buildvbox(QString isoPath, int id, int vm){
             case 1:
                 vm.Create("Windows7_64");
                 break;
-            default:
+            case 2:
                 vm.Create("WindowsNT_64");
+                break;
+            case 3:
+                vm.Create("WindowsNT_64");
+                vm.EnabledUEFI(true);
                 break;
         }
         QDir dir("/home/gfdgd_xi/Qemu/Windows/");
