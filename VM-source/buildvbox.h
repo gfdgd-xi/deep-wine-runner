@@ -14,6 +14,8 @@ public:
     void CleanScreen();
     QString GetNet();
     int Download(QString url, QString path, QString fileName);
+    int GetCPUSocket();
+    int GetCPUCore();
 };
 
 #endif // BUILDVBOX_H

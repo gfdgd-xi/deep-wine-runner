@@ -12,6 +12,7 @@
 #include <QCoreApplication>
 #include <infoutils.h>
 #include "qemu.h"
+#include <QProcess>
 // 懒得用 QThread 了（要继承）
 #include <thread>
 using namespace std;
@@ -25,6 +26,37 @@ void buildvbox::CleanScreen(){
     }
     // Windows
     system("cls");
+}
+
+// 获取 CPU 个数
+int buildvbox::GetCPUSocket(){
+    // 获取命令返回值
+    QProcess process;
+    process.start("bash", QStringList() << "-c" << "cat /proc/cpuinfo | grep \"cpu cores\" | uniq | wc -l");
+    process.waitForStarted();
+    process.waitForFinished();
+    int value = process.readAllStandardOutput().toInt();
+    process.close();
+    // 判断异常值，例如没挂载 /proc
+    if(value <= 0){
+        value = 1;
+    }
+    return value;
+}
+
+// 获取 CPU 核心数
+int buildvbox::GetCPUCore(){
+    QProcess process;
+    process.start("bash", QStringList() << "-c" << "grep 'core id' /proc/cpuinfo | sort -u | wc -l");
+    process.waitForStarted();
+    process.waitForFinished();
+    int value = process.readAllStandardOutput().toInt();
+    process.close();
+    // 判断异常值，例如没挂载 /proc
+    if(value <= 0){
+        value = 1;
+    }
+    return value;
 }
 
 QString buildvbox::GetNet(){
@@ -114,7 +146,7 @@ buildvbox::buildvbox(QString isoPath, int id, int vm){
             vm.MountISO("/usr/share/virtualbox/VBoxGuestAdditions.iso", "storage_controller_1", 1, 1);
         }*/
 
-        vm.SetCPU(get_nprocs());
+        vm.SetCPU(get_nprocs(), GetCPUSocket(), GetCPUCore());
         long memory = 0;
         long memoryAll = 0;
         long swap = 0;
@@ -174,7 +206,7 @@ buildvbox::buildvbox(QString isoPath, int id, int vm){
             vm.MountISO("/usr/share/virtualbox/VBoxGuestAdditions.iso", "storage_controller_1", 1, 1);
         }
 
-        vm.SetCPU(get_nprocs_conf());
+        vm.SetCPU(get_nprocs(), GetCPUSocket(), GetCPUCore());
         long memory = 0;
         long memoryAll = 0;
         long swap = 0;
