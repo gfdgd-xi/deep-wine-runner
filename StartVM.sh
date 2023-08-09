@@ -14,7 +14,8 @@ if [[ 0 == $? ]]; then
     exit
 fi
 # 检查是否有 QEMU
-if [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
+which qemu-system-x86_64
+if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
     if [[ -f "$HOME/.config/deepin-wine-runner/QemuSetting.json" ]]; then
         echo 有设置文件，读设置文件
         cd `dirname $0`
