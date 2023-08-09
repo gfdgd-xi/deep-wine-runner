@@ -2549,15 +2549,16 @@ updateThingsString = transla.transe("U", '''※1、修复简易打包器无法�
 ※5、Deepin 23 支持使用 Winetricks
 ※6、新增视频教程入库
 ※7、修复虚拟机工具在检测到 Qemu 磁盘但没有安装 Qemu 时无法启动的问题
-8、高级打包器支持隐藏输入框以及使用小字体
-9、打包器提供 bcm 和 dcm wine 支持
-10、修复星火 wine 配置错误问题
-11、打包器支持多线程打包
-12、修复升级工具问题：https://gitee.com/gfdgd-xi/uengine-runner/issues/I6ZRZX
-13、跟进打包器 run.sh 模板
-14、云沙箱新增 cloud.vdnel.cn
-15、打包器新增分类 Game、System、AudioVideo
-16、修复安装 Box64 时源里没有 libc6:armhf 导致无法安装的问题''')
+※8、修复虚拟机工具的一些问题并调整部分设置
+9、高级打包器支持隐藏输入框以及使用小字体
+10、打包器提供 bcm 和 dcm wine 支持
+11、修复星火 wine 配置错误问题
+12、打包器支持多线程打包
+13、修复升级工具问题：https://gitee.com/gfdgd-xi/uengine-runner/issues/I6ZRZX
+14、跟进打包器 run.sh 模板
+15、云沙箱新增 cloud.vdnel.cn
+16、打包器新增分类 Game、System、AudioVideo
+17、修复安装 Box64 时源里没有 libc6:armhf 导致无法安装的问题''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
 updateTime = "2023年08月09日"
