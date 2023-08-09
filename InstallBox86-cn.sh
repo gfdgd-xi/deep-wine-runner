@@ -22,7 +22,7 @@ fi
 echo 使用国内源
 #sudo wget https://ryanfortner.github.io/box86-debs/box86.list -O /etc/apt/sources.list.d/box86.list
 sudo bash -c "echo deb http://seafile.jyx2048.com:2345/spark-deepin-wine-runner/data/box86-debs/debian ./ > /etc/apt/sources.list.d/box86.list"
-wget -qO- http://seafile.jyx2048.com:2345/spark-deepin-wine-runner/data/KEY.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/box86-debs-archive-keyring.gpg 
+wget -qO- http://seafile.jyx2048.com:2345/spark-deepin-wine-runner/data/box86-debs/KEY.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/box86-debs-archive-keyring.gpg 
 echo "adding key..."
 installBox=box86-generic-arm
 if [[ $PCArch == "arm64" ]]; then
