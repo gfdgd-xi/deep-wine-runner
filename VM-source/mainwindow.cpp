@@ -177,12 +177,28 @@ void MainWindow::on_install_clicked()
         }
         break;
     }
+    QFile file(QDir::homePath() + "/.config/deepin-wine-runner/QEMU-EFI");
+    QDir dir(QDir::homePath() + "/.config/deepin-wine-runner");
     switch (ui->systemVersion->currentIndex()) {
         case 3:
-            if(QFile::exists("/usr/share/qemu/OVMF.fd")){
+            if(!QFile::exists("/usr/share/qemu/OVMF.fd") && !QFile::exists(QCoreApplication::applicationDirPath() + "/OVMF.fd") && ui->vmChooser->currentIndex() == 0){
                 if(QMessageBox::question(this, "提示", "似乎无法找到 UEFI 固件，是否继续创建虚拟机？\nQemu 固件可以在“安装 Qemu”处安装") == QMessageBox::No){
                     return;
                 }
+            }
+            if(!dir.exists()){
+                dir.mkpath(QDir::homePath() + "/.config/deepin-wine-runner");
+            }
+            if(!QFile::exists(QDir::homePath() + "/.config/deepin-wine-runner/QEMU-EFI")){
+                // 写入用于识别的空文件
+                file.open(QIODevice::WriteOnly);
+                file.write("1");
+                file.close();
+            }
+            break;
+        default:
+            if(ui->vmChooser->currentIndex() == 0 && QFile::exists(QDir::homePath() + "/.config/deepin-wine-runner/QEMU-EFI")){
+                QFile::remove(QDir::homePath() + "/.config/deepin-wine-runner/QEMU-EFI");
             }
     }
     buildvbox(ui->isoPath->text(), ui->systemVersion->currentIndex(), ui->vmChooser->currentIndex());

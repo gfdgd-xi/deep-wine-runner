@@ -13,7 +13,7 @@ def ReadTXT(file: str):
 command = "qemu-system-x86_64"
 #if "--kvm" in sys.argv:
 #    command = "kvm"
-
+programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 homePath = os.path.expanduser('~')
 try:
     setting = json.loads(ReadTXT(f"{homePath}/.config/deepin-wine-runner/QemuSetting.json"))
@@ -30,4 +30,9 @@ if setting["EnableVNC"]:
     option += f"-display gtk -display vnc=:{setting['VNC']} "
 if setting["EnableSound"]:
     option += "-soundhw all "
+if os.path.exists(f"{homePath}/.config/deepin-wine-runner/QEMU-EFI"):
+    if os.path.exists("/usr/share/qemu/OVMF.fd"):
+        option += "--bios /usr/share/qemu/OVMF.fd "
+    elif os.path.exists(f"{programPath}/OVMF.fd"):
+        option += f"--bios {programPath}/OVMF.fd "
 os.system(f"{command} {option}")
