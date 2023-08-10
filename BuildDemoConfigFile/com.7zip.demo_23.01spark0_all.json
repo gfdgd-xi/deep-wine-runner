@@ -1,0 +1,87 @@
+{
+    "Package": [
+        "L",
+        "com.7zip.demo"
+    ],
+    "Version": [
+        "L",
+        "23.01spark0"
+    ],
+    "Description": [
+        "L",
+        "7Zip For Deepin Wine6 Stable"
+    ],
+    "Maintainer": [
+        "L",
+        "gfdgd xi<3025613752@qq.com>"
+    ],
+    "BottleName": [
+        "L",
+        "Spark-7zip"
+    ],
+    "BottlePath": [
+        "L",
+        "/home/gfdgd_xi/.deepinwine/Spark-7zip"
+    ],
+    "WineVersion": [
+        "Co",
+        5
+    ],
+    "DebSavePath": [
+        "L",
+        "/home/gfdgd_xi/Desktop/com.7zip.demo_23.01spark0_all.deb"
+    ],
+    "Desktop": [
+        "List-Desktop",
+        [
+            [
+                "c:/Program Files/7-Zip/7zFM.exe",
+                11,
+                "",
+                "7Zip",
+                "/home/gfdgd_xi/Desktop/Icon_0001.png",
+                ""
+            ]
+        ]
+    ],
+    "UseInstallWineArch": [
+        "Co",
+        0
+    ],
+    "RemoveBash": [
+        "Ch",
+        true
+    ],
+    "CleanBottleByUOS": [
+        "Ch",
+        true
+    ],
+    "ChooseWineHelperValue": [
+        "Ch",
+        true
+    ],
+    "DisabledMono": [
+        "Ch",
+        true
+    ],
+    "DebDepends": [
+        "L",
+        "deepin-wine6-stable | deepin-wine6-stable-bcm | deepin-wine6-stable-dcm, spark-dwine-helper | store.spark-app.spark-dwine-helper, fonts-wqy-microhei, fonts-wqy-zenhei"
+    ],
+    "DebRecommend": [
+        "L",
+        ""
+    ],
+    "DebFirstArch": [
+        "Co",
+        0
+    ],
+    "DebArch": [
+        "Co",
+        0
+    ],
+    "SparkHelperConfigPath": [
+        "Str-SparkHelperConfigPath",
+        null
+    ]
+}

@@ -77,6 +77,9 @@ def disabled_or_NORMAL_all(choose):
     buildDebDir.setDisabled(choose)
     debDepends.setDisabled(choose)
     debRecommend.setDisabled(choose)
+    debFirstArch.setDisabled(choose)
+    helperConfigPathButton.setDisabled(choose)
+    helperConfigPathText.setDisabled(choose)
     #if not choose:
     #    ChangeArchCombobox()
     #    ChangeWine()
@@ -2420,6 +2423,10 @@ else:
     uploadSparkStoreProgram.setDisabled(True)
 tip = QtWidgets.QAction(transla.transe("U", "小提示"))
 getPdfHelp = QtWidgets.QAction(transla.transe("U", "Wine运行器和Wine打包器傻瓜式使用教程（小白专用）\nBy @雁舞白沙"))
+videoHelp = menu.addMenu(transla.transe("U", "视频教程(&V)"))
+videoHelpAction = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "视频教程"))
+videoHelpAction.triggered.connect(lambda: webbrowser.open_new_tab("https://space.bilibili.com/695814694/channel/collectiondetail?sid=1610353"))
+videoHelp.addAction(videoHelpAction)
 openFile.triggered.connect(OpenConfigFile)
 saveFile.triggered.connect(SaveConfigList)
 setMiniFont.triggered.connect(lambda: SetFont(1.2))
@@ -2463,16 +2470,17 @@ window.setCentralWidget(widget)
 window.setWindowTitle(f"wine 应用打包器 {version}")
 window.setWindowIcon(QtGui.QIcon(iconPath))
 window.resize(int(window.frameSize().width() * 2.1), int(window.frameSize().height()))
-e1_text.setWhatsThis("""com.XXX.deepin
-XXX指windows软件的英文名称，可以自定义名称，但最好是用软件解压安装后自动生成的英文名称，如：dingtalk。包名只能含有小写字母（a-z）、数字（0-9）、加号（+）和减号（-）、以及点号(.)，软件包名最短长度为两个字符，且包名必须以字母开头。""")
+e1_text.setWhatsThis("""安装包的包名，推荐类似 com.xxx.spark 这种倒置域名的格式，当然类似 spark-xxx 这种也可以，但是包名只能含有<b>小写字母（a-z）、数字（0-9）、加号（+）和减号（-）、以及点号(.)</b>，软件包名最短长度为两个字符，且包名必须以字母开头。""")
 # 创建控件
-e2_text.setWhatsThis(transla.transe("U", """6.5.50（随便填写或填写该软件的windows版本的版本号，6.5.50只是示例）。"""))
-e3_text.setWhatsThis(transla.transe("U", """随便填写或使用该软件的windows版本的软件简介。"""))
-e4_text.setWhatsThis(transla.transe("U", """填写自己的网名，若是自用软件，不上架至应用商店，不进行后续维护，可随便填写。"""))
+e2_text.setWhatsThis(transla.transe("U", """安装包的版本号，一般推荐格式为 <b><u>程序版本号</u>spark<u>修订号</u></b>，例如 23.01spark0，23.01 就是程序版本号，0 为修订号，代表第一版版本"""))
+e3_text.setWhatsThis(transla.transe("U", """安装包的说明，随意但最好能程序的介绍之类方便用户快速了解安装包内容的文字，推荐只用英文"""))
+e4_text.setWhatsThis(transla.transe("U", """安装包的维护者，推荐格式为：<b><u>打包者</u>&lt;<u>邮箱</u>&gt;</b> ，例如 gfdgd xi&lt;3025613752@qq.com&gt;，多个打包者用半角符号“,”分隔"""))
 e5_text.setWhatsThis(f"<p>解压容器到其它机器的容器名称，一般自动带出</p><p><img src='{programPath}/Icon/Screen/202211121646232464_image.png'></p>")
 e6_text.setWhatsThis(transla.transe("U", f"要打包的容器所在路径，也可以选择已经好打包的 7z 文件，一般自动带出"))
-e7_text.setWhatsThis("""可执行文件的运行路径格式是“C:/XXX/XXX.exe”（不包含引号）""")
+e7_text.setWhatsThis("""程序在 wine 容器的路径，格式一般为 c:/xxx/xxx.exe""")
 debArch.setWhatsThis(transla.transe("U", "选择生成 deb 包所对应的架构"))
+wineVersion.setWhatsThis("deb 包使用的 Wine")
+option1_text.setWhatsThis("程序在启动器的快捷方式分类")
 rmBash.setWhatsThis(transla.transe("U", "清理容器无用内容，一般建议勾选，最新版本默认勾选，如果有特殊需求（如容器内有 mono、gecko 等）建议取消勾选"))
 debDepends.setWhatsThis(transla.transe("U", "生成 deb 包所需的依赖，一般情况下默认即可"))
 debRecommend.setWhatsThis(transla.transe("U", "生成 deb 包的推荐依赖，一般情况下为空即可"))
@@ -2482,15 +2490,20 @@ option1_text.setWhatsThis("""点击右侧的下拉箭头，选择该软件所属
 Network=网络应用；
 Chat=即时通讯或社交沟通；
 Video=视频播放；
+Audio=音乐欣赏；
+AudioVideo=视频播放；
 Graphics=图形图像；
+Game=游戏娱乐；
 Office=办公学习；
 Translation=阅读翻译；
 Development=软件开发；
+Reading=阅读翻译；
+System=系统管理；
 Utility=工具软件或其他应用。
 不明白英文的可以百度查询一下软件分类名称的意思。
 注意：此时选择的软件分类名称决定了该软件打包后再安装时会安装在启动器中的哪个软件分类目录中。""")
-e8_text.setWhatsThis(transla.transe("U", """填写该软件的中文或英文名称。"""))
-e9_text.setWhatsThis(transla.transe("U", """图标只支持PNG格式和SVG格式，其他格式无法显示。"""))
+e8_text.setWhatsThis(transla.transe("U", """在启动器快捷方式的名称"""))
+e9_text.setWhatsThis(transla.transe("U", """在启动器快捷方式的图标（不支持 ico 格式，推荐使用 svg、png 格式）"""))
 e10_text.setWhatsThis(transla.transe("U", "快捷方式的 MimeType 项，一般为空即可"))
 option1_text.setWhatsThis(transla.transe("U", "打包的 Wine 版本，根据实际情况选择（如果打包 arm 包将不会提供选择）"))
 e12_text.setWhatsThis(transla.transe("U", "打包出的 deb 生成的位置，一般自动生成"))

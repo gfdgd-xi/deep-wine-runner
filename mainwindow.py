@@ -2547,21 +2547,22 @@ updateThingsString = transla.transe("U", '''※1、修复简易打包器无法�
 ※3、修复运行器在 Ubuntu 23 的安装问题
 ※4、高级打包器支持导出/导入填写信息
 ※5、Deepin 23 支持使用 Winetricks
-※6、新增视频教程入库
+※6、新增视频教程
 ※7、修复虚拟机工具在检测到 Qemu 磁盘但没有安装 Qemu 时无法启动的问题
 ※8、修复虚拟机工具的一些问题并调整部分设置
-9、高级打包器支持隐藏输入框以及使用小字体
-10、打包器提供 bcm 和 dcm wine 支持
-11、修复星火 wine 配置错误问题
-12、打包器支持多线程打包
-13、修复升级工具问题：https://gitee.com/gfdgd-xi/uengine-runner/issues/I6ZRZX
-14、跟进打包器 run.sh 模板
-15、云沙箱新增 cloud.vdnel.cn
-16、打包器新增分类 Game、System、AudioVideo
-17、修复安装 Box64 时源里没有 libc6:armhf 导致无法安装的问题''')
+※9、虚拟机工具支持设置 UEFI 启动
+10、高级打包器支持隐藏输入框以及使用小字体
+11、打包器提供 bcm 和 dcm wine 支持
+12、修复星火 wine 配置错误问题
+13、打包器支持多线程打包
+14、修复升级工具问题：https://gitee.com/gfdgd-xi/uengine-runner/issues/I6ZRZX
+15、跟进打包器 run.sh 模板
+16、云沙箱新增 cloud.vdnel.cn
+17、打包器新增分类 Game、System、AudioVideo
+18、修复安装 Box64 时源里没有 libc6:armhf 导致无法安装的问题''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2023年08月09日"
+updateTime = "2023年08月10日"
 aboutProgram = transla.transe("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。</p>
 <p>它同时还内置了基于VirtualBox/Qemu制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作。</p>
 <pre>
@@ -3202,7 +3203,7 @@ if len(qemuBottleList) >= 1:
     print(qemuBottleList)
 
 videoHelp = menu.addMenu(transla.transe("U", "视频教程(&V)"))
-videoHelpAction = QtWidgets.QAction(transla.transe("U", "视频教程"))
+videoHelpAction = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "视频教程"))
 videoHelpAction.triggered.connect(lambda: webbrowser.open_new_tab("https://space.bilibili.com/695814694/channel/collectiondetail?sid=1610353"))
 videoHelp.addAction(videoHelpAction)
 
@@ -3241,10 +3242,7 @@ help.addSeparator()
 wikiHelp = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "程序 Wiki"))
 help.addAction(wikiHelp)
 videoHelp = help.addMenu(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "视频教程"))
-easyHelp = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "简易使用教程"))
-buildHelp = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), transla.transe("U", "打包教程"))
-videoHelp.addAction(easyHelp)
-videoHelp.addAction(buildHelp)
+videoHelp.addAction(videoHelpAction)
 help.addSeparator()
 help.addAction(h5)
 help.addAction(h6)
@@ -3267,8 +3265,6 @@ h3.triggered.connect(UpdateThings)
 wineRunnerHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://bbs.deepin.org/post/246837"))
 h4.triggered.connect(ThankWindow)
 wikiHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io/wine-runner-wiki"))
-easyHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://www.bilibili.com/video/BV1ma411972Y"))
-buildHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://www.bilibili.com/video/BV1EU4y1k7zr"))
 h5.triggered.connect(UpdateWindow.ShowWindow)
 h6.triggered.connect(WineRunnerBugUpload)
 fenUpload.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"python3 '{programPath}/ProgramFen.py'"]).start())
