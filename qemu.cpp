@@ -53,8 +53,14 @@ int qemu::BootFirst(QString bootDrive){
 int qemu::SetNetBridge(QString netDriver){
     return 0;
 }
-int qemu::SetCPU(int number){
-    commandOption += "-smp " + QString::number(number) + " ";
+int qemu::SetCPU(int number, int cpuNum, int coreNum){
+    // commandOption += "-smp " + QString::number(number) + " ";
+    // 调整调用方法
+    //qDebug() << number << " " << cpuNum << " " << coreNum;
+    qDebug() << "Socket: " << cpuNum;
+    qDebug() << "Core: " << coreNum;
+    qDebug() << "Threads: " << number;
+    commandOption += "-smp " + QString::number(number) + ",sockets=" + QString::number(cpuNum) + ",cores=" + QString::number(coreNum / cpuNum) + ",threads=" + QString::number(number / cpuNum / coreNum) + " ";
     return 0;
 }
 int qemu::SetMemory(int memory){
@@ -70,7 +76,7 @@ int qemu::SetRemoteConnectSetting(int port){
 int qemu::Start(bool unShown){
     qDebug() << commandOption;
     if(Command().GetCommand("arch").replace("\n", "").replace(" ", "") == "x86_64"){
-        return system(("kvm " + commandOption + " &").toLatin1());
+        return system(("kvm -cpu host " + commandOption + " &").toLatin1());
     }
     return system(("qemu-system-x86_64 -nic model=rtl8139 " + commandOption + " &").toLatin1());
 }
@@ -112,4 +118,18 @@ int qemu::SetKeyboardPS2(){
 }
 int qemu::OpenUSB(){
     return 0;
+}
+int qemu::EnabledUEFI(bool status){
+    if(!status){
+        return 0;
+    }
+    if(QFile::exists("/usr/share/qemu/OVMF.fd")){
+        commandOption += "--bios /usr/share/qemu/OVMF.fd ";
+        return 0;
+    }
+    if(QFile::exists(QCoreApplication::applicationDirPath() + "/OVMF.fd")){
+        commandOption += "--bios '" + QCoreApplication::applicationDirPath() + "/OVMF.fd' ";
+        return 0;
+    }
+    return 1;
 }

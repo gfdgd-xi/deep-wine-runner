@@ -44,7 +44,7 @@ int vbox::SetNetBridge(QString netDriver){
     return system(("\"" + managerPath + "\" modifyvm \"" + name +
                    "\" --nic1 bridged --cableconnected1 on --nictype1 82540EM --bridgeadapter1 \"" + netDriver + "\" --intnet1 brigh1 --macaddress1 auto").toLatin1());
 }
-int vbox::SetCPU(int number){
+int vbox::SetCPU(int number, int cpuNum, int coreNum){
     return system(("\"" + managerPath + "\" modifyvm \"" + name + "\" --cpus " + QString::number(number)).toLatin1());
 }
 int vbox::SetMemory(int memory){
@@ -100,4 +100,11 @@ int vbox::SetKeyboardPS2(){
 }
 int vbox::OpenUSB(){
     return system(("\"" + managerPath + "\" modifyvm \"" + name + "\" --usbohci on").toLatin1());
+}
+
+int vbox::EnabledUEFI(bool status){
+    if(status){
+        return system(("\"" + managerPath + "\" modifyvm \"" + name + "\" --firmware=efi").toLatin1());
+    }
+    return system(("\"" + managerPath + "\" modifyvm \"" + name + "\" --firmware=bios").toLatin1());
 }

@@ -21,7 +21,7 @@ public:
     int MountISO(QString isoPath, QString controlName="storage_controller_1", int port=1, int device=0);
     int BootFirst(QString bootDrive);
     int SetNetBridge(QString netDriver);
-    int SetCPU(int number);
+    int SetCPU(int number, int cpuNum, int coreNum);
     int SetMemory(int memory);
     int SetRemote(bool setting);
     int SetRemoteConnectSetting(int port=5540);
@@ -38,8 +38,9 @@ public:
     int SetMousePS2();
     int SetKeyboardPS2();
     int OpenUSB();
+    int EnabledUEFI(bool status);
 private:
-    QString commandOption;
+    QString commandOption = "";
 
 };
 
