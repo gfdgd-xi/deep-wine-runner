@@ -65,6 +65,10 @@ else
 	rm -f /opt/apps/deepin-wine-runner/VM/VirtualMachine-*
 fi
 echo 处理完成！
+# 修复 3.3.0.1 Box86 源挂了的问题
+if [ -f /etc/apt/sources.list.d/box86.list ]; then
+	bash -c "echo deb http://seafile.jyx2048.com:2345/spark-deepin-wine-runner/data/box86-debs/debian ./ > /etc/apt/sources.list.d/box86.list"
+fi
 # Gitlink 源挂了
 # 到时候切换 gpg 源会方便很多
 #if [ -r /etc/apt/sources.list.d/better-dde.list ]; then

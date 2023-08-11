@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 3.3.0.1</h1>
+<h1 align="center">Wine 运行器 3.4.0</h1>
 <hr>
 
 ## 介绍
@@ -136,6 +136,32 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志 
+### 3.4.0（2023年08月11日）
+**※1、修复简易打包器无法打开的问题以及 Wine 识别错误的问题**  
+**※2、高级打包器支持多 .desktop 分别设置不同的 MimeType**  
+**※3、修复运行器在 Ubuntu 23 的安装问题**  
+**※4、高级打包器支持导出/导入填写信息**  
+**※5、Deepin 23 支持使用 Winetricks**  
+**※6、新增视频教程**  
+**※7、修复虚拟机工具在检测到 Qemu 磁盘但没有安装 Qemu 时无法启动的问题**  
+**※8、修复虚拟机工具的一些问题并调整部分设置**  
+**※9、虚拟机工具支持设置 UEFI 启动**  
+**※10、虚拟机安装工具提供 LoongArch 新世界版本**  
+11、高级打包器支持隐藏输入框以及使用小字体  
+12、打包器提供 bcm 和 dcm wine 支持  
+13、修复星火 wine 配置错误问题  
+14、打包器支持多线程打包  
+15、修复升级工具问题：https://gitee.com/gfdgd-xi/uengine-runner/issues/I6ZRZX  
+16、跟进打包器 run.sh 模板  
+17、云沙箱新增 cloud.vdnel.cn  
+18、打包器新增分类 Game、System、AudioVideo  
+19、修复安装 Box64 时源里没有 libc6:armhf 导致无法安装的问题  
+
+
+![图片.png](https://storage.deepin.org/thread/2023081111212518_图片.png)
+
+
+
 ### 3.3.0.1（2023年07月25日）
 **※1、修复运行器打开主界面不进行任何操作但 CPU 占用率过高的问题**  
 **※2、修复运行器运行器（局部）无法正常移除的问题**  
@@ -158,6 +184,7 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 15、修复部分组件没完全换源的问题，部分组件支持自动换可用源  
 ![图片.png](https://storage.deepin.org/thread/202307121216143835_图片.png)  
 ![图片.png](https://storage.deepin.org/thread/202307121221299140_图片.png)  
+
 ### 3.2.2（2023年05月12日）
 **※1. 修改源地址（迁出 Gitlink）；**  
 **※2. 修复非 X86 架构运行器主页面虚拟机工具禁用的问题；**  
