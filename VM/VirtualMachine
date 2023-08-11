@@ -2,7 +2,7 @@
 import os
 import subprocess
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
-arch = subprocess.getoutput("arch").replace(" ", "").replace("\n", "")
+arch = subprocess.getoutput("dpkg --print-architecture").replace(" ", "").replace("\n", "")
 if os.path.exists(f"{programPath}/VirtualMachine-{arch}"):
     os.system(f"{programPath}/VirtualMachine-{arch}")
     exit()

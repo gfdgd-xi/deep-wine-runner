@@ -2551,15 +2551,16 @@ updateThingsString = transla.transe("U", '''※1、修复简易打包器无法�
 ※7、修复虚拟机工具在检测到 Qemu 磁盘但没有安装 Qemu 时无法启动的问题
 ※8、修复虚拟机工具的一些问题并调整部分设置
 ※9、虚拟机工具支持设置 UEFI 启动
-10、高级打包器支持隐藏输入框以及使用小字体
-11、打包器提供 bcm 和 dcm wine 支持
-12、修复星火 wine 配置错误问题
-13、打包器支持多线程打包
-14、修复升级工具问题：https://gitee.com/gfdgd-xi/uengine-runner/issues/I6ZRZX
-15、跟进打包器 run.sh 模板
-16、云沙箱新增 cloud.vdnel.cn
-17、打包器新增分类 Game、System、AudioVideo
-18、修复安装 Box64 时源里没有 libc6:armhf 导致无法安装的问题''')
+※10、虚拟机安装工具提供 LoongArch 新世界版本
+11、高级打包器支持隐藏输入框以及使用小字体
+12、打包器提供 bcm 和 dcm wine 支持
+13、修复星火 wine 配置错误问题
+14、打包器支持多线程打包
+15、修复升级工具问题：https://gitee.com/gfdgd-xi/uengine-runner/issues/I6ZRZX
+16、跟进打包器 run.sh 模板
+17、云沙箱新增 cloud.vdnel.cn
+18、打包器新增分类 Game、System、AudioVideo
+19、修复安装 Box64 时源里没有 libc6:armhf 导致无法安装的问题''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
 updateTime = "2023年08月10日"
