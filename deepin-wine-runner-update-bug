@@ -9,6 +9,7 @@ import webbrowser
 import urllib.parse as parse
 import PyQt5.QtGui as QtGui
 import PyQt5.QtWidgets as QtWidgets
+from DefaultSetting import *
 
 # 读取文本文档
 def readtxt(path: "路径")->"读取文本文档":
@@ -90,9 +91,18 @@ widgetLayout.addWidget(updateButton, 3, 5, 1, 1)
 giteeButton.clicked.connect(OpenGiteeIssues)
 githubButton.clicked.connect(OpenGithubIssues)
 updateButton.clicked.connect(UpdateButtonClick)
+# 禁用 bug 提交，引导到 Gitee 提交 bug
+nameThings.setDisabled(True)
+contactThings.setDisabled(True)
+starMenu.setDisabled(True)
+updateThings.setDisabled(True)
+updateButton.setDisabled(True)
+updateThings.setText("请移步到 Gitee 或 Github 提交 Bug（推荐使用 Gitee）")
 widget.setLayout(widgetLayout)
 window.setCentralWidget(widget)
 window.setWindowTitle(f"Wine 运行器 {version} 问题/建议反馈")
 window.setWindowIcon(QtGui.QIcon(iconPath))
 window.show()
+# 设置字体
+SetFont(app)
 sys.exit(app.exec_())

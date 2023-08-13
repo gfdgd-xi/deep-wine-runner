@@ -25,6 +25,7 @@ import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
 from trans import *
+from DefaultSetting import *
 
 #################
 # 程序所需事件
@@ -2160,16 +2161,6 @@ def LockBottleName():
 def get_now_lang()->"获取当前语言":
     return os.getenv('LANG')
 
-def SetFont(size):
-    font = QtGui.QFont(defaultFont)
-    if size == 1:
-        app.setFont(defaultFont)    
-        return
-    font.setPixelSize(int(defaultFont.pixelSize() / size))
-    font.setPointSize(int(defaultFont.pointSize() / size))
-    app.setFont(font)
-
-
 bottleNameLock = False
 ###############
 # 程序信息
@@ -2429,16 +2420,14 @@ videoHelpAction.triggered.connect(lambda: webbrowser.open_new_tab("https://space
 videoHelp.addAction(videoHelpAction)
 openFile.triggered.connect(OpenConfigFile)
 saveFile.triggered.connect(SaveConfigList)
-setMiniFont.triggered.connect(lambda: SetFont(1.2))
-setDefaultFont.triggered.connect(lambda: SetFont(1))
 hideShowText.triggered.connect(lambda: textbox1.setHidden(hideShowText.isChecked()))
 exit.triggered.connect(window.close)
 tip.triggered.connect(helps)
 programmenu.addAction(openFile)
 programmenu.addAction(saveFile)
-programmenu.addSeparator()
-programmenu.addAction(setMiniFont)
-programmenu.addAction(setDefaultFont)
+#programmenu.addSeparator()
+#programmenu.addAction(setMiniFont)
+#programmenu.addAction(setDefaultFont)
 programmenu.addAction(hideShowText)
 programmenu.addSeparator()
 programmenu.addAction(exit)
@@ -2535,6 +2524,8 @@ allInfoList = {
     "DebArch": ["Co", debArch],
     "SparkHelperConfigPath": ["Str-SparkHelperConfigPath", helperConfigPath]
 }
+# 设置字体
+SetFont(app)
 #window.setWindowFlag(QtGui.Qt)
 window.show()
 sys.exit(app.exec_())

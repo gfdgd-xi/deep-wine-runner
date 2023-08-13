@@ -11,6 +11,7 @@ import subprocess
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
+from DefaultSetting import *
 
 def ShowText(text: str):
     if text.replace(" ", "").replace("\n", "") == "":
@@ -682,4 +683,6 @@ if __name__ == "__main__":
         pass
     window.resize(int(window.frameGeometry().width() * 1.2), int(window.frameGeometry().height() * 1.1))
     window.show()
+    # 设置字体
+    SetFont(app)
     sys.exit(app.exec_())

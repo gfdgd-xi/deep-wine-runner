@@ -30,6 +30,7 @@ package:
 	cp -rv AllInstall.py deb/opt/apps/deepin-wine-runner
 	cp -rv ShellList deb/opt/apps/deepin-wine-runner
 	cp -rv QemuDownload.py deb/opt/apps/deepin-wine-runner
+	cp -rv DefaultSetting.py deb/opt/apps/deepin-wine-runner
 	cp -rv QemuRun.py deb/opt/apps/deepin-wine-runner
 	cp -rv kill.sh deb/opt/apps/deepin-wine-runner
 	cp -rv updatekiller.py deb/opt/apps/deepin-wine-runner

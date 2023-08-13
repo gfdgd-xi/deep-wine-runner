@@ -37,6 +37,7 @@ except:
     bad = True
 from trans import *
 from Model import *
+from DefaultSetting import *
 
 def PythonLower():
     app = QtWidgets.QApplication(sys.argv)
@@ -2235,26 +2236,7 @@ def TransLog():
 ###########################
 # 加载配置
 ###########################
-defultProgramList = {
-    "Architecture": "Auto",
-    "Debug": True,
-    "DefultWine": "deepin-wine6 stable",
-    "DefultBotton" : get_home() + "/.wine",
-    "TerminalOpen": False,
-    "WineOption": "",
-    "WineBottonDifferent": False,
-    "CenterWindow": False,
-    "Theme": "",
-    "MonoGeckoInstaller": False,
-    "AutoWine": True,
-    "RuntimeCache": True,
-    "MustRead": False,
-    "BuildByBottleName": False,
-    "AutoPath": False,
-    "QemuUnMountHome": False,
-    "Chinese": True,
-    "FontSize": 1
-}
+
 if not os.path.exists(get_home() + "/.config/"):  # 如果没有配置文件夹
     os.mkdir(get_home() + "/.config/")  # 创建配置文件夹
 if not os.path.exists(get_home() + "/.config/deepin-wine-runner"):  # 如果没有配置文件夹
@@ -2654,7 +2636,7 @@ except:
 # Qt 窗口
 app = QtWidgets.QApplication(sys.argv)
 window = QtWidgets.QMainWindow()
-defaultFont = window.font()
+defaultFont = app.font()
 window.setWindowTitle(title)
 widget = QtWidgets.QWidget()
 window.setCentralWidget(widget)

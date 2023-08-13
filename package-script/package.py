@@ -20,6 +20,7 @@ import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
 from trans import *
+from DefaultSetting import *
 
 ###################
 # 程序所需事件
@@ -286,4 +287,6 @@ windowFrameInputValueList = [
     packageName,
     versionName
 ]
+# 设置字体
+SetFont(app)
 sys.exit(app.exec_())
