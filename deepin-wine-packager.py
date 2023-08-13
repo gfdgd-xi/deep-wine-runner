@@ -2163,11 +2163,11 @@ def get_now_lang()->"获取当前语言":
 def SetFont(size):
     font = QtGui.QFont(defaultFont)
     if size == 1:
-        window.setFont(defaultFont)    
+        app.setFont(defaultFont)    
         return
     font.setPixelSize(int(defaultFont.pixelSize() / size))
     font.setPointSize(int(defaultFont.pointSize() / size))
-    window.setFont(font)
+    app.setFont(font)
 
 
 bottleNameLock = False

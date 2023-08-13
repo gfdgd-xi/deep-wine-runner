@@ -606,6 +606,14 @@ def CleanProgramCache():
         traceback.print_exc()
         QtWidgets.QMessageBox.critical(widget, "错误", traceback.format_exc())
 
+def SetFont(size):
+    font = QtGui.QFont(defaultFont)
+    if size == 1:
+        app.setFont(defaultFont)    
+        return
+    font.setPixelSize(int(defaultFont.pixelSize() / size))
+    font.setPointSize(int(defaultFont.pointSize() / size))
+    app.setFont(font)
 
 # 重启本应用程序
 def ReStartProgram():
@@ -1738,6 +1746,7 @@ class ProgramSetting():
     autoPath = None
     qemuUnmountHome = None
     chineseLanguage = None
+    fontSize = None
     def ShowWindow():
         ProgramSetting.message = QtWidgets.QMainWindow()
         widget = QtWidgets.QWidget()
@@ -1756,6 +1765,7 @@ class ProgramSetting():
         widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "自动根据EXE名称生成路径：")), 11, 0, 1, 1)
         widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "Qemu + Chroot 挂载用户目录：")), 12, 0, 1, 1)
         widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "程序翻译：")), 13, 0, 1, 1)
+        widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "字体缩小比例（数值越大字体越小，默认为 1）：")), 14, 0, 1, 1)
         ProgramSetting.wineBottonA = QtWidgets.QComboBox()
         ProgramSetting.wineDebug = QtWidgets.QCheckBox(transla.transe("U", "开启 DEBUG 输出"))
         ProgramSetting.defultWine = QtWidgets.QComboBox()
@@ -1778,6 +1788,7 @@ class ProgramSetting():
         ProgramSetting.autoPath = QtWidgets.QCheckBox(transla.transe("U", "自动根据文件名生成容器路径（开启后必须通过修改默认wine容器路径才可指定其它路径，重启程序后生效）"))
         ProgramSetting.qemuUnmountHome = QtWidgets.QCheckBox(transla.transe("U", "使用 Qemu + Chroot 时不挂载用户目录并与系统隔离（修改后重启操作系统生效）"))
         ProgramSetting.chineseLanguage = QtWidgets.QCheckBox(transla.transe("U", "禁用程序界面翻译"))
+        ProgramSetting.fontSize = QtWidgets.QDoubleSpinBox()
         ProgramSetting.wineBottonA.addItems(["Auto", "win32", "win64"])
         ProgramSetting.wineBottonA.setCurrentText(setting["Architecture"])
         ProgramSetting.wineDebug.setChecked(setting["Debug"])
@@ -1793,6 +1804,7 @@ class ProgramSetting():
         ProgramSetting.autoPath.setChecked(setting["AutoPath"])
         ProgramSetting.qemuUnmountHome.setChecked(setting["QemuUnMountHome"])
         ProgramSetting.chineseLanguage.setChecked(setting["Chinese"])
+        ProgramSetting.fontSize.setValue(setting["FontSize"])
         # QemuUnMountHome
         widgetLayout.addWidget(ProgramSetting.wineBottonA, 0, 1, 1, 1)
         widgetLayout.addWidget(ProgramSetting.wineDebug, 1, 1, 1, 1)
@@ -1810,7 +1822,8 @@ class ProgramSetting():
         widgetLayout.addWidget(ProgramSetting.autoPath, 11, 1, 1, 2)
         widgetLayout.addWidget(ProgramSetting.qemuUnmountHome, 12, 1, 1, 2)
         widgetLayout.addWidget(ProgramSetting.chineseLanguage, 13, 1, 1, 2)
-        widgetLayout.addWidget(save, 14, 2, 1, 1)
+        widgetLayout.addWidget(ProgramSetting.fontSize, 14, 1, 1, 2)
+        widgetLayout.addWidget(save, 15, 2, 1, 1)
         widget.setLayout(widgetLayout)
         ProgramSetting.message.setCentralWidget(widget)
         ProgramSetting.message.setWindowIcon(QtGui.QIcon(iconPath))
@@ -1842,6 +1855,7 @@ class ProgramSetting():
         setting["AutoPath"] = ProgramSetting.autoPath.isChecked()
         setting["QemuUnMountHome"] = ProgramSetting.qemuUnmountHome.isChecked()
         setting["Chinese"] = ProgramSetting.chineseLanguage.isChecked()
+        setting["FontSize"] = ProgramSetting.fontSize.value()
         try:
             write_txt(get_home() + "/.config/deepin-wine-runner/WineSetting.json", json.dumps(setting))
         except:
@@ -2238,7 +2252,8 @@ defultProgramList = {
     "BuildByBottleName": False,
     "AutoPath": False,
     "QemuUnMountHome": False,
-    "Chinese": True
+    "Chinese": True,
+    "FontSize": 1
 }
 if not os.path.exists(get_home() + "/.config/"):  # 如果没有配置文件夹
     os.mkdir(get_home() + "/.config/")  # 创建配置文件夹
@@ -2639,6 +2654,7 @@ except:
 # Qt 窗口
 app = QtWidgets.QApplication(sys.argv)
 window = QtWidgets.QMainWindow()
+defaultFont = window.font()
 window.setWindowTitle(title)
 widget = QtWidgets.QWidget()
 window.setCentralWidget(widget)
@@ -2808,6 +2824,9 @@ installBox86 = QtWidgets.QAction(QtGui.QIcon.fromTheme("box"), transla.transe("U
 addWineDebMirrorForDeepin20 = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine.png"), transla.transe("U", "添加 Wine 运行器源以安装较新版本的 WineHQ（支持 Deepin20/Debian10）"))
 p2 = QtWidgets.QAction(QtGui.QIcon.fromTheme("settings"), transla.transe("U", "设置程序(&S)"))
 enabledAll = QtWidgets.QAction(transla.transe("U", "强制启用所有被禁用的组件（不推荐）"))
+setMiniFont = QtWidgets.QAction(transla.transe("U", "临时设置小字体"))
+setTinyFont = QtWidgets.QAction(transla.transe("U", "临时设置很小的字体"))
+setDefaultFont = QtWidgets.QAction(transla.transe("U", "临时设置默认字体"))
 p3 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(47), transla.transe("U", "清空软件历史记录(&C)"))
 cleanCache = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(47), transla.transe("U", "清空软件缓存"))
 cleanProgramUnuse = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(47), transla.transe("U", "删除程序组件"))
@@ -2822,6 +2841,10 @@ programmenu.addAction(installMoreWine)
 programmenu.addAction(downloadChrootBottle)
 programmenu.addAction(installBox86CN)
 programmenu.addAction(installBox86)
+#programmenu.addSeparator()
+#programmenu.addAction(setMiniFont)
+#programmenu.addAction(setTinyFont)
+#programmenu.addAction(setDefaultFont)
 programmenu.addSeparator()
 programmenu.addAction(p2)
 programmenu.addAction(enabledAll)
@@ -2831,6 +2854,9 @@ programmenu.addAction(cleanCache)
 programmenu.addAction(cleanProgramUnuse)
 programmenu.addSeparator()
 programmenu.addAction(p4)
+setDefaultFont.triggered.connect(lambda: SetFont(1))
+setMiniFont.triggered.connect(lambda: SetFont(1.2))
+setTinyFont.triggered.connect(lambda: SetFont(1.6))
 p1.triggered.connect(InstallWine)
 installWineOnDeepin23.triggered.connect(InstallWineOnDeepin23)
 installWineOnDeepin23Alpha.triggered.connect(InstallWineOnDeepin23Alpha)
@@ -3327,7 +3353,7 @@ if o1.currentText() == "":
     wine["没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用"] = "没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用"
     canUseWine.append("没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用")
     o1.addItem("没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用")
-
+SetFont(setting["FontSize"])
 # Mini 模式
 # MiniMode(True)
 sys.exit(app.exec_())
