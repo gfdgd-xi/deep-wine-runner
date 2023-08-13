@@ -94,6 +94,11 @@
               <string>其他 Windows 系统（不支持自动安装，UEFI 启动，推荐 Windows 8 及以上）</string>
              </property>
             </item>
+            <item>
+             <property name="text">
+              <string>安装 WIndows 11（不支持自动安装）</string>
+             </property>
+            </item>
            </widget>
           </item>
          </layout>
