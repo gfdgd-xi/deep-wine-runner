@@ -196,6 +196,12 @@ void MainWindow::on_install_clicked()
                 file.close();
             }
             break;
+        case 4:
+            if(ui->vmChooser->currentIndex() == 0){
+                QMessageBox::warning(this, "提示", "Qemu 不支持该选项！");
+                return;
+            }
+            break;
         default:
             if(ui->vmChooser->currentIndex() == 0 && QFile::exists(QDir::homePath() + "/.config/deepin-wine-runner/QEMU-EFI")){
                 QFile::remove(QDir::homePath() + "/.config/deepin-wine-runner/QEMU-EFI");

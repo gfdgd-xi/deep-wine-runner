@@ -110,15 +110,24 @@ buildvbox::buildvbox(QString isoPath, int id, int vm){
         switch (id) {
             case 0:
                 vm.Create("Windows7");
+                vm.SetDisplayMemory(32);
                 break;
             case 1:
                 vm.Create("Windows7_64");
+                vm.SetDisplayMemory(32);
                 break;
             case 2:
                 vm.Create("WindowsNT_64");
+                vm.SetDisplayMemory(32);
                 break;
             case 3:
                 vm.Create("WindowsNT_64");
+                vm.SetDisplayMemory(32);
+                vm.EnabledUEFI(true);
+                break;
+            case 4:
+                vm.Create("Windows11_64");
+                vm.SetDisplayMemory(128);
                 vm.EnabledUEFI(true);
                 break;
         }
@@ -158,7 +167,6 @@ buildvbox::buildvbox(QString isoPath, int id, int vm){
         infoUtils::memoryRate(memory, memoryAll, swap, swapAll);
         //memoryRate(memory, memoryAll, swap, swapAll);
         vm.SetMemory(memoryAll / 3 / 1024);
-        vm.SetDisplayMemory(32);
         vm.SetNetBridge(net);
         vm.EnabledAudio();
         vm.EnabledClipboardMode();
@@ -180,15 +188,24 @@ buildvbox::buildvbox(QString isoPath, int id, int vm){
         switch (id) {
             case 0:
                 vm.Create("Windows7");
+                vm.SetDisplayMemory(32);
                 break;
             case 1:
                 vm.Create("Windows7_64");
+                vm.SetDisplayMemory(32);
                 break;
             case 2:
                 vm.Create("WindowsNT_64");
+                vm.SetDisplayMemory(32);
                 break;
             case 3:
                 vm.Create("WindowsNT_64");
+                vm.EnabledUEFI(true);
+                vm.SetDisplayMemory(32);
+                break;
+            case 4:
+                vm.Create("Windows11_64");
+                vm.SetDisplayMemory(128);
                 vm.EnabledUEFI(true);
                 break;
         }
@@ -213,8 +230,8 @@ buildvbox::buildvbox(QString isoPath, int id, int vm){
         if(QFile::exists("/usr/share/virtualbox/VBoxGuestAdditions.iso")){
             vm.MountISO("/usr/share/virtualbox/VBoxGuestAdditions.iso", "storage_controller_1", 1, 1);
         }
-
-        vm.SetCPU(get_nprocs(), GetCPUSocket(), GetCPUCore());
+        // VirtualBox 的 CPU 数量设置方法和 Qemu 不一样
+        vm.SetCPU(GetCPUCore(), GetCPUSocket(), GetCPUCore());
         long memory = 0;
         long memoryAll = 0;
         long swap = 0;
@@ -222,7 +239,6 @@ buildvbox::buildvbox(QString isoPath, int id, int vm){
         infoUtils::memoryRate(memory, memoryAll, swap, swapAll);
         //memoryRate(memory, memoryAll, swap, swapAll);
         vm.SetMemory(memoryAll / 3 / 1024);
-        vm.SetDisplayMemory(32);
         vm.SetNetBridge(net);
         vm.EnabledAudio();
         vm.EnabledClipboardMode();
