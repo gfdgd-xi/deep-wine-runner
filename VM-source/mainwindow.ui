@@ -99,6 +99,21 @@
               <string>安装 WIndows 11（不支持自动安装）</string>
              </property>
             </item>
+            <item>
+             <property name="text">
+              <string>安装其他 Windows XP（支持自动安装，只支持 VirtualBox）</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>安装其他 Windows （支持自动安装，传统启动，只支持 VirtualBox）</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>安装其他 Windows（支持自动安装，UEFI 启动，只支持 VirtualBox）</string>
+             </property>
+            </item>
            </widget>
           </item>
          </layout>

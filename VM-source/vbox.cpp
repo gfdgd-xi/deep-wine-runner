@@ -108,3 +108,6 @@ int vbox::EnabledUEFI(bool status){
     }
     return system(("\"" + managerPath + "\" modifyvm \"" + name + "\" --firmware=bios").toLatin1());
 }
+int vbox::AutoInstall(QString iso){
+    return system(("vboxmanage unattended install '" + name + "' '--iso=" + iso + "'").toLatin1());
+}

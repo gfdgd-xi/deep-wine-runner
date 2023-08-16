@@ -39,7 +39,7 @@ public:
     int SetKeyboardPS2();
     int OpenUSB();
     int EnabledUEFI(bool status);
-
+    int AutoInstall(QString iso);
 private:
 
 };

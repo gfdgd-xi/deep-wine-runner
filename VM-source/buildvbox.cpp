@@ -106,7 +106,7 @@ buildvbox::buildvbox(QString isoPath, int id, int vm){
         //vbox *box = new vbox("Window");
         //vbox vm("Windows");
         qemu vm("Windows");
-
+        bool setISOAlready = 0;
         switch (id) {
             case 0:
                 vm.Create("Windows7");
@@ -129,20 +129,42 @@ buildvbox::buildvbox(QString isoPath, int id, int vm){
                 vm.Create("Windows11_64");
                 vm.SetDisplayMemory(128);
                 vm.EnabledUEFI(true);
+                setISOAlready = 1;
+                break;
+            case 5:
+                vm.Create("WindowsXP_32");
+                vm.SetDisplayMemory(32);
+                setISOAlready = 1;
+                break;
+            case 6:
+                vm.Create("WindowsNT_64");
+                vm.SetDisplayMemory(32);
+                setISOAlready = 1;
+                break;
+            case 7:
+                vm.Create("WindowsNT_64");
+                vm.SetDisplayMemory(32);
+                vm.EnabledUEFI(true);
+                setISOAlready = 1;
                 break;
         }
         vm.CreateDiskControl();
         //vm.CreateDiskControl("storage_controller_2");
         vm.CreateDisk(QDir::homePath() + "/Qemu/Windows/Windows.qcow2", 131072);
         vm.MountDisk(QDir::homePath() + "/Qemu/Windows/Windows.qcow2");
-        vm.MountISO(isoPath, "storage_controller_1", 0, 1);
-        switch (id) {
-            case 0:
-                vm.MountISO(programPath + "/Windows7X86Auto.iso", "storage_controller_1", 1, 2);
-                break;
-            case 1:
-                vm.MountISO(programPath + "/Windows7X64Auto.iso", "storage_controller_1", 1, 2);
-                break;
+        if(!setISOAlready){
+            vm.MountISO(isoPath, "storage_controller_1", 0, 1);
+            switch (id) {
+                case 0:
+                    vm.MountISO(programPath + "/Windows7X86Auto.iso", "storage_controller_1", 1, 2);
+                    break;
+                case 1:
+                    vm.MountISO(programPath + "/Windows7X64Auto.iso", "storage_controller_1", 1, 2);
+                    break;
+            }
+        }
+        else{
+            vm.AutoInstall(isoPath);
         }
         /*vm.MountISO(isoPath, "storage_controller_1", 0, 1);
         switch (id) {
@@ -184,7 +206,7 @@ buildvbox::buildvbox(QString isoPath, int id, int vm){
         //vbox *box = new vbox("Window");
         vbox vm("Windows");
         //qemu vm("Windows");
-
+        bool setISOAlready = 1;
         switch (id) {
             case 0:
                 vm.Create("Windows7");
@@ -207,22 +229,44 @@ buildvbox::buildvbox(QString isoPath, int id, int vm){
                 vm.Create("Windows11_64");
                 vm.SetDisplayMemory(128);
                 vm.EnabledUEFI(true);
+                setISOAlready = 1;
                 break;
-        }
+            case 5:
+                vm.Create("WindowsXP_32");
+                vm.SetDisplayMemory(32);
+                setISOAlready = 1;
+                break;
+            case 6:
+                vm.Create("WindowsNT_64");
+                vm.SetDisplayMemory(32);
+                setISOAlready = 1;
+                break;
+            case 7:
+                vm.Create("WindowsNT_64");
+                vm.SetDisplayMemory(32);
+                vm.EnabledUEFI(true);
+                setISOAlready = 1;
+                break;
+            }
         QDir dir("/home/gfdgd_xi/Qemu/Windows/");
         dir.mkpath("/home/gfdgd_xi/Qemu/Windows/");
         vm.CreateDiskControl();
         //vm.CreateDiskControl("storage_controller_2");
         vm.CreateDisk(QDir::homePath() + "/VirtualBox VMs/Windows/Windows.vdi", 131072);
         vm.MountDisk(QDir::homePath() + "/VirtualBox VMs/Windows/Windows.vdi");
-        vm.MountISO(isoPath, "storage_controller_1", 0, 1);
-        switch (id) {
-            case 0:
-                vm.MountISO(programPath + "/Windows7X86Auto.iso", "storage_controller_1", 1, 0);
-                break;
-            case 1:
-                vm.MountISO(programPath + "/Windows7X64Auto.iso", "storage_controller_1", 1, 0);
-                break;
+        if(!setISOAlready){
+            vm.MountISO(isoPath, "storage_controller_1", 0, 1);
+            switch (id) {
+                case 0:
+                    vm.MountISO(programPath + "/Windows7X86Auto.iso", "storage_controller_1", 1, 0);
+                    break;
+                case 1:
+                    vm.MountISO(programPath + "/Windows7X64Auto.iso", "storage_controller_1", 1, 0);
+                    break;
+            }
+        }
+        else{
+            vm.AutoInstall(isoPath);
         }
 
         // 判断 VirtualBox Guest ISO 是否存在

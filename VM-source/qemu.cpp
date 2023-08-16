@@ -133,3 +133,6 @@ int qemu::EnabledUEFI(bool status){
     }
     return 1;
 }
+int qemu::AutoInstall(QString iso){
+    return 0;
+}
