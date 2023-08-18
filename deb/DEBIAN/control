@@ -1,5 +1,5 @@
 Package: spark-deepin-wine-runner
-Version: 3.4.0
+Version: 3.4.0.1
 Maintainer: gfdgd xi <3025613752@qq.com>
 Homepage: https://gitee.com/gfdgd-xi/deep-wine-runner
 Architecture: all
@@ -14,6 +14,6 @@ Section: utils
 Conflicts: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, spark-deepin-wine-runner-52
 Replaces: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, spark-deepin-wine-runner-52
 Provides: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, spark-deepin-wine-runner-52
-Installed-Size: 76512
+Installed-Size: 83156
 Description: Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。
  它同时还内置了基于Qemu/VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作，也能在非 X86 架构安装 X86 架构的 Windows 操作系统（但是效率较低）。

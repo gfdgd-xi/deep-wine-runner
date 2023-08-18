@@ -2539,7 +2539,11 @@ exe路径\' 参数 \'
 5、wine 容器如果没有指定，则会默认为 ~/.wine；
 6、如果可执行文件比较大的话，会出现点击“获取该程序运行情况”出现假死的情况，因为正在后台读取 SHA1，只需要等一下即可（读取速度依照您电脑处理速度、读写速度、可执行文件大小等有关）；
 7、如果非 X86 的用户的 UOS 专业版用户想要使用的话，只需要在应用商店安装一个 Wine 版本微信即可在本程序选择正确的 Wine 运行程序；''')
-updateThingsString = transla.transe("U", '''※1、修复简易打包器无法打开的问题以及 Wine 识别错误的问题
+updateThingsString = transla.transe("U", '''<b>3.4.0.1 更新内容：</b>
+※1、修复部分高性能机器打包器提示“无效的压缩参数”：https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I7SMTJ
+
+<b>3.4.0 更新内容：</b>
+※1、修复简易打包器无法打开的问题以及 Wine 识别错误的问题
 ※2、高级打包器支持多 .desktop 分别设置不同的 MimeType
 ※3、修复运行器在 Ubuntu 23 的安装问题
 ※4、高级打包器支持导出/导入填写信息
@@ -2560,7 +2564,7 @@ updateThingsString = transla.transe("U", '''※1、修复简易打包器无法�
 19、修复安装 Box64 时源里没有 libc6:armhf 导致无法安装的问题''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2023年08月11日"
+updateTime = "2023年08月18日"
 aboutProgram = transla.transe("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。</p>
 <p>它同时还内置了基于VirtualBox/Qemu制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作。</p>
 <pre>
