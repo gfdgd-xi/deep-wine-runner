@@ -2541,6 +2541,7 @@ exe路径\' 参数 \'
 7、如果非 X86 的用户的 UOS 专业版用户想要使用的话，只需要在应用商店安装一个 Wine 版本微信即可在本程序选择正确的 Wine 运行程序；''')
 updateThingsString = transla.transe("U", '''<b>3.4.0.1 更新内容：</b>
 ※1、修复部分高性能机器打包器提示“无效的压缩参数”：https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I7SMTJ
+※2、支持设置程序字体大小：https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I7SAYE
 
 <b>3.4.0 更新内容：</b>
 ※1、修复简易打包器无法打开的问题以及 Wine 识别错误的问题
