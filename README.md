@@ -42,6 +42,8 @@ env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径
 [![star](https://gitee.com/gfdgd-xi/deep-wine-runner/badge/star.svg?theme=dark)](https://gitee.com/gfdgd-xi/deep-wine-runner/stargazers)  
 最后感谢 [@鹤舞白沙](https://bbs.deepin.org/user/227203) 编写的《Wine运行器和Wine打包器傻瓜式使用教程（小白专用）》，链接：https://bbs.deepin.org/post/246837
 
+Wine 运行器 QQ 交流群：762985460
+
 ## 软件架构
 理论上支持全架构，如果 Python 能运行的话  
 非 X86 架构会利用到 `box86`、`exagear`、`qemu` 等技术  
