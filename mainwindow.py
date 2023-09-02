@@ -2566,13 +2566,11 @@ updateThingsString = transla.transe("U", '''<b>3.4.0.1 更新内容：</b>
 for i in information["Thank"]:
     thankText += f"{i}\n"
 updateTime = "2023年08月18日"
-aboutProgram = transla.transe("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。</p>
-<p>它同时还内置了基于VirtualBox/Qemu制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作。</p>
-<pre>
-
-一个图形化了如下命令的程序（最简单格式）
-<code>env WINEPREFIX=容器路径 wine（wine的路径） 可执行文件路径</code>
-让你可以简易方便的使用 wine""")
+aboutProgram = transla.transe("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序。原版的 Wine 只能使用命令操作，且安装过程较为繁琐，对小白不友好。于是该运行器为了解决该痛点，内置了对Wine图形化的支持、Wine 安装器、微型应用商店、各种Wine工具、自制的Wine程序打包器、运行库安装工具等。</p>
+<p>它同时还内置了基于Qemu/VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作，也能在非 X86 架构安装 X86 架构的 Windows 操作系统（但是效率较低，可以运行些老系统）。</p>
+<p>而且对于部分 Wine 应用适配者来说，提供了图形化的打包工具，以及提供了一些常用工具以及运行库的安装方式，以及能安装多种不同的 Wine 以测试效果，能极大提升适配效率。</p>
+<p>且对于 Deepin23 用户做了特别优化，以便能在缺少 i386 运行库的情况下运行 Wine32。同时也为非 X86 架构用户提供了 Box86/64、Qemu User 的安装方式</p>
+<pre>""")
 about = f'''<style>
 a:link, a:active {{
     text-decoration: none;
@@ -2586,6 +2584,7 @@ a:link, a:active {{
 安装包构建时间：{information['Time']}
 Qt 版本：{QtCore.qVersion()}
 程序官网：{programUrl}
+<b>Wine 运行器 QQ 交流群：762985460</b>
 当前程序占用体积：@programSize@MB</pre>
 <p>本程序依照 GPLV3 协议开源</p>
 <hr>
