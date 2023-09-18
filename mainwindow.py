@@ -2282,6 +2282,7 @@ def CheckWine():
             "spark-wine": "spark-wine",
             "spark-wine7-devel": "spark-wine7-devel", 
             "spark-wine8": "spark-wine8",
+            "spark-wine8-wow": "spark-wine8-wow",
             "deepin-wine": "deepin-wine", 
             "deepin-wine5": "deepin-wine5", 
             "wine": "wine", 
