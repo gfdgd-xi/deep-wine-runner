@@ -119,7 +119,8 @@ install:
 	cp -rv RemoveQemuUser.sh $(DESTDIR)/opt/apps/deepin-wine-runner
 	cp -rv InstallBox86.sh  $(DESTDIR)/opt/apps/deepin-wine-runner
 	cp -rv InstallRuntime   $(DESTDIR)/opt/apps/deepin-wine-runner
-	
+	cp -rv DesktopIcon/* $(DESTDIR)/opt/apps/deepin-wine-runner/entries/applications
+	cp -rv DesktopIcon/* $(DESTDIR)/usr/share/applications 
 	cp -rv $(DESTDIR)/opt/apps/deepin-wine-runner/entries/applications $(DESTDIR)/usr/share/applications 
 	#cp -rv deb $(DESTDIR)
 	python3 UpdateTime.py $(DESTDIR)/opt/apps/deepin-wine-runner/information.json
