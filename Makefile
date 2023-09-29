@@ -14,6 +14,7 @@ install:
 	mkdir -pv $(DESTDIR)/usr/bin
 	mkdir -pv $(DESTDIR)/usr/share/applications 
 	mkdir -pv $(DESTDIR)/opt/apps/deepin-wine-runner/entries/applications
+	mkdir -pv $(DESTDIR)/opt/apps/deepin-wine-runner/VM
 	cp -rv helperset $(DESTDIR)/opt/apps/deepin-wine-runner/
 	#cp -rv VM-source/VirtualMachine VM
 	cp -rv VM-source/deepin-wine-runner.svg VM
@@ -24,7 +25,11 @@ install:
 	cp -rv information.json package-script
 	zip -v -q -r package-script.zip package-script
 	cp -rv InstallBox86-cn.sh $(DESTDIR)/opt/apps/deepin-wine-runner/
-	cp -rv VM $(DESTDIR)/opt/apps/deepin-wine-runner
+	cp -rv VM/VirtualMachine $(DESTDIR)/opt/apps/deepin-wine-runner/VM
+	cp -rv VM/OVMF.fd $(DESTDIR)/opt/apps/deepin-wine-runner/VM
+	cp -rv VM/StartQemu.py $(DESTDIR)/opt/apps/deepin-wine-runner/VM
+	rm -rfv $(DESTDIR)/opt/apps/deepin-wine-runner/VM/vm.tar.gz
+	cd VM ; tar -cvzf $(DESTDIR)/opt/apps/deepin-wine-runner/VM/vm.tar.gz .
 	cp -rv 2048 $(DESTDIR)/opt/apps/deepin-wine-runner/
 	cp -rv Download.py $(DESTDIR)/opt/apps/deepin-wine-runner/
 	cp -rv AllInstall.py $(DESTDIR)/opt/apps/deepin-wine-runner
@@ -127,7 +132,7 @@ install:
 	#sudo rm -rfv $(DESTDIR)/
 	#cp -rv deb /tmp/spark-deepin-wine-runner-builder
 	rm -rfv package-script.zip
-	
+	chmod 777 -Rv $(DESTDIR)/opt/apps/deepin-wine-runner
 	ln -fs /opt/apps/deepin-wine-runner/deepin-wine-packager.py $(DESTDIR)/usr/bin/deepin-wine-package-builder 
 	ln -fs /opt/apps/deepin-wine-runner/deepin-wine-easy-packager.py $(DESTDIR)/usr/bin/deepin-wine-packager-easy-builder
 	ln -fs /opt/apps/deepin-wine-runner/deepin-wine-packager-with-script.py $(DESTDIR)/usr/bin/deepin-wine-packager-with-script

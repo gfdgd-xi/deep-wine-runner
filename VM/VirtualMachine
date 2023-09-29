@@ -6,6 +6,13 @@ arch = subprocess.getoutput("dpkg --print-architecture").replace(" ", "").replac
 if os.path.exists(f"{programPath}/VirtualMachine-{arch}"):
     os.system(f"{programPath}/VirtualMachine-{arch}")
     exit()
+# 判断文件是否解压
+if not os.path.exists(f"{programPath}/VirtualMachine-amd64"):
+    # 解压文件
+    os.system(f"cd '{programPath}' ; tar -xvf vm.tar.gz")
+    if os.path.exists(f"{programPath}/VirtualMachine-{arch}"):
+        os.system(f"{programPath}/VirtualMachine-{arch}")
+        exit()
 # 只能使用 Qemu User 运行程序
 if os.path.exists("/usr/lib/x86_64-linux-gnu/") and not os.system("which qemu-x86_64"):
     os.system(f"qemu-x86_64 '{programPath}/VirtualMachine-x86_64'")
