@@ -13,7 +13,7 @@ install:
 	mkdir $(DESTDIR)/opt/apps/deepin-wine-runner/LANG -pv
 	mkdir -pv $(DESTDIR)/usr/bin
 	mkdir -pv $(DESTDIR)/usr/share/applications 
-	mkdir -pv $(DESTDIR)/opt/apps/deepin-wine-runner/entries/
+	mkdir -pv $(DESTDIR)/opt/apps/deepin-wine-runner/entries/applications
 	cp -rv helperset $(DESTDIR)/opt/apps/deepin-wine-runner/
 	#cp -rv VM-source/VirtualMachine VM
 	cp -rv VM-source/deepin-wine-runner.svg VM
