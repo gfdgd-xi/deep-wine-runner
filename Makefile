@@ -1,6 +1,3 @@
-build:
-	make package -j$(nproc)
-
 clean:
 	python3 RemovePycacheFile.py
 	cd VM-source ; make clean
@@ -147,8 +144,8 @@ install:
 	ln -fs /opt/apps/deepin-wine-runner/InstallVisualCPlusPlus.py $(DESTDIR)/usr/bin/deepin-wine-runner-wine-vscppruntime-installer
 	ln -fs /opt/apps/deepin-wine-runner/deepin-wine-venturi-setter.py $(DESTDIR)/usr/bin/deepin-wine-venturi-setter
 
-remove:
-	sudo apt purge spark-deepin-wine-runner  -y
+build:
+	echo Done!
 
 run:
 	python3 mainwindow.py
