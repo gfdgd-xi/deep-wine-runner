@@ -11,6 +11,9 @@ install:
 	make clean -j$(nproc)
 	python3 RemovePycacheFile.py
 	mkdir $(DESTDIR)/opt/apps/deepin-wine-runner/LANG -pv
+	mkdir -pv $(DESTDIR)/usr/bin
+	mkdir -pv $(DESTDIR)/usr/share/applications 
+	mkdir -pv $(DESTDIR)/opt/apps/deepin-wine-runner/entries/
 	cp -rv helperset $(DESTDIR)/opt/apps/deepin-wine-runner/
 	#cp -rv VM-source/VirtualMachine VM
 	cp -rv VM-source/deepin-wine-runner.svg VM
@@ -116,14 +119,14 @@ install:
 	cp -rv RemoveQemuUser.sh $(DESTDIR)/opt/apps/deepin-wine-runner
 	cp -rv InstallBox86.sh  $(DESTDIR)/opt/apps/deepin-wine-runner
 	cp -rv InstallRuntime   $(DESTDIR)/opt/apps/deepin-wine-runner
-	mkdir -pv $(DESTDIR)/opt/apps/deepin-wine-runner/entries/
-	cp -rv $(DESTDIR)/usr/share/applications $(DESTDIR)/opt/apps/deepin-wine-runner/entries/applications
+	
+	cp -rv $(DESTDIR)/opt/apps/deepin-wine-runner/entries/applications $(DESTDIR)/usr/share/applications 
 	#cp -rv deb $(DESTDIR)
 	python3 UpdateTime.py $(DESTDIR)/opt/apps/deepin-wine-runner/information.json
 	#sudo rm -rfv $(DESTDIR)/
 	#cp -rv deb /tmp/spark-deepin-wine-runner-builder
 	rm -rfv package-script.zip
-	mkdir -pv $(DESTDIR)/usr/bin
+	
 	ln -fs /opt/apps/deepin-wine-runner/deepin-wine-packager.py $(DESTDIR)/usr/bin/deepin-wine-package-builder 
 	ln -fs /opt/apps/deepin-wine-runner/deepin-wine-easy-packager.py $(DESTDIR)/usr/bin/deepin-wine-packager-easy-builder
 	ln -fs /opt/apps/deepin-wine-runner/deepin-wine-packager-with-script.py $(DESTDIR)/usr/bin/deepin-wine-packager-with-script
