@@ -18,8 +18,11 @@ jobs:
           sudo apt install git dpkg-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools qt5-qmake -y
           git clone https://github.com/gfdgd-xi/deep-wine-runner
           cd deep-wine-runner
-          make build
-          mv spark-deepin-wine-runner.deb ~
+          #make build
+          #mv spark-deepin-wine-runner.deb ~
+          sudo apt build-dep .
+          dpkg-buildpackage -b
+          cp spark-deepin-wine-runner_*.deb ~/spark-deepin-wine-runner.deb
       - name: upload result
         uses: actions/upload-artifact@v1
         with:

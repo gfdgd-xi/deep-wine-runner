@@ -4,7 +4,9 @@ Priority: optional
 Maintainer: gfdgd_xi <3025613752@qq.com>
 Rules-Requires-Root: no
 Build-Depends:
- debhelper-compat (= 13),
+ debhelper-compat,
+ make,
+ p7zip-full,
 Standards-Version: 4.6.2
 Homepage: https://gitee.com/gfdgd-xi/deep-wine-runner
 
