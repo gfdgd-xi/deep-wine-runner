@@ -2278,6 +2278,7 @@ def CheckWine():
             "基于 UOS exagear 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al -- /opt/deepin-wine6-stable/bin/wine ",
             "使用 Flatpak 安装的 Wine": "flatpak run org.winehq.Wine",
             "deepin-wine6 stable": "deepin-wine6-stable", 
+            "deepin-wine6-vannila": "deepin-wine6-vannila",
             "deepin-wine5 stable": "deepin-wine5-stable", 
             "spark-wine": "spark-wine",
             "spark-wine7-devel": "spark-wine7-devel", 
@@ -2540,30 +2541,9 @@ exe路径\' 参数 \'
 5、wine 容器如果没有指定，则会默认为 ~/.wine；
 6、如果可执行文件比较大的话，会出现点击“获取该程序运行情况”出现假死的情况，因为正在后台读取 SHA1，只需要等一下即可（读取速度依照您电脑处理速度、读写速度、可执行文件大小等有关）；
 7、如果非 X86 的用户的 UOS 专业版用户想要使用的话，只需要在应用商店安装一个 Wine 版本微信即可在本程序选择正确的 Wine 运行程序；''')
-updateThingsString = transla.transe("U", '''<b>3.4.0.1 更新内容：</b>
-※1、修复部分高性能机器打包器提示“无效的压缩参数”：https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I7SMTJ
-※2、支持设置程序字体大小：https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I7SAYE
-
-<b>3.4.0 更新内容：</b>
-※1、修复简易打包器无法打开的问题以及 Wine 识别错误的问题
-※2、高级打包器支持多 .desktop 分别设置不同的 MimeType
-※3、修复运行器在 Ubuntu 23 的安装问题
-※4、高级打包器支持导出/导入填写信息
-※5、Deepin 23 支持使用 Winetricks
-※6、新增视频教程
-※7、修复虚拟机工具在检测到 Qemu 磁盘但没有安装 Qemu 时无法启动的问题
-※8、修复虚拟机工具的一些问题并调整部分设置
-※9、虚拟机工具支持设置 UEFI 启动
-※10、虚拟机安装工具提供 LoongArch 新世界版本
-11、高级打包器支持隐藏输入框以及使用小字体
-12、打包器提供 bcm 和 dcm wine 支持
-13、修复星火 wine 配置错误问题
-14、打包器支持多线程打包
-15、修复升级工具问题：https://gitee.com/gfdgd-xi/uengine-runner/issues/I6ZRZX
-16、跟进打包器 run.sh 模板
-17、云沙箱新增 cloud.vdnel.cn
-18、打包器新增分类 Game、System、AudioVideo
-19、修复安装 Box64 时源里没有 libc6:armhf 导致无法安装的问题''')
+updateThingsString = transla.transe("U", '''<b>3.4.1 更新内容：</b>
+※1、支持识别 spark-wine8-wow 且打包时可以使用该 wine
+※2、替换安装 Box86 的 pkexec 为 sudo''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
 updateTime = "2023年08月18日"
@@ -2806,8 +2786,9 @@ installWineHQOrg = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/w
 installWineHQ = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine.png"), transla.transe("U", "安装 WineHQ（国内清华大学镜像源）"))
 installMoreWine = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/more-wine.png"), transla.transe("U", "安装更多 Wine"))
 downloadChrootBottle = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/CHROOT.png"), transla.transe("U", "下载 Chroot 容器"))
-installBox86CN = QtWidgets.QAction(QtGui.QIcon.fromTheme("box"), transla.transe("U", "安装 Box86/Box64（国内源）"))
-#installBox86 = QtWidgets.QAction(QtGui.QIcon.fromTheme("box"), transla.transe("U", "安装 Box86/Box64（国外 Github 源）"))
+installBox86CN = QtWidgets.QAction(QtGui.QIcon.fromTheme("box"), transla.transe("U", "安装 Box86/Box64 日构建（国内源）"))
+installBox86 = QtWidgets.QAction(QtGui.QIcon.fromTheme("box"), transla.transe("U", "安装 Box86/Box64 日构建（国外 Github 源）"))
+installBox86Own = QtWidgets.QAction(QtGui.QIcon.fromTheme("box"), transla.transe("U", "安装 Box86/Box64（使用自建源，支持 riscv64）"))
 addWineDebMirrorForDeepin20 = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine.png"), transla.transe("U", "添加 Wine 运行器源以安装较新版本的 WineHQ（支持 Deepin20/Debian10）"))
 p2 = QtWidgets.QAction(QtGui.QIcon.fromTheme("settings"), transla.transe("U", "设置程序(&S)"))
 enabledAll = QtWidgets.QAction(transla.transe("U", "强制启用所有被禁用的组件（不推荐）"))
@@ -2827,7 +2808,8 @@ programmenu.addAction(addWineDebMirrorForDeepin20)
 programmenu.addAction(installMoreWine)
 programmenu.addAction(downloadChrootBottle)
 programmenu.addAction(installBox86CN)
-#programmenu.addAction(installBox86)
+programmenu.addAction(installBox86)
+programmenu.addAction(installBox86Own)
 #programmenu.addSeparator()
 #programmenu.addAction(setMiniFont)
 #programmenu.addAction(setTinyFont)
@@ -2865,7 +2847,8 @@ downloadChrootBottle.triggered.connect(lambda: threading.Thread(target=os.system
 p2.triggered.connect(ProgramSetting.ShowWindow)
 enabledAll.triggered.connect(lambda: DisableButton(False))
 installBox86CN.triggered.connect(lambda: OpenTerminal(f"sudo bash '{programPath}/InstallBox86-cn.sh'"))
-#installBox86.triggered.connect(lambda: OpenTerminal(f"sudo bash '{programPath}/InstallBox86.sh'"))
+installBox86.triggered.connect(lambda: OpenTerminal(f"sudo bash '{programPath}/InstallBox86.sh'"))
+installBox86Own.triggered.connect(lambda: OpenTerminal(f"sudo bash '{programPath}/InstallBox86-own.sh'"))
 p3.triggered.connect(CleanProgramHistory)
 cleanCache.triggered.connect(CleanProgramCache)
 cleanProgramUnuse.triggered.connect(CleanProgram)
