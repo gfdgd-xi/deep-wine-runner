@@ -2543,10 +2543,11 @@ exe路径\' 参数 \'
 7、如果非 X86 的用户的 UOS 专业版用户想要使用的话，只需要在应用商店安装一个 Wine 版本微信即可在本程序选择正确的 Wine 运行程序；''')
 updateThingsString = transla.transe("U", '''<b>3.4.1 更新内容：</b>
 ※1、支持识别 spark-wine8-wow 且打包时可以使用该 wine
-※2、替换安装 Box86 的 pkexec 为 sudo''')
+※2、替换安装 Box86 的 pkexec 为 sudo
+※3、Wine 下载工具新增更多 Wine''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2023年08月18日"
+updateTime = "2023年09月30日"
 aboutProgram = transla.transe("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序。原版的 Wine 只能使用命令操作，且安装过程较为繁琐，对小白不友好。于是该运行器为了解决该痛点，内置了对Wine图形化的支持、Wine 安装器、微型应用商店、各种Wine工具、自制的Wine程序打包器、运行库安装工具等。</p>
 <p>它同时还内置了基于Qemu/VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作，也能在非 X86 架构安装 X86 架构的 Windows 操作系统（但是效率较低，可以运行些老系统）。</p>
 <p>而且对于部分 Wine 应用适配者来说，提供了图形化的打包工具，以及提供了一些常用工具以及运行库的安装方式，以及能安装多种不同的 Wine 以测试效果，能极大提升适配效率。</p>
@@ -2784,7 +2785,7 @@ installWineOnDeepin23 = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Funct
 installWineOnDeepin23Alpha = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine23A.png"), transla.transe("U", "安装 wine(只限Deepin23 Alpha)"))
 installWineHQOrg = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine.png"), transla.transe("U", "安装 WineHQ（官方源）"))
 installWineHQ = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine.png"), transla.transe("U", "安装 WineHQ（国内清华大学镜像源）"))
-installMoreWine = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/more-wine.png"), transla.transe("U", "安装更多 Wine"))
+installMoreWine = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/more-wine.png"), transla.transe("U", "安装更多 Wine（Wine 下载工具）"))
 downloadChrootBottle = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/CHROOT.png"), transla.transe("U", "下载 Chroot 容器"))
 installBox86CN = QtWidgets.QAction(QtGui.QIcon.fromTheme("box"), transla.transe("U", "安装 Box86/Box64 日构建（国内源）"))
 installBox86 = QtWidgets.QAction(QtGui.QIcon.fromTheme("box"), transla.transe("U", "安装 Box86/Box64 日构建（国外 Github 源）"))

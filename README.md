@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 3.4.0.1</h1>
+<h1 align="center">Wine 运行器 3.4.1</h1>
 <hr>
 <a href='https://gitee.com/gfdgd-xi/deep-wine-runner/stargazers'><img src='https://gitee.com/gfdgd-xi/deep-wine-runner/badge/star.svg?theme=dark' alt='star'></img></a>
 <a href='https://gitee.com/gfdgd-xi/deep-wine-runner/members'><img src='https://gitee.com/gfdgd-xi/deep-wine-runner/badge/fork.svg?theme=dark' alt='fork'></img></a>  
@@ -115,6 +115,16 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志 
+### 3.4.1（2023年09月30日）
+**※1、支持识别 spark-wine8-wow 且打包时可以使用该 wine**  
+**※2、替换安装 Box86 的 pkexec 为 sudo**  
+**※3、Wine 下载工具新增更多 Wine**  
+
+
+![图片.png](https://storage.deepin.org/thread/202309301259131162_图片.png)
+
+
+
 ### 3.4.0.1（2023年08月18日）
 **※1、修复部分高性能机器打包器提示“无效的压缩参数”：https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I7SMTJ**  
 **※2、支持设置程序字体大小：https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I7SAYE**  
