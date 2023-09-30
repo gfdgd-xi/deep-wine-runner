@@ -1291,21 +1291,33 @@ extract_archive()
     fi
 }}
 
+ACTIVEX_NAME=""
 BOTTLENAME="{e5_text.text()}"
 APPVER="{e2_text.text()}"
 EXEC_PATH="@@@EXEC_PATH@@@"
 START_SHELL_PATH="{["/opt/deepinwine/tools/run_v4.sh", "/opt/deepinwine/tools/spark_run_v4.sh"][int(chooseWineHelperValue.isChecked())]}"
 export MIME_TYPE=""
+export MIME_EXEC=""
 export DEB_PACKAGE_NAME="{e1_text.text()}"
 export APPRUN_CMD="$HOME/.deepinwine/{os.path.basename(wine[wineVersion.currentText()]).replace('.7z', '')}/bin/{useInstallWineArch.currentText()}"
+EXPORT_ENVS=""
+EXEC_NAME="@@@EXEC_NAME@@@"
 export PATCH_LOADER_ENV=""
 export FILEDLG_PLUGIN="/opt/apps/$DEB_PACKAGE_NAME/files/gtkGetFileNameDlg"
-DISABLE_ATTACH_FILE_DIALOG="1"
+DISABLE_ATTACH_FILE_DIALOG=""
 export SPECIFY_SHELL_DIR=`dirname $START_SHELL_PATH`
 
 DEEPIN_WINE_BIN_DIR=`dirname $APPRUN_CMD`
 DEEPIN_WINE_DIR=`dirname $DEEPIN_WINE_BIN_DIR`
 ARCHIVE_FILE_DIR="/opt/apps/$DEB_PACKAGE_NAME/files"
+
+export SPECIFY_SHELL_DIR=`dirname $START_SHELL_PATH`
+
+ARCHIVE_FILE_DIR="/opt/apps/$DEB_PACKAGE_NAME/files"
+
+export WINEDLLPATH=/opt/$APPRUN_CMD/lib:/opt/$APPRUN_CMD/lib64
+
+export WINEPREDLL="$ARCHIVE_FILE_DIR/dlls"
 
 if [ -n "$PATCH_LOADER_ENV" ] && [ -n "$EXEC_PATH" ];then
     export $PATCH_LOADER_ENV
@@ -1313,16 +1325,20 @@ fi
 
 extract_archive "$ARCHIVE_FILE_DIR/wine_archive.7z" "$ARCHIVE_FILE_DIR/wine_archive.md5sum" "$DEEPIN_WINE_DIR"
 
-if [ -d "$DEEPIN_WINE_BIN_DIR" ] && [ "$DEEPIN_WINE_BIN_DIR" != "." ];then
-    export DEEPIN_WINE_BIN_DIR
-fi
-
 if [ -z "$DISABLE_ATTACH_FILE_DIALOG" ];then
     export ATTACH_FILE_DIALOG=1
 fi
 
+if [ -n "$EXPORT_ENVS" ];then
+    export $EXPORT_ENVS
+fi
+
 if [ -n "$EXEC_PATH" ];then
-    $START_SHELL_PATH $BOTTLENAME $APPVER "$EXEC_PATH" "$@"
+    if [ -z "${{EXEC_PATH##*.lnk*}}" ];then
+        $START_SHELL_PATH $BOTTLENAME $APPVER "C:/windows/command/start.exe" "/Unix" "$EXEC_PATH" "$@"
+    else
+        $START_SHELL_PATH $BOTTLENAME $APPVER "$EXEC_PATH" "$@"
+    fi
 else
     $START_SHELL_PATH $BOTTLENAME $APPVER "uninstaller.exe" "$@"
 fi
