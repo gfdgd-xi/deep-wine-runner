@@ -543,22 +543,6 @@ make run
 ```bash
 make install
 ```
-### 从源码构建 deb
-1. 安装需要的依赖  
-```bash
-sudo apt install git make
-```
-2. 下载仓库  
-```bash
-git clone https://gitee.com/gfdgd-xi/deep-wine-runner.git
-cd deep-wine-runner
-```
-3. 从源码构建 deb
-```bash
-sudo apt build-dep .
-dpkg-buildpackage -b
-```
-
 ## Openkylin 如何安装这个 Wine 运行器？
 首先添加作者的源：    
 Gitlink 源（国内推荐）：    
