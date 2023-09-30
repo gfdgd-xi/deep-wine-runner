@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: gfdgd_xi <3025613752@qq.com>
 Rules-Requires-Root: no
 Build-Depends:
- debhelper-compat,
+ debhelper-compat (= 10),
  make,
  p7zip-full,
 Standards-Version: 4.6.2
