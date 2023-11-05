@@ -99,6 +99,21 @@
               <string>安装 WIndows 11（不支持自动安装）</string>
              </property>
             </item>
+            <item>
+             <property name="text">
+              <string>安装其他 Windows XP（支持自动安装，只支持 VirtualBox）</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>安装其他 Windows （支持自动安装，传统启动，只支持 VirtualBox）</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>安装其他 Windows（支持自动安装，UEFI 启动，只支持 VirtualBox）</string>
+             </property>
+            </item>
            </widget>
           </item>
          </layout>
@@ -216,7 +231,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;百度网盘：&lt;/span&gt;&lt;a href=&quot;https://pan.baidu.com/s/19WbvinITCQJFZpAdZutrjg?pwd=me4y&quot;&gt;&lt;span style=&quot; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;https://pan.baidu.com/s/19WbvinITCQJFZpAdZutrjg?pwd=me4y&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; 提取码: me4y&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;（如果下载这个，系统版本选第一项，一般推荐这个）&lt;/span&gt;&lt;a href=&quot;ed2k://|file|cn_windows_7_ultimate_with_sp1_x86_dvd_u_677486.iso|2653276160|7503E4B9B8738DFCB95872445C72AEFB|/&quot;&gt;&lt;span style=&quot; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;ed2k://|file|cn_windows_7_ultimate_with_sp1_x86_dvd_u_677486.iso|2653276160|7503E4B9B8738DFCB95872445C72AEFB|/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;（如果下载这个，系统版本选第二项）&lt;/span&gt;&lt;a href=&quot;ed2k://|file|cn_windows_7_ultimate_with_sp1_x64_dvd_u_677408.iso|3420557312|B58548681854236C7939003B583A8078|/&quot;&gt;&lt;span style=&quot; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;ed2k://|file|cn_windows_7_ultimate_with_sp1_x64_dvd_u_677408.iso|3420557312|B58548681854236C7939003B583A8078|/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;hr /&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;hr /&gt;&lt;/body&gt;&lt;/html&gt;<br/><p>UOS 3a4000 用户需要安装 Debian10 原版的 Qemu，下载链接：</p></string>
           </property>
           <property name="openLinks">
            <bool>false</bool>

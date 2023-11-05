@@ -197,6 +197,9 @@ void MainWindow::on_install_clicked()
             }
             break;
         case 4:
+        case 5:
+        case 6:
+        case 7:
             if(ui->vmChooser->currentIndex() == 0){
                 QMessageBox::warning(this, "提示", "Qemu 不支持该选项！");
                 return;
