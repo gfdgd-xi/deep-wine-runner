@@ -175,6 +175,13 @@
            </widget>
           </item>
           <item>
+           <widget class="QPushButton" name="kvmTest">
+            <property name="text">
+             <string>kvm 测试</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="qemuSetting">
             <property name="text">
              <string>Qemu虚拟机设置</string>
