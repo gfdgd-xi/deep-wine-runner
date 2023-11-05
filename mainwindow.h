@@ -44,6 +44,8 @@ private slots:
 
     void on_delQemuDiskButton_clicked();
 
+    void on_kvmTest_clicked();
+
 private:
     Ui::MainWindow *ui;
     long m_cpuAll;

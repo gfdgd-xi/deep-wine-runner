@@ -301,3 +301,30 @@ void MainWindow::on_delQemuDiskButton_clicked()
     }
     QMessageBox::information(this, "提示", "移除成功");
 }
+
+void MainWindow::on_kvmTest_clicked()
+{
+    if(system("which kvm-ok")&& !QFile::exists(QCoreApplication::applicationDirPath() + "/kvm-ok")){
+        QMessageBox::critical(this, "错误", "未识别到命令 kvm-ok\n可以使用命令 sudo apt install cpu-checker 安装");
+        return;
+    }
+    QString kvm_ok_path = "kvm-ok";
+    if(!system("which kvm-ok")){
+        kvm_ok_path = "kvm-ok";
+    }
+    else if(QFile::exists(QCoreApplication::applicationDirPath() + "/kvm-ok")){
+        kvm_ok_path = QCoreApplication::applicationDirPath() + "/kvm-ok";
+    }
+    qDebug() << "使用" << kvm_ok_path;
+    QProcess process;
+    process.start(kvm_ok_path);
+    process.waitForStarted();
+    process.waitForFinished();
+    if(process.exitCode()){
+        QMessageBox::critical(this, "错误", "您的系统不支持使用 kvm：\n" + process.readAll());
+        return;
+    }
+    QMessageBox::information(this, "提示", "您的系统支持使用 kvm：\n" + process.readAll());
+
+}
+
