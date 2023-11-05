@@ -74,6 +74,87 @@ showTailText:
 		mov al,[ds:si]
 		mov byte [es:di],al
 		loop showTailTextLoop
+	
+
+get_data:
+	mov di,80*2*25-2
+
+	; 读取秒
+	mov al,0x00
+	call read_time
+	mov byte [es:di-4],':'
+	mov byte [es:di-2],ah
+	mov byte [es:di],al
+	; 读取分钟
+	mov al,0x02
+	call read_time
+	mov byte [es:di-10],':'
+	mov byte [es:di-8],ah
+	mov byte [es:di-6],al
+	; 读取小时
+	mov al,0x04
+	call read_time
+	mov byte [es:di-14],ah
+	mov byte [es:di-12],al
+	; 读取日
+	mov al,0x07
+	call read_time
+	mov byte [es:di-22],'.'
+	mov byte [es:di-20],ah
+	mov byte [es:di-18],al
+	; 读取月
+	mov al,0x08
+	call read_time
+	mov byte [es:di-28],'.'
+	mov byte [es:di-26],ah
+	mov byte [es:di-24],al
+	; 读取年
+	mov al,0x09
+	call read_time
+	mov byte [es:di-32],ah
+	mov byte [es:di-30],al
+	mov cx,showTipsStr-tipsStr
+	sub di,30
+	mov ax,tipsStr
+	mov ds,ax
+	; 先跳过文本显示
+	jmp near showTipsStrEnd
+	; 显示提示文本
+	tipsStr: db 'Time:20'
+	showTipsStr:
+		mov di,cx
+		add di,showTipsStr+0x7c0
+		mov dl,[ds:di]
+		mov di,80*2*25-36
+		sub di,cx
+		mov byte [es:di],dl
+		loop showTipsStr
+	showTipsStrEnd:
+
+jmp near get_data
+
+
+read_time:
+	out 0x70,al
+	in al,0x71
+	call bcd_to_ascii
+	ret
+
+; 用于编码转换：BCD=》ASCII
+; 输入：AL=bcd码
+; 输出：AX=ascii
+bcd_to_ascii:
+	mov ah,al
+	and al,0x0f
+	add al,0x30
+
+	shr ah,4
+	and ah,0x0f
+	add ah,0x30
+	ret
+
+
+
 
 poweroff:
 	; 跳过关机
