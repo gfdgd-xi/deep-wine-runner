@@ -131,6 +131,7 @@ get_data:
 		loop showTipsStr
 	showTipsStrEnd:
 
+hlt  ; 使用停机指令降低 CPU 使用率
 jmp near get_data
 
 
