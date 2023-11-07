@@ -452,7 +452,8 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>虚拟机</string>
     </property>
-    <addaction name="actionVMLog"/>
+    <addaction name="actionVMInstallLog"/>
+    <addaction name="actionVMRunlLog"/>
    </widget>
    <addaction name="menuVM"/>
   </widget>
@@ -476,9 +477,14 @@ p, li { white-space: pre-wrap; }
     <string>导出</string>
    </property>
   </action>
-  <action name="actionVMLog">
+  <action name="actionVMInstallLog">
    <property name="text">
-    <string>虚拟机日志</string>
+    <string>虚拟机安装日志</string>
+   </property>
+  </action>
+  <action name="actionVMRunlLog">
+   <property name="text">
+    <string>虚拟机运行日志</string>
    </property>
   </action>
  </widget>
