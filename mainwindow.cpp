@@ -344,7 +344,20 @@ void MainWindow::on_actionVMLog_triggered()
         return;
     }
     file.open(QIODevice::ReadOnly);
-    QInputDialog::getMultiLineText(this, "日志", "虚拟机日志",file.readAll());
+    QInputDialog::getMultiLineText(this, "安装日志", "虚拟机安装日志",file.readAll());
+    file.close();
+}
+
+
+void MainWindow::on_actionVMRunlLog_triggered()
+{
+    QFile file("/tmp/windows-virtual-machine-installer-for-wine-runner-run.log");
+    if(!file.exists()){
+        QMessageBox::information(this, "提示", "没有日志文件");
+        return;
+    }
+    file.open(QIODevice::ReadOnly);
+    QInputDialog::getMultiLineText(this, "运行日志", "虚拟机运行日志",file.readAll());
     file.close();
 }
 
