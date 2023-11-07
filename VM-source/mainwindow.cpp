@@ -21,6 +21,8 @@
 #include <QDesktopServices>
 #include <QMessageBox>
 #include <iostream>
+#include <QIODevice>
+#include <QInputDialog>
 #include "qemusetting.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -129,7 +131,9 @@ void MainWindow::ShowCPUMessage(){
             QString::number(memory * 100 / memoryAll) + "% " + QString::number(memory / 1024) + "MB/" + QString::number(memoryAll / 1024) + "MB" +
             " 开机时间: " + QString::number(dd) + "天 " + QString::number(hh) + ":" + QString::number(MM) + ":" + QString::number(ss);
     //qDebug() << cpuAll << "  " << cpuFree;
-    ui->CPUValue->showMessage(info, 5000);
+    if(!stopShowTime){
+        ui->CPUValue->showMessage(info, 5000);
+    }
     m_cpuAll = cpuAll;
     m_cpuFree = cpuFree;
 }
@@ -212,6 +216,8 @@ void MainWindow::on_install_clicked()
     }
     buildvbox(ui->isoPath->text(), ui->systemVersion->currentIndex(), ui->vmChooser->currentIndex());
     ui->tabWidget->setCurrentIndex(1);
+    stopShowTime = 1;
+    ui->CPUValue->showMessage("提示：目前已经尝试开启虚拟机，如果在一段时间后依旧还没看到虚拟机窗口开启，请在菜单栏查看虚拟机日志", 10000);
     return;
 }
 
@@ -327,5 +333,18 @@ void MainWindow::on_kvmTest_clicked()
     }
     QMessageBox::information(this, "提示", "您的系统支持使用 kvm：\n" + process.readAll());
 
+}
+
+
+void MainWindow::on_actionVMLog_triggered()
+{
+    QFile file("/tmp/windows-virtual-machine-installer-for-wine-runner-install.log");
+    if(!file.exists()){
+        QMessageBox::information(this, "提示", "没有日志文件");
+        return;
+    }
+    file.open(QIODevice::ReadOnly);
+    QInputDialog::getMultiLineText(this, "日志", "虚拟机日志",file.readAll());
+    file.close();
 }
 
