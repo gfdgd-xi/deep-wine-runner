@@ -50,6 +50,8 @@ private slots:
 
     void on_actionVMRunlLog_triggered();
 
+    void on_actionVMTest_triggered();
+
 private:
     bool stopShowTime = 0;
     Ui::MainWindow *ui;
