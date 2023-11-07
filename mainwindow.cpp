@@ -211,6 +211,7 @@ void MainWindow::on_install_clicked()
             }
     }
     buildvbox(ui->isoPath->text(), ui->systemVersion->currentIndex(), ui->vmChooser->currentIndex());
+    ui->tabWidget->setCurrentIndex(1);
     return;
 }
 
