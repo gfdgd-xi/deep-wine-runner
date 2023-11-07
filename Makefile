@@ -19,6 +19,7 @@ package:
 	cp -rv VM-source/deepin-wine-runner.svg VM
 	cp -rv VM-source/Windows7X64Auto.iso VM
 	cp -rv VM-source/Windows7X86Auto.iso VM
+	cp -rv VM-source/test.qcow2 VM
 	cp -rv wine/ deb/opt/apps/deepin-wine-runner/
 	cp -rv Test/ deb/opt/apps/deepin-wine-runner/
 	cp -rv information.json package-script

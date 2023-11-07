@@ -96,7 +96,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->textBrowser_3, &QTextBrowser::anchorClicked, this, [=](const QUrl &link){
         QDesktopServices::openUrl(link);
     });
-
+    // 设置标签栏图标
+    ui->tabWidget->setTabIcon(1, QIcon::fromTheme(":/application-vnd.oasis.opendocument.text.svg"));
+    // 设置窗口图标
+    this->setWindowIcon(QIcon(":/deepin-wine-runner.svg"));
 }
 
 void MainWindow::ShowCPUMessage(){
@@ -359,5 +362,24 @@ void MainWindow::on_actionVMRunlLog_triggered()
     file.open(QIODevice::ReadOnly);
     QInputDialog::getMultiLineText(this, "运行日志", "虚拟机运行日志",file.readAll());
     file.close();
+}
+
+
+void MainWindow::on_actionVMTest_triggered()
+{
+    // 运行 Demo
+    // 写入 disk 文件
+    QFile file(":/TestDisk/test.qcow2");
+    // 计算随机数
+    //qsrand(QTime(0, 0, 0).secsTo(QTime::currentTime()));
+    //int number = qrand() % 1000;
+    //QFile writeFile("/tmp/indows-virtual-machine-installer-for-wine-runner-test-disk-" + QString::number(number) + ".qcow2");
+    QFile writeFile("/tmp/indows-virtual-machine-installer-for-wine-runner-test-disk.qcow2");
+    file.open(QIODevice::ReadOnly);
+    writeFile.open(QIODevice::WriteOnly);
+    writeFile.write(file.readAll());
+    file.close();
+    writeFile.close();
+    system("qemu-system-i386 --hda /tmp/indows-virtual-machine-installer-for-wine-runner-test-disk.qcow2 > /tmp/windows-virtual-machine-installer-for-wine-runner-run.log 2>&1");
 }
 

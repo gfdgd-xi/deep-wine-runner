@@ -39,7 +39,7 @@ tailtitle:
 	loop tailtitle
 ; 在第一行写入文本 Hello World!
 jmp near showHeadText
-headText: db 'Hello World!'
+headText: db 'Hello World!' ;'Wine Runner Qemu Test'
 showHeadText:
 ; 虽然可以简单粗暴的用 movsw，但是会出现问题
 	mov cx,showHeadText-headText
@@ -74,7 +74,72 @@ showTailText:
 		mov al,[ds:si]
 		mov byte [es:di],al
 		loop showTailTextLoop
-	
+
+; 显示中部提示文本
+jmp near showCenterText
+centerTextScreenSize:
+	; 第一位是行数
+	; 第二位是单行偏移量
+	db 1, -1
+centerText: 
+	db 'Hello', 0x0A
+	db 'It is test text', 0x0A
+	db 'a', 0x0A
+	db 'b', 0x0A
+	db  0x03  ; 结束符
+showCenterText:
+	centerTextLong equ showCenterText-centerText
+	mov cx,centerTextLong
+	xor ax,ax
+	loopShowCenterText:
+		jmp near addScreenLineFinish
+		addScreenLine:
+			; 如果检测到换行符
+			mov dx, [centerTextScreenSize]
+			add dx,1
+			mov [centerTextScreenSize], dx
+			dec cx
+			mov al,-1
+			mov [centerTextScreenSize+1],al
+			; 行数+1，偏移量设为 -1（从头开始）
+			;ret
+		addScreenLineFinish:
+		; 偏移量 + 1
+		mov al,[centerTextScreenSize+1]
+		add al,1
+		mov [centerTextScreenSize+1],al
+		mov di,centerText
+		add di,centerTextLong
+		sub di,cx
+		mov bl,[di]
+
+		; 判断是不是结束符
+		cmp bl,0x03
+		je showCenterTextEnd
+		
+		; 判断是不是换行符
+		cmp bl,0x0A
+		je addScreenLine ; 换行符检测
+
+		xor ah,ah ; 清空高位
+		add al,al
+		mov di,ax
+		
+		; 计算显示位置
+		xor dx,dx
+		mov dl,[centerTextScreenSize]
+		mov ax,80
+		mul dx
+		mov dx,2
+		mul dx
+		add ax,2
+		add di,ax
+
+		; 显示
+		mov byte [es:di], bl
+		loop loopShowCenterText
+
+showCenterTextEnd:
 
 get_data:
 	mov di,80*2*25-2

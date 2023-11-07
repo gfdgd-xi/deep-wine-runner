@@ -420,8 +420,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;此组件也有非常大的缺点，就是相比于 Wine，会需要占用大量的空间、安装需要大量的时间、某些情况下需要相比于 Wine 需要消耗更多的系统资源，但可以更加完美、流畅的运行 Windows 应用，会尽量减少因为缺少或未实现导致的 Windows exe 程序运行异常&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;该组件制作者：gfdgd xi&lt;/p&gt;
 &lt;hr /&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;参考文献：&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Droid Sans Mono','monospace','monospace'; font-size:11pt; color:#6a9955;&quot;&gt;https://juejin.cn/post/7080484519328874510&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="openLinks">
            <bool>false</bool>
@@ -454,6 +453,8 @@ p, li { white-space: pre-wrap; }
     </property>
     <addaction name="actionVMInstallLog"/>
     <addaction name="actionVMRunlLog"/>
+    <addaction name="separator"/>
+    <addaction name="actionVMTest"/>
    </widget>
    <addaction name="menuVM"/>
   </widget>
@@ -485,6 +486,11 @@ p, li { white-space: pre-wrap; }
   <action name="actionVMRunlLog">
    <property name="text">
     <string>虚拟机运行日志</string>
+   </property>
+  </action>
+  <action name="actionVMTest">
+   <property name="text">
+    <string>虚拟机测试（X86、Qemu）</string>
    </property>
   </action>
  </widget>
