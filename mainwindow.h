@@ -46,7 +46,10 @@ private slots:
 
     void on_kvmTest_clicked();
 
+    void on_actionVMLog_triggered();
+
 private:
+    bool stopShowTime = 0;
     Ui::MainWindow *ui;
     long m_cpuAll;
     long m_cpuFree;

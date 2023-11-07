@@ -439,6 +439,23 @@ p, li { white-space: pre-wrap; }
     <string/>
    </property>
   </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1058</width>
+     <height>36</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuVM">
+    <property name="title">
+     <string>虚拟机</string>
+    </property>
+    <addaction name="actionVMLog"/>
+   </widget>
+   <addaction name="menuVM"/>
+  </widget>
   <action name="action">
    <property name="text">
     <string>退出</string>
@@ -457,6 +474,11 @@ p, li { white-space: pre-wrap; }
   <action name="delQemuDisk">
    <property name="text">
     <string>导出</string>
+   </property>
+  </action>
+  <action name="actionVMLog">
+   <property name="text">
+    <string>虚拟机日志</string>
    </property>
   </action>
  </widget>

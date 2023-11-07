@@ -61,9 +61,9 @@ int vbox::SetRemoteConnectSetting(int port){
 }
 int vbox::Start(bool unShown){
     if(unShown){
-        return system(("\"" + managerPath + "\"").toLatin1());
+        return system(("\"" + managerPath + "\" > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1").toLatin1());
     }
-    return system(("\"" + managerPath + "\" startvm \"" + name + "\"").toLatin1());
+    return system(("\"" + managerPath + "\" startvm \"" + name + "\"  > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1").toLatin1());
 }
 int vbox::Stop(){
     return system(("\"" + managerPath + "\" controlvm \"" + name + "\" poweroff").toLatin1());

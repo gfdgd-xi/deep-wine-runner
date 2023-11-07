@@ -76,9 +76,9 @@ int qemu::SetRemoteConnectSetting(int port){
 int qemu::Start(bool unShown){
     qDebug() << commandOption;
     if(Command().GetCommand("arch").replace("\n", "").replace(" ", "") == "x86_64"){
-        return system(("kvm -cpu host " + commandOption + " &").toLatin1());
+        return system(("kvm -cpu host " + commandOption + " > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
     }
-    return system(("qemu-system-x86_64 -nic model=rtl8139 " + commandOption + " &").toLatin1());
+    return system(("qemu-system-x86_64 -nic model=rtl8139 " + commandOption + " > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
 }
 int qemu::Stop(){
     system("killall qemu-system-x86_64 -9");
