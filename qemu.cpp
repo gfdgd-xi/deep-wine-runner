@@ -105,6 +105,8 @@ int qemu::Start(bool unShown){
 }
 int qemu::Stop(){
     system("killall qemu-system-x86_64 -9");
+    system("killall qemu-system-aarch64 -9");
+    system("killall qemu-system-arm -9");
     system("killall kvm -9");
     return 0;
 }
@@ -183,6 +185,9 @@ int qemu::EnabledUEFI(bool status){
         return 0;
     }
     return 1;
+}
+int qemu::MountMainISO(QString isoPath){
+    commandOption += "--cdrom '" + isoPath + "' ";
 }
 int qemu::AutoInstall(QString iso){
     return 0;
