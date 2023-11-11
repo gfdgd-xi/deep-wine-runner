@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Windows 应用适配工具</string>
+   <string>Wine 运行器虚拟机安装工具</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -428,7 +428,6 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;项目地址：&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    Gitee：&lt;a href=&quot;https://gitee.com/gfdgd-xi/deep-wine-runner&quot;&gt;&lt;span style=&quot; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;https://gitee.com/gfdgd-xi/deep-wine-runner&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    Github：&lt;a href=&quot;https://github.com/gfdgd-xi/deep-wine-runner&quot;&gt;&lt;span style=&quot; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;https://github.com/gfdgd-xi/deep-wine-runner&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    Gitlink：&lt;a href=&quot;https://gitlink.org.cn/gfdgd_xi/deep-wine-runner&quot;&gt;&lt;span style=&quot; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;https://gitlink.org.cn/gfdgd_xi/deep-wine-runner&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;此组件也有非常大的缺点，就是相比于 Wine，会需要占用大量的空间、安装需要大量的时间、某些情况下需要相比于 Wine 需要消耗更多的系统资源，但可以更加完美、流畅的运行 Windows 应用，会尽量减少因为缺少或未实现导致的 Windows exe 程序运行异常&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;该组件制作者：gfdgd xi&lt;/p&gt;
 &lt;hr /&gt;

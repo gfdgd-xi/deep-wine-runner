@@ -206,7 +206,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Windows 应用适配工具"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Wine 运行器虚拟机安装工具"))
         self.label.setText(_translate("MainWindow", "镜像路径："))
         self.isoPath.setPlaceholderText(_translate("MainWindow", "请选择系统镜像"))
         self.browser.setText(_translate("MainWindow", "浏览……"))
@@ -335,7 +335,6 @@ class Ui_MainWindow(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">项目地址：</p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">    Gitee：<a href=\"https://gitee.com/gfdgd-xi/deep-wine-runner\"><span style=\" font-size:11pt; text-decoration: underline; color:#0082fa;\">https://gitee.com/gfdgd-xi/deep-wine-runner</span></a></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">    Github：<a href=\"https://github.com/gfdgd-xi/deep-wine-runner\"><span style=\" font-size:11pt; text-decoration: underline; color:#0082fa;\">https://github.com/gfdgd-xi/deep-wine-runner</span></a></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">    Gitlink：<a href=\"https://gitlink.org.cn/gfdgd_xi/deep-wine-runner\"><span style=\" font-size:11pt; text-decoration: underline; color:#0082fa;\">https://gitlink.org.cn/gfdgd_xi/deep-wine-runner</span></a></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">此组件也有非常大的缺点，就是相比于 Wine，会需要占用大量的空间、安装需要大量的时间、某些情况下需要相比于 Wine 需要消耗更多的系统资源，但可以更加完美、流畅的运行 Windows 应用，会尽量减少因为缺少或未实现导致的 Windows exe 程序运行异常</p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">该组件制作者：gfdgd xi</p>\n"
 "<hr />\n"

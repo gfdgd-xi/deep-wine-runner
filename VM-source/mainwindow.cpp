@@ -82,7 +82,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     }
     // 设置程序标题
-    this->setWindowTitle("Windows 应用适配工具 " + versionValue.toString());
+    this->setWindowTitle("Wine 运行器虚拟机安装工具 " + versionValue.toString());
     // 读取谢明列表
     ui->textBrowser_2->setHtml("<p>程序版本号：" + versionValue.toString() + ", " + GetRunCommand("arch") + "</p><p>安装包构建时间：" + buildTime.toString() + "</p><p>该组件构建时间："
                                + __DATE__ + " " + __TIME__ + "</p>" + ui->textBrowser_2->toHtml() +
