@@ -119,6 +119,18 @@ int qemu::SetKeyboardPS2(){
 int qemu::OpenUSB(){
     return 0;
 }
+int qemu::UseAarch64EFI(){
+
+}
+int qemu::UseArmhfEFI(){
+
+}
+int qemu::UseLoongarch64EFI(){
+
+}
+int qemu::UseOtherEFI(QString fdFilePath){
+
+}
 int qemu::EnabledUEFI(bool status){
     if(!status){
         return 0;

@@ -40,6 +40,10 @@ public:
     int OpenUSB();
     int EnabledUEFI(bool status);
     int AutoInstall(QString iso);
+    int UseAarch64EFI();
+    int UseArmhfEFI();
+    int UseLoongarch64EFI();
+    int UseOtherEFI(QString fdFilePath);
 private:
     QString commandOption = "";
 
