@@ -26,6 +26,10 @@ public:
     int SetRemote(bool setting);
     int SetRemoteConnectSetting(int port=5540);
     int Start(bool unShown=false);
+    int StartArmhf();
+    int StartAarch64();
+    int StartLoong64();
+    int MountMainDisk(QString diskPath);
     int Stop();
     int Delete();
     int SetDisplayMemory(int memory);
