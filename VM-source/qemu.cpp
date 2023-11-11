@@ -82,16 +82,16 @@ int qemu::MountMainDisk(QString diskPath){
 int qemu::StartArmhf(){
     qDebug() << commandOption;
     if(Command().GetCommand("arch").replace("\n", "").replace(" ", "") == "aarch64" && !system((QCoreApplication::applicationDirPath() + "/kvm-ok").toUtf8())){
-        return system(("qemu-system-arm -net user,hostfwd=tcp::3389-:3389 -display vnc=:5 -display gtk --enable-kvm -cpu host -M virt " + commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
+        return system(("qemu-system-arm  -display vnc=:5 -display gtk --enable-kvm -cpu host -M virt " + commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
     }
-    return system(("qemu-system-arm -net user,hostfwd=tcp::3389-:3389 -display vnc=:5 -display gtk -cpu max -M virt " + commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
+    return system(("qemu-system-arm  -display vnc=:5 -display gtk -cpu max -M virt " + commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
 }
 int qemu::StartAarch64(){
     qDebug() << commandOption;
     if(Command().GetCommand("arch").replace("\n", "").replace(" ", "") == "aarch64" && !system((QCoreApplication::applicationDirPath() + "/kvm-ok").toUtf8())){
-        return system(("qemu-system-aarch64 -net user,hostfwd=tcp::3389-:3389 -display vnc=:5 -display gtk --enable-kvm -cpu host -M virt " + commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
+        return system(("qemu-system-aarch64  -display vnc=:5 -display gtk --enable-kvm -cpu host -M virt " + commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
     }
-    return system(("qemu-system-aarch64 -net user,hostfwd=tcp::3389-:3389 -display vnc=:5 -display gtk -cpu max -M virt " + commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
+    return system(("qemu-system-aarch64  -display vnc=:5 -display gtk -cpu max -M virt " + commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
 }
 int qemu::StartLoong64(){
 
@@ -99,9 +99,9 @@ int qemu::StartLoong64(){
 int qemu::Start(bool unShown){
     qDebug() << commandOption;
     if(Command().GetCommand("arch").replace("\n", "").replace(" ", "") == "x86_64" && !system((QCoreApplication::applicationDirPath() + "/kvm-ok").toUtf8())){
-        return system(("qemu-system-x86_64 -net user,hostfwd=tcp::3389-:3389 -display vnc=:5 -display gtk --enable-kvm -cpu host " + commandOption + " > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
+        return system(("qemu-system-x86_64  -display vnc=:5 -display gtk --enable-kvm -cpu host " + commandOption + " > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
     }
-    return system(("qemu-system-x86_64 -net user,hostfwd=tcp::3389-:3389 -display vnc=:5 -display gtk -nic model=rtl8139 " + commandOption + " > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
+    return system(("qemu-system-x86_64  -display vnc=:5 -display gtk -nic model=rtl8139 " + commandOption + " > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
 }
 int qemu::Stop(){
     system("killall qemu-system-x86_64 -9");
