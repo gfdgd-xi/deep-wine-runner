@@ -57,6 +57,7 @@ def DisbledOrEnabled(choose: bool):
 class PackageDebThread(QtCore.QThread):
     signal = QtCore.pyqtSignal(str)
     info = QtCore.pyqtSignal(str)
+    error = QtCore.pyqtSignal(str)
     def __init__(self) -> None:
         super().__init__()
 
@@ -104,11 +105,17 @@ export apprun_cmd="deepin-wine6-stable"
                 text = ""
             self.signal.emit(text)
             print(text, end="")
-        self.info.emit("打包完成！")
+        if not res.returncode:
+            self.info.emit("打包完成！")
+        else:
+            self.error.emit("打包出现错误！")
         DisbledOrEnabled(False)
 
 class QT:
     run = None
+
+def MessageBoxError(text):
+    QtWidgets.QMessageBox.critical(window, "错误", text)
 
 def MessageBoxInformation(text):
     QtWidgets.QMessageBox.information(window, "提示", text)
@@ -126,6 +133,7 @@ def PackageDeb():
     QT.run = PackageDebThread()
     QT.run.signal.connect(RunCommand)
     QT.run.info.connect(MessageBoxInformation)
+    QT.run.error.connect(MessageBoxError)
     QT.run.start()
 
 def RunCommand(command):
