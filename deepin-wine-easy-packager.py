@@ -5,7 +5,11 @@ import json
 import time
 import updatekiller
 import random
-import xpinyin
+try:
+    import xpinyin
+except:
+    os.system("python3 -m pip install --upgrade xpinyin --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple --break-system-packages")
+    import xpinyin
 import traceback
 import subprocess
 import PyQt5.QtGui as QtGui
