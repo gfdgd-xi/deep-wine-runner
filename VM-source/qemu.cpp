@@ -188,6 +188,7 @@ int qemu::EnabledUEFI(bool status){
 }
 int qemu::MountMainISO(QString isoPath){
     commandOption += "--cdrom '" + isoPath + "' ";
+    return 0;
 }
 int qemu::AutoInstall(QString iso){
     return 0;
