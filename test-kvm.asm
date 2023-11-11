@@ -14,6 +14,7 @@ clean:
 mov byte [es:0x00],''
 mov cx,80*2-1
 mov di,0
+push cx
 headtitle:
 	mov di,cx
 	mov byte [es:di],0xF0
@@ -24,8 +25,8 @@ headtitle:
 	;sub cx,1
 	loop headtitle
 
-mov di,0
-mov cx,80*2-1
+xor di,di
+pop cx
 ; 显示下方白条
 tailtitle:
 	mov di,cx
@@ -37,9 +38,9 @@ tailtitle:
 	add di,80*2*24
 	mov byte [es:di],''
 	loop tailtitle
-; 在第一行写入文本 Hello World!
+; 在第一行写入文本
 jmp near showHeadText
-headText: db 'Hello World!' ;'Wine Runner Qemu Test'
+headText: db 'Wine Runner  Webiste:http://gitee.com/gfdgd-xi/deep-wine-runner'
 showHeadText:
 ; 虽然可以简单粗暴的用 movsw，但是会出现问题
 	mov cx,showHeadText-headText
@@ -82,10 +83,9 @@ centerTextScreenSize:
 	; 第二位是单行偏移量
 	db 1, -1
 centerText: 
-	db 'Hello', 0x0A
-	db 'It is test text', 0x0A
-	db 'a', 0x0A
-	db 'b', 0x0A
+	db 'Mode: Real Mode Demo', 0x0A
+	db 'Bit: 16', 0x0A
+	db 'Virtual Machine: qemu-system-i386'
 	db  0x03  ; 结束符
 showCenterText:
 	centerTextLong equ showCenterText-centerText
@@ -141,6 +141,20 @@ showCenterText:
 
 showCenterTextEnd:
 
+;mov ax,[cs:0x100]
+;mov dx,[cs:0x102]
+;	mov bx,16
+;	div bx
+;	mov ds,ax
+;	mov es,ax
+;xor di,di
+;mov si,1
+;xor ds,ds
+;mov bx,512
+;xor bx,bx
+;call read_hard_disk_0
+
+
 get_data:
 	mov di,80*2*25-2
 
@@ -178,23 +192,7 @@ get_data:
 	call read_time
 	mov byte [es:di-32],ah
 	mov byte [es:di-30],al
-	mov cx,showTipsStr-tipsStr
-	sub di,30
-	mov ax,tipsStr
-	mov ds,ax
-	; 先跳过文本显示
-	jmp near showTipsStrEnd
-	; 显示提示文本
-	tipsStr: db 'Time:20'
-	showTipsStr:
-		mov di,cx
-		add di,showTipsStr+0x7c0
-		mov dl,[ds:di]
-		mov di,80*2*25-36
-		sub di,cx
-		mov byte [es:di],dl
-		loop showTipsStr
-	showTipsStrEnd:
+
 
 hlt  ; 使用停机指令降低 CPU 使用率
 jmp near get_data
@@ -219,17 +217,73 @@ bcd_to_ascii:
 	add ah,0x30
 	ret
 
-
-
-
-poweroff:
-	; 跳过关机
-	jmp near end
+;poweroff:
 	; 关机
-	mov ax,5307H  ; 高级电源管理功能，设置电源状态
-	mov bx,0001H  ; 设备ID，1：所有设备
-	mov cx,0003H  ; 状态，3：表示关机
-	int 15h
+;	mov ax,5307H  ; 高级电源管理功能，设置电源状态
+;	mov bx,0001H  ; 设备ID，1：所有设备
+;	mov cx,0003H  ; 状态，3：表示关机
+;	int 15h
+
+
+
 end:
 	times 510-($-$$) db 0
 	db 0x55,0xaa
+
+; 后面部分暂时废弃
+
+
+read_hard_disk_0:  ; 从硬盘读取一个逻辑扇区
+		; 输入：DI:SI=起始逻辑扇区号
+		; DS:BX=目标缓冲区地址
+	push ax
+	push bx
+	push cx
+	push dx
+
+	mov dx,0x1f2
+	mov al,1
+	out dx,al ; 读取的扇区数
+
+	inc dx ; 0x1f3
+	mov ax,si
+	out dx,al ; LBA地址7~0
+
+	inc dx ; 0x1f4
+	mov al,ah
+	out dx,al ; LBA地址15~8
+
+	inc dx ; 0x1f5
+	mov ax,di
+	out dx,al ; LBA地址23~16
+
+	inc dx ; 0x1f6
+	mov al,0xe0 ; LBA28模式，主盘
+	or al,ah ; LBA地址27~24
+	out dx,al
+
+	inc dx ; 0x1f7
+	mov al,0x20 ; 读命令
+	out dx,al
+
+	.waits:
+		in al,dx  ; 此时 dx 为 0x1f7，此时为命令端口也是状态窗口
+		and al,0x88
+		cmp al,0x08
+		jnz .waits
+		; 内部操作期间，会将 0x1f7 端口第 7 位设置为“1”，准备就绪后会将此位清零，并将第 3 位设为 1
+
+		mov cx,256 ; 总计要读取的/字/数
+		mov dx,0x1f0
+	
+	.readw:
+		in ax,dx
+		mov [bx],ax
+		add bx,2
+		loop .readw
+
+		pop dx
+		pop cx
+		pop bx
+		pop ax
+
