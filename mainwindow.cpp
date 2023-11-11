@@ -212,6 +212,18 @@ void MainWindow::on_install_clicked()
                 return;
             }
             break;
+        case 8:
+            if(ui->vmChooser->currentIndex() == 1){
+                QMessageBox::warning(this, "提示", "VirtualBox 不支持该选项！");
+                return;
+            }
+            break;
+        case 9:
+            if(ui->vmChooser->currentIndex() == 1){
+                QMessageBox::warning(this, "提示", "VirtualBox 不支持该选项！");
+                return;
+            }
+            break;
         default:
             if(ui->vmChooser->currentIndex() == 0 && QFile::exists(QDir::homePath() + "/.config/deepin-wine-runner/QEMU-EFI")){
                 QFile::remove(QDir::homePath() + "/.config/deepin-wine-runner/QEMU-EFI");
@@ -371,15 +383,12 @@ void MainWindow::on_actionVMTest_triggered()
     // 写入 disk 文件
     QFile file(":/TestDisk/test.qcow2");
     // 计算随机数
-    //qsrand(QTime(0, 0, 0).secsTo(QTime::currentTime()));
-    //int number = qrand() % 1000;
-    //QFile writeFile("/tmp/indows-virtual-machine-installer-for-wine-runner-test-disk-" + QString::number(number) + ".qcow2");
     QFile writeFile("/tmp/indows-virtual-machine-installer-for-wine-runner-test-disk.qcow2");
     file.open(QIODevice::ReadOnly);
     writeFile.open(QIODevice::WriteOnly);
     writeFile.write(file.readAll());
     file.close();
     writeFile.close();
-    system("qemu-system-i386 --hda /tmp/indows-virtual-machine-installer-for-wine-runner-test-disk.qcow2 > /tmp/windows-virtual-machine-installer-for-wine-runner-run.log 2>&1");
+    system("qemu-system-i386 --hda /tmp/indows-virtual-machine-installer-for-wine-runner-test-disk.qcow2 -rtc base=localtime > /tmp/windows-virtual-machine-installer-for-wine-runner-run.log 2>&1");
 }
 

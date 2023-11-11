@@ -147,6 +147,7 @@ buildvbox::buildvbox(QString isoPath, int id, int vm){
                 vm.EnabledUEFI(true);
                 setISOAlready = 1;
                 break;
+
         }
         vm.CreateDiskControl();
         //vm.CreateDiskControl("storage_controller_2");
