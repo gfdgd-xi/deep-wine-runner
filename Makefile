@@ -8,6 +8,8 @@ clean:
 	rm -rfv VM-source/.qmake.stash
 
 package:
+	# 读取程序版本号
+	PROGRAMVERSION=`python3 GetProgramVersion.py`
 	#cd VM-source && qmake
 	#cd VM-source && make
 	#cd wine && make
@@ -127,6 +129,9 @@ package:
 	python3 RemovePycacheFile.py
 	sudo rm -rfv /tmp/spark-deepin-wine-runner-builder/
 	cp -rv deb /tmp/spark-deepin-wine-runner-builder
+	sed -i "s%@@VERSION@@%${PROGRAMVERSION}%g" /tmp/spark-deepin-wine-runner-builder/DEBIAN/control
+	SIZE=`du /tmp/spark-deepin-wine-runner-builder/`
+	sed -i "s%@@SIZE@@%${SIZE}%g" /tmp/spark-deepin-wine-runner-builder/DEBIAN/control
 	rm -rfv deb/opt/apps/deepin-wine-runner/*
 	rm -rfv package-script.zip
 	mkdir -pv /tmp/spark-deepin-wine-runner-builder/usr/bin
@@ -152,7 +157,16 @@ package:
 	
 	sudo chown -R root:root /tmp/spark-deepin-wine-runner-builder
 	
-	dpkg-deb -Z xz -b /tmp/spark-deepin-wine-runner-builder spark-deepin-wine-runner.deb
+	dpkg-deb -Z xz -z 9 -b /tmp/spark-deepin-wine-runner-builder spark-deepin-wine-runner.deb
+	sudo rm -rfv /tmp/spark-deepin-wine-runner-builder
+	# 构建 ace 包
+	cp -rv deb-ace /tmp/spark-deepin-wine-runner-builder
+	cp -rv spark-deepin-wine-runner.deb /tmp/spark-deepin-wine-runner-builder/opt/apps/spark-deepin-wine-runner-ace
+	sed -i "s%@@VERSION@@%${PROGRAMVERSION}%g" /tmp/spark-deepin-wine-runner-builder/DEBIAN/control
+	SIZE=`du /tmp/spark-deepin-wine-runner-builder/`
+	sed -i "s%@@SIZE@@%${SIZE}%g" /tmp/spark-deepin-wine-runner-builder/DEBIAN/control
+	sudo chown -R root:root /tmp/spark-deepin-wine-runner-builder
+	dpkg-deb -Z xz -z 9 -b /tmp/spark-deepin-wine-runner-builder spark-deepin-wine-runner-ace.deb
 	sudo rm -rfv /tmp/spark-deepin-wine-runner-builder
 	
 install:

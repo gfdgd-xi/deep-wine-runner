@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+X-Categories=System;Wine;
+Exec=bookworm-run /usr/bin/deepin-wine-packager-with-script
+Icon=/opt/apps/spark-deepin-wine-runner-ace/deepin-wine-runner.svg
+Name=Wine Package Builder For UOS
+NoDisplay=true
+Name[zh]=Wine 打包器(基于活动脚本)
+Terminal=false
+StartupNotify=true

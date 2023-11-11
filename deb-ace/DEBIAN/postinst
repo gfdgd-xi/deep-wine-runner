@@ -1,0 +1,37 @@
+#!/bin/bash
+function notify-send(){
+ #Detect the user using such display
+    local user=$(who | awk '{print $1}' | head -n 1)
+
+    #Detect the id of the user
+    local uid=$(id -u $user)
+sudo -u $user DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$uid/bus notify-send "$@"
+}
+
+function zenity(){
+ #Detect the user using such display
+    local user=$(who | awk '{print $1}' | head -n 1)
+
+    #Detect the id of the user
+    local uid=$(id -u $user)
+sudo -u $user DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$uid/bus zenity "$@"
+}
+
+###检查aptss在不在
+if [ -z `which bookworm-run` ];then
+echo "Oh no, ssinstall have not installed bookworm-run dependency yet! Exit"
+exit 1
+fi
+bookworm-run echo "Welcome to BCM! Trying to install package"
+if [ -z "`bookworm-run which aptss`" ];then
+wget https://zunyun01.store.deepinos.org.cn/store/depends/spark-store-console-in-container_4.2.6.2_all.deb -O /tmp/ssconsole.deb
+bookworm-run apt install /tmp/ssconsole.deb -y
+rm /tmp/ssconsole.deb -f
+fi
+notify-send "Installing Wine Runner BCM, may cost some time please ensure your network is fine" 
+notify-send "正在书虫兼容环境中安装 Wine 运行器，可能会花费一些时间，请保持网络畅通" 
+bookworm-run aptss update
+cp /opt/apps/spark-deepin-wine-runner-ace/spark-deepin-wine-runner.deb /tmp
+bookworm-run aptss install /tmp/spark-deepin-wine-runner.deb -y
+
+bookworm-run aptss clean

@@ -1,0 +1,13 @@
+[Desktop Entry]
+Exec=bookworm-run /usr/bin/deepin-wine-packager-easy-builder %F
+Icon=/opt/apps/spark-deepin-wine-runner-ace/deepin-wine-runner.svg
+Keywords=exe;scr;
+MimeType=application/x-ms-dos-executable;application/x-msi;application/x-ms-shortcut;
+Name=Wine Package Builder
+Name[zh]=Wine 简易打包器
+NoDisplay=true
+StartupNotify=true
+Terminal=false
+Type=Application
+X-Categories=System;Wine;
+X-Deepin-Vendor=user-custom
