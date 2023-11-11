@@ -183,6 +183,20 @@ void MainWindow::on_install_clicked()
             }
         }
         break;
+     case 8:
+        if(system("which qemu-system-arm")){
+            if(QMessageBox::question(this, "提示", "无法检测到 qemu-system-arm，是否继续创建虚拟机？") == QMessageBox::No){
+                return;
+            }
+        }
+        break;
+     case 9:
+       if(system("which qemu-system-aarch64")){
+           if(QMessageBox::question(this, "提示", "无法检测到 qemu-system-aarch64，是否继续创建虚拟机？") == QMessageBox::No){
+               return;
+           }
+       }
+       break;
     }
     QFile file(QDir::homePath() + "/.config/deepin-wine-runner/QEMU-EFI");
     QFile archFile(QDir::homePath() + "/.config/deepin-wine-runner/QEMU-ARCH");
