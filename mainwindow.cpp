@@ -351,17 +351,7 @@ void MainWindow::on_kvmTest_clicked()
 }
 
 
-void MainWindow::on_actionVMLog_triggered()
-{
-    QFile file("/tmp/windows-virtual-machine-installer-for-wine-runner-install.log");
-    if(!file.exists()){
-        QMessageBox::information(this, "提示", "没有日志文件");
-        return;
-    }
-    file.open(QIODevice::ReadOnly);
-    QInputDialog::getMultiLineText(this, "安装日志", "虚拟机安装日志",file.readAll());
-    file.close();
-}
+void MainWindow::on_actionVMLog_triggered(){}
 
 
 void MainWindow::on_actionVMRunlLog_triggered()
@@ -390,5 +380,18 @@ void MainWindow::on_actionVMTest_triggered()
     file.close();
     writeFile.close();
     system("qemu-system-i386 --hda /tmp/indows-virtual-machine-installer-for-wine-runner-test-disk.qcow2 -rtc base=localtime > /tmp/windows-virtual-machine-installer-for-wine-runner-run.log 2>&1");
+}
+
+
+void MainWindow::on_actionVMInstallLog_triggered()
+{
+    QFile file("/tmp/windows-virtual-machine-installer-for-wine-runner-install.log");
+    if(!file.exists()){
+        QMessageBox::information(this, "提示", "没有日志文件");
+        return;
+    }
+    file.open(QIODevice::ReadOnly);
+    QInputDialog::getMultiLineText(this, "安装日志", "虚拟机安装日志",file.readAll());
+    file.close();
 }
 

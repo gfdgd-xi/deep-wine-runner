@@ -81,30 +81,12 @@ int buildvbox::Download(QString url, QString path, QString fileName){
 }
 
 buildvbox::buildvbox(QString isoPath, int id, int vm){
-    /*if(vm == 1){
-        QDir vboxPath(QDir::homePath() + "/VirtualBox VMs/Windows");
-        if(vboxPath.exists()){
-            qDebug("虚拟机存在，直接启动！");
-            vbox vm("Windows");
-            vm.Start();
-            return;
-         }
-    }*/
     QString programPath = QCoreApplication::applicationDirPath();
-
-    /*if(!QFile::exists(programPath + "/a.iso")){
-        std::thread([=](){
-            while(1){
-                qDebug() << "a";
-            }
-        }).detach();
-    }*/
 
     QString net = GetNet();
     qDebug() << "使用网卡：" << net << endl;
     if(vm == 0){
-        //vbox *box = new vbox("Window");
-        //vbox vm("Windows");
+        // Qemu
         qemu vm("Windows");
         bool setISOAlready = 0;
         switch (id) {
@@ -147,12 +129,25 @@ buildvbox::buildvbox(QString isoPath, int id, int vm){
                 vm.EnabledUEFI(true);
                 setISOAlready = 1;
                 break;
+            case 8:
+                vm.Create("WindowsNT_64");
+                vm.SetDisplayMemory(32);
+                vm.UseArmhfEFI();
+                setISOAlready = 1;
+                break;
+            case 9:
+                vm.Create("WindowsNT_64");
+                vm.SetDisplayMemory(32);
+                vm.UseAarch64EFI();
+                setISOAlready = 1;
+                break;
 
         }
         vm.CreateDiskControl();
         //vm.CreateDiskControl("storage_controller_2");
         vm.CreateDisk(QDir::homePath() + "/Qemu/Windows/Windows.qcow2", 131072);
-        vm.MountDisk(QDir::homePath() + "/Qemu/Windows/Windows.qcow2");
+        //vm.MountDisk(QDir::homePath() + "/Qemu/Windows/Windows.qcow2");
+        vm.MountMainDisk(QDir::homePath() + "/Qemu/Windows/Windows.qcow2");
         if(!setISOAlready){
             vm.MountISO(isoPath, "storage_controller_1", 0, 1);
             switch (id) {
@@ -167,20 +162,6 @@ buildvbox::buildvbox(QString isoPath, int id, int vm){
         else{
             vm.AutoInstall(isoPath);
         }
-        /*vm.MountISO(isoPath, "storage_controller_1", 0, 1);
-        switch (id) {
-            case 0:
-                vm.MountISO(programPath + "/Windows7X86Auto.iso", "storage_controller_1", 1, 0);
-                break;
-            case 1:
-                vm.MountISO(programPath + "/Windows7X64Auto.iso", "storage_controller_1", 1, 0);
-                break;
-        }*/
-        // 判断 VirtualBox Guest ISO 是否存在
-        // 在的话直接挂载
-        /*if(QFile::exists("/usr/share/virtualbox/VBoxGuestAdditions.iso")){
-            vm.MountISO("/usr/share/virtualbox/VBoxGuestAdditions.iso", "storage_controller_1", 1, 1);
-        }*/
 
         vm.SetCPU(get_nprocs(), GetCPUSocket(), GetCPUCore());
         long memory = 0;
@@ -188,7 +169,6 @@ buildvbox::buildvbox(QString isoPath, int id, int vm){
         long swap = 0;
         long swapAll = 0;
         infoUtils::memoryRate(memory, memoryAll, swap, swapAll);
-        //memoryRate(memory, memoryAll, swap, swapAll);
         vm.SetMemory(memoryAll / 3 / 1024);
         vm.SetNetBridge(net);
         vm.EnabledAudio();
@@ -200,13 +180,23 @@ buildvbox::buildvbox(QString isoPath, int id, int vm){
         vm.OpenUSB();
         vm.ShareFile("ROOT", "/");
         vm.ShareFile("HOME", QDir::homePath());
-        vm.Start();
+        switch(id){
+            case 8:
+                vm.StartArmhf();
+                break;
+            case 9:
+                vm.StartAarch64();
+                break;
+            default:
+                vm.Start();
+                break;
+        }
+
+
     }
     else if(vm == 1){
-        // ?
-        //vbox *box = new vbox("Window");
+        // VirtualBox
         vbox vm("Windows");
-        //qemu vm("Windows");
         bool setISOAlready = 1;
         switch (id) {
             case 0:
