@@ -161,7 +161,10 @@ buildvbox::buildvbox(QString isoPath, int id, int vm){
         }
         else{
             //vm.AutoInstall(isoPath);
-            vm.MountMainISO(isoPath);
+            if(isoPath != ""){
+                vm.MountMainISO(isoPath);
+            }
+
         }
 
         vm.SetCPU(get_nprocs(), GetCPUSocket(), GetCPUCore());
