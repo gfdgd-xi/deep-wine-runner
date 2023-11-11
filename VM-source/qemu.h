@@ -44,6 +44,7 @@ public:
     int OpenUSB();
     int EnabledUEFI(bool status);
     int AutoInstall(QString iso);
+    int MountMainISO(QString isoPath);
     int UseAarch64EFI();
     int UseArmhfEFI();
     int UseLoongarch64EFI();
