@@ -366,6 +366,6 @@ cd "$dstdir"
 echo "<=====done."
 echo "=====>Creating deb package..."
 mv debian DEBIAN
-dpkg-deb -b ./ ../package_save/uos
+dpkg-deb -Z xz -b  ./ ../package_save/uos
 echo "<=====done."
 exit 0
