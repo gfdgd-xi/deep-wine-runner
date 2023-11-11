@@ -185,7 +185,11 @@ void MainWindow::on_install_clicked()
         break;
     }
     QFile file(QDir::homePath() + "/.config/deepin-wine-runner/QEMU-EFI");
+    QFile archFile(QDir::homePath() + "/.config/deepin-wine-runner/QEMU-ARCH");
     QDir dir(QDir::homePath() + "/.config/deepin-wine-runner");
+    archFile.open(QIODevice::WriteOnly);
+    archFile.write("amd64");
+    archFile.close();
     switch (ui->systemVersion->currentIndex()) {
         case 3:
             if(!QFile::exists("/usr/share/qemu/OVMF.fd") && !QFile::exists(QCoreApplication::applicationDirPath() + "/OVMF.fd") && ui->vmChooser->currentIndex() == 0){
@@ -217,12 +221,18 @@ void MainWindow::on_install_clicked()
                 QMessageBox::warning(this, "提示", "VirtualBox 不支持该选项！");
                 return;
             }
+            archFile.open(QIODevice::WriteOnly);
+            archFile.write("armhf");
+            archFile.close();
             break;
         case 9:
             if(ui->vmChooser->currentIndex() == 1){
                 QMessageBox::warning(this, "提示", "VirtualBox 不支持该选项！");
                 return;
             }
+            archFile.open(QIODevice::WriteOnly);
+            archFile.write("aarch64");
+            archFile.close();
             break;
         default:
             if(ui->vmChooser->currentIndex() == 0 && QFile::exists(QDir::homePath() + "/.config/deepin-wine-runner/QEMU-EFI")){
