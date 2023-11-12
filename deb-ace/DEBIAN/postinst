@@ -32,6 +32,6 @@ notify-send "Installing Wine Runner BCM, may cost some time please ensure your n
 notify-send "正在书虫兼容环境中安装 Wine 运行器，可能会花费一些时间，请保持网络畅通" 
 bookworm-run aptss update
 cp /opt/apps/spark-deepin-wine-runner-ace/spark-deepin-wine-runner.deb /tmp
-bookworm-run aptss install /tmp/spark-deepin-wine-runner.deb -y
+bookworm-run aptss reinstall /tmp/spark-deepin-wine-runner.deb -y
 
 bookworm-run aptss clean
