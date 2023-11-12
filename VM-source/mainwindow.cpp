@@ -410,6 +410,11 @@ void MainWindow::on_actionVMRunlLog_triggered()
 void MainWindow::on_actionVMTest_triggered()
 {
     // 运行 Demo
+    if(QFile::exists(QCoreApplication::applicationDirPath() + "/test.qcow2")){
+        // 优先使用本地的磁盘
+        system(("qemu-system-i386 --hda '" + QCoreApplication::applicationDirPath() + "/test.qcow2' -rtc base=localtime > /tmp/windows-virtual-machine-installer-for-wine-runner-run.log 2>&1").toUtf8());
+        return;
+    }
     // 写入 disk 文件
     QFile file(":/TestDisk/test.qcow2");
     // 计算随机数
