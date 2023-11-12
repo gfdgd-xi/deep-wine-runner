@@ -466,6 +466,9 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionVMRunlLog"/>
     <addaction name="separator"/>
     <addaction name="actionVMTest"/>
+    <addaction name="separator"/>
+    <addaction name="action_StopVirtualBox"/>
+    <addaction name="action_StopQemu"/>
    </widget>
    <addaction name="menuVM"/>
   </widget>
@@ -502,6 +505,16 @@ p, li { white-space: pre-wrap; }
   <action name="actionVMTest">
    <property name="text">
     <string>虚拟机测试（X86、Qemu）</string>
+   </property>
+  </action>
+  <action name="action_StopVirtualBox">
+   <property name="text">
+    <string>强制停止 VirtualBox</string>
+   </property>
+  </action>
+  <action name="action_StopQemu">
+   <property name="text">
+    <string>强制停止 Qemu</string>
    </property>
   </action>
  </widget>

@@ -54,6 +54,10 @@ private slots:
 
     void on_actionVMInstallLog_triggered();
 
+    void on_action_StopVirtualBox_triggered();
+
+    void on_action_StopQemu_triggered();
+
 private:
     bool stopShowTime = 0;
     Ui::MainWindow *ui;

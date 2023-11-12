@@ -24,6 +24,8 @@
 #include <QIODevice>
 #include <QInputDialog>
 #include "qemusetting.h"
+#include "vbox.h"
+#include "qemu.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -205,6 +207,20 @@ void MainWindow::on_install_clicked()
     archFile.write("amd64");
     archFile.close();
     switch (ui->systemVersion->currentIndex()) {
+        case 0:
+            if(!QFile::exists(QCoreApplication::applicationDirPath() + "/Windows7X86Auto.iso")){
+                if(QMessageBox::question(this, "提示", "似乎无法找到 Windows7X86Auto.iso，是否继续创建虚拟机？\n缺少该文件可能会导致虚拟机无法正常启动，尝试重新安装 Wine 运行器再试试？") == QMessageBox::No){
+                    return;
+                }
+            }
+            break;
+        case 1:
+            if(!QFile::exists(QCoreApplication::applicationDirPath() + "/Windows7X64Auto.iso")){
+                if(QMessageBox::question(this, "提示", "似乎无法找到 Windows7X64Auto.iso，是否继续创建虚拟机？\n缺少该文件可能会导致虚拟机无法正常启动，尝试重新安装 Wine 运行器再试试？") == QMessageBox::No){
+                    return;
+                }
+            }
+            break;
         case 3:
             if(!QFile::exists("/usr/share/qemu/OVMF.fd") && !QFile::exists(QCoreApplication::applicationDirPath() + "/OVMF.fd") && ui->vmChooser->currentIndex() == 0){
                 if(QMessageBox::question(this, "提示", "似乎无法找到 UEFI 固件，是否继续创建虚拟机？\nQemu 固件可以在“安装 Qemu”处安装") == QMessageBox::No){
@@ -417,5 +433,19 @@ void MainWindow::on_actionVMInstallLog_triggered()
     file.open(QIODevice::ReadOnly);
     QInputDialog::getMultiLineText(this, "安装日志", "虚拟机安装日志",file.readAll());
     file.close();
+}
+
+
+void MainWindow::on_action_StopVirtualBox_triggered()
+{
+    vbox vmControl("");
+    vmControl.Stop();
+}
+
+
+void MainWindow::on_action_StopQemu_triggered()
+{
+    qemu vmControl("");
+    vmControl.Stop();
 }
 
