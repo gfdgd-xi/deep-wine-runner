@@ -20,11 +20,16 @@ jobs:
           cd deep-wine-runner
           make build
           mv spark-deepin-wine-runner.deb ~
+          mv spark-deepin-wine-runner-ace.deb ~
       - name: upload result
         uses: actions/upload-artifact@v1
         with:
           name: spark-deepin-wine-runner.deb
           path: /home/runner/spark-deepin-wine-runner.deb
-      
+    - name: upload result
+      uses: actions/upload-artifact@v1
+      with:
+        name: spark-deepin-wine-runner-ace.deb
+        path: /home/runner/spark-deepin-wine-runner-ace.deb
       
     
