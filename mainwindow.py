@@ -2541,13 +2541,23 @@ exe路径\' 参数 \'
 5、wine 容器如果没有指定，则会默认为 ~/.wine；
 6、如果可执行文件比较大的话，会出现点击“获取该程序运行情况”出现假死的情况，因为正在后台读取 SHA1，只需要等一下即可（读取速度依照您电脑处理速度、读写速度、可执行文件大小等有关）；
 7、如果非 X86 的用户的 UOS 专业版用户想要使用的话，只需要在应用商店安装一个 Wine 版本微信即可在本程序选择正确的 Wine 运行程序；''')
-updateThingsString = transla.transe("U", '''<b>3.4.1 更新内容：</b>
-※1、支持识别 spark-wine8-wow 且打包时可以使用该 wine
-※2、替换安装 Box86 的 pkexec 为 sudo
-※3、Wine 下载工具新增更多 Wine''')
+updateThingsString = transla.transe("U", '''<b>3.5.0 更新内容：</b>
+※1、虚拟机工具支持 kvm 检测
+※2、修改虚拟机工具提示文本，新增对 UOS 3a4000 用户无法正常使用 Qemu 的解决方案
+※3、在主界面点击“安装”按钮后自动切换至帮助页面
+※4、新增虚拟机日志输出和读取功能
+※5、新增Qemu测试测试功能
+※6、虚拟机工具支持安装/运行 arm32、arm64 架构的系统
+※7、修复虚拟机工具在系统版本选择第 5 项及以后出现不会挂载 ISO 的问题（使用 Qemu 的情况下）
+※8、修复简易打包器无法打开的问题 https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I85F9M
+※9、生态适配脚本打包器支持正确根据打包结果显示打包成功/失败 https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I7D83Z
+10、生态适配脚本打包器设置使用 xz 格式打包 deb
+11、新增 ace 包
+12、虚拟机工具支持强制关闭 VirtualBox/Qemu，并增加了对 Windows 7 安装脚本的检测
+13、新增 lat 翻译器安装选项''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2023年09月30日"
+updateTime = "2023年11月17日"
 aboutProgram = transla.transe("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序。原版的 Wine 只能使用命令操作，且安装过程较为繁琐，对小白不友好。于是该运行器为了解决该痛点，内置了对Wine图形化的支持、Wine 安装器、微型应用商店、各种Wine工具、自制的Wine程序打包器、运行库安装工具等。</p>
 <p>它同时还内置了基于Qemu/VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作，也能在非 X86 架构安装 X86 架构的 Windows 操作系统（但是效率较低，可以运行些老系统）。</p>
 <p>而且对于部分 Wine 应用适配者来说，提供了图形化的打包工具，以及提供了一些常用工具以及运行库的安装方式，以及能安装多种不同的 Wine 以测试效果，能极大提升适配效率。</p>

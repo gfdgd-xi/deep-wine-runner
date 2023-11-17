@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 3.4.1</h1>
+<h1 align="center">Wine 运行器 3.5.0</h1>
 <hr>
 <a href='https://gitee.com/gfdgd-xi/deep-wine-runner/stargazers'><img src='https://gitee.com/gfdgd-xi/deep-wine-runner/badge/star.svg?theme=dark' alt='star'></img></a>
 <a href='https://gitee.com/gfdgd-xi/deep-wine-runner/members'><img src='https://gitee.com/gfdgd-xi/deep-wine-runner/badge/fork.svg?theme=dark' alt='fork'></img></a>  
@@ -18,6 +18,9 @@ Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程�
 
 打包器视频教程：https://www.bilibili.com/video/BV1Bh4y1Q7nT/  
 Wine 运行器 QQ 交流群：762985460  
+
+### 注
+spark-deepin-wine-runner 是普通包，spark-deepin-wine-runner-ace 是使用 ace 兼容环境运行的运行器
 
 ## 软件架构
 理论上支持全架构，如果 Python 能运行的话  
@@ -115,6 +118,25 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志 
+### 3.5.0（2023年11月17日）
+**※1、虚拟机工具支持 kvm 检测**  
+**※2、修改虚拟机工具提示文本，新增对 UOS 3a4000 用户无法正常使用 Qemu 的解决方案**  
+**※3、在主界面点击“安装”按钮后自动切换至帮助页面**  
+**※4、新增虚拟机日志输出和读取功能**  
+**※5、新增Qemu测试测试功能**  
+**※6、虚拟机工具支持安装/运行 arm32、arm64 架构的系统**  
+**※7、修复虚拟机工具在系统版本选择第 5 项及以后出现不会挂载 ISO 的问题（使用 Qemu 的情况下）**  
+**※8、修复简易打包器无法打开的问题 https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I85F9M**  
+**※9、生态适配脚本打包器支持正确根据打包结果显示打包成功/失败 https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I7D83Z**  
+10、生态适配脚本打包器设置使用 xz 格式打包 deb  
+11、新增 ace 包  
+12、虚拟机工具支持强制关闭 VirtualBox/Qemu，并增加了对 Windows 7 安装脚本的检测  
+13、新增 lat 翻译器安装选项  
+
+![图片.png](https://storage.deepin.org/thread/20231117194051562_图片.png)
+
+
+
 ### 3.4.1（2023年09月30日）
 **※1、支持识别 spark-wine8-wow 且打包时可以使用该 wine**  
 **※2、替换安装 Box86 的 pkexec 为 sudo**  
