@@ -24,9 +24,13 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     // 语言
     QTranslator *trans = new QTranslator(&a);
-    trans->load("virtualmachine-en_US.qm");
+    if(!QProcessEnvironment::systemEnvironment().value("LANG").contains("zh_CN")){
+        trans->load(":/en_US.qm");
+    }
 
     a.installTranslator(trans);
+
+
     // 判断是否为 !amd64（无需判断了）
     /*if(GetRunCommand("arch").replace(" ", "").replace("\n", "") != QString("x86_64")){
         QMessageBox::critical(NULL, "错误", "此程序不支持非 X86 架构，立即退出");

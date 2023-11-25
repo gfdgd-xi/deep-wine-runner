@@ -56,4 +56,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
+    trans.qrc \
     图标.qrc
+
+DISTFILES += \
+    en_US.qm \
+    en_US.ts
