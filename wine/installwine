@@ -78,9 +78,9 @@ class Ui_MainWindow(object):
         self.menu = MainWindow.menuBar()
         self.changeSources = self.menu.addMenu(_translate("MainWindow", "更换源"))
         self.gitlinkAction = QtWidgets.QAction(_translate("MainWindow", "Gitee 源（推荐）"))
-        self.kgithubAction = QtWidgets.QAction(_translate("MainWindow", "Github 镜像站源"))
-        self.ipv6Action = QtWidgets.QAction(_translate("MainWindow", "Github 源1（国内访问不稳定）"))
-        self.githubAction = QtWidgets.QAction(_translate("MainWindow", "Github 源2（国内访问不稳定）"))
+        self.kgithubAction = QtWidgets.QAction(_translate("MainWindow", "Sourceforge 源"))
+        self.ipv6Action = QtWidgets.QAction(_translate("MainWindow", "默认源"))
+        self.githubAction = QtWidgets.QAction(_translate("MainWindow", "Github 源（国内访问不稳定）"))
         
         self.localAction = QtWidgets.QAction(_translate("MainWindow", "本地测试源（127.0.0.1）"))
         self.changeSources.addAction(self.ipv6Action)
@@ -314,11 +314,14 @@ def on_addButton_clicked():
     dialog.setWindowIcon(QtGui.QIcon(f"{programPath}/../deepin-wine-runner.svg"))
     dialog.setCancelButton(cancel)
     dialog.setWindowTitle(f"正在下载“{internetJsonList[choose][0]}”")
+    saveName = os.path.basename(internetJsonList[choose][1])
+    if os.path.split(os.path.basename(internetJsonList[choose][1]))[0] == "":
+        saveName = os.path.basename(internetJsonList[choose][0]) + ".7z"
     QT.thread = DownloadThread(
         dialog, 
         downloadUrl, 
         "", 
-        os.path.basename(internetJsonList[choose][1]),
+        saveName,
         ui.localWineList,
         ui.deleteZip.isChecked(),
         not ui.unzip.isChecked(),
@@ -361,7 +364,7 @@ if __name__ == "__main__":
     internetJsonList = []
     internetWineSourceList = [
         "http://wine.wine-runner.gfdgdxi.top/",
-        "https://githubfast.com/gfdgd-xi/wine-mirrors-websize/raw/master/",
+        "https://github.com/gfdgd-xi/wine-mirrors-websize/raw/master/sourceforge",
         "https://gitee.com/gfdgd-xi/wine-mirrors-websize/raw/master/",
         "https://github.com/gfdgd-xi/wine-mirrors-websize/raw/master/",
         "http://127.0.0.1/wine-mirrors/"  # 本地测试源

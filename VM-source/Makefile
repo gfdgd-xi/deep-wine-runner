@@ -59,7 +59,8 @@ SOURCES       = main.cpp \
 		command.cpp \
 		infoutils.cpp \
 		qemu.cpp \
-		qemusetting.cpp qrc_图标.cpp \
+		qemusetting.cpp qrc_trans.cpp \
+		qrc_图标.cpp \
 		moc_mainwindow.cpp \
 		moc_infoutils.cpp \
 		moc_qemusetting.cpp
@@ -71,11 +72,14 @@ OBJECTS       = main.o \
 		infoutils.o \
 		qemu.o \
 		qemusetting.o \
+		qrc_trans.o \
 		qrc_图标.o \
 		moc_mainwindow.o \
 		moc_infoutils.o \
 		moc_qemusetting.o
-DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
+DIST          = en_US.qm \
+		en_US.ts \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/sanitize.conf \
@@ -363,6 +367,7 @@ Makefile: VirtualMachine.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qma
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		VirtualMachine.pro \
+		trans.qrc \
 		图标.qrc
 	$(QMAKE) -o Makefile VirtualMachine.pro
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf:
@@ -497,6 +502,7 @@ Makefile: VirtualMachine.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qma
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf:
 VirtualMachine.pro:
+trans.qrc:
 图标.qrc:
 qmake: FORCE
 	@$(QMAKE) -o Makefile VirtualMachine.pro
@@ -512,7 +518,7 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents 图标.qrc $(DISTDIR)/
+	$(COPY_FILE) --parents trans.qrc 图标.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents mainwindow.h buildvbox.h vbox.h command.h infoutils.h qemu.h qemusetting.h $(DISTDIR)/
 	$(COPY_FILE) --parents main.cpp mainwindow.cpp buildvbox.cpp vbox.cpp command.cpp infoutils.cpp qemu.cpp qemusetting.cpp $(DISTDIR)/
@@ -541,9 +547,17 @@ check: first
 
 benchmark: first
 
-compiler_rcc_make_all: qrc_图标.cpp
+compiler_rcc_make_all: qrc_trans.cpp qrc_图标.cpp
 compiler_rcc_clean:
-	-$(DEL_FILE) qrc_图标.cpp
+	-$(DEL_FILE) qrc_trans.cpp qrc_图标.cpp
+qrc_trans.cpp: trans.qrc \
+		/usr/lib/qt5/bin/rcc \
+		en_US.ts \
+		en_US.qm \
+		zh_CN.ts \
+		zh_CN.qm
+	/usr/lib/qt5/bin/rcc -name trans trans.qrc -o qrc_trans.cpp
+
 qrc_图标.cpp: 图标.qrc \
 		/usr/lib/qt5/bin/rcc \
 		deepin-wine-runner.png \
@@ -623,7 +637,9 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		ui_mainwindow.h \
 		buildvbox.h \
 		infoutils.h \
-		qemusetting.h
+		qemusetting.h \
+		vbox.h \
+		qemu.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o mainwindow.cpp
 
 buildvbox.o: buildvbox.cpp buildvbox.h \
@@ -650,6 +666,9 @@ qemusetting.o: qemusetting.cpp qemusetting.h \
 		ui_qemusetting.h \
 		infoutils.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qemusetting.o qemusetting.cpp
+
+qrc_trans.o: qrc_trans.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_trans.o qrc_trans.cpp
 
 qrc_图标.o: qrc_图标.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_图标.o qrc_图标.cpp
