@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    //QApplication a(argc, argv);
     ui->tabWidget->setTabPosition(QTabWidget::West);  // 标签靠左
     // 选择最优虚拟机
     if(!system("which qemu-system-x86_64")){
@@ -102,6 +103,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tabWidget->setTabIcon(1, QIcon::fromTheme(":/application-vnd.oasis.opendocument.text.svg"));
     // 设置窗口图标
     this->setWindowIcon(QIcon(":/deepin-wine-runner.svg"));
+
 }
 
 void MainWindow::ShowCPUMessage(){
@@ -141,6 +143,7 @@ void MainWindow::ShowCPUMessage(){
     }
     m_cpuAll = cpuAll;
     m_cpuFree = cpuFree;
+    ui->retranslateUi(this);
 }
 
 QString MainWindow::GetRunCommand(QString command){

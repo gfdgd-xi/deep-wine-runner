@@ -1,130 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1">
+<TS version="2.1" language="en" sourcelanguage="zh_CN">
 <context>
     <name>MainWindow</name>
     <message>
         <location filename="mainwindow.ui" line="14"/>
         <source>Wine 运行器虚拟机安装工具</source>
-        <oldsource>Windows 应用适配工具</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Wine Runner Virtual Machine Install Tools</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="32"/>
         <location filename="mainwindow.ui" line="35"/>
         <source>设置</source>
-        <translation type="unfinished"></translation>
+        <translation>Setting</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="43"/>
         <source>镜像路径：</source>
-        <translation type="unfinished"></translation>
+        <translation>ISO FilePath:</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="50"/>
         <source>请选择系统镜像</source>
-        <translation type="unfinished"></translation>
+        <translation>Please choose or input system image</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="57"/>
         <source>浏览……</source>
-        <translation type="unfinished"></translation>
+        <translation>browser...</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="68"/>
         <source>系统版本：</source>
-        <translation type="unfinished"></translation>
+        <translation>System Version:</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="75"/>
+        <location filename="mainwindow.ui" line="79"/>
+        <source>Windows 7 32 位（支持自动安装）</source>
+        <translation>Windows 7 32bit (support auto installing)</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="84"/>
+        <source>Windows 7 64 位（支持自动安装）</source>
+        <translation>Windows 7 64bit (support auto installing)</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="89"/>
         <source>其它 Windows 系统（不支持自动安装，传统启动，推荐 Windows 7 及以下）</source>
-        <translation type="unfinished"></translation>
+        <translation>Other system (unsupport auto installing and using legacy boot)</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="94"/>
         <source>其他 Windows 系统（不支持自动安装，UEFI 启动，推荐 Windows 8 及以上）</source>
-        <translation type="unfinished"></translation>
+        <translation>Other system (unsupport auto installing and using UEFI boot)</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="99"/>
         <source>安装 WIndows 11（不支持自动安装）</source>
-        <translation type="unfinished"></translation>
+        <translation>Install windows (unsupport auto installing)</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="104"/>
         <source>安装其他 Windows XP（支持自动安装，只支持 VirtualBox）</source>
-        <translation type="unfinished"></translation>
+        <translation>Install other Windows XP (support auto installing but only support VirtualBox)</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="109"/>
         <source>安装其他 Windows （支持自动安装，传统启动，只支持 VirtualBox）</source>
-        <translation type="unfinished"></translation>
+        <translation>Install Other Windows (support auto installing and using legacy boot but only support VirtualBox)</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="114"/>
         <source>安装其他 Windows（支持自动安装，UEFI 启动，只支持 VirtualBox）</source>
-        <translation type="unfinished"></translation>
+        <translation>Install Other Windows (support auto installing and using UEFI boot but only support VirtualBox)</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="119"/>
         <source>安装 arm32 系统（只支持 Qemu）</source>
-        <translation type="unfinished"></translation>
+        <translation>Install arm32 system (only support Qemu/KVM)</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="124"/>
         <source>安装 arm64 系统（只支持 Qemu）</source>
-        <translation type="unfinished"></translation>
+        <translation>Install arm64 system (only support Qemu/KVM)</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="136"/>
         <source>虚拟机（建议默认）：</source>
-        <translation type="unfinished"></translation>
+        <translation>Virtual Machine:</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="143"/>
         <location filename="mainwindow.ui" line="153"/>
         <source>qemu/kvm</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="158"/>
         <source>VirtualBox</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="183"/>
         <source>安装 Qemu</source>
-        <translation type="unfinished"></translation>
+        <translation>Install Qemu</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="190"/>
         <source>kvm 测试</source>
-        <translation type="unfinished"></translation>
+        <translation>kvm test</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="197"/>
         <source>Qemu虚拟机设置</source>
-        <translation type="unfinished"></translation>
+        <translation>Qemu Setting</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="204"/>
         <source>添加/覆盖Qemu磁盘</source>
-        <translation type="unfinished"></translation>
+        <translation>Add/Replace Qemu Disk</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="211"/>
         <source>导出Qemu磁盘</source>
-        <translation type="unfinished"></translation>
+        <translation>Export Qemu Disk</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="218"/>
         <source>移除Qemu磁盘</source>
-        <translation type="unfinished"></translation>
+        <translation>Delete Qemu Disk</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="225"/>
         <source>获取VirtualBox</source>
-        <translation type="unfinished"></translation>
+        <translation>Get VirtualBox</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="232"/>
+        <source>安装</source>
+        <translation>Install</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="241"/>
@@ -152,6 +167,11 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;123网盘：&lt;/span&gt;&lt;a href=&quot;https://www.123pan.com/s/pDSKVv-uCBWv.html&quot;&gt;&lt;span style=&quot; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;https://www.123pan.com/s/pDSKVv-uCBWv.html&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;hr /&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="274"/>
+        <source>安装/使用帮助</source>
+        <translation>Document</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="283"/>
@@ -223,6 +243,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="364"/>
+        <location filename="mainwindow.ui" line="482"/>
+        <source>关于</source>
+        <translation>About</translation>
+    </message>
+    <message>
         <location filename="mainwindow.ui" line="421"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
@@ -243,74 +269,47 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="mainwindow.ui" line="463"/>
         <source>虚拟机</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="487"/>
-        <source>导入/覆盖</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="492"/>
-        <source>导出</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="497"/>
-        <source>虚拟机安装日志</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="502"/>
-        <source>虚拟机运行日志</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="507"/>
-        <source>虚拟机测试（X86、Qemu）</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="512"/>
-        <source>强制停止 VirtualBox</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="517"/>
-        <source>强制停止 Qemu</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="75"/>
-        <location filename="mainwindow.ui" line="79"/>
-        <source>Windows 7 32 位（支持自动安装）</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="84"/>
-        <source>Windows 7 64 位（支持自动安装）</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="232"/>
-        <source>安装</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="274"/>
-        <source>安装/使用帮助</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="364"/>
-        <location filename="mainwindow.ui" line="482"/>
-        <source>关于</source>
-        <translation type="unfinished"></translation>
+        <translation>Virtual Machine</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="477"/>
         <source>退出</source>
-        <translation type="unfinished"></translation>
+        <translation>Exit</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="487"/>
+        <source>导入/覆盖</source>
+        <translation>Add/Replace</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="492"/>
+        <source>导出</source>
+        <translation>Export</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="497"/>
+        <source>虚拟机安装日志</source>
+        <translation>Virtual Machine log (Installing)</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="502"/>
+        <source>虚拟机运行日志</source>
+        <translation>Virtual Machine log (Running)</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="507"/>
+        <source>虚拟机测试（X86、Qemu）</source>
+        <translation>Qemu Test (x86, qemu)</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="512"/>
+        <source>强制停止 VirtualBox</source>
+        <translation>Stop VirtualBox with forced</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="517"/>
+        <source>强制停止 Qemu</source>
+        <translation>Stop Qemu with forced</translation>
     </message>
 </context>
 <context>
@@ -318,75 +317,76 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="qemusetting.ui" line="14"/>
         <source>设置</source>
-        <translation type="unfinished"></translation>
+        <translation>Setting</translation>
     </message>
     <message>
         <location filename="qemusetting.ui" line="35"/>
         <source>&lt;h3&gt;远程服务&lt;/h3&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;h3&gt;Remote Service&lt;/h3&gt;</translation>
     </message>
     <message>
         <location filename="qemusetting.ui" line="42"/>
         <source>VNC服务端口：</source>
-        <translation type="unfinished"></translation>
+        <translation>VNC service port:</translation>
     </message>
     <message>
         <location filename="qemusetting.ui" line="49"/>
         <source>开启 rdp 服务映射</source>
-        <translation type="unfinished"></translation>
+        <translation>Enable rdp port</translation>
     </message>
     <message>
         <location filename="qemusetting.ui" line="56"/>
         <source>内存大小（MB）：</source>
-        <translation type="unfinished"></translation>
+        <translation>Memory size (MB):</translation>
     </message>
     <message>
         <location filename="qemusetting.ui" line="90"/>
         <source>&lt;h3&gt;基础设置&lt;/h3&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;h3&gt;Base setting&lt;/h3&gt;</translation>
     </message>
     <message>
         <location filename="qemusetting.ui" line="97"/>
         <source>开启VNC服务</source>
-        <translation type="unfinished"></translation>
+        <translation>Enable VNC service</translation>
     </message>
     <message>
         <location filename="qemusetting.ui" line="104"/>
         <source>开启 kvm 加速</source>
-        <translation type="unfinished"></translation>
+        <translation>Enable kvm</translation>
     </message>
     <message>
         <location filename="qemusetting.ui" line="111"/>
         <source>CPU核心数：</source>
-        <translation type="unfinished"></translation>
+        <translation>CPU cores:</translation>
     </message>
     <message>
         <location filename="qemusetting.ui" line="125"/>
         <source>开启声音</source>
-        <translation type="unfinished"></translation>
+        <translation>Enable sound</translation>
     </message>
     <message>
         <location filename="qemusetting.ui" line="145"/>
         <source>保存</source>
-        <translation type="unfinished"></translation>
+        <translation>Save</translation>
     </message>
     <message>
         <location filename="qemusetting.ui" line="158"/>
         <source>取消</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancel</translation>
     </message>
     <message>
         <location filename="qemusetting.ui" line="171"/>
         <source>重置
 默认</source>
-        <translation type="unfinished"></translation>
+        <translation>Resetting</translation>
     </message>
     <message>
         <location filename="qemusetting.ui" line="185"/>
         <source>获取
 Wine
 运行器</source>
-        <translation type="unfinished"></translation>
+        <translation>Get Wine
+Runner</translation>
     </message>
 </context>
 </TS>
