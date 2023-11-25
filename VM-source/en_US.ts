@@ -288,11 +288,13 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="mainwindow.ui" line="497"/>
+        <location filename="mainwindow.cpp" line="442"/>
         <source>虚拟机安装日志</source>
         <translation>Virtual Machine log (Installing)</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="502"/>
+        <location filename="mainwindow.cpp" line="408"/>
         <source>虚拟机运行日志</source>
         <translation>Virtual Machine log (Running)</translation>
     </message>
@@ -310,6 +312,214 @@ p, li { white-space: pre-wrap; }
         <location filename="mainwindow.ui" line="517"/>
         <source>强制停止 Qemu</source>
         <translation>Stop Qemu with forced</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="88"/>
+        <source>Wine 运行器虚拟机安装工具 </source>
+        <translation>Wine Runner Virtual Machine Install Tools </translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="90"/>
+        <source>&lt;p&gt;程序版本号：</source>
+        <translation>&lt;p&gt;Program Version:</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="90"/>
+        <source>&lt;/p&gt;&lt;p&gt;安装包构建时间：</source>
+        <translation>&lt;/p&gt;&lt;p&gt;Package build time:</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="90"/>
+        <source>&lt;/p&gt;&lt;p&gt;该组件构建时间：</source>
+        <translation>&lt;/p&gt;&lt;p&gt;Tools builded time:</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="92"/>
+        <source>&lt;hr/&gt;&lt;h1&gt;谢明列表&lt;/h1&gt;</source>
+        <translation>&lt;hr/&gt;&lt;h1&gt;Thank&lt;/h1&gt;</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="179"/>
+        <location filename="mainwindow.cpp" line="186"/>
+        <location filename="mainwindow.cpp" line="193"/>
+        <location filename="mainwindow.cpp" line="200"/>
+        <location filename="mainwindow.cpp" line="215"/>
+        <location filename="mainwindow.cpp" line="222"/>
+        <location filename="mainwindow.cpp" line="229"/>
+        <location filename="mainwindow.cpp" line="248"/>
+        <location filename="mainwindow.cpp" line="254"/>
+        <location filename="mainwindow.cpp" line="263"/>
+        <location filename="mainwindow.cpp" line="307"/>
+        <location filename="mainwindow.cpp" line="322"/>
+        <location filename="mainwindow.cpp" line="328"/>
+        <location filename="mainwindow.cpp" line="332"/>
+        <location filename="mainwindow.cpp" line="338"/>
+        <location filename="mainwindow.cpp" line="357"/>
+        <location filename="mainwindow.cpp" line="360"/>
+        <location filename="mainwindow.cpp" line="364"/>
+        <location filename="mainwindow.cpp" line="367"/>
+        <location filename="mainwindow.cpp" line="392"/>
+        <location filename="mainwindow.cpp" line="404"/>
+        <location filename="mainwindow.cpp" line="438"/>
+        <source>提示</source>
+        <translation>Tips</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="179"/>
+        <source>您似乎没有安装 Qemu，是否继续创建虚拟机？</source>
+        <translation>Can&apos;t find qemu, do you want to countinue to create the virtual machine?</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="186"/>
+        <source>您似乎没有安装 VBox，是否继续创建虚拟机？</source>
+        <translation>Can&apos;t find VirtualBox, do you want to countinue to create the virtual machine?</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="193"/>
+        <source>无法检测到 qemu-system-arm，是否继续创建虚拟机？</source>
+        <translation>Can&apos;t find the qemu-system-arm, do you want to countinue to create the virtual machine?</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="200"/>
+        <source>无法检测到 qemu-system-aarch64，是否继续创建虚拟机？</source>
+        <translation>Can&apos;t find the qemu-system-aarch64, do you want to countinue to create the virtual machine?</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="215"/>
+        <source>似乎无法找到 Windows7X86Auto.iso，是否继续创建虚拟机？
+缺少该文件可能会导致虚拟机无法正常启动，尝试重新安装 Wine 运行器再试试？</source>
+        <translation>Can&apos;t find the Windows7X86Auto.iso, do you want to countinue to create the virtual machine?</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="222"/>
+        <source>似乎无法找到 Windows7X64Auto.iso，是否继续创建虚拟机？
+缺少该文件可能会导致虚拟机无法正常启动，尝试重新安装 Wine 运行器再试试？</source>
+        <translation>Can&apos;t find the Windows7X64Auto.iso, do you want to countinue to create the virtual machine?</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="229"/>
+        <source>似乎无法找到 UEFI 固件，是否继续创建虚拟机？
+Qemu 固件可以在“安装 Qemu”处安装</source>
+        <translation>Can&apos;t find the UEFI boot, do you want to countinue to create the virtual machine?
+You can get qemu efi from &quot;Install Qemu&quot; button</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="248"/>
+        <source>Qemu 不支持该选项！</source>
+        <translation>Qemu unsupport it</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="254"/>
+        <location filename="mainwindow.cpp" line="263"/>
+        <source>VirtualBox 不支持该选项！</source>
+        <translation>VirtualBox unsupport it</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="278"/>
+        <source>提示：目前已经尝试开启虚拟机，如果在一段时间后依旧还没看到虚拟机窗口开启，请在菜单栏查看虚拟机日志</source>
+        <translation>Tips: It trying to start virtualbox now, you should view the log in the tools menu if you can&apos;t see the virtual machine window a few time late</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="307"/>
+        <source>磁盘文件已存在，是否覆盖？
+覆盖后将无法恢复！</source>
+        <translation>Qemu Disk is exist. Do you want to replace?
+You will not recovery after you replacing!</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="311"/>
+        <source>选择 Qemu 镜像</source>
+        <translation>Choose Qemu Disk</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="311"/>
+        <source>Qemu镜像(*.qcow2 *.img *.raw *.qcow *.qed *.vdi *.vhdx *.vmdk);;所有文件(*.*)</source>
+        <translation>Qemu Disk(*.qcow2 *.img *.raw *.qcow *.qed *.vdi *.vhdx *.vmdk);;All files(*.*)</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="322"/>
+        <location filename="mainwindow.cpp" line="328"/>
+        <source>添加错误！</source>
+        <translation>Add error!</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="332"/>
+        <source>添加完成！</source>
+        <translation>Add finishing!</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="338"/>
+        <source>不存在磁盘文件，无法导出</source>
+        <translation>Can&apos;t export because can&apos;t find the qemu disk</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="357"/>
+        <source>不存在磁盘文件，无法移除</source>
+        <translation>Can&apos;t delete because can&apos;t find the qemu disk</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="360"/>
+        <source>是否删除？
+删除后将无法恢复！</source>
+        <translation>Do you want to delete?
+It can&apos;t recovery after you deleting!</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="364"/>
+        <source>移除失败</source>
+        <translation>Delete error</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="367"/>
+        <source>移除成功</source>
+        <translation>Delete successfully</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="373"/>
+        <location filename="mainwindow.cpp" line="389"/>
+        <source>错误</source>
+        <translation>Error</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="373"/>
+        <source>未识别到命令 kvm-ok
+可以使用命令 sudo apt install cpu-checker 安装</source>
+        <translation>Can&apos;t find the command &quot;kvm-ok&quot; and you can use command &quot;sudo apt install cpu-checker&quot; to install</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="383"/>
+        <source>使用</source>
+        <translation>Use</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="389"/>
+        <source>您的系统不支持使用 kvm：
+</source>
+        <translation>Your system can&apos;t use kvm:
+</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="392"/>
+        <source>您的系统支持使用 kvm：
+</source>
+        <translation>Your system can use kvm:
+</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="404"/>
+        <location filename="mainwindow.cpp" line="438"/>
+        <source>没有日志文件</source>
+        <translation>Can&apos;t find the log file</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="408"/>
+        <source>运行日志</source>
+        <translation>Running file</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="442"/>
+        <source>安装日志</source>
+        <translation>Installed log</translation>
     </message>
 </context>
 <context>

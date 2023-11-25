@@ -257,11 +257,13 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="mainwindow.ui" line="497"/>
+        <location filename="mainwindow.cpp" line="442"/>
         <source>虚拟机安装日志</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="502"/>
+        <location filename="mainwindow.cpp" line="408"/>
         <source>虚拟机运行日志</source>
         <translation type="unfinished"></translation>
     </message>
@@ -310,6 +312,209 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="mainwindow.ui" line="477"/>
         <source>退出</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="88"/>
+        <source>Wine 运行器虚拟机安装工具 </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="90"/>
+        <source>&lt;p&gt;程序版本号：</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="90"/>
+        <source>&lt;/p&gt;&lt;p&gt;安装包构建时间：</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="90"/>
+        <source>&lt;/p&gt;&lt;p&gt;该组件构建时间：</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="92"/>
+        <source>&lt;hr/&gt;&lt;h1&gt;谢明列表&lt;/h1&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="179"/>
+        <location filename="mainwindow.cpp" line="186"/>
+        <location filename="mainwindow.cpp" line="193"/>
+        <location filename="mainwindow.cpp" line="200"/>
+        <location filename="mainwindow.cpp" line="215"/>
+        <location filename="mainwindow.cpp" line="222"/>
+        <location filename="mainwindow.cpp" line="229"/>
+        <location filename="mainwindow.cpp" line="248"/>
+        <location filename="mainwindow.cpp" line="254"/>
+        <location filename="mainwindow.cpp" line="263"/>
+        <location filename="mainwindow.cpp" line="307"/>
+        <location filename="mainwindow.cpp" line="322"/>
+        <location filename="mainwindow.cpp" line="328"/>
+        <location filename="mainwindow.cpp" line="332"/>
+        <location filename="mainwindow.cpp" line="338"/>
+        <location filename="mainwindow.cpp" line="357"/>
+        <location filename="mainwindow.cpp" line="360"/>
+        <location filename="mainwindow.cpp" line="364"/>
+        <location filename="mainwindow.cpp" line="367"/>
+        <location filename="mainwindow.cpp" line="392"/>
+        <location filename="mainwindow.cpp" line="404"/>
+        <location filename="mainwindow.cpp" line="438"/>
+        <source>提示</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="179"/>
+        <source>您似乎没有安装 Qemu，是否继续创建虚拟机？</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="186"/>
+        <source>您似乎没有安装 VBox，是否继续创建虚拟机？</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="193"/>
+        <source>无法检测到 qemu-system-arm，是否继续创建虚拟机？</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="200"/>
+        <source>无法检测到 qemu-system-aarch64，是否继续创建虚拟机？</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="215"/>
+        <source>似乎无法找到 Windows7X86Auto.iso，是否继续创建虚拟机？
+缺少该文件可能会导致虚拟机无法正常启动，尝试重新安装 Wine 运行器再试试？</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="222"/>
+        <source>似乎无法找到 Windows7X64Auto.iso，是否继续创建虚拟机？
+缺少该文件可能会导致虚拟机无法正常启动，尝试重新安装 Wine 运行器再试试？</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="229"/>
+        <source>似乎无法找到 UEFI 固件，是否继续创建虚拟机？
+Qemu 固件可以在“安装 Qemu”处安装</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="248"/>
+        <source>Qemu 不支持该选项！</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="254"/>
+        <location filename="mainwindow.cpp" line="263"/>
+        <source>VirtualBox 不支持该选项！</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="278"/>
+        <source>提示：目前已经尝试开启虚拟机，如果在一段时间后依旧还没看到虚拟机窗口开启，请在菜单栏查看虚拟机日志</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="307"/>
+        <source>磁盘文件已存在，是否覆盖？
+覆盖后将无法恢复！</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="311"/>
+        <source>选择 Qemu 镜像</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="311"/>
+        <source>Qemu镜像(*.qcow2 *.img *.raw *.qcow *.qed *.vdi *.vhdx *.vmdk);;所有文件(*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="322"/>
+        <location filename="mainwindow.cpp" line="328"/>
+        <source>添加错误！</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="332"/>
+        <source>添加完成！</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="338"/>
+        <source>不存在磁盘文件，无法导出</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="357"/>
+        <source>不存在磁盘文件，无法移除</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="360"/>
+        <source>是否删除？
+删除后将无法恢复！</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="364"/>
+        <source>移除失败</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="367"/>
+        <source>移除成功</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="373"/>
+        <location filename="mainwindow.cpp" line="389"/>
+        <source>错误</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="373"/>
+        <source>未识别到命令 kvm-ok
+可以使用命令 sudo apt install cpu-checker 安装</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="383"/>
+        <source>使用</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="389"/>
+        <source>您的系统不支持使用 kvm：
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="392"/>
+        <source>您的系统支持使用 kvm：
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="404"/>
+        <location filename="mainwindow.cpp" line="438"/>
+        <source>没有日志文件</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="408"/>
+        <source>运行日志</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="442"/>
+        <source>安装日志</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
