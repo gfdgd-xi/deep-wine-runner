@@ -48,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QLoggingCategory::defaultCategory()->setEnabled(QtDebugMsg, true);
     // 判断是否安装 vbox（无需判断）
     /*if(system("which VBoxManage")){
-        if(QMessageBox::question(this, "提示", "检测到您似乎没有安装 VirtualBox，立即安装？") == QMessageBox::Yes){
+        if(QMessageBox::question(this, tr("提示"), "检测到您似乎没有安装 VirtualBox，立即安装？") == QMessageBox::Yes){
             system("xdg-open https://www.virtualbox.org/wiki/Linux_Downloads");
         }
     }*/
@@ -85,11 +85,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     }
     // 设置程序标题
-    this->setWindowTitle("Wine 运行器虚拟机安装工具 " + versionValue.toString());
+    this->setWindowTitle(tr("Wine 运行器虚拟机安装工具 ") + versionValue.toString());
     // 读取谢明列表
-    ui->textBrowser_2->setHtml("<p>程序版本号：" + versionValue.toString() + ", " + GetRunCommand("arch") + "</p><p>安装包构建时间：" + buildTime.toString() + "</p><p>该组件构建时间："
+    ui->textBrowser_2->setHtml(tr("<p>程序版本号：") + versionValue.toString() + ", " + GetRunCommand("arch") + tr("</p><p>安装包构建时间：") + buildTime.toString() + tr("</p><p>该组件构建时间：")
                                + __DATE__ + " " + __TIME__ + "</p>" + ui->textBrowser_2->toHtml() +
-                               "<hr/><h1>谢明列表</h1>" + thankText);
+                               tr("<hr/><h1>谢明列表</h1>") + thankText);
     connect(ui->textBrowser_2, &QTextBrowser::anchorClicked, this, [=](const QUrl &link){
         QDesktopServices::openUrl(link);
     });
@@ -176,28 +176,28 @@ void MainWindow::on_install_clicked()
     switch (ui->vmChooser->currentIndex()) {
     case 0:
         if(system("which qemu-system-x86_64")){
-            if(QMessageBox::question(this, "提示", "您似乎没有安装 Qemu，是否继续创建虚拟机？") == QMessageBox::No){
+            if(QMessageBox::question(this, tr("提示"), tr("您似乎没有安装 Qemu，是否继续创建虚拟机？")) == QMessageBox::No){
                 return;
             }
         }
         break;
     case 1:
         if(system("which vboxmanage")){
-            if(QMessageBox::question(this, "提示", "您似乎没有安装 VBox，是否继续创建虚拟机？") == QMessageBox::No){
+            if(QMessageBox::question(this, tr("提示"), tr("您似乎没有安装 VBox，是否继续创建虚拟机？")) == QMessageBox::No){
                 return;
             }
         }
         break;
      case 8:
         if(system("which qemu-system-arm")){
-            if(QMessageBox::question(this, "提示", "无法检测到 qemu-system-arm，是否继续创建虚拟机？") == QMessageBox::No){
+            if(QMessageBox::question(this, tr("提示"), tr("无法检测到 qemu-system-arm，是否继续创建虚拟机？")) == QMessageBox::No){
                 return;
             }
         }
         break;
      case 9:
        if(system("which qemu-system-aarch64")){
-           if(QMessageBox::question(this, "提示", "无法检测到 qemu-system-aarch64，是否继续创建虚拟机？") == QMessageBox::No){
+           if(QMessageBox::question(this, tr("提示"), tr("无法检测到 qemu-system-aarch64，是否继续创建虚拟机？")) == QMessageBox::No){
                return;
            }
        }
@@ -212,21 +212,21 @@ void MainWindow::on_install_clicked()
     switch (ui->systemVersion->currentIndex()) {
         case 0:
             if(!QFile::exists(QCoreApplication::applicationDirPath() + "/Windows7X86Auto.iso")){
-                if(QMessageBox::question(this, "提示", "似乎无法找到 Windows7X86Auto.iso，是否继续创建虚拟机？\n缺少该文件可能会导致虚拟机无法正常启动，尝试重新安装 Wine 运行器再试试？") == QMessageBox::No){
+                if(QMessageBox::question(this, tr("提示"), tr("似乎无法找到 Windows7X86Auto.iso，是否继续创建虚拟机？\n缺少该文件可能会导致虚拟机无法正常启动，尝试重新安装 Wine 运行器再试试？")) == QMessageBox::No){
                     return;
                 }
             }
             break;
         case 1:
             if(!QFile::exists(QCoreApplication::applicationDirPath() + "/Windows7X64Auto.iso")){
-                if(QMessageBox::question(this, "提示", "似乎无法找到 Windows7X64Auto.iso，是否继续创建虚拟机？\n缺少该文件可能会导致虚拟机无法正常启动，尝试重新安装 Wine 运行器再试试？") == QMessageBox::No){
+                if(QMessageBox::question(this, tr("提示"), tr("似乎无法找到 Windows7X64Auto.iso，是否继续创建虚拟机？\n缺少该文件可能会导致虚拟机无法正常启动，尝试重新安装 Wine 运行器再试试？")) == QMessageBox::No){
                     return;
                 }
             }
             break;
         case 3:
             if(!QFile::exists("/usr/share/qemu/OVMF.fd") && !QFile::exists(QCoreApplication::applicationDirPath() + "/OVMF.fd") && ui->vmChooser->currentIndex() == 0){
-                if(QMessageBox::question(this, "提示", "似乎无法找到 UEFI 固件，是否继续创建虚拟机？\nQemu 固件可以在“安装 Qemu”处安装") == QMessageBox::No){
+                if(QMessageBox::question(this, tr("提示"), tr("似乎无法找到 UEFI 固件，是否继续创建虚拟机？\nQemu 固件可以在“安装 Qemu”处安装")) == QMessageBox::No){
                     return;
                 }
             }
@@ -245,13 +245,13 @@ void MainWindow::on_install_clicked()
         case 6:
         case 7:
             if(ui->vmChooser->currentIndex() == 0){
-                QMessageBox::warning(this, "提示", "Qemu 不支持该选项！");
+                QMessageBox::warning(this, tr("提示"), tr("Qemu 不支持该选项！"));
                 return;
             }
             break;
         case 8:
             if(ui->vmChooser->currentIndex() == 1){
-                QMessageBox::warning(this, "提示", "VirtualBox 不支持该选项！");
+                QMessageBox::warning(this, tr("提示"), tr("VirtualBox 不支持该选项！"));
                 return;
             }
             archFile.open(QIODevice::WriteOnly);
@@ -260,7 +260,7 @@ void MainWindow::on_install_clicked()
             break;
         case 9:
             if(ui->vmChooser->currentIndex() == 1){
-                QMessageBox::warning(this, "提示", "VirtualBox 不支持该选项！");
+                QMessageBox::warning(this, tr("提示"), tr("VirtualBox 不支持该选项！"));
                 return;
             }
             archFile.open(QIODevice::WriteOnly);
@@ -275,7 +275,7 @@ void MainWindow::on_install_clicked()
     buildvbox(ui->isoPath->text(), ui->systemVersion->currentIndex(), ui->vmChooser->currentIndex());
     ui->tabWidget->setCurrentIndex(1);
     stopShowTime = 1;
-    ui->CPUValue->showMessage("提示：目前已经尝试开启虚拟机，如果在一段时间后依旧还没看到虚拟机窗口开启，请在菜单栏查看虚拟机日志", 10000);
+    ui->CPUValue->showMessage(tr("提示：目前已经尝试开启虚拟机，如果在一段时间后依旧还没看到虚拟机窗口开启，请在菜单栏查看虚拟机日志"), 10000);
     return;
 }
 
@@ -304,11 +304,11 @@ void MainWindow::on_qemuSetting_clicked()
 void MainWindow::on_addQemuDisk_triggered()
 {
     if(QFile::exists(QDir::homePath() + "/Qemu/Windows/Windows.qcow2")){
-        if(QMessageBox::question(this, "提示", "磁盘文件已存在，是否覆盖？\n覆盖后将无法恢复！") == QMessageBox::No){
+        if(QMessageBox::question(this, tr("提示"), tr("磁盘文件已存在，是否覆盖？\n覆盖后将无法恢复！")) == QMessageBox::No){
             return;
         }
     }
-    QString path = QFileDialog::getOpenFileName(this, "选择 Qemu 镜像", QDir::homePath(), "Qemu镜像(*.qcow2 *.img *.raw *.qcow *.qed *.vdi *.vhdx *.vmdk);;所有文件(*.*)");
+    QString path = QFileDialog::getOpenFileName(this, tr("选择 Qemu 镜像"), QDir::homePath(), tr("Qemu镜像(*.qcow2 *.img *.raw *.qcow *.qed *.vdi *.vhdx *.vmdk);;所有文件(*.*)"));
     qDebug() << path;
     if(path == ""){
         return;
@@ -319,23 +319,23 @@ void MainWindow::on_addQemuDisk_triggered()
     }
     if(QFile::exists(QDir::homePath() + "/Qemu/Windows/Windows.qcow2")){
         if(!QFile::remove(QDir::homePath() + "/Qemu/Windows/Windows.qcow2") | !QFile::copy(path, QDir::homePath() + "/Qemu/Windows/Windows.qcow2")){
-            QMessageBox::critical(this, "提示", "添加错误！");
+            QMessageBox::critical(this, tr("提示"), tr("添加错误！"));
             return;
         }
     }
     else{
         if(!QFile::copy(path, QDir::homePath() + "/Qemu/Windows/Windows.qcow2")){
-            QMessageBox::critical(this, "提示", "添加错误！");
+            QMessageBox::critical(this, tr("提示"), tr("添加错误！"));
             return;
         }
     }
-    QMessageBox::information(this, "提示", "添加完成！");
+    QMessageBox::information(this, tr("提示"), tr("添加完成！"));
 }
 
 void MainWindow::on_delQemuDisk_triggered()
 {
     if(!QFile::exists(QDir::homePath() + "/Qemu/Windows/Windows.qcow2")){
-        QMessageBox::information(this, "提示", "不存在磁盘文件，无法导出");
+        QMessageBox::information(this, tr("提示"), tr("不存在磁盘文件，无法导出"));
         return;
     }
     std::system(("xdg-open \"" + QDir::homePath() + "/Qemu/Windows/\"").toUtf8());
@@ -354,23 +354,23 @@ void MainWindow::on_saveQemuDiskButton_clicked()
 void MainWindow::on_delQemuDiskButton_clicked()
 {
     if(!QFile::exists(QDir::homePath() + "/Qemu/Windows/Windows.qcow2")){
-        QMessageBox::information(this, "提示", "不存在磁盘文件，无法移除");
+        QMessageBox::information(this, tr("提示"), tr("不存在磁盘文件，无法移除"));
         return;
     }
-    if(QMessageBox::question(this, "提示", "是否删除？\n删除后将无法恢复！") == QMessageBox::No){
+    if(QMessageBox::question(this, tr("提示"), tr("是否删除？\n删除后将无法恢复！")) == QMessageBox::No){
         return;
     }
     if(!QFile::remove(QDir::homePath() + "/Qemu/Windows/Windows.qcow2")){
-        QMessageBox::critical(this, "提示", "移除失败");
+        QMessageBox::critical(this, tr("提示"), tr("移除失败"));
         return;
     }
-    QMessageBox::information(this, "提示", "移除成功");
+    QMessageBox::information(this, tr("提示"), tr("移除成功"));
 }
 
 void MainWindow::on_kvmTest_clicked()
 {
     if(system("which kvm-ok")&& !QFile::exists(QCoreApplication::applicationDirPath() + "/kvm-ok")){
-        QMessageBox::critical(this, "错误", "未识别到命令 kvm-ok\n可以使用命令 sudo apt install cpu-checker 安装");
+        QMessageBox::critical(this, tr("错误"), tr("未识别到命令 kvm-ok\n可以使用命令 sudo apt install cpu-checker 安装"));
         return;
     }
     QString kvm_ok_path = "kvm-ok";
@@ -380,16 +380,16 @@ void MainWindow::on_kvmTest_clicked()
     else if(QFile::exists(QCoreApplication::applicationDirPath() + "/kvm-ok")){
         kvm_ok_path = QCoreApplication::applicationDirPath() + "/kvm-ok";
     }
-    qDebug() << "使用" << kvm_ok_path;
+    qDebug() << tr("使用") << kvm_ok_path;
     QProcess process;
     process.start(kvm_ok_path);
     process.waitForStarted();
     process.waitForFinished();
     if(process.exitCode()){
-        QMessageBox::critical(this, "错误", "您的系统不支持使用 kvm：\n" + process.readAll());
+        QMessageBox::critical(this, tr("错误"), tr("您的系统不支持使用 kvm：\n") + process.readAll());
         return;
     }
-    QMessageBox::information(this, "提示", "您的系统支持使用 kvm：\n" + process.readAll());
+    QMessageBox::information(this, tr("提示"), tr("您的系统支持使用 kvm：\n") + process.readAll());
 
 }
 
@@ -401,11 +401,11 @@ void MainWindow::on_actionVMRunlLog_triggered()
 {
     QFile file("/tmp/windows-virtual-machine-installer-for-wine-runner-run.log");
     if(!file.exists()){
-        QMessageBox::information(this, "提示", "没有日志文件");
+        QMessageBox::information(this, tr("提示"), tr("没有日志文件"));
         return;
     }
     file.open(QIODevice::ReadOnly);
-    QInputDialog::getMultiLineText(this, "运行日志", "虚拟机运行日志",file.readAll());
+    QInputDialog::getMultiLineText(this, tr("运行日志"), tr("虚拟机运行日志"), file.readAll());
     file.close();
 }
 
@@ -435,11 +435,11 @@ void MainWindow::on_actionVMInstallLog_triggered()
 {
     QFile file("/tmp/windows-virtual-machine-installer-for-wine-runner-install.log");
     if(!file.exists()){
-        QMessageBox::information(this, "提示", "没有日志文件");
+        QMessageBox::information(this, tr("提示"), tr("没有日志文件"));
         return;
     }
     file.open(QIODevice::ReadOnly);
-    QInputDialog::getMultiLineText(this, "安装日志", "虚拟机安装日志",file.readAll());
+    QInputDialog::getMultiLineText(this, tr("安装日志"), tr("虚拟机安装日志"),file.readAll());
     file.close();
 }
 
