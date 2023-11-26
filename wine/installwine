@@ -364,12 +364,12 @@ if __name__ == "__main__":
     internetJsonList = []
     internetWineSourceList = [
         "http://wine.wine-runner.gfdgdxi.top/",
-        "https://github.com/gfdgd-xi/wine-mirrors-websize/raw/master/sourceforge",
+        "http://wine.wine-runner.gfdgdxi.top/sourceforge",
         "https://gitee.com/gfdgd-xi/wine-mirrors-websize/raw/master/",
         "https://github.com/gfdgd-xi/wine-mirrors-websize/raw/master/",
         "http://127.0.0.1/wine-mirrors/"  # 本地测试源
         ]
-    internetWineSource = internetWineSourceList[0]
+
     app = QtWidgets.QApplication(sys.argv)
     # 读取翻译
     if not get_now_lang() == "zh_CN.UTF-8":
@@ -382,6 +382,22 @@ if __name__ == "__main__":
     window.setWindowIcon(QtGui.QIcon(f"{programPath}/../deepin-wine-runner.svg"))
     ui.setupUi(window)
     window.show()
+    # 判断机器所在国家并自动分配源
+    try:
+        isChina = requests.get("https://ip.useragentinfo.com/json").json()["country"] == "中国"
+        print("IsChina", isChina)
+        if isChina:
+            internetWineSource = internetWineSourceList[0]
+            ui.ipv6Action.setChecked(True)
+        else:
+            internetWineSource = internetWineSourceList[1]
+            ui.kgithubAction.setChecked(True)
+    except:
+        traceback.print_exc()
+        print("IsChina", False)
+        # 请求失败，默认使用国际源
+        internetWineSource = internetWineSourceList[1]
+        ui.kgithubAction.setChecked(True)
     # 连接信号
     ui.addButton.clicked.connect(on_addButton_clicked)
     ui.delButton.clicked.connect(on_delButton_clicked)
