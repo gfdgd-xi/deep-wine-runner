@@ -1250,7 +1250,26 @@ class UpdateWindow():
         os.makedirs("/tmp/spark-deepin-wine-runner/update")
         try:            
             print(UpdateWindow.data["Url"])
-            write_txt("/tmp/spark-deepin-wine-runner/update.sh", f"""#!/bin/bash
+            if os.path.exists(f"{programPath}/off-line.lock") or programPath != "/opt/apps/deepin-wine-runner":
+                # 使用解压法更新
+                write_txt("/tmp/spark-deepin-wine-runner/update.sh", f"""#!/bin/bash
+echo 删除多余的安装包
+rm -rfv /tmp/spark-deepin-wine-runner/update/*
+echo 关闭“Wine 运行器”
+python3 "{programPath}/updatekiller.py"
+echo 下载安装包
+wget -P /tmp/spark-deepin-wine-runner/update {UpdateWindow.data["Url"][0]}
+echo 安装安装包
+cd /tmp/spark-deepin-wine-runner/update
+7z x *.deb
+7z x data.tar
+cp opt/apps/deepin-wine-runner "{programPath}" -rv
+notify-send -i "{iconPath}" "更新完毕！"
+zenity --info --text=\"更新完毕！\" --ellipsize
+""")
+            else:
+                # 使用 deb 安装更新
+                write_txt("/tmp/spark-deepin-wine-runner/update.sh", f"""#!/bin/bash
 echo 删除多余的安装包
 rm -rfv /tmp/spark-deepin-wine-runner/update/*
 echo 关闭“Wine 运行器”
@@ -2605,7 +2624,10 @@ Deepin 论坛：<a href="https://bbs.deepin.org">https://bbs.deepin.org</a>
 gfdgd xi：<a href="https://gfdgd-xi.github.io">https://gfdgd-xi.github.io</a>
 <hr>
 <h1>©2020~{time.strftime("%Y")} By gfdgd xi</h1>'''
-title = "Wine 运行器 {}".format(version)
+if os.path.exists(f"{programPath}/off-line.lock"):
+    title = "Wine 运行器 {}（离线模式）".format(version)
+else:
+    title = "Wine 运行器 {}".format(version)
 #<h1>©2020~{time.strftime("%Y")} <a href="https://gitee.com/gfdgd-xi">By gfdgd xi</h1>'''
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 try:

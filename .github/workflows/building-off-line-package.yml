@@ -50,6 +50,8 @@ jobs:
           cp deep-wine-runner/off-line-shell/bwrap_amd64 package/bwrap -rv
           sudo chmod 777 -Rv package
           cd package
+          # 添加 Wine 运行器离线模式标识
+          touch opt/apps/deepin-wine-runner/off-line.lock
           tar -cvf ../spark-deepin-wine-runner-off-line.tar *
           cd ..
           xz -T $cpu spark-deepin-wine-runner-off-line.tar
