@@ -1263,10 +1263,12 @@ echo 安装安装包
 cd /tmp/spark-deepin-wine-runner/update
 7z x *.deb
 7z x data.tar
-cp opt/apps/deepin-wine-runner "{programPath}" -rv
+cp opt/apps/deepin-wine-runner/* "{programPath}" -rv
 notify-send -i "{iconPath}" "更新完毕！"
 zenity --info --text=\"更新完毕！\" --ellipsize
 """)
+                OpenTerminal("bash /tmp/spark-deepin-wine-runner/update.sh")
+                return
             else:
                 # 使用 deb 安装更新
                 write_txt("/tmp/spark-deepin-wine-runner/update.sh", f"""#!/bin/bash
@@ -1283,10 +1285,11 @@ apt install -f -y
 notify-send -i "{iconPath}" "更新完毕！"
 zenity --info --text=\"更新完毕！\" --ellipsize
 """)
+                OpenTerminal("pkexec bash /tmp/spark-deepin-wine-runner/update.sh")
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(None, "出现错误，无法继续更新", traceback.format_exc())
-        OpenTerminal("pkexec bash /tmp/spark-deepin-wine-runner/update.sh")
+        
 
 class GetDllFromWindowsISO:
     wineBottonPath = get_home() + "/.wine"
@@ -2293,6 +2296,7 @@ def CheckWine():
     global untipsWine
     global canUseWine
     try:
+        wine7zUse = ["wine", "wine64", "wine-i386", "wine-aarch64", "wine-x86_64"]
         wine = {
             "基于 UOS box86 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86 /opt/deepin-wine6-stable/bin/wine ",
             "基于 UOS exagear 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al -- /opt/deepin-wine6-stable/bin/wine ",
@@ -2382,8 +2386,15 @@ def CheckWine():
             write_txt(get_home() + "/.config/deepin-wine-runner/WineSetting.json", json.dumps(setting))
         try:
             # Read /opt Wine
-            for i in os.listdir("/opt"):
-                pass
+            try:
+                for i in os.listdir(f"/opt"):
+                    for j in wine7zUse:
+                        if os.path.exists(f"/opt/{i}/bin/{j}"):
+                            wine[f"/opt/{i}/bin/{j}"] = f"/opt/{i}/bin/{j}"
+                            canUseWine.append(f"/opt/{i}/bin/{j}")
+            except:
+                traceback.print_exc()    
+
             # 不再从列表读取，直接读目录
             for i in os.listdir(f"{programPath}/wine/"):
             #for i in json.loads(readtxt(f"{programPath}/wine/winelist.json")):
@@ -2470,37 +2481,21 @@ def CheckWine():
                             chrootProgramPath = "/opt/apps/deepin-wine-runner"
                         else:
                             chrootProgramPath = programPath
-                        if os.path.exists(f"{programPath}/wine/{i}/bin/wine"):        
-                            wine[f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine"] = f"{k[1]}{chrootProgramPath}/wine/{i}/bin/wine"
-                            canUseWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine")
-                            untipsWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine")
-                        if os.path.exists(f"{programPath}/wine/{i}/bin/wine64"):
-                            wine[f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine64"] = f"{k[1]}{chrootProgramPath}/wine/{i}/bin/wine64"
-                            canUseWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine64")
-                            untipsWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine64")
-                        if os.path.exists(f"{programPath}/wine/{i}/bin/wine-i386"):
-                            wine[f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-i386"] = f"{k[1]}{chrootProgramPath}/wine/{i}/bin/wine-i386"
-                            canUseWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-i386")
-                            untipsWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-i386")
-                        if os.path.exists(f"{programPath}/wine/{i}/bin/wine-aarch64"):        
-                            wine[f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-aarch64"] = f"{k[1]}{chrootProgramPath}/wine/{i}/bin/wine-aarch64"
-                            canUseWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-aarch64")
-                            untipsWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-aarch64")
-                        if os.path.exists(f"{programPath}/wine/{i}/bin/wine-x86_64"):        
-                            wine[f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-x86_64"] = f"{k[1]}{chrootProgramPath}/wine/{i}/bin/wine-x86_64"
-                            canUseWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-x86_64")
-                            untipsWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/wine-x86_64")
+                        for j in wine7zUse:
+                            if os.path.exists(f"{programPath}/wine/{i}/bin/{j}"):        
+                                wine[f"{k[0]}{chrootProgramPath}/wine/{i}/bin/{j}"] = f"{k[1]}{chrootProgramPath}/wine/{i}/bin/{j}"
+                                canUseWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/{j}")
+                                untipsWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/{j}")
             
         except:
             traceback.print_exc()
         try:
             for i in os.listdir(f"{get_home()}/.deepinwine/"):
-                if os.path.exists(f"{get_home()}/.deepinwine/{i}/bin/wine"):
-                    wine[f"{get_home()}/.deepinwine/{i}/bin/wine"] = f"{get_home()}/.deepinwine/{i}/bin/wine"
-                    canUseWine.append(f"{get_home()}/.deepinwine/{i}/bin/wine")
-                if os.path.exists(f"{get_home()}/.deepinwine/{i}/bin/wine64"):
-                    wine[f"{get_home()}/.deepinwine/{i}/bin/wine64"] = f"{get_home()}/.deepinwine/{i}/bin/wine64"
-                    canUseWine.append(f"{get_home()}/.deepinwine/{i}/bin/wine64")
+                for j in wine7zUse:
+                    if os.path.exists(f"{get_home()}/.deepinwine/{i}/bin/{j}"):
+                        wine[f"{get_home()}/.deepinwine/{i}/bin/{j}"] = f"{get_home()}/.deepinwine/{i}/bin/{j}"
+                        canUseWine.append(f"{get_home()}/.deepinwine/{i}/bin/{j}")
+                
         except:
             traceback.print_exc()
         try:
