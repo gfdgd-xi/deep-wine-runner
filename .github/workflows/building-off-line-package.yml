@@ -16,7 +16,7 @@ jobs:
           cpu=$(cat /proc/cpuinfo | grep processor | wc -l)
           # 配置环境
           sudo apt update
-          sudo apt install debootstrap xz-utils -y
+          sudo apt install python3-requests debootstrap xz-utils -y
           cd ~
           mkdir package
           # 部署 chroot 环境
