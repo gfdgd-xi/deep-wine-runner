@@ -414,7 +414,9 @@ def about_this_program()->"显示“关于这个程序”窗口":
     messageWidget = QtWidgets.QWidget()
     QT.message.setWindowTitle(f"关于 {title}")
     messageLayout = QtWidgets.QGridLayout()
-    messageLayout.addWidget(QtWidgets.QLabel(f"<img width=256 src='{iconPath}'>"), 0, 0, 1, 1, QtCore.Qt.AlignTop)
+    iconShow = QtWidgets.QLabel(f"<a href='https://www.gfdgdxi.top'><img width=256 src='{iconPath}'></a>")
+    iconShow.linkActivated.connect(lambda: iconShow.setText(f"<a href='https://www.gfdgdxi.top'><img width=256 src='{iconPathList[random.randint(0, len(iconPathList) - 1)]}'></a>"))
+    messageLayout.addWidget(iconShow, 0, 0, 1, 1, QtCore.Qt.AlignTop)
     aboutInfo = QtWidgets.QTextBrowser(messageWidget)
     aboutInfo.setFocusPolicy(QtCore.Qt.NoFocus)
     #aboutInfo.copyAvailable.connect(lambda: print("b"))
@@ -2546,6 +2548,11 @@ else:
     pass
 app.installTranslator(trans)
 iconPath = "{}/deepin-wine-runner.svg".format(programPath)
+iconPathList = [
+    "{}/deepin-wine-runner.svg".format(programPath),
+    f"{programPath}/Icon/Program/AboutIcon0.png",
+    f"{programPath}/Icon/Program/AboutIcon1.png"
+]
 #iconPath = "{}/Icon/Program/wine运行器.png".format(programPath)
 programUrl = "https://gitee.com/gfdgd-xi/deep-wine-runner\nhttps://github.com/gfdgd-xi/deep-wine-runner\nhttps://gfdgd-xi.github.io"
 information = json.loads(readtxt(f"{programPath}/information.json"))
@@ -2563,19 +2570,7 @@ exe路径\' 参数 \'
 6、如果可执行文件比较大的话，会出现点击“获取该程序运行情况”出现假死的情况，因为正在后台读取 SHA1，只需要等一下即可（读取速度依照您电脑处理速度、读写速度、可执行文件大小等有关）；
 7、如果非 X86 的用户的 UOS 专业版用户想要使用的话，只需要在应用商店安装一个 Wine 版本微信即可在本程序选择正确的 Wine 运行程序；''')
 updateThingsString = QtCore.QCoreApplication.translate("U", '''<b>3.5.0 更新内容：</b>
-※1、虚拟机工具支持 kvm 检测
-※2、修改虚拟机工具提示文本，新增对 UOS 3a4000 用户无法正常使用 Qemu 的解决方案
-※3、在主界面点击“安装”按钮后自动切换至帮助页面
-※4、新增虚拟机日志输出和读取功能
-※5、新增Qemu测试测试功能
-※6、虚拟机工具支持安装/运行 arm32、arm64 架构的系统
-※7、修复虚拟机工具在系统版本选择第 5 项及以后出现不会挂载 ISO 的问题（使用 Qemu 的情况下）
-※8、修复简易打包器无法打开的问题 https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I85F9M
-※9、生态适配脚本打包器支持正确根据打包结果显示打包成功/失败 https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I7D83Z
-10、生态适配脚本打包器设置使用 xz 格式打包 deb
-11、新增 ace 包
-12、虚拟机工具支持强制关闭 VirtualBox/Qemu，并增加了对 Windows 7 安装脚本的检测
-13、新增 lat 翻译器安装选项''')
+※1、修复高级打包器选择软件适配脚本后无法打包的问题 https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I8I110''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
 updateTime = "2023年11月17日"
@@ -2619,6 +2614,7 @@ Deepin 论坛：<a href="https://bbs.deepin.org">https://bbs.deepin.org</a>
 gfdgd xi：<a href="https://gfdgd-xi.github.io">https://gfdgd-xi.github.io</a>
 <hr>
 <h1>©2020~{time.strftime("%Y")} By gfdgd xi</h1>'''
+
 if os.path.exists(f"{programPath}/off-line.lock"):
     title = "Wine 运行器 {}（离线模式）".format(version)
 else:
@@ -2634,7 +2630,6 @@ iconList = json.loads(readtxt(f"{programPath}/IconList.json"))[1]
 for i in iconListUnBuild:
     iconList.append(i)
 print(iconList)
-
 # Qemu Lock
 try:
     if os.path.exists("/tmp/deepin-wine-runner-lock.txt"):
