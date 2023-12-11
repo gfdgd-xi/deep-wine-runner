@@ -409,13 +409,27 @@ def about_this_program()->"显示“关于这个程序”窗口":
     global about
     global title
     global iconPath
+    global clickIconTime
+    clickIconTime = 0
     QT.message = QtWidgets.QMainWindow()  
     QT.message.setWindowIcon(QtGui.QIcon(iconPath))
     messageWidget = QtWidgets.QWidget()
     QT.message.setWindowTitle(f"关于 {title}")
     messageLayout = QtWidgets.QGridLayout()
     iconShow = QtWidgets.QLabel(f"<a href='https://www.gfdgdxi.top'><img width=256 src='{iconPath}'></a>")
-    iconShow.linkActivated.connect(lambda: iconShow.setText(f"<a href='https://www.gfdgdxi.top'><img width=256 src='{iconPathList[random.randint(0, len(iconPathList) - 1)]}'></a>"))
+    def ChangeIcon():
+        global clickIconTime
+        if clickIconTime >= 0:
+            clickIconTime = clickIconTime + 1
+        if clickIconTime > 5:
+            clickIconTime = -1
+            for k in ["", "Function"]:
+                for i in os.listdir(f"{programPath}/Icon/{k}"):
+                    if i[-4:] == ".svg" or i[-4:] == ".png":
+                        iconPathList.append(f"{programPath}/Icon/{k}/{i}")
+        randomNumber = random.randint(0, len(iconPathList) - 1)
+        iconShow.setText(f"<a href='https://www.gfdgdxi.top'><img width=256 src='{iconPathList[randomNumber]}'></a><p align='center'>{randomNumber + 1}/{len(iconPathList)}</p>")
+    iconShow.linkActivated.connect(ChangeIcon)
     messageLayout.addWidget(iconShow, 0, 0, 1, 1, QtCore.Qt.AlignTop)
     aboutInfo = QtWidgets.QTextBrowser(messageWidget)
     aboutInfo.setFocusPolicy(QtCore.Qt.NoFocus)
@@ -2550,9 +2564,14 @@ app.installTranslator(trans)
 iconPath = "{}/deepin-wine-runner.svg".format(programPath)
 iconPathList = [
     "{}/deepin-wine-runner.svg".format(programPath),
+    f"{programPath}/Icon/Program/AboutIcon1.png",
     f"{programPath}/Icon/Program/AboutIcon0.png",
-    f"{programPath}/Icon/Program/AboutIcon1.png"
+    f"{programPath}/Icon/Program/webp2.png",
+    f"{programPath}/Icon/Program/webp3.png",
+    f"{programPath}/Icon/Program/Windows虚拟机.png",
+    f"{programPath}/Icon/Program/wine打包器.png"
 ]
+
 #iconPath = "{}/Icon/Program/wine运行器.png".format(programPath)
 programUrl = "https://gitee.com/gfdgd-xi/deep-wine-runner\nhttps://github.com/gfdgd-xi/deep-wine-runner\nhttps://gfdgd-xi.github.io"
 information = json.loads(readtxt(f"{programPath}/information.json"))
