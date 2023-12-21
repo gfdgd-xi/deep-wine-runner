@@ -2798,7 +2798,12 @@ returnText.setStyleSheet("""
 background-color: black;
 color: white;
 """)
-returnText.setText(QtCore.QCoreApplication.translate("U", "在此可以看到wine安装应用时的终端输出内容"))
+returnText.setText(QtCore.QCoreApplication.translate("U", """在此可以看到wine安装应用时的终端输出内容
+========================================
+如果解决了你的问题，请不要吝啬你的star哟！
+地址：
+https://gitee.com/gfdgd-xi/deep-wine-runner
+https://github.com/gfdgd-xi/deep-wine-runner"""))
 mainLayout.setRowStretch(0, 2)
 mainLayout.setRowStretch(1, 1)
 mainLayout.setColumnStretch(0, 2)
