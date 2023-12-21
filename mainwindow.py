@@ -2330,6 +2330,7 @@ def CheckWine():
             "wine": "wine", 
             "wine64": "wine64", 
             "ukylin-wine": "ukylin-wine",
+            "okylin-wine": "okylin-wine",
             "mono（这不是 wine，但可以实现初步调用运行 .net 应用）": "mono",
             "基于 linglong 的 deepin-wine6-stable（不推荐）": f"ll-cli run '' --exec '/bin/deepin-wine6-stable'"
         }
