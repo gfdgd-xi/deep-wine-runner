@@ -2590,7 +2590,9 @@ exe路径\' 参数 \'
 6、如果可执行文件比较大的话，会出现点击“获取该程序运行情况”出现假死的情况，因为正在后台读取 SHA1，只需要等一下即可（读取速度依照您电脑处理速度、读写速度、可执行文件大小等有关）；
 7、如果非 X86 的用户的 UOS 专业版用户想要使用的话，只需要在应用商店安装一个 Wine 版本微信即可在本程序选择正确的 Wine 运行程序；''')
 updateThingsString = QtCore.QCoreApplication.translate("U", '''<b>3.5.0 更新内容：</b>
-※1、修复高级打包器选择软件适配脚本后无法打包的问题 https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I8I110''')
+※1、修复高级打包器选择软件适配脚本后无法打包的问题 https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I8I110
+※2、支持调用 Deepin Wine8 Stable
+※3、移除过时的 Wine 安装程序入口''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
 updateTime = "2023年11月17日"
@@ -2829,8 +2831,8 @@ mainLayout.addWidget(programRun, 2, 1, 1, 1)
 menu = window.menuBar()
 programmenu = menu.addMenu(QtCore.QCoreApplication.translate("U", "程序(&P)"))
 p1 = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine.png"), QtCore.QCoreApplication.translate("U", "安装 wine(&I)"))
-installWineOnDeepin23 = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine23P.png"), QtCore.QCoreApplication.translate("U", "安装 wine(只限Deepin23 Preview)"))
-installWineOnDeepin23Alpha = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine23A.png"), QtCore.QCoreApplication.translate("U", "安装 wine(只限Deepin23 Alpha)"))
+#installWineOnDeepin23 = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine23P.png"), QtCore.QCoreApplication.translate("U", "安装 wine(只限Deepin23 Preview)"))
+#installWineOnDeepin23Alpha = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine23A.png"), QtCore.QCoreApplication.translate("U", "安装 wine(只限Deepin23 Alpha)"))
 installWineHQOrg = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine.png"), QtCore.QCoreApplication.translate("U", "安装 WineHQ（官方源）"))
 installWineHQ = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine.png"), QtCore.QCoreApplication.translate("U", "安装 WineHQ（国内清华大学镜像源）"))
 installMoreWine = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/more-wine.png"), QtCore.QCoreApplication.translate("U", "安装更多 Wine（Wine 下载工具，推荐）"))
@@ -2850,8 +2852,8 @@ cleanCache = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(47), 
 cleanProgramUnuse = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(47), QtCore.QCoreApplication.translate("U", "删除程序组件"))
 p4 = QtWidgets.QAction(QtGui.QIcon.fromTheme("exit"), QtCore.QCoreApplication.translate("U", "退出程序(&E)"))
 programmenu.addAction(p1)
-programmenu.addAction(installWineOnDeepin23)
-programmenu.addAction(installWineOnDeepin23Alpha)
+#programmenu.addAction(installWineOnDeepin23)
+#programmenu.addAction(installWineOnDeepin23Alpha)
 programmenu.addAction(installWineHQ)
 programmenu.addAction(installWineHQOrg)
 programmenu.addAction(addWineDebMirrorForDeepin20)
@@ -2878,8 +2880,8 @@ setDefaultFont.triggered.connect(lambda: SetFont(1))
 setMiniFont.triggered.connect(lambda: SetFont(1.2))
 setTinyFont.triggered.connect(lambda: SetFont(1.6))
 p1.triggered.connect(InstallWine)
-installWineOnDeepin23.triggered.connect(InstallWineOnDeepin23)
-installWineOnDeepin23Alpha.triggered.connect(InstallWineOnDeepin23Alpha)
+#installWineOnDeepin23.triggered.connect(InstallWineOnDeepin23)
+#installWineOnDeepin23Alpha.triggered.connect(InstallWineOnDeepin23Alpha)
 installWineHQ.triggered.connect(InstallWineHQ)
 installWineHQOrg.triggered.connect(lambda: threading.Thread(target=OpenTerminal, args=[f"{programPath}/InstallNewWineHQOrg.sh"]).start())
 installLat.triggered.connect(lambda: threading.Thread(target=OpenTerminal, args=[f"{programPath}/InstallLat.sh"]).start())
@@ -3342,7 +3344,7 @@ else:
     o1.addItems(wine.keys())
 # 禁用被精简掉的控件
 for i in [
-    [[p1, installWineOnDeepin23, installWineHQ, installWineHQOrg, installMoreWine], f"{programPath}/InstallWineOnDeepin23.py"],
+    [[p1, installWineHQ, installWineHQOrg, installMoreWine], f"{programPath}/InstallWineOnDeepin23.py"],
     [[w5], f"{programPath}/deepin-wine-packager.py"],
     [[w6], f"{programPath}/deepin-wine-packager-with-script.py"],
     [[p1, v1], f"{programPath}/RunVM.sh"],
@@ -3354,7 +3356,6 @@ for i in [
 # 有些功能是非 X86 不适用的，需要屏蔽
 if subprocess.getoutput("arch").lower() != "x86_64":
     p1.setDisabled(True)
-    installWineOnDeepin23.setDisabled(True)
     installMoreWine.setEnabled(True)
     #virtualMachine.setDisabled(True)
     #v1.setDisabled(True)

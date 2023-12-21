@@ -69,7 +69,8 @@ m     m   "
     for i in [
         ["原版 Wine（Wine64）", "wine"],
         ["deepin-wine5-stable", "deepin-wine5-stable"],
-        ["deepin-wine6-stable", "deepin-wine6-stable"]
+        ["deepin-wine6-stable", "deepin-wine6-stable"],
+        ["deepin-wine8-stable", "deepin-wine8-stable"]
     ]:
         if not os.system(f"which {i[1]} > /dev/null"):
             continue

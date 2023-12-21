@@ -81,6 +81,11 @@ if os.system("which deepin-wine6-stable > /dev/null"):
     choose = input().upper()
     if not choose == "N":
         os.system("sudo apt install deepin-wine6-stable -y")
+if os.system("which deepin-wine8-stable > /dev/null"):
+    print("请问是否要安装 deepin-wine8-stable？[Y/N]", end=' ')
+    choose = input().upper()
+    if not choose == "N":
+        os.system("sudo apt install deepin-wine6-stable -y")
 if os.system("which spark-wine7-devel > /dev/null"):
     print("请问是否要安装 spark-wine7-devel（需要安装最新版星火应用商店）？[Y/N]", end=' ')
     choose = input().upper()
