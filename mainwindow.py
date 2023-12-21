@@ -2317,6 +2317,7 @@ def CheckWine():
             "基于 UOS box86 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86 /opt/deepin-wine6-stable/bin/wine ",
             "基于 UOS exagear 的 deepin-wine6-stable": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix {get_home()}/.deepinwine/debian-buster --utmp-paths-list {get_home()}/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list {get_home()}/.deepinwine/debian-buster/.exagear/vpaths-list --opaths-list {get_home()}/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al -- /opt/deepin-wine6-stable/bin/wine ",
             "使用 Flatpak 安装的 Wine": "flatpak run org.winehq.Wine",
+            "deepin-wine8-stable": "deepin-wine8-stable",
             "deepin-wine6 stable": "deepin-wine6-stable", 
             "deepin-wine6-vannila": "deepin-wine6-vannila",
             "deepin-wine5 stable": "deepin-wine5-stable", 

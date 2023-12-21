@@ -642,6 +642,7 @@ if __name__ == "__main__":
         color: white;
     """)
     wineChooserList = [
+        "使用 Deepin Wine8 Stable 打包应用",
         "使用 Spark Wine8 打包应用",
         "使用 Spark Wine7 Devel 打包应用",
         "使用 Deepin Wine6 Stable 打包应用",
@@ -650,12 +651,11 @@ if __name__ == "__main__":
         "使用 Deepin Wine2 打包应用"
     ]
     wineChooserIndex = 2
-    wineList = ["spark-wine8", "spark-wine7-devel", "deepin-wine6-stable", "deepin-wine6-vannila", "spark-wine8-wow", "deepin-wine5-stable", "deepin-wine5", "deepin-wine"]
-    if os.system("which deepin-wine6-stable"):
-        for i in range(len(wineList)):
-            if not os.system(f"which '{wineList[i]}'"):
-                wineChooserIndex = i
-                break
+    wineList = ["deepin-wine8-stable", "spark-wine8", "spark-wine7-devel", "deepin-wine6-stable", "deepin-wine6-vannila", "spark-wine8-wow", "deepin-wine5-stable", "deepin-wine5", "deepin-wine"]
+    for i in range(len(wineList)):
+        if not os.system(f"which '{wineList[i]}'"):
+            wineChooserIndex = i
+            break
     chooseWine = wineList[wineChooserIndex]
     wineChooserList[wineChooserIndex] = f"{wineChooserList[wineChooserIndex]}（推荐，如无特殊需求不建议更换）"
     wineChooser.addItems(wineChooserList)

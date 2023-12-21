@@ -18,7 +18,7 @@ def readtxt(path):
 defultProgramList = {
     "Architecture": "Auto",
     "Debug": True,
-    "DefultWine": "deepin-wine6 stable",
+    "DefultWine": "deepin-wine8-stable",
     "DefultBotton" : get_home() + "/.wine",
     "TerminalOpen": False,
     "WineOption": "",

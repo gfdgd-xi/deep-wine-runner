@@ -2183,8 +2183,8 @@ bottleNameLock = False
 ###############
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 # 如果要添加其他 wine，请在字典添加其名称和执行路径
-wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable": "deepin-wine6-stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine", "spark-wine8": "spark-wine8", "spark-wine8-wow": "spark-wine8-wow", "deepin-wine6-vannila": "deepin-wine6-vannila"}
-wineValue = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5-stable": "deepin-wine5 stable", "deepin-wine6-stable": "deepin-wine6 stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine", "spark-wine8": "spark-wine8", "spark-wine8-wow": "spark-wine8-wow", "deepin-wine6-vannila": "deepin-wine6-vannila"}
+wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable": "deepin-wine6-stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine", "spark-wine8": "spark-wine8", "spark-wine8-wow": "spark-wine8-wow", "deepin-wine6-vannila": "deepin-wine6-vannila", "deepin-wine8-stable": "deepin-wine8-stable"}
+wineValue = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5-stable": "deepin-wine5 stable", "deepin-wine6-stable": "deepin-wine6 stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine", "spark-wine8": "spark-wine8", "spark-wine8-wow": "spark-wine8-wow", "deepin-wine6-vannila": "deepin-wine6-vannila", "deepin-wine8-stable": "deepin-wine8-stable"}
 # 读取 wine 本地列表
 for i in os.listdir("/opt"):
     if os.path.exists(f"/opt/{i}/bin/wine"):
@@ -2243,7 +2243,7 @@ widgetLayout = QtWidgets.QGridLayout()
 # 设置变量以修改和获取值项
 wineVersion = QtWidgets.QComboBox()
 wineVersion.addItems(wine.keys())
-wineVersion.setCurrentText("deepin-wine6 stable")
+wineVersion.setCurrentText("deepin-wine8-stable")
 e1_text = QtWidgets.QLineEdit()
 e2_text = QtWidgets.QLineEdit()
 e3_text = QtWidgets.QLineEdit()
