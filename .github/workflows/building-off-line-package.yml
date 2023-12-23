@@ -41,11 +41,13 @@ jobs:
           ## 安装
           sudo chroot debian apt install locales /tmp/wine-runner.deb winehq-devel xfce4-terminal -y
           # 构建软件包
-          sudo cp debian/opt package -rv
+          mkdir package/opt
+          sudo cp debian/opt/wine-devel package -rv
           sudo cp debian/usr/bin package -rv
           sudo cp debian/usr/lib package -rv
           sudo cp debian/usr/lib32 package -rv
           sudo cp debian/usr/lib64 package -rv
+          sudo cp debian/opt/apps/deepin-wine-runner package/runner -rv
           cp deep-wine-runner/off-line-shell/run.sh package -rv
           cp deep-wine-runner/off-line-shell/bwrap_amd64 package/bwrap -rv
           sudo chmod 777 -Rv package
