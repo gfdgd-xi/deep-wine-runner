@@ -62,7 +62,7 @@ jobs:
         with:
           name: spark-deepin-wine-runner-off-line.tar.xz
           path: /home/runner/spark-deepin-wine-runner-off-line.tar.xz
-      -name: upload result
+      - name: upload result
         uses: actions/upload-artifact@v1
         with:
           name: spark-deepin-wine-runner-off-line.sh
