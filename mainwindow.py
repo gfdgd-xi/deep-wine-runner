@@ -279,6 +279,7 @@ class Runexebutton_threading(QtCore.QThread):
         super().__init__()
 
     def run(self):
+        global lastRunCommand
         if e1.currentText() == "":
             wineBottonPath = setting["DefultBotton"]
         else:
@@ -330,20 +331,26 @@ class Runexebutton_threading(QtCore.QThread):
         if setting["TerminalOpen"]:
             res = ""
             if e2.currentText()[-4:] == ".msi" and os.path.exists(e2.currentText()):
-                OpenTerminal("env WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " msiexec /i '" + e2.currentText() + "' " + setting["WineOption"])
+                runCommand = "env WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " msiexec /i '" + e2.currentText() + "' " + setting["WineOption"]
+                OpenTerminal(runCommand)
             elif e2.currentText()[-4:] == ".bat" and os.path.exists(e2.currentText()):
-                OpenTerminal("env WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " wineconsole '" + e2.currentText() + "' " + setting["WineOption"])
+                runCommand = "env WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " wineconsole '" + e2.currentText() + "' " + setting["WineOption"]
+                OpenTerminal(runCommand)
             else:
-                OpenTerminal("env WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + exePath + "' " + setting["WineOption"])
+                runCommand = "env WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + exePath + "' " + setting["WineOption"]
+                OpenTerminal(runCommand)
             #res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + e2.currentText() + "' " + setting["WineOption"] + "\" --keep-open" + wineUsingOption], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         else:
             if e2.currentText()[-4:] == ".msi" and os.path.exists(e2.currentText()):
-                res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " msiexec /i '" + e2.currentText() + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                runCommand = "WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " msiexec /i '" + e2.currentText() + "' " + setting["WineOption"]
+                res = subprocess.Popen([runCommand], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             elif e2.currentText()[-4:] == ".bat" and os.path.exists(e2.currentText()):
-                res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " wineconsole '" + e2.currentText() + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                runCommand = "WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " wineconsole '" + e2.currentText() + "' " + setting["WineOption"]
+                res = subprocess.Popen([runCommand], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             else:
+                runCommand = "WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + exePath + "' " + setting["WineOption"]
                 print(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + exePath + "' " + setting["WineOption"]])
-                res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + exePath + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                res = subprocess.Popen([runCommand], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         # 实时读取程序返回
         #
         if not setting["TerminalOpen"]:
@@ -354,6 +361,8 @@ class Runexebutton_threading(QtCore.QThread):
                     text = ""
                 self.signal.emit(text)
                 print(text, end="")
+        lastRunCommand = runCommand
+        print(runCommand)
         if len(findExeHistory) == 0 or findExeHistory[-1] != wineBottonPath:
             findExeHistory.append(wineBottonPath)  # 将记录写进数组
             write_txt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json", str(json.dumps(ListToDictionary(findExeHistory))))  # 将历史记录的数组转换为字典并写入
@@ -750,6 +759,7 @@ class RunWineProgramThread(QtCore.QThread):
         self.Disbled = Disbled
 
     def run(self):
+        global lastRunCommand
         if e1.currentText() == "":
             wineBottonPath = setting["DefultBotton"]
         else:
@@ -774,10 +784,14 @@ class RunWineProgramThread(QtCore.QThread):
                 os.remove(f"{programPath}/dlls-arm.7z")
         if setting["TerminalOpen"]:
             res = ""
-            OpenTerminal(f"env WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + self.wineProgram + "' " + setting["WineOption"] + " " + wineUsingOption)
+            runCommand = f"env WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + self.wineProgram + "' " + setting["WineOption"] + " " + wineUsingOption
+            OpenTerminal(runCommand)
             #res = subprocess.Popen([f"'{programPath}/launch.sh' deepin-terminal -C \"WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + self.wineProgram + "' " + setting["WineOption"] + " " + wineUsingOption + "\" --keep-open"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         else:
-            res = subprocess.Popen(["WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + self.wineProgram + "' " + setting["WineOption"]], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            runCommand = "WINEPREFIX='" + wineBottonPath + "' " + option + wine[o1.currentText()] + " '" + self.wineProgram + "' " + setting["WineOption"]
+            res = subprocess.Popen([runCommand], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        print(runCommand)
+        lastRunCommand = runCommand
         # 实时读取程序返回
         if not setting["TerminalOpen"]:
             while res.poll() is None:
@@ -2580,6 +2594,7 @@ information = json.loads(readtxt(f"{programPath}/information.json"))
 version = information["Version"]
 goodRunSystem = QtCore.QCoreApplication.translate("U", "常见 Linux 发行版")
 thankText = ""
+lastRunCommand = "暂未运行命令"
 tips = QtCore.QCoreApplication.translate("U", '''<h4>提示：</h4>
 1、使用终端运行该程序，可以看到 wine 以及程序本身的提示和报错；
 2、wine 32 位和 64 位的容器互不兼容；
@@ -2800,11 +2815,12 @@ background-color: black;
 color: white;
 """)
 returnText.setText(QtCore.QCoreApplication.translate("U", """在此可以看到wine安装应用时的终端输出内容
-========================================
+=============================================
 如果解决了你的问题，请不要吝啬你的star哟！
 地址：
 https://gitee.com/gfdgd-xi/deep-wine-runner
-https://github.com/gfdgd-xi/deep-wine-runner"""))
+https://github.com/gfdgd-xi/deep-wine-runner
+https://sourceforge.net/projects/deep-wine-runner"""))
 mainLayout.setRowStretch(0, 2)
 mainLayout.setRowStretch(1, 1)
 mainLayout.setColumnStretch(0, 2)
@@ -3148,18 +3164,21 @@ log = menu.addMenu(QtCore.QCoreApplication.translate("U", "日志(&L)"))
 getDllInfo = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "查询 Dll"))
 checkLogText = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "日志分析"))
 saveLogText = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(16), QtCore.QCoreApplication.translate("U", "另存为日志"))
+saveLogReport = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(16), QtCore.QCoreApplication.translate("U", "输出详细日志报告"))
 transLogText = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "翻译日志（翻译后日志分析功能会故障）"))
 uploadLogText = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "上传日志"))
 getDllInfo.triggered.connect(DllWindow.ShowWindow)
 checkLogText.triggered.connect(LogChecking.ShowWindow)
 saveLogText.triggered.connect(SaveLog)
+saveLogReport.triggered.connect(lambda: SaveLogReport(o1.currentText(), wine[o1.currentText()], lastRunCommand, e2.currentText(), returnText.toPlainText()).SetWindow())
 transLogText.triggered.connect(TransLog)
 uploadLogText.triggered.connect(UploadLog)
 log.addAction(getDllInfo)
-log.addAction(checkLogText)
+#log.addAction(checkLogText)
 log.addAction(saveLogText)
-log.addAction(transLogText)
-log.addAction(uploadLogText)
+log.addAction(saveLogReport)
+#log.addAction(transLogText)
+#log.addAction(uploadLogText)
 
 actionList = []
 def AddLib(install: QtWidgets.QAction, uninstall, menu, info):
@@ -3281,7 +3300,7 @@ gfdgdxiio = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), Q
 gitee = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), QtCore.QCoreApplication.translate("U", "Gitee"))
 github = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), QtCore.QCoreApplication.translate("U", "Github"))
 gitlab = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), QtCore.QCoreApplication.translate("U", "Gitlab"))
-jihu = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), QtCore.QCoreApplication.translate("U", "极狐"))
+jihu = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), QtCore.QCoreApplication.translate("U", "Sourceforge"))
 h1.addAction(gfdgdxiio)
 h1.addAction(gitee)
 h1.addAction(github)
@@ -3315,7 +3334,7 @@ gfdgdxiio.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.gi
 gitee.triggered.connect(lambda: webbrowser.open_new_tab("https://gitee.com/gfdgd-xi/deep-wine-runner"))
 github.triggered.connect(lambda: webbrowser.open_new_tab("https://github.com/gfdgd-xi/deep-wine-runner"))
 gitlab.triggered.connect(lambda: webbrowser.open_new_tab("https://gitlab.com/gfdgd-xi/deep-wine-runner"))
-jihu.triggered.connect(lambda: webbrowser.open_new_tab("https://jihulab.com//gfdgd-xi/deep-wine-runner"))
+jihu.triggered.connect(lambda: webbrowser.open_new_tab("https://sourceforge.net/projects/deep-wine-runner/"))
 runStatusWebSize.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io/wine-runner-info"))
 h2.triggered.connect(helps)
 h3.triggered.connect(UpdateThings)

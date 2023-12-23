@@ -98,9 +98,13 @@
 %Lshw%
 </pre></code>
     <hr />
-    <p align="center">©2020~Now gfdgd xi</p>
+    <p align="center" id="copyright">©2020~Now <a target="_blank" class="unLine" href="https://gitee.com/gfdgd-xi">gfdgd xi</a></p>
 </body>
 <style>
+    .unLine {
+        text-decoration: none;
+        color: black;
+    }
     @counter-style lno {
         system: extends decimal;
         pad: 4 " ";
@@ -142,5 +146,9 @@
     }
 </style>
 <script>
+window.onload = function load(){
+    date = new Date();
+    document.getElementById("copyright").innerHTML = "©2020~" + date.getFullYear() + ' <a class="unLine" target="_blank" href="https://gitee.com/gfdgd-xi">gfdgd xi</a>';
+}
 
 </script>
