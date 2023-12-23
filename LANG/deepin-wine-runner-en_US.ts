@@ -887,7 +887,7 @@ exe路径&apos; 参数 &apos;
     <message>
         <location filename="../mainwindow.py" line="2750"/>
         <source>重启指定Wine容器</source>
-        <translation type="unfinished"></translation>
+        <translation>Restart wine bottle</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="2800"/>
@@ -902,22 +902,22 @@ exe路径&apos; 参数 &apos;
     <message>
         <location filename="../mainwindow.py" line="2802"/>
         <source>安装 WineHQ（官方源）</source>
-        <translation type="unfinished"></translation>
+        <translation>Install WineHQ</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="2803"/>
         <source>安装 WineHQ（国内清华大学镜像源）</source>
-        <translation type="unfinished"></translation>
+        <translation>Install WineHQ(Tsinghua University mirror)</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="2804"/>
         <source>安装更多 Wine（Wine 下载工具，推荐）</source>
-        <translation type="unfinished"></translation>
+        <translation>Wine manager(Recommend)</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="2805"/>
         <source>下载 Chroot 容器</source>
-        <translation type="unfinished"></translation>
+        <translation>Download chroot bottle</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="2806"/>
@@ -937,7 +937,7 @@ exe路径&apos; 参数 &apos;
     <message>
         <location filename="../mainwindow.py" line="2809"/>
         <source>安装 lat（只限 Loongarch64 架构）</source>
-        <translation type="unfinished"></translation>
+        <translation>Install lat(Only support loongarch64)</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="2810"/>
@@ -967,72 +967,72 @@ exe路径&apos; 参数 &apos;
     <message>
         <location filename="../mainwindow.py" line="2884"/>
         <source>打包 wine 应用（专业用户使用）</source>
-        <translation type="unfinished"></translation>
+        <translation>Pack wine application (Recommend professional user to use)</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="2886"/>
         <source>使用简易打包器进行打包（小白且无特殊需求建议使用这个）</source>
-        <translation type="unfinished"></translation>
+        <translation>Use easy packer to pack</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="2890"/>
         <source>快捷方式管理工具</source>
-        <translation type="unfinished"></translation>
+        <translation>Lnk manager</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="2913"/>
         <source>在指定wine、指定容器安装 Visual FoxPro</source>
-        <translation type="unfinished"></translation>
+        <translation>Install FoxPro</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="2941"/>
         <source>run_v3.sh 管理</source>
-        <translation type="unfinished"></translation>
+        <translation>run_v3.sh manager</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="2946"/>
         <source>使用winetricks打开指定容器（使用Wine运行器运行库）</source>
-        <translation type="unfinished"></translation>
+        <translation>Open bottle with winetricks</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="2955"/>
         <source>组件功能测试</source>
-        <translation type="unfinished"></translation>
+        <translation>Wine tester</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="2956"/>
         <source>测试 Visual Basic 6 程序</source>
-        <translation type="unfinished"></translation>
+        <translation>Test Visual Basic 6 application</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="2957"/>
         <source>测试 .net framework 程序</source>
-        <translation type="unfinished"></translation>
+        <translation>Test .net framework application</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="2958"/>
         <source>测试 .net framework + Internet Explorer 程序</source>
-        <translation type="unfinished"></translation>
+        <translation>Test .net framework and Internet Explorer application</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="2963"/>
         <source>启用/禁用功能</source>
-        <translation type="unfinished"></translation>
+        <translation>Enable/Disable option</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="2979"/>
         <source>安装/卸载 Vkd3d</source>
-        <translation type="unfinished"></translation>
+        <translation>Install/Remove vkd3d</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="2980"/>
         <source>安装 Vkd3d</source>
-        <translation type="unfinished"></translation>
+        <translation>Install</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="2981"/>
         <source>卸载 Vkd3d</source>
-        <translation type="unfinished"></translation>
+        <translation>Remove</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="2987"/>
@@ -1057,7 +1057,7 @@ exe路径&apos; 参数 &apos;
     <message>
         <location filename="../mainwindow.py" line="3071"/>
         <source>使用虚拟机运行 Windows 应用</source>
-        <translation type="unfinished"></translation>
+        <translation>Run Windows application with virtual machine</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3097"/>
@@ -1067,12 +1067,12 @@ exe路径&apos; 参数 &apos;
     <message>
         <location filename="../mainwindow.py" line="3107"/>
         <source>日志(&amp;L)</source>
-        <translation type="unfinished"></translation>
+        <translation>Log(&amp;L)</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3108"/>
         <source>查询 Dll</source>
-        <translation type="unfinished"></translation>
+        <translation>Search dll</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3109"/>
@@ -1092,12 +1092,12 @@ exe路径&apos; 参数 &apos;
     <message>
         <location filename="../mainwindow.py" line="3112"/>
         <source>上传日志</source>
-        <translation type="unfinished"></translation>
+        <translation>Upload log</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3133"/>
         <source>应用运行库(&amp;R)</source>
-        <translation type="unfinished"></translation>
+        <translation>Application runtime(&amp;R)</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3134"/>
@@ -1142,12 +1142,12 @@ exe路径&apos; 参数 &apos;
     <message>
         <location filename="../mainwindow.py" line="3217"/>
         <source>配置指定 Chroot 容器</source>
-        <translation type="unfinished"></translation>
+        <translation>Config chroot bottle</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3222"/>
         <source>视频教程(&amp;V)</source>
-        <translation type="unfinished"></translation>
+        <translation>Video helped(&amp;V)</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3231"/>
