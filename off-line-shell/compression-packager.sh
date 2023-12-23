@@ -29,8 +29,9 @@ echo ©2020~`date +%Y` gfdgd xi
 echo
 echo Temp Path: $tempPath
 mkdir -pv $tempPath
-7z x -o$tempPath
+7z x "$1" -o$tempPath
 bash $tempPath/run.sh
 if [[ $1 != "--no-clean" ]]; then
     rm -rfv $tempPath
 fi
+exit
