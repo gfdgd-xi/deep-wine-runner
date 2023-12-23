@@ -18,6 +18,7 @@ Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程�
 
 打包器视频教程：https://www.bilibili.com/video/BV1Bh4y1Q7nT/  
 Wine 运行器 QQ 交流群：762985460  
+Wine运行器 QQ 频道：https://pd.qq.com/s/edqkgeydx  
 
 ### 注
 spark-deepin-wine-runner 是普通包，spark-deepin-wine-runner-ace 是使用 ace 兼容环境运行的运行器

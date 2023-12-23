@@ -2613,10 +2613,11 @@ updateThingsString = QtCore.QCoreApplication.translate("U", '''<b>3.6.0 更新�
 ※5、Wine 安装器新增 Sourceforge 源
 ※6、新增 Wine 运行报告生成功能
 ※7、初步英语翻译
-※8、新增离线安装包（只支持 amd64）''')
+※8、新增离线安装包（只支持 amd64）
+※9、支持识别 /opt 文件夹下的 Wine''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2023年12月23日"
+updateTime = "2023年12月24日"
 aboutProgram = QtCore.QCoreApplication.translate("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序。原版的 Wine 只能使用命令操作，且安装过程较为繁琐，对小白不友好。于是该运行器为了解决该痛点，内置了对Wine图形化的支持、Wine 安装器、微型应用商店、各种Wine工具、自制的Wine程序打包器、运行库安装工具等。</p>
 <p>它同时还内置了基于Qemu/VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作，也能在非 X86 架构安装 X86 架构的 Windows 操作系统（但是效率较低，可以运行些老系统）。</p>
 <p>而且对于部分 Wine 应用适配者来说，提供了图形化的打包工具，以及提供了一些常用工具以及运行库的安装方式，以及能安装多种不同的 Wine 以测试效果，能极大提升适配效率。</p>
@@ -2636,6 +2637,7 @@ a:link, a:active {{
 Qt 版本：{QtCore.qVersion()}
 程序官网：{programUrl}
 <b>Wine 运行器 QQ 交流群：762985460</b>
+<b>Wine运行器 QQ 频道：https://pd.qq.com/s/edqkgeydx</b>
 当前程序占用体积：@programSize@MB</pre>
 <p>本程序依照 GPLV3 协议开源</p>
 <hr>
