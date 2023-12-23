@@ -115,7 +115,7 @@ Press &quot;OK&quot; button to open the font folder</translation>
         <source>查找DLL
 （为空则代表不查找，
 将显示全部内容）：</source>
-        <translation>Search DLL</translation>
+        <translation>Search DLL:</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="1712"/>
@@ -635,162 +635,162 @@ Press &quot;OK&quot; button to open the font folder</translation>
     <message>
         <location filename="../mainwindow.py" line="2992"/>
         <source>启用/禁用指定 wine 容器崩溃提示窗口</source>
-        <translation type="unfinished"></translation>
+        <translation>Enable/Disable wine debug window</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="2993"/>
         <source>禁用指定 wine 容器崩溃提示窗口</source>
-        <translation type="unfinished"></translation>
+        <translation>Disable window</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="2994"/>
         <source>启用指定 wine 容器崩溃提示窗口</source>
-        <translation type="unfinished"></translation>
+        <translation>Enable window</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3002"/>
         <source>设置指定 Wine 容器代理</source>
-        <translation type="unfinished"></translation>
+        <translation>Set wine bottle proxy</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3003"/>
         <source>设置指定 wine 容器的代理</source>
-        <translation type="unfinished"></translation>
+        <translation>Set wine bottle proxy</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3004"/>
         <source>禁用指定 wine 容器的代理</source>
-        <translation type="unfinished"></translation>
+        <translation>Remove wine bottle proxy</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3007"/>
         <source>函数顶替库列表</source>
-        <translation type="unfinished"></translation>
+        <translation>Wine function replaced list</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3008"/>
         <source>导出函数顶替列表</source>
-        <translation type="unfinished"></translation>
+        <translation>Export wine function replaced list</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3009"/>
         <source>导入函数顶替列表</source>
-        <translation type="unfinished"></translation>
+        <translation>Import wine function replaced list</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3010"/>
         <source>编辑函数顶替库列表</source>
-        <translation type="unfinished"></translation>
+        <translation>Edit wine function replaced list</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3070"/>
         <source>虚拟机(&amp;V)</source>
-        <translation type="unfinished"></translation>
+        <translation>Virtual Machine(&amp;V)</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3075"/>
         <source>校验值计算(&amp;S)</source>
-        <translation type="unfinished"></translation>
+        <translation>Verification calculated(&amp;S)</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3078"/>
         <source>Base64(建议小文件)(&amp;B)</source>
-        <translation type="unfinished"></translation>
+        <translation>Base64(Recommend to use few file)(&amp;B)</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3093"/>
         <source>云沙箱(&amp;C)</source>
-        <translation type="unfinished"></translation>
+        <translation>Cloud antivirus(&amp;C)</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3094"/>
         <source>360 沙箱云</source>
-        <translation type="unfinished"></translation>
+        <translation>360</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3095"/>
         <source>微步云沙箱</source>
-        <translation type="unfinished"></translation>
+        <translation>ThreatBook</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3227"/>
         <source>帮助(&amp;H)</source>
-        <translation type="unfinished"></translation>
+        <translation>Help(&amp;H)</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3228"/>
         <source>查询程序在 Wine 的运行情况</source>
-        <translation type="unfinished"></translation>
+        <translation>Search program running effect</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3229"/>
         <source>程序官网</source>
-        <translation type="unfinished"></translation>
+        <translation>Program website</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3230"/>
         <source>小提示</source>
-        <translation type="unfinished"></translation>
+        <translation>Tips</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3232"/>
         <source>更新内容</source>
-        <translation type="unfinished"></translation>
+        <translation>Update introduced</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3234"/>
         <source>更新这个程序</source>
-        <translation type="unfinished"></translation>
+        <translation>Update program</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3236"/>
         <source>反馈这个程序的建议和问题</source>
-        <translation type="unfinished"></translation>
+        <translation>Upload suggestions and bugs</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3238"/>
         <source>关于这个程序</source>
-        <translation type="unfinished"></translation>
+        <translation>About</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3239"/>
         <source>关于 Qt</source>
-        <translation type="unfinished"></translation>
+        <translation>About Qt</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3240"/>
         <source>作者个人站</source>
-        <translation type="unfinished"></translation>
+        <translation>Developer website</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3244"/>
         <source>极狐</source>
-        <translation type="unfinished"></translation>
+        <translation>Jihulab</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3259"/>
         <source>程序 Wiki</source>
-        <translation type="unfinished"></translation>
+        <translation>Wiki</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3261"/>
         <source>视频教程</source>
-        <translation type="unfinished"></translation>
+        <translation>Video helped</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3271"/>
         <source>更多生态适配应用</source>
-        <translation type="unfinished"></translation>
+        <translation>More applications</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3272"/>
         <source>运行 Android 应用：UEngine 运行器</source>
-        <translation type="unfinished"></translation>
+        <translation>UEngine Runner</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="1201"/>
         <source>更新（更新时会自动关闭 Wine 运行器）</source>
-        <translation type="unfinished"></translation>
+        <translation>Update</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="1294"/>
@@ -799,17 +799,19 @@ Press &quot;OK&quot; button to open the font folder</translation>
     以及不要拷贝/替换太多的 dll，否则可能会导致 wine 容器异常，以及不要替换 Wine 的核心 dll
     最后，拷贝/替换 dll 后，建议点击下面“设置 wine 容器”按钮==》函数库 进行设置
 当前选择的 Wine 容器：{GetDllFromWindowsISO.wineBottonPath}</source>
-        <translation type="unfinished"></translation>
+        <translation>Tips:
+It only support official system installing image and don&apos;t replace too many dll to run apps, also you shouldn&apos;t replace core dll with wine such as ntdll.dll
+Choose wine bottle: {GetDllFromWindowsISO.wineBottonPath}</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="1768"/>
         <source>Qemu + Chroot 挂载用户目录：</source>
-        <translation type="unfinished"></translation>
+        <translation>Qemu + Chroot mount path:</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="1769"/>
         <source>程序翻译：</source>
-        <translation type="unfinished"></translation>
+        <translation>Program translated:</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="1770"/>
@@ -1105,12 +1107,12 @@ exe路径&apos; 参数 &apos;
     <message>
         <location filename="../mainwindow.py" line="3196"/>
         <source>安装 Qemu User</source>
-        <translation type="unfinished"></translation>
+        <translation>Install qemu user</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3197"/>
         <source>卸载 Qemu User</source>
-        <translation type="unfinished"></translation>
+        <translation>Remove qemu user</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3208"/>
@@ -1130,7 +1132,7 @@ exe路径&apos; 参数 &apos;
     <message>
         <location filename="../mainwindow.py" line="3212"/>
         <source>容器(&amp;C)</source>
-        <translation type="unfinished"></translation>
+        <translation>Bottle(&amp;C)</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3213"/>
@@ -1155,7 +1157,7 @@ exe路径&apos; 参数 &apos;
     <message>
         <location filename="../mainwindow.py" line="3233"/>
         <source>鸣谢名单</source>
-        <translation type="unfinished"></translation>
+        <translation>Thank</translation>
     </message>
     <message>
         <location filename="../mainwindow.py" line="3235"/>

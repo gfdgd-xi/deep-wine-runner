@@ -197,7 +197,7 @@ class SaveLogReport():
                     QtWidgets.QMessageBox.critical(messagebox, "错误", traceback.format_exc())
                     return
                 messagebox.close()
-                QtWidgets.QMessageBox.information(messagebox, "提示", "生成完成！")
+                QtWidgets.QMessageBox.information(messagebox, "提示", "生成完成！\n建议将报告与可执行文件一并提交以便排除错误")
 
         def CancelClicked():
             messagebox.close()
