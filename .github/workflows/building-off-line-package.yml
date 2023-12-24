@@ -46,7 +46,7 @@ jobs:
           # 构建软件包
           mkdir package/opt -p
           mkdir package/runner -p
-          sudo cp debian/opt/wine-devel package -rv
+          sudo cp debian/opt/wine-devel package/opt -rv
           sudo cp debian/usr/bin package -rv
           sudo cp debian/usr/lib package -rv
           sudo cp debian/usr/lib32 package -rv
