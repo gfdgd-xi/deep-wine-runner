@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 3.5.0</h1>
+<h1 align="center">Wine 运行器 3.6.0</h1>
 <hr>
 <a href='https://gitee.com/gfdgd-xi/deep-wine-runner/stargazers'><img src='https://gitee.com/gfdgd-xi/deep-wine-runner/badge/star.svg?theme=dark' alt='star'></img></a>
 <a href='https://gitee.com/gfdgd-xi/deep-wine-runner/members'><img src='https://gitee.com/gfdgd-xi/deep-wine-runner/badge/fork.svg?theme=dark' alt='fork'></img></a>  
@@ -120,6 +120,22 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志 
+### 3.6.0（2023年12月24日）
+**※1、修复高级打包器选择软件适配脚本后无法打包的问题 https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I8I110**  
+**※2、支持调用 Deepin Wine8 Stable**  
+**※3、移除过时的 Wine 安装程序入口**  
+**※4、Wine 安装器支持根据地区自动选择国内源以及国际源**  
+**※5、Wine 安装器新增 Sourceforge 源**  
+**※6、新增 Wine 运行报告生成功能**  
+**※7、初步英语翻译**  
+**※8、新增离线安装包（只支持 amd64）**  
+**※9、支持识别 /opt 文件夹下的 Wine**  
+10、新增 Wine 运行器视频教程的 Youtube 入口  
+
+![图片.png](https://storage.deepin.org/thread/202312241003211288_图片.png)
+
+
+
 ### 3.5.0（2023年11月17日）
 **※1、虚拟机工具支持 kvm 检测**  
 **※2、修改虚拟机工具提示文本，新增对 UOS 3a4000 用户无法正常使用 Qemu 的解决方案**  
