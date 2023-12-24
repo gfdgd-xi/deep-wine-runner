@@ -35,9 +35,12 @@ jobs:
           sudo chroot debian apt update
           ## 获取 Wine 运行器安装包
           git clone https://github.com/gfdgd-xi/deep-wine-runner --depth=1
+          cd deep-wine-runner
+          make build
+          cd ..
           url=`python3 deep-wine-runner/off-line-shell/GetNewestDebUrl.py`
-          wget $url
-          mv *.deb debian/tmp/wine-runner.deb
+          #wget $url
+          mv deep-wine-runner/spark-deepin-wine-runner.deb debian/tmp/wine-runner.deb
           ## 安装
           sudo chroot debian apt install locales /tmp/wine-runner.deb winehq-devel xfce4-terminal -y
           # 构建软件包
