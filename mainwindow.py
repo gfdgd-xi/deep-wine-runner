@@ -2614,7 +2614,8 @@ updateThingsString = QtCore.QCoreApplication.translate("U", '''<b>3.6.0 更新�
 ※6、新增 Wine 运行报告生成功能
 ※7、初步英语翻译
 ※8、新增离线安装包（只支持 amd64）
-※9、支持识别 /opt 文件夹下的 Wine''')
+※9、支持识别 /opt 文件夹下的 Wine
+10、新增 Wine 运行器视频教程的 Youtube 入口''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
 updateTime = "2023年12月24日"
@@ -3286,9 +3287,12 @@ if len(qemuBottleList) >= 1:
     print(qemuBottleList)
 
 videoHelp = menu.addMenu(QtCore.QCoreApplication.translate("U", "视频教程(&V)"))
-videoHelpAction = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), QtCore.QCoreApplication.translate("U", "视频教程"))
+videoHelpAction = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), QtCore.QCoreApplication.translate("U", "视频教程（Bilibili）"))
+videoHelpActionYoutube = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), QtCore.QCoreApplication.translate("U", "视频教程（Youtube）"))
 videoHelpAction.triggered.connect(lambda: webbrowser.open_new_tab("https://space.bilibili.com/695814694/channel/collectiondetail?sid=1610353"))
+videoHelpActionYoutube.triggered.connect(lambda: webbrowser.open_new_tab("https://www.youtube.com/watch?v=qDaPBiIdGAs&list=PLoXD11L1NQAx8A1Qskgu3tUoi0nHKJcmg"))
 videoHelp.addAction(videoHelpAction)
+videoHelp.addAction(videoHelpActionYoutube)
 
 help = menu.addMenu(QtCore.QCoreApplication.translate("U", "帮助(&H)"))
 runStatusWebSize = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), QtCore.QCoreApplication.translate("U", "查询程序在 Wine 的运行情况"))

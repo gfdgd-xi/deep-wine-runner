@@ -3,6 +3,7 @@ build:
 
 clean:
 	python3 RemovePycacheFile.py
+	rm *.deb -fv
 	cd VM-source ; make clean
 	rm VM-source/VirtualMachine -rfv
 	rm -rfv VM-source/.qmake.stash
