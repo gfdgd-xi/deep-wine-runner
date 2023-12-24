@@ -17,6 +17,7 @@ jobs:
           # 配置环境
           sudo apt update
           sudo apt install python3-requests debootstrap xz-utils -y
+          sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
           cd ~
           mkdir package
           # 部署 chroot 环境
