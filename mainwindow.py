@@ -2605,7 +2605,10 @@ exe路径\' 参数 \'
 5、wine 容器如果没有指定，则会默认为 ~/.wine；
 6、如果可执行文件比较大的话，会出现点击“获取该程序运行情况”出现假死的情况，因为正在后台读取 SHA1，只需要等一下即可（读取速度依照您电脑处理速度、读写速度、可执行文件大小等有关）；
 7、如果非 X86 的用户的 UOS 专业版用户想要使用的话，只需要在应用商店安装一个 Wine 版本微信即可在本程序选择正确的 Wine 运行程序；''')
-updateThingsString = QtCore.QCoreApplication.translate("U", '''<b>3.6.0 更新内容：</b>
+updateThingsString = QtCore.QCoreApplication.translate("U", '''<b>3.6.1 更新内容：</b>
+※1、修复应用无法打开的问题
+
+<b>3.6.0 更新内容：</b>
 ※1、修复高级打包器选择软件适配脚本后无法打包的问题 https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I8I110
 ※2、支持调用 Deepin Wine8 Stable
 ※3、移除过时的 Wine 安装程序入口

@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 3.6.0</h1>
+<h1 align="center">Wine 运行器 3.6.1</h1>
 <hr>
 <a href='https://gitee.com/gfdgd-xi/deep-wine-runner/stargazers'><img src='https://gitee.com/gfdgd-xi/deep-wine-runner/badge/star.svg?theme=dark' alt='star'></img></a>
 <a href='https://gitee.com/gfdgd-xi/deep-wine-runner/members'><img src='https://gitee.com/gfdgd-xi/deep-wine-runner/badge/fork.svg?theme=dark' alt='fork'></img></a>  
@@ -120,6 +120,9 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志 
+### 3.6.1（2023年12月25日）
+**※1、修复应用无法打开的问题**
+
 ### 3.6.0（2023年12月24日）
 **※1、修复高级打包器选择软件适配脚本后无法打包的问题 https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I8I110**  
 **※2、支持调用 Deepin Wine8 Stable**  
