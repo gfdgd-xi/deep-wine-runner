@@ -49,9 +49,10 @@ defultProgramList = {
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 iconPath = "{}/deepin-wine-runner.svg".format(programPath)
 try:
-    setting = json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineSetting.json"))
     information = json.loads(readtxt(f"{programPath}/information.json"))
+    setting = json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/WineSetting.json"))
 except:
+    traceback.print_exc()
     setting = defultProgramList
 
 def SetFont(app):
