@@ -430,7 +430,7 @@ def about_this_program()->"显示“关于这个程序”窗口":
         global clickIconTime
         if clickIconTime >= 0:
             clickIconTime = clickIconTime + 1
-        if clickIconTime > 5:
+        if clickIconTime > 0:
             clickIconTime = -1
             for k in ["", "Function"]:
                 for i in os.listdir(f"{programPath}/Icon/{k}"):
@@ -2580,12 +2580,6 @@ app.installTranslator(trans)
 iconPath = "{}/deepin-wine-runner.svg".format(programPath)
 iconPathList = [
     "{}/deepin-wine-runner.svg".format(programPath),
-    f"{programPath}/Icon/Program/AboutIcon1.png",
-    f"{programPath}/Icon/Program/AboutIcon0.png",
-    f"{programPath}/Icon/Program/webp2.png",
-    f"{programPath}/Icon/Program/webp3.png",
-    f"{programPath}/Icon/Program/Windows虚拟机.png",
-    f"{programPath}/Icon/Program/wine打包器.png"
 ]
 
 #iconPath = "{}/Icon/Program/wine运行器.png".format(programPath)
@@ -2663,9 +2657,13 @@ Deepin 论坛：<a href="https://bbs.deepin.org">https://bbs.deepin.org</a>
 gfdgd xi：<a href="https://gfdgd-xi.github.io">https://gfdgd-xi.github.io</a>
 <hr>
 <h1>©2020~{time.strftime("%Y")} By gfdgd xi</h1>'''
-
+offLineInformation = ""
 if os.path.exists(f"{programPath}/off-line.lock"):
     title = "Wine 运行器 {}（离线模式）".format(version)
+    try:
+        offLineInformation = readtxt(f"{programPath}/off-line.lock")
+    except:
+        traceback.print_exc()
 else:
     title = "Wine 运行器 {}".format(version)
 #<h1>©2020~{time.strftime("%Y")} <a href="https://gitee.com/gfdgd-xi">By gfdgd xi</h1>'''
@@ -2839,8 +2837,14 @@ mainLayout.setColumnStretch(1, 1)
 mainLayout.addWidget(returnText, 0, 1, 2, 1)
 
 # 版权
-copy = QtWidgets.QLabel(f"""程序版本：{version}，<b>提示：Wine 无法保证可以运行所有的 Windows 程序，如果想要运行更多 Windows 程序，可以考虑虚拟机和双系统</b><br/>
+if offLineInformation.replace("\n", "").replace(" ", "") == "":
+    copy = QtWidgets.QLabel(f"""程序版本：{version}，<b>提示：Wine 无法保证可以运行所有的 Windows 程序，如果想要运行更多 Windows 程序，可以考虑虚拟机和双系统</b><br/>
 <b>注：部分二进制兼容层会自动注册 binfmt（如原版的 Box86/64、Qemu User Static），则意味着无需在 Wine 版本那里特别指定兼容层，直接指定 Wine 即可</b><br/>
+©2020~{time.strftime("%Y")} gfdgd xi""")
+else:
+    copy = QtWidgets.QLabel(f"""程序版本：{version}，<b>提示：Wine 无法保证可以运行所有的 Windows 程序，如果想要运行更多 Windows 程序，可以考虑虚拟机和双系统</b><br/>
+<b>注：部分二进制兼容层会自动注册 binfmt（如原版的 Box86/64、Qemu User Static），则意味着无需在 Wine 版本那里特别指定兼容层，直接指定 Wine 即可</b><br/>
+{offLineInformation}<br/>
 ©2020~{time.strftime("%Y")} gfdgd xi""")
 mainLayout.addWidget(copy, 2, 0, 1, 1)
 

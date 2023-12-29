@@ -1,6 +1,12 @@
 build:
 	make package -j$(nproc)
 
+replace:
+	rm Icon/Program/*
+	rm Icon/*.svg
+	rm Icon/doge.png
+	echo "[[], []]" > IconList.json
+
 clean:
 	python3 RemovePycacheFile.py
 	rm *.deb -fv
