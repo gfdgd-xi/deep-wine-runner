@@ -11,6 +11,14 @@ Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程�
 且对于 Deepin23 用户做了特别优化，以便能在缺少 i386 运行库的情况下运行 Wine32。同时也为非 X86 架构用户提供了 Box86/64、Qemu User 的安装方式  
 该版本用于解决 Python 版 Wine 运行器依赖过于复杂的问题（简化版 Wine 运行器）  
  
+## 如何编译
+```bash
+git clone https://gitee.com/gfdgd-xi/deep-wine-runner-cpp --depth=1
+cd deep-wine-runner-cpp
+qmake .
+make -j4
+./deep-wine-runner-cpp
+```
 
 ## 请作者吃点零食
 如果你觉得 Wine 运行器对你有帮助，可以请作者吃点零食  

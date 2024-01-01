@@ -14,7 +14,7 @@ MainWindow::MainWindow(){
     QWidget *widget = new QWidget();
     window->setCentralWidget(widget);
     QGridLayout *mainLayout = new QGridLayout();
-    QSizePolicy *size = new QSizePolicy();
+    QSizePolicy size;
     //size->setVerticalPolicy(0);
     QWidget *leftUp = new QWidget();
     mainLayout->addWidget(leftUp, 0, 0, 1, 1);
@@ -42,8 +42,8 @@ MainWindow::MainWindow(){
     QComboBox *o1 = new QComboBox();
     leftUpLayout->addWidget(o1, 7, 0, 1, 1);
     // 设置空间权重
-    //button1->setSizePolicy(size);
-    //button2->setSizePolicy(size);
+    button1->setSizePolicy(size);
+    button2->setSizePolicy(size);
 
     // UI 创建
     QWidget *leftDown = new QWidget();
@@ -116,13 +116,13 @@ MainWindow::MainWindow(){
     programManager->addWidget(wineBottleReboot, 3, 10, 1, 1);
 
     // 权重
-    //button5->setSizePolicy(size);
-    //saveDesktopFileOnLauncher->setSizePolicy(size);
-    //label_r_2->setSizePolicy(size);
-    //getProgramIcon->setSizePolicy(size);
-    // //trasButton.setSizePolicy(size);
-    //button_r_6->setSizePolicy(size);
-    //wineConfig->setSizePolicy(size);
+    button5->setSizePolicy(size);
+    saveDesktopFileOnLauncher->setSizePolicy(size);
+    label_r_2->setSizePolicy(size);
+    getProgramIcon->setSizePolicy(size);
+    //trasButton.setSizePolicy(size);
+    button_r_6->setSizePolicy(size);
+    wineConfig->setSizePolicy(size);
 
     QTextBrowser *returnText = new QTextBrowser();
     returnText->setStyleSheet("background-color: black;"\
@@ -144,6 +144,7 @@ MainWindow::MainWindow(){
     QLabel *copy = new QLabel("程序版本：{version}，<b>提示：Wine 无法保证可以运行所有的 Windows 程序，如果想要运行更多 Windows 程序，可以考虑虚拟机和双系统</b><br/>"\
     "<b>注：部分二进制兼容层会自动注册 binfmt（如原版的 Box86/64、Qemu User Static），则意味着无需在 Wine 版本那里特别指定兼容层，直接指定 Wine 即可</b><br/>"\
     "©2020~{time.strftime('%Y')} gfdgd xi");
+    mainLayout->addWidget(copy, 2, 0, 1, 1);
 
     // 程序运行
     QWidget *programRun = new QWidget();
@@ -161,8 +162,17 @@ MainWindow::MainWindow(){
     programRunLayout->addWidget(killBottonProgram);
     mainLayout->addWidget(programRun, 2, 1, 1, 1);
 
+    // 窗口设置
+    window->resize(widget->frameGeometry().width() * 2, widget->frameGeometry().height());
+    //window->setWindowIcon(QIcon("{programPath}/deepin-wine-runner.svg"));
     widget->setLayout(mainLayout);
     window->show();
+
+    // 一个 Wine 都没有却用 Wine 的功能
+    // 还是要处理的，至少不会闪退
+    if(o1->currentText() == ""){
+        o1->addItem("没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用");
+    }
 }
 
 MainWindow::~MainWindow()
