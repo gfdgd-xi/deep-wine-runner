@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/">
+        <file>information.json</file>
+        <file>LICENSE</file>
+    </qresource>
+    <qresource prefix="/Icon">
+        <file>deepin-wine-runner_512x512.png</file>
+        <file>deepin-wine-runner.svg</file>
+        <file>Icon/Program/AboutIcon0.png</file>
+    </qresource>
+    <qresource prefix="/Icon/QR">
+        <file>Icon/QR/Alipay.jpg</file>
+        <file>Icon/QR/QQ.png</file>
+        <file>Icon/QR/Wechat.png</file>
+    </qresource>
+    <qresource prefix="/Icon/Function">
+        <file>Icon/Function/CHROOT.png</file>
+        <file>Icon/Function/more-wine.png</file>
+        <file>Icon/Function/wine.png</file>
+        <file>Icon/Function/wine23A.png</file>
+        <file>Icon/Function/wine23P.png</file>
+    </qresource>
+</RCC>

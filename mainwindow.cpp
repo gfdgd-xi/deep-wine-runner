@@ -41,21 +41,21 @@ MainWindow::MainWindow(){
     leftUpLayout->addWidget(fastLabel, 0, 0, 1, 2);
     leftUpLayout->addWidget(new QLabel("<hr>"), 1, 0, 1, 2);
     leftUpLayout->addWidget(new QLabel(QObject::tr("请选择容器路径：")), 2, 0, 1, 1);
-    QComboBox *e1 = new QComboBox();
+    e1 = new QComboBox();
     e1->setEditable(1);
     leftUpLayout->addWidget(e1, 3, 0, 1, 1);
-    QPushButton *button1 = new QPushButton("浏览");
+    button1 = new QPushButton("浏览");
     //button1.clicked.connect(liulanbutton);
     leftUpLayout->addWidget(button1, 3, 1, 1, 1);
     leftUpLayout->addWidget(new QLabel(QObject::tr("请选择要执行的程序（EXE、MSI或者命令）：")), 4, 0, 1, 1);
-    QComboBox *e2 = new QComboBox();
+    e2 = new QComboBox();
     e2->setEditable(1);
     leftUpLayout->addWidget(e2, 5, 0, 1, 1);
-    QPushButton *button2 = new QPushButton(QObject::tr("浏览"));
+    button2 = new QPushButton(QObject::tr("浏览"));
     //button2.clicked.connect(liulanexebutton);
     leftUpLayout->addWidget(button2, 5, 1, 1, 1);
     leftUpLayout->addWidget(new QLabel(QObject::tr("请选择WINE版本：")), 6, 0, 1, 1);
-    QComboBox *o1 = new QComboBox();
+    o1 = new QComboBox();
     leftUpLayout->addWidget(o1, 7, 0, 1, 1);
     // 设置空间权重
     button1->setSizePolicy(size);
@@ -87,18 +87,18 @@ MainWindow::MainWindow(){
     QGridLayout *programManager = new QGridLayout();
     leftDownLayout->addLayout(programManager);
     programManager->addWidget(new QLabel(QObject::tr("程序管理：")), 0, 0, 1, 1);
-    QPushButton *getProgramIcon = new QPushButton(QObject::tr("提取图标"));
+    getProgramIcon = new QPushButton(QObject::tr("提取图标"));
     //getProgramIcon.clicked.connect(lambda: RunWineProgram(f"{programPath}/BeCyIconGrabber.exe' '{e2.currentText()}" if e2.currentText()[:2].upper() == "C:" else f"{programPath}/BeCyIconGrabber.exe' 'z:/{e2.currentText()}"));
     programManager->addWidget(getProgramIcon, 1, 0, 1, 1);
     programManager->addWidget(new QLabel("     "), 1, 1, 1, 1);
-    QPushButton *trasButton = new QPushButton(QObject::tr("窗口透明工具"));
+    trasButton = new QPushButton(QObject::tr("窗口透明工具"));
     //trasButton.clicked.connect(lambda: RunWineProgram(f"{programPath}/窗体透明度设置工具.exe"));
     programManager->addWidget(trasButton, 1, 2, 1, 1);
-    QPushButton *uninstallProgram = new QPushButton(QObject::tr("卸载程序"));
+    uninstallProgram = new QPushButton(QObject::tr("卸载程序"));
     //uninstallProgram.clicked.connect(lambda: RunWineProgram(f"{programPath}/geek.exe"));
     programManager->addWidget(new QLabel("     "), 1, 3, 1, 1);
     programManager->addWidget(uninstallProgram, 1, 4, 1, 1);
-    QPushButton *miniAppStore = new QPushButton(QObject::tr("微型应用商店"));
+    miniAppStore = new QPushButton(QObject::tr("微型应用商店"));
     //miniAppStore.clicked.connect(lambda: threading.Thread(target=MiniAppStore).start());
     programManager->addWidget(new QLabel("     "), 1, 5, 1, 1);
     programManager->addWidget(miniAppStore, 1, 6, 1, 1);
@@ -112,13 +112,13 @@ MainWindow::MainWindow(){
     programManager->addWidget(getLoseDll, 1, 10, 1, 1);
     programManager->addItem(new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum), 1, 11, 1, 1);
     programManager->addWidget(new QLabel(QObject::tr("WINE配置：")), 2, 0, 1, 1);
-    QPushButton *wineConfig = new QPushButton(QObject::tr("配置容器"));
+    wineConfig = new QPushButton(QObject::tr("配置容器"));
     //wineConfig.clicked.connect(lambda: RunWineProgram("winecfg"));
     programManager->addWidget(wineConfig, 3, 0, 1, 1);
     QPushButton *fontAppStore = new QPushButton(QObject::tr("字体商店"));
     //fontAppStore.clicked.connect(FontAppStore);
     programManager->addWidget(fontAppStore, 3, 2, 1, 1);
-    QPushButton *button_r_6 = new QPushButton(QObject::tr("RegShot"));
+    button_r_6 = new QPushButton(QObject::tr("RegShot"));
     //button_r_6.clicked.connect(lambda: RunWineProgram(f"{programPath}/RegShot/regshot.exe"));
     programManager->addWidget(button_r_6, 3, 4, 1, 1);
     QPushButton *sparkWineSetting = new QPushButton(QObject::tr("星火wine配置"));
@@ -159,7 +159,7 @@ MainWindow::MainWindow(){
     // 版权
     QLabel *copy = new QLabel("程序版本：{version}，<b>提示：Wine 无法保证可以运行所有的 Windows 程序，如果想要运行更多 Windows 程序，可以考虑虚拟机和双系统</b><br/>"\
     "<b>注：部分二进制兼容层会自动注册 binfmt（如原版的 Box86/64、Qemu User Static），则意味着无需在 Wine 版本那里特别指定兼容层，直接指定 Wine 即可</b><br/>"\
-    "©2020~{time.strftime('%Y')} gfdgd xi");
+    "©2020~" + QDateTime(QDateTime::currentDateTime()).toString("yyyy") + " gfdgd xi");
     mainLayout->addWidget(copy, 2, 0, 1, 1);
 
     // 程序运行
@@ -180,21 +180,45 @@ MainWindow::MainWindow(){
 
     // 窗口设置
     window->resize(widget->frameGeometry().width() * 2, widget->frameGeometry().height());
-    //window->setWindowIcon(QIcon("{programPath}/deepin-wine-runner.svg"));
+    window->setWindowIcon(QIcon(":/Icon/deepin-wine-runner.svg"));
     widget->setLayout(mainLayout);
     window->show();
 
     CheckWine();
 
     // 控件设置
-    //if(setting.value("AutoWine") != 0)
+    e1->addItems(findExeHistory);
+    e2->addItems(wineBottonHistory);
+    combobox1->addItems(shellHistory);
     o1->addItems(canUseWine);
+
 
     // 一个 Wine 都没有却用 Wine 的功能
     // 还是要处理的，至少不会闪退
     if(o1->currentText() == ""){
         o1->addItem("没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用");
     }
+}
+
+void MainWindow::DisableButton(bool things){
+    button_r_6->setDisabled(things);
+    button1->setDisabled(things);
+    button2->setDisabled(things);
+    button3->setDisabled(things);
+    wineConfig->setDisabled(things);
+    e1->setDisabled(things);
+    e2->setDisabled(things);
+    o1->setDisabled(things);
+    miniAppStore->setDisabled(things);
+    //winetricksOpen->configure(state=a[things])
+    getProgramIcon->setDisabled(things);
+    uninstallProgram->setDisabled(things);
+    trasButton->setDisabled(things);
+}
+
+void MainWindow::runexebutton(){
+    DisableButton(1);
+
 }
 
 MainWindow::~MainWindow()
@@ -385,8 +409,53 @@ void MainWindow::CheckWine(){
                 if(QFile::exists("/opt/exagear/bin/ubt_x32a64_al")){
                     nameValue.append(QStringList() << "使用 ubt_x32a64_al 运行" << "/opt/exagear/bin/ubt_x32a64_al -- ");
                 }
-                for(QString g: qemuBottleList){
+                /*for(QString g: qemuBottleList){
                     nameValue.append(QStringList() << "使用qemu-" + g[0] + "-static 调用容器" + g[1] + "运行 " << "python3 '" + programPath + "/QemuRun.py' '" + g[0] + "/" + g[1] + "' " + setting.value("QemuUnMountHome").toInt());
+                }*/
+            }
+            catch(QString msg){
+                qDebug() << msg;
+            }
+            /*for(QString k: nameValue){
+                qDebug() << k;
+                if(k.contains("qemu")){
+
+                }
+            }*/
+            try{
+                for(QString i: QDir(homePath + "/.deepinwine/").entryList()){
+                    for(QString j: wine7zUse){
+                        if(QFile::exists(homePath + "/.deepinwine/" + i + "/bin/" + j)){
+                            wine.insert(homePath + "/.deepinwine/" + i + "/bin/" + j, homePath + "/.deepinwine/" + i + "/bin/" + j);
+                            canUseWine.append(homePath + "/.deepinwine/" + i + "/bin/" + j);
+                        }
+
+                    }
+                }
+            }
+            catch(QString msg){
+                qDebug() << msg;
+            }
+            try{
+                QStringList canUseWineOld = canUseWine;
+                for(QString i: canUseWineOld){
+                    if(QDir(programPath + "/WineLib/usr").exists()){
+                        wine.insert("使用运行器的运行库运行 " + i, "bash '" + programPath + "/WineLib/run.sh' " + wine.value(i));
+                        canUseWine.append("使用运行器的运行库运行 " + i);
+                        untipsWine.append("使用运行器的运行库运行 " + i);
+                    }
+                }
+                if(QDir("/opt/exagear/images").exists()){
+                    for(QString k: QDir("/opt/exagear/images").entryList()){
+                        if(QFileInfo("/opt/exagear/images/" + k).isDir()){
+                            continue;
+                        }
+                        for(QString i: canUseWineOld){
+                            wine.insert("使用Exagear容器运行库运行 " + i, "bash '" + programPath + "/WineLib/run-more.sh' '/opt/exagear/images/" + k + "' " + wine.value(i));
+                            canUseWine.append("使用Exagear容器运行库运行 " + i);
+                            untipsWine.append("使用Exagear容器运行库运行 " + i);
+                        }
+                    }
                 }
             }
             catch(QString msg){

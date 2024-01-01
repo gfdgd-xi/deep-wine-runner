@@ -4,6 +4,8 @@
 #include <QMap>
 #include <QDir>
 #include <QCoreApplication>
+#include <QPushButton>
+#include <QComboBox>
 
 class MainWindow
 {
@@ -19,6 +21,8 @@ public:
     QString GetCommandResult(QString command);
 
 private:
+    void runexebutton();
+    void DisableButton(bool things);
     QString homePath = QDir::homePath();
     QString programPath = QCoreApplication::applicationDirPath();
     QMap<QString, QString> wine;
@@ -32,6 +36,19 @@ private:
     QStringList isoPath;
     QStringList isoPathFound;
     QMap<QString, QString> setting;
+    // 控件
+    QPushButton *button_r_6;
+    QPushButton *button1;
+    QPushButton *button2;
+    QPushButton *button3;
+    QPushButton *wineConfig;
+    QPushButton *miniAppStore;
+    QPushButton *getProgramIcon;
+    QPushButton *uninstallProgram;
+    QPushButton *trasButton;
+    QComboBox *e1;
+    QComboBox *e2;
+    QComboBox *o1;
 
 
 };
