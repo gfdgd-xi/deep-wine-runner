@@ -14,8 +14,9 @@ public:
     void CheckWine();
     QString get_home();
     QString readtxt(QString path);
-    void write_txt(QString path, QString things);
+    void write_txt(QString path, QByteArray things);
     QByteArray readtxtByte(QString path);
+    QString GetCommandResult(QString command);
 
 private:
     QString homePath = QDir::homePath();

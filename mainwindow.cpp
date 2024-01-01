@@ -14,6 +14,8 @@
 #include <QIODevice>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QFile>
+#include <QProcess>
 using namespace std;
 
 MainWindow::MainWindow(){
@@ -220,8 +222,21 @@ QByteArray MainWindow::readtxtByte(QString path){
     return things;
 }
 
-void MainWindow::write_txt(QString path, QString things){
+void MainWindow::write_txt(QString path, QByteArray things){
+    QFile file(path);
+    file.open(QIODevice::WriteOnly);
+    file.write(things);
+    file.close();
+}
 
+QString MainWindow::GetCommandResult(QString command){
+    QProcess process;
+    process.start(command);
+    process.waitForStarted();
+    process.waitForFinished();
+    QString result = process.readAll();
+    process.close();
+    return result;
 }
 
 /*
@@ -343,7 +358,35 @@ void MainWindow::CheckWine(){
                     nameValue.append(QStringList() << "基于 box86 的 " << "box86 ");
                 }
                 if(!system("which box64")){
-                    nameValue.append(QStringList() << "基于 box86 的 " << "box86 ");
+                    nameValue.append(QStringList() << "基于 box64 的 " << "box64 ");
+                }
+                if(!system("which qemu-i386") &&
+                        GetCommandResult("arch").replace(" ", "").replace("\n", "") != "x86_64" &&
+                        GetCommandResult("arch").replace(" ", "").replace("\n", "") != "i686"){
+                    nameValue.append(QStringList() << "基于 qemu-i386 的 " << "qemu-i386 ");
+                }
+                if(!system("which qemu-x86_64") &&
+                        GetCommandResult("arch").replace(" ", "").replace("\n", "") != "x86_64" &&
+                        GetCommandResult("arch").replace(" ", "").replace("\n", "") != "i686"){
+                    nameValue.append(QStringList() << "基于 qemu-x86_64 的 " << "qemu-x86_64 ");
+                }
+                if(QFile::exists("/opt/exagear/bin/ubt_x64a64_al") && QFile::exists(homePath + "/.deepinwine/debian-buster")){
+                    nameValue.append(QStringList() << "基于 UOS exagear 的 " << "WINEPREDLL='" + programPath + "/dlls-arm' "\
+                                    "WINEDLLPATH=/opt/deepin-wine6-stable/lib /opt/exagear/bin/ubt_x64a64_al --path-prefix " + get_home() + "/.deepinwine/debian-buster "\
+                                    "--utmp-paths-list " + homePath + "/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list " + homePath + "/.deepinwine/debian-buster/.exagear/vpaths-list "\
+                                    "--opaths-list " + homePath + "/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al --  ");
+                }
+                if(!system("which exagear")){
+                    nameValue.append(QStringList() << "运行 exagear 容器内的 " << "exagear -- ");
+                }
+                if(QFile::exists("/opt/exagear/bin/ubt_x64a64_al")){
+                    nameValue.append(QStringList() << "使用 ubt_x64a64_al 运行" << "/opt/exagear/bin/ubt_x64a64_al -- ");
+                }
+                if(QFile::exists("/opt/exagear/bin/ubt_x32a64_al")){
+                    nameValue.append(QStringList() << "使用 ubt_x32a64_al 运行" << "/opt/exagear/bin/ubt_x32a64_al -- ");
+                }
+                for(QString g: qemuBottleList){
+                    nameValue.append(QStringList() << "使用qemu-" + g[0] + "-static 调用容器" + g[1] + "运行 " << "python3 '" + programPath + "/QemuRun.py' '" + g[0] + "/" + g[1] + "' " + setting.value("QemuUnMountHome").toInt());
                 }
             }
             catch(QString msg){
