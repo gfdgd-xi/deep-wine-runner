@@ -761,9 +761,9 @@ make install -j4
 ## 请作者吃点零食
 如果你觉得 Wine 运行器对你有帮助，可以请作者吃点零食  
 （本来想说喝一杯咖啡的，但我不喝啊）  
-<img src="Icon/QR/Wechat.png" width="200" height="200" /> 
-<img src="Icon/QR/Alipay.jpg" width="200" height="200" />
-<img src="Icon/QR/QQ.png" width="200" height="200">
+<img src="Icon/QR/Wechat.png" width="200"  /> 
+<img src="Icon/QR/Alipay.jpg" width="200"  />
+<img src="Icon/QR/QQ.png" width="200" >
 
 
 # ©2020-Now gfdgd xi
