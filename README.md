@@ -21,8 +21,20 @@ Wine 运行器 QQ 交流群：762985460
 Wine运行器 QQ 频道：https://pd.qq.com/s/edqkgeydx  
 Wine 运行器离线包下载地址：https://www.123pan.com/s/pDSKVv-pAJWv.html     
 
+
 ### 注
 spark-deepin-wine-runner 是普通包，spark-deepin-wine-runner-ace 是使用 ace 兼容环境运行的运行器
+
+## Wine 运行器离线包
+### X86
+123pan：https://www.123pan.com/s/pDSKVv-pAJWv.html  
+百度网盘：https://pan.baidu.com/s/1klBw63tw2_ZQLzmi11dDBw?pwd=7bu5 提取码: 7bu5  
+诚通网盘：http://ctfile.gfdgdxi.top/d/31540479-59254792-909739?p=2061 (访问密码: 2061)  
+Github：https://github.com/gfdgd-xi/deep-wine-runner/releases/  
+Sourceforge：https://sourceforge.net/projects/deep-wine-runner/files/  
+更多需求需要私聊作者定制（有偿服务）
+### ARM
+需要私聊作者定制（有偿服务）
 
 ## 软件架构
 理论上支持全架构，如果 Python 能运行的话  

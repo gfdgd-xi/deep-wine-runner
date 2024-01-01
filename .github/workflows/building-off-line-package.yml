@@ -43,7 +43,7 @@ jobs:
           #wget $url
           mv deep-wine-runner/spark-deepin-wine-runner.deb debian/tmp/wine-runner.deb
           ## 安装
-          sudo chroot debian apt install locales /tmp/wine-runner.deb winehq-devel xfce4-terminal -y
+          sudo chroot debian apt install locales /tmp/wine-runner.deb winehq-devel fcitx xfce4-terminal -y
           # 构建软件包
           mkdir package/opt -p
           mkdir package/runner -p
