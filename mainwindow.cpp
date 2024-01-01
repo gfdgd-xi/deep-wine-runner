@@ -12,6 +12,8 @@
 #include <iostream>
 #include <QDebug>
 #include <QIODevice>
+#include <QJsonDocument>
+#include <QJsonObject>
 using namespace std;
 
 MainWindow::MainWindow(){
@@ -180,6 +182,12 @@ MainWindow::MainWindow(){
     widget->setLayout(mainLayout);
     window->show();
 
+    CheckWine();
+
+    // 控件设置
+    //if(setting.value("AutoWine") != 0)
+    o1->addItems(canUseWine);
+
     // 一个 Wine 都没有却用 Wine 的功能
     // 还是要处理的，至少不会闪退
     if(o1->currentText() == ""){
@@ -202,6 +210,18 @@ QString MainWindow::readtxt(QString path){
     QString things = file.readAll();
     file.close();
     return things;
+}
+
+QByteArray MainWindow::readtxtByte(QString path){
+    QFile file(path);
+    file.open(QIODevice::ReadOnly);
+    QByteArray things = file.readAll();
+    file.close();
+    return things;
+}
+
+void MainWindow::write_txt(QString path, QString things){
+
 }
 
 /*
@@ -254,6 +274,7 @@ void MainWindow::CheckWine(){
     if(QDir("/persistent/linglong/layers/").exists()){  // 判断是否使用 linglong
         for(QString i : QDir("/persistent/linglong/layers/").entryList()){
             try{
+                break;  // bug
                 QString dire = QDir("/persistent/linglong/layers/" + i).entryList()[-1];
                 QString arch = QDir("/persistent/linglong/layers/" + i + "/" + dire)[-1];
                 if(QFile::exists("/persistent/linglong/layers/" + i + "/" + dire + "/" + arch + "/runtime/bin/deepin-wine6-stable")){
@@ -281,6 +302,52 @@ void MainWindow::CheckWine(){
                         }
                     }
                 }
+            }
+        }
+    }
+    QJsonParseError jsonError;
+    QJsonDocument jsonDocument;
+    QJsonObject jsonObject;
+    QStringList historyList[] = {shellHistory, findExeHistory, wineBottonHistory, isoPath, isoPathFound};
+    QStringList historyListPath = {homePath + "/.config/deepin-wine-runner/ShellHistory.json",
+                                  homePath + "/.config/deepin-wine-runner/FindExeHistory.json",
+                                  homePath + "/.config/deepin-wine-runner/WineBottonHistory.json",
+                                  homePath + "/.config/deepin-wine-runner/ISOPath.json",
+                                  homePath + "/.config/deepin-wine-runner/ISOPathFound.json"};
+    for(int i = 0; i <= historyList->size(); i++){
+        QStringList *list = &historyList[i];
+        jsonDocument = QJsonDocument(QJsonDocument::fromJson(readtxtByte(historyListPath[i])));
+        jsonObject = jsonDocument.object();
+        list->clear();
+        for(QString i: jsonObject.keys()){
+            list->append(jsonObject.value(i).toString());
+        }
+    }
+    qDebug() << jsonError.errorString();
+    jsonDocument = QJsonDocument(QJsonDocument::fromJson(readtxtByte(homePath + "/.config/deepin-wine-runner/WineSetting.json")));
+    jsonObject = jsonDocument.object();
+    setting.clear();
+    for(QString i: jsonObject.keys()){
+        setting.insert(i, jsonObject.value(i).toString());
+    }
+    for(QString i: QDir(programPath + "/wine/").entryList()){
+        if(QDir(programPath + "/wine/" + i).exists() && QFileInfo(programPath + "/wine/" + i).isDir()){
+            QStringList nameValue = {{"", ""}};
+            try{
+                if(QFile::exists("/opt/deepin-box86/box86")){
+                    nameValue.append(QStringList() << "基于 UOS box86 的 " <<
+                                     "WINEPREDLL='" + programPath + "/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1"\
+                                      " /opt/deepin-box86/box86  ");
+                }
+                if(!system("which box86")){
+                    nameValue.append(QStringList() << "基于 box86 的 " << "box86 ");
+                }
+                if(!system("which box64")){
+                    nameValue.append(QStringList() << "基于 box86 的 " << "box86 ");
+                }
+            }
+            catch(QString msg){
+                qDebug() << msg;
             }
         }
     }

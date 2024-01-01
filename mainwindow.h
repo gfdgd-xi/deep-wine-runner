@@ -14,6 +14,8 @@ public:
     void CheckWine();
     QString get_home();
     QString readtxt(QString path);
+    void write_txt(QString path, QString things);
+    QByteArray readtxtByte(QString path);
 
 private:
     QString homePath = QDir::homePath();
@@ -29,6 +31,7 @@ private:
     QStringList isoPath;
     QStringList isoPathFound;
     QMap<QString, QString> setting;
+
 
 };
 #endif // MAINWINDOW_H
