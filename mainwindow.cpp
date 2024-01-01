@@ -9,6 +9,10 @@
 #include <QSpacerItem>
 #include <QTextBrowser>
 #include <QCoreApplication>
+#include <iostream>
+#include <QDebug>
+#include <QIODevice>
+using namespace std;
 
 MainWindow::MainWindow(){
     /*********
@@ -192,6 +196,14 @@ QString MainWindow::get_home(){
     return QDir::homePath();
 }
 
+QString MainWindow::readtxt(QString path){
+    QFile file(path);
+    file.open(QIODevice::ReadOnly);
+    QString things = file.readAll();
+    file.close();
+    return things;
+}
+
 /*
  * 检测 Wine
  */
@@ -225,4 +237,51 @@ void MainWindow::CheckWine(){
     wine.insert("okylin-wine", "okylin-wine");
     wine.insert("mono（这不是 wine，但可以实现初步调用运行 .net 应用）", "mono");
     wine.insert("基于 linglong 的 deepin-wine6-stable（不推荐）", "ll-cli run '' --exec '/bin/deepin-wine6-stable'");
+    if(QFile::exists("/opt/deepin-box86/box86") && QFile::exists("/opt/deepin-wine6-stable/bin/wine")){
+        canUseWine.append("基于 UOS box86 的 deepin-wine6-stable");
+    }
+    if(QFile::exists("/opt/exagear/bin/ubt_x64a64_al") && QFile::exists("/opt/deepin-wine6-stable/bin/wine")){
+        canUseWine.append("基于 UOS exagear 的 deepin-wine6-stable");
+    }
+    for(QString i : wine.keys()){
+        if(!system(("which '" + wine.key(i) + "'").toUtf8())){
+            canUseWine.append(i);
+        }
+    }
+    if(!system("which flatpak") && QDir("/var/lib/flatpak/app/org.winehq.Wine").exists()){
+        canUseWine.append("使用 Flatpak 安装的 Wine");
+    }
+    if(QDir("/persistent/linglong/layers/").exists()){  // 判断是否使用 linglong
+        for(QString i : QDir("/persistent/linglong/layers/").entryList()){
+            try{
+                QString dire = QDir("/persistent/linglong/layers/" + i).entryList()[-1];
+                QString arch = QDir("/persistent/linglong/layers/" + i + "/" + dire)[-1];
+                if(QFile::exists("/persistent/linglong/layers/" + i + "/" + dire + "/" + arch + "/runtime/bin/deepin-wine6-stable")){
+                    wine.insert("基于 linglong 的 deepin-wine6-stable（不推荐）", "ll-cli run " + i + " --exec '/bin/deepin-wine6-stable'");
+                    canUseWine.append("基于 linglong 的 deepin-wine6-stable（不推荐）");
+                    break;
+                }
+            }
+            catch(QString msg){
+                qDebug() << msg;
+            }
+        }
+    }
+    // 读取自定义安装的 Wine（需要解包的才能使用）
+    if(!system("which qemu-i386-static")){
+        if(QDir(qemuPath).exists()){
+            for(QString g: QDir(qemuPath).entryList()){
+                QString archPath = qemuPath + "/" + g;
+                QString arch = g;
+                if(QFileInfo(archPath).isDir()){
+                    for(QString d: QDir(archPath).entryList()){
+                        QString bottlePath = archPath + "/" + g;
+                        if(QFileInfo(bottlePath).isDir()){
+                            qemuBottleList.append(QStringList() << arch << d << bottlePath);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

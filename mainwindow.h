@@ -13,6 +13,7 @@ public:
     ~MainWindow();
     void CheckWine();
     QString get_home();
+    QString readtxt(QString path);
 
 private:
     QString homePath = QDir::homePath();
@@ -20,7 +21,14 @@ private:
     QMap<QString, QString> wine;
     QStringList untipsWine = {"使用 Flatpak 安装的 Wine", "基于 exagear 的 deepin-wine6-stable", "基于 UOS box86 的 deepin-wine6-stable", "基于 UOS exagear 的 deepin-wine6-stable", "基于 linglong 的 deepin-wine6-stable（不推荐）"};
     QStringList canUseWine = {};
-
+    QStringList qemuBottleList = {};
+    QString qemuPath = homePath + "/.deepin-wine-runner-ubuntu-images";
+    QStringList shellHistory;
+    QStringList findExeHistory;
+    QStringList wineBottonHistory;
+    QStringList isoPath;
+    QStringList isoPathFound;
+    QMap<QString, QString> setting;
 
 };
 #endif // MAINWINDOW_H
