@@ -8,8 +8,16 @@
 #include <QSizePolicy>
 #include <QSpacerItem>
 #include <QTextBrowser>
+#include <QCoreApplication>
 
 MainWindow::MainWindow(){
+    /*********
+     * 设置变量
+     *********/
+
+    // 如果要添加其他 wine，请使用安装更多 Wine 功能
+
+
     QMainWindow *window = new QMainWindow();
     QWidget *widget = new QWidget();
     window->setCentralWidget(widget);
@@ -180,3 +188,41 @@ MainWindow::~MainWindow()
     //delete ui;
 }
 
+QString MainWindow::get_home(){
+    return QDir::homePath();
+}
+
+/*
+ * 检测 Wine
+ */
+void MainWindow::CheckWine(){
+    QStringList wine7zUse = {"wine", "wine64", "wine-i386", "wine-aarch64", "wine-x86_64"};
+    wine.clear();
+    wine.insert("基于 UOS box86 的 deepin-wine6-stable",
+                "WINEPREDLL='" + programPath + "/dlls-arm' "\
+                "WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 "\
+                "/opt/deepin-box86/box86 /opt/deepin-wine6-stable/bin/wine ");
+    wine.insert("基于 UOS exagear 的 deepin-wine6-stable",
+                "WINEPREDLL='" + programPath + "/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib"\
+                " /opt/exagear/bin/ubt_x64a64_al --path-prefix " + get_home() + "/.deepinwine/debian-buster --utmp-paths-list " + get_home() + ""\
+                "/.deepinwine/debian-buster/.exagear/utmp-list --vpaths-list " + get_home() + "/.deepinwine/debian-buster/.exagear/vpaths-list"\
+                " --opaths-list " + get_home() + "/.deepinwine/debian-buster/.exagear/opaths-list --smo-mode fbase --smo-severity smart "\
+                "--fd-limit 8192 --foreign-ubt-binary /opt/exagear/bin/ubt_x32a64_al -- /opt/deepin-wine6-stable/bin/wine ");
+    wine.insert("使用 Flatpak 安装的 Wine", "flatpak run org.winehq.Wine");
+    wine.insert("deepin-wine8-stable", "deepin-wine8-stable");
+    wine.insert("deepin-wine6 stable", "deepin-wine6-stable");
+    wine.insert("deepin-wine6-vannila", "deepin-wine6-vannila");
+    wine.insert("deepin-wine5 stable", "deepin-wine5-stable");
+    wine.insert("spark-wine", "spark-wine");
+    wine.insert("spark-wine7-devel", "spark-wine7-devel");
+    wine.insert("spark-wine8", "spark-wine8");
+    wine.insert("spark-wine8-wow", "spark-wine8-wow");
+    wine.insert("deepin-wine", "deepin-wine");
+    wine.insert("deepin-wine5", "deepin-wine5");
+    wine.insert("wine", "wine");
+    wine.insert("wine64", "wine64");
+    wine.insert("ukylin-wine", "ukylin-wine");
+    wine.insert("okylin-wine", "okylin-wine");
+    wine.insert("mono（这不是 wine，但可以实现初步调用运行 .net 应用）", "mono");
+    wine.insert("基于 linglong 的 deepin-wine6-stable（不推荐）", "ll-cli run '' --exec '/bin/deepin-wine6-stable'");
+}
