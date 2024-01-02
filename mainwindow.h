@@ -6,6 +6,7 @@
 #include <QCoreApplication>
 #include <QPushButton>
 #include <QComboBox>
+#include <QThread>
 
 class MainWindow
 {
@@ -21,8 +22,17 @@ public:
     QString GetCommandResult(QString command);
 
 private:
+    class Runexebutton_threading: public QThread{
+    signals:
+        void signal(QString str);
+        void showHistory(QString str);
+    public:
+        void run();
+
+    };
     void runexebutton();
     void DisableButton(bool things);
+    QString lastRunCommand = "";
     QString homePath = QDir::homePath();
     QString programPath = QCoreApplication::applicationDirPath();
     QMap<QString, QString> wine;
@@ -35,7 +45,7 @@ private:
     QStringList wineBottonHistory;
     QStringList isoPath;
     QStringList isoPathFound;
-    QMap<QString, QString> setting;
+    static QMap<QString, QString> setting;
     // 控件
     QPushButton *button_r_6;
     QPushButton *button1;
@@ -46,7 +56,7 @@ private:
     QPushButton *getProgramIcon;
     QPushButton *uninstallProgram;
     QPushButton *trasButton;
-    QComboBox *e1;
+    static QComboBox *e1;
     QComboBox *e2;
     QComboBox *o1;
 

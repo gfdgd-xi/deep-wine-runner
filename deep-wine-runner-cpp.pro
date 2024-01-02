@@ -11,15 +11,18 @@ CONFIG += c++17
 SOURCES += \
     about_this_program.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    qr.cpp
 
 HEADERS += \
     about_this_program.h \
-    mainwindow.h
+    mainwindow.h \
+    qr.h
 
 FORMS += \
     about_this_program.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    qr.ui
 
 TRANSLATIONS += \
     deep-wine-runner-cpp_zh_CN.ts

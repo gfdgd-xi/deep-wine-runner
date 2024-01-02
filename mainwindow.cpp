@@ -17,7 +17,8 @@
 #include <QFile>
 #include <QProcess>
 using namespace std;
-
+QComboBox *MainWindow::e1;
+QMap<QString, QString> MainWindow::setting;
 MainWindow::MainWindow(){
     /*********
      * 设置变量
@@ -197,6 +198,24 @@ MainWindow::MainWindow(){
     // 还是要处理的，至少不会闪退
     if(o1->currentText() == ""){
         o1->addItem("没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用");
+    }
+    QObject::connect(button3, &QPushButton::clicked, [&](){
+        Runexebutton_threading *thread = new Runexebutton_threading();
+        thread->start();
+    });
+
+}
+
+void MainWindow::Runexebutton_threading::run(){
+    if(e1->currentText() == ""){
+        QString wineBottlePath = setting.value("DefultBotton");
+    }
+    else{
+        QString wineBottlePath = e1->currentText();
+    }
+    QString option = "";
+    if(setting.value("Architecture") != "Auto"){
+        QString option = option + "WINEARCH=" + setting.value("Architecture") + " ";
     }
 }
 
