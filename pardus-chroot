@@ -22,9 +22,9 @@ mount -t sysfs sysfs "$DESTDIR/sys"
 mount -t proc proc "$DESTDIR/proc"
 mount -t tmpfs tmpfs  "$DESTDIR/dev/shm"
 mount --bind /tmp "$DESTDIR/tmp"
-if [[ -d /sys/firmware/efi/ ]] ; then
-    mount -t efivarfs efivarfs  "$DESTDIR/sys/firmware/efi/efivars"
-fi
+#if [[ -d /sys/firmware/efi/ ]] ; then
+#    mount -t efivarfs efivarfs  "$DESTDIR/sys/firmware/efi/efivars"
+#fi
 #cat /etc/resolv.conf > $DESTDIR/etc/resolv.conf
 #SHELL=/bin/bash unshare --fork --pid chroot "$DESTDIR" "$@"
 #exit
