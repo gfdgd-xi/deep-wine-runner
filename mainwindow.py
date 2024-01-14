@@ -353,6 +353,8 @@ class Runexebutton_threading(QtCore.QThread):
                 res = subprocess.Popen([runCommand], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         # 实时读取程序返回
         #
+        print(runCommand)
+        lastRunCommand = runCommand
         if not setting["TerminalOpen"]:
             while res.poll() is None:
                 try:
@@ -361,8 +363,8 @@ class Runexebutton_threading(QtCore.QThread):
                     text = ""
                 self.signal.emit(text)
                 print(text, end="")
-        lastRunCommand = runCommand
-        print(runCommand)
+        
+        
         if len(findExeHistory) == 0 or findExeHistory[-1] != wineBottonPath:
             findExeHistory.append(wineBottonPath)  # 将记录写进数组
             write_txt(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json", str(json.dumps(ListToDictionary(findExeHistory))))  # 将历史记录的数组转换为字典并写入
@@ -1227,6 +1229,7 @@ class UpdateWindow():
         versionLabel = QtWidgets.QLabel(f"当前版本：{version}\n最新版本：未知\n更新内容：")
         updateText = QtWidgets.QTextBrowser()
         updateText.anchorClicked.connect(OpenUrl)
+        updateText.setOpenLinks(False)
         updateText.setOpenExternalLinks(False)
         ok = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "更新（更新时会自动关闭 Wine 运行器）"))
         ok.clicked.connect(UpdateWindow.Update)
@@ -2065,7 +2068,10 @@ def SaveLog():
 
 def GetNewInformation():
     try:
-        text = requests.get("http://wine-runner.gfdgdxi.top/info/").text
+        # 获取是否为最新版本的公告
+        informationID = requests.get("http://update.gfdgdxi.top/wine-runner/info/id.json").json()["Number"]
+        text = requests.get("http://update.gfdgdxi.top/wine-runner/info/").text
+        write_txt(f"{get_home()}/.config/deepin-wine-runner/information/{informationID}", informationID)
     except:
         traceback.print_exc()
         text = f"""<p>无法连接到服务器</p>
@@ -2294,6 +2300,8 @@ if not os.path.exists(get_home() + "/.config/"):  # 如果没有配置文件夹
     os.mkdir(get_home() + "/.config/")  # 创建配置文件夹
 if not os.path.exists(get_home() + "/.config/deepin-wine-runner"):  # 如果没有配置文件夹
     os.mkdir(get_home() + "/.config/deepin-wine-runner")  # 创建配置文件夹
+if not os.path.exists(f"{get_home()}/.config/deepin-wine-runner/information"):  # 如果没有配置文件夹
+    os.mkdir(f"{get_home()}/.config/deepin-wine-runner/information")  # 创建配置文件夹
 if not os.path.exists(get_home() + "/.config/deepin-wine-runner/ShellHistory.json"):  # 如果没有配置文件
     write_txt(get_home() + "/.config/deepin-wine-runner/ShellHistory.json", json.dumps({}))  # 创建配置文件
 if not os.path.exists(get_home() + "/.config/deepin-wine-runner/FindExeHistory.json"):  # 如果没有配置文件
@@ -2657,6 +2665,49 @@ Deepin 论坛：<a href="https://bbs.deepin.org">https://bbs.deepin.org</a>
 gfdgd xi：<a href="https://gfdgd-xi.github.io">https://gfdgd-xi.github.io</a>
 <hr>
 <h1>©2020~{time.strftime("%Y")} By gfdgd xi</h1>'''
+defaultCommandText = """<pre>在此可以看到wine安装应用时的终端输出内容
+=============================================================
+如果解决了你的问题，请不要吝啬你的star哟！
+地址：
+<a href='https://gitee.com/gfdgd-xi/deep-wine-runner'>https://gitee.com/gfdgd-xi/deep-wine-runner</a>
+<a href='https://github.com/gfdgd-xi/deep-wine-runner'>https://github.com/gfdgd-xi/deep-wine-runner</a>
+<a href='https://sourceforge.net/projects/deep-wine-runner'>https://sourceforge.net/projects/deep-wine-runner</a>"""
+# 创建线程用于获取是否有更新
+class GetUpdateToShow(QtCore.QThread):
+    signal = QtCore.pyqtSignal(str)
+    def __init__(self):
+        super().__init__()
+    def run(self):
+        global defaultCommandText
+        # 获取更新
+        url = "http://update.gfdgdxi.top/update.json"
+        try:
+            data = json.loads(requests.get(url).text)
+            if data["Version"] != version:
+                # 版本号读取（防止出现高版本号提示要“升级”到低版本号的问题）
+                localVersionList = version.split(".")
+                webVersionList = data['Version'].split(".")
+                for i in range(len(localVersionList)):
+                    local = int(localVersionList[i])
+                    web = int(webVersionList[i])
+                    if web < local:
+                        break
+                    if web > local:
+                        defaultCommandText += f"""\n=============================================================
+Wine运行器 {data['Version']} 发布了！<a href='http://update.gfdgdxi.top/update-wine-runner'>点此立即更新</a>"""
+        except:
+            traceback.print_exc()
+        # 获取应用公告
+        try:
+            informationID = requests.get("http://update.gfdgdxi.top/wine-runner/info/id.json").json()["Number"]
+            if not os.path.exists(f"{get_home()}/.config/deepin-wine-runner/information/{informationID}"):
+                defaultCommandText += f"""\n=============================================================
+程序有新的公告，<a href='http://update.gfdgdxi.top/information-wine-runner'>点此立即查看</a>"""
+        except:
+            traceback.print_exc()
+        if lastRunCommand == "暂未运行命令":
+            self.signal.emit(defaultCommandText + "</pre>")
+
 offLineInformation = ""
 if os.path.exists(f"{programPath}/off-line.lock"):
     title = "Wine 运行器 {}（离线模式）".format(version)
@@ -2819,17 +2870,25 @@ button_r_6.setSizePolicy(size)
 wineConfig.setSizePolicy(size)
 
 returnText = QtWidgets.QTextBrowser()
+getUpdate = GetUpdateToShow()
+getUpdate.signal.connect(returnText.setHtml)
+getUpdate.start()
+def ReturnTextOpenUrl(url):
+    print(url)
+    if url.url() == "http://update.gfdgdxi.top/update-wine-runner":
+        UpdateWindow.ShowWindow()
+    elif url.url() == "http://update.gfdgdxi.top/information-wine-runner":
+        GetNewInformation()
+    else:
+        webbrowser.open_new_tab(url.url())
+returnText.anchorClicked.connect(ReturnTextOpenUrl)
+returnText.setOpenExternalLinks(False)
+returnText.setOpenLinks(False)
 returnText.setStyleSheet("""
 background-color: black;
 color: white;
 """)
-returnText.setText(QtCore.QCoreApplication.translate("U", """在此可以看到wine安装应用时的终端输出内容
-=============================================
-如果解决了你的问题，请不要吝啬你的star哟！
-地址：
-https://gitee.com/gfdgd-xi/deep-wine-runner
-https://github.com/gfdgd-xi/deep-wine-runner
-https://sourceforge.net/projects/deep-wine-runner"""))
+returnText.setHtml(QtCore.QCoreApplication.translate("U", defaultCommandText) + "</pre>")
 mainLayout.setRowStretch(0, 2)
 mainLayout.setRowStretch(1, 1)
 mainLayout.setColumnStretch(0, 2)
@@ -3420,6 +3479,7 @@ if o1.currentText() == "":
     canUseWine.append("没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用")
     o1.addItem("没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用")
 SetFont(setting["FontSize"])
+
 # Mini 模式
 # MiniMode(True)
 sys.exit(app.exec_())
