@@ -759,7 +759,7 @@ make install -j4
 ```
 
 ## 请作者喝杯茶
-如果您觉得 Wine 运行器对你有帮助，可以请作者喝杯茶 
+如果您觉得 Wine 运行器对你有帮助，可以请作者喝杯茶  
 <img src="Icon/QR/Wechat.png" width="200"  /> 
 <img src="Icon/QR/Alipay.jpg" width="200"  />
 <img src="Icon/QR/QQ.png" width="200" >

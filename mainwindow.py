@@ -2083,6 +2083,10 @@ def GetNewInformation():
     global webInformation
     if bad:
         webInformation = QtWidgets.QTextBrowser()
+        webInformation.anchorClicked.connect(OpenUrl)
+        webInformation.setOpenLinks(False)
+        webInformation.setOpenExternalLinks(False)
+
     else:
         webInformation = QtWebEngineWidgets.QWebEngineView()
     webInformation.setHtml(text)
