@@ -101,6 +101,24 @@ def FileToBase64(filePath):
 def SaveLogWindow():
     pass
 
+def Appreciate():
+    global messageAppreciate
+    messageAppreciate = QtWidgets.QTextBrowser()
+    messageAppreciate.setHtml(f"""<h3>请作者喝杯茶</h3>
+    <p>如果您觉得 Wine 运行器对你有帮助，可以请作者喝杯茶 </p>
+    <p>
+        <img src="{programPath}/Icon/QR/Wechat.png" width="250"  /> 
+        <img src="{programPath}/Icon/QR/Alipay.jpg" width="250"  />
+        <img src="{programPath}/Icon/QR/QQ.png" width="250" >
+    </p>
+    <hr/>
+    <h3>广告</h3>
+    <p>支付宝官方活动，扫描获得支付红包！</p>
+    <p><img src="{programPath}/Icon/QR/advertisement0.jpg" width="250" ></p>""")
+    messageAppreciate.resize(int(messageAppreciate.frameGeometry().width() * 2), int(messageAppreciate.frameGeometry().height() * 1.5))
+    messageAppreciate.setWindowTitle("赞赏作者/请作者喝杯茶")
+    messageAppreciate.show()
+
 class SaveLogReport():
     userName = getpass.getuser()
     time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")

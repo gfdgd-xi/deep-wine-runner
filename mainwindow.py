@@ -2070,7 +2070,7 @@ def GetNewInformation():
     try:
         # 获取是否为最新版本的公告
         informationID = requests.get("http://update.gfdgdxi.top/wine-runner/info/id.json").json()["Number"]
-        text = requests.get("http://update.gfdgdxi.top/wine-runner/info/").text
+        text = requests.get("http://update.gfdgdxi.top/wine-runner/info/").text.replace("Icon/QR/", f"{programPath}/Icon/QR/")
         write_txt(f"{get_home()}/.config/deepin-wine-runner/information/{informationID}", informationID)
     except:
         traceback.print_exc()
@@ -2093,6 +2093,8 @@ def GetNewInformation():
     webInformation.setWindowTitle("获取程序公告")
     webInformation.setWindowIcon(QtGui.QIcon(iconPath))
     webInformation.resize(int(webInformation.frameGeometry().width() * 1.3), int(webInformation.frameGeometry().height() * 1.1))
+    webInformation.setWindowFlags(webInformation.windowFlags() | QtCore.Qt.Dialog)
+    webInformation.setWindowModality(QtCore.Qt.ApplicationModal)
     webInformation.show()
 
 def getFileFolderSize(fileOrFolderPath):
@@ -3372,6 +3374,7 @@ wineRunnerHelp = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(2
 h3 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "更新内容"))
 h4 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "鸣谢名单"))
 h5 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "更新这个程序"))
+appreciate = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "赞赏作者/请作者喝杯茶"))
 programInformation = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "获取程序公告（也可以在这里看程序安装/打开量）"))
 h6 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "反馈这个程序的建议和问题"))
 fenUpload = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "程序评分"))
@@ -3405,6 +3408,7 @@ help.addAction(h5)
 help.addAction(h6)
 help.addAction(fenUpload)
 help.addAction(programInformation)
+help.addAction(appreciate)
 help.addAction(h7)
 help.addAction(h8)
 help.addSeparator()
@@ -3418,6 +3422,7 @@ gitlab.triggered.connect(lambda: webbrowser.open_new_tab("https://gitlab.com/gfd
 jihu.triggered.connect(lambda: webbrowser.open_new_tab("https://sourceforge.net/projects/deep-wine-runner/"))
 runStatusWebSize.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io/wine-runner-info"))
 h2.triggered.connect(helps)
+appreciate.triggered.connect(Appreciate)
 h3.triggered.connect(UpdateThings)
 wineRunnerHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://bbs.deepin.org/post/246837"))
 h4.triggered.connect(ThankWindow)
@@ -3433,7 +3438,7 @@ programInformation.triggered.connect(GetNewInformation)
 #threading.Thread(target=GetVersion).start()
 GetVersion()
 # 窗口设置
-window.resize(widget.frameGeometry().width() * 2, widget.frameGeometry().height())
+window.resize(int(widget.frameGeometry().width() * 2), int(widget.frameGeometry().height()))
 widget.setLayout(mainLayout)
 window.setWindowIcon(QtGui.QIcon(f"{programPath}/deepin-wine-runner.svg"))
 widget.show()
