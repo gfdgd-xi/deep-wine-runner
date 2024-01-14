@@ -307,7 +307,9 @@ TranslateTemplateFileUos "$outdir/info"
 #if no desktop_file_categories, don't create desktop
 if [ -n "$desktop_file_categories" ]; then
     mkdir -p "$outentries/applications"
+    mkdir -p "$dstdir/usr/share/applications"
     cp "$curdir/template/target.desktop" "$outentries/applications/$deb_package_name.desktop"
+    cp "$curdir/template/target.desktop" "$dstdir/usr/share/applications/$deb_package_name.desktop"
     TranslateTemplateFileUos "$outentries/applications/$deb_package_name.desktop"
 
     # TODO: We should generate icons from main program automatically.

@@ -566,6 +566,7 @@ class RunThread(QtCore.QThread):
             debDesktop = ReplaceText(desktopFile, replaceMap)
             ########### 写入文件
             WriteTxt(f"{debBuildPath}/opt/apps/{debPackageName}/entries/applications/{debPackageName}.desktop", debDesktop)
+            WriteTxt(f"{debBuildPath}/opt/usr/share/applications/{debPackageName}.desktop", debDesktop)
             WriteTxt(f"{debBuildPath}/opt/apps/{debPackageName}/files/run.sh", debRunSh)
             WriteTxt(f"{debBuildPath}/opt/apps/{debPackageName}/info", debInfo)
             WriteTxt(f"{debBuildPath}/DEBIAN/control", debControl)
@@ -575,6 +576,7 @@ class RunThread(QtCore.QThread):
             self.RunCommand(f"chmod -Rv 0755 '{debBuildPath}/DEBIAN'")
             self.RunCommand(f"chmod -Rv 755 '{debBuildPath}/opt/apps/{debPackageName}/files/'*.sh")
             self.RunCommand(f"chmod -Rv 755 '{debBuildPath}/opt/apps/{debPackageName}/entries/applications/'*.desktop")
+            self.RunCommand(f"chmod -Rv 755 '{debBuildPath}/usr/share/applications/'*.desktop")
             ########### 打包 deb
             print(debPackageVersion)
             self.RunCommand(f"dpkg-deb -Z xz -b '{debBuildPath}' '{desktopPath}/{debPackageName}_{debPackageVersion}_all.deb'")

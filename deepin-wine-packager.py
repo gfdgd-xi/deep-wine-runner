@@ -1384,6 +1384,7 @@ fi
             if debArch.currentIndex() != 2:
                 # Deepin Wine 包目录结构
                 os.makedirs("{}/opt/apps/{}/entries/applications".format(debPackagePath, e1_text.text()))
+                os.makedirs("{}/usr/share/applications".format(debPackagePath))
                 os.makedirs("{}/opt/apps/{}/entries/icons/hicolor/scalable/apps".format(debPackagePath, e1_text.text()))
                 os.makedirs("{}/opt/apps/{}/files".format(debPackagePath, e1_text.text()))
             else:
@@ -1519,6 +1520,7 @@ Description: {e3_text.text()}
             ]
             line = "\\"
             if desktopIconTab.count() <= 1 and debArch.currentIndex() != 2:
+                write_txt("{}/usr/share/applications/{}.desktop".format(debPackagePath, e1_text.text()), '#!/usr/bin/env xdg-open\n[Desktop Entry]\nEncoding=UTF-8\nType=Application\nX-Created-By={}\nCategories={};\nIcon={}\nExec="/opt/apps/{}/files/run.sh" --uri {}\nName={}\nComment={}\nMimeType={}\nGenericName={}\nTerminal=false\nStartupNotify=false\n'.format(e4_text.text(), option1_text.currentText(), a, e1_text.text(), e15_text.text(), e8_text.text(), e3_text.text(), e10_text.text(), e1_text.text()))
                 write_txt("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()), '#!/usr/bin/env xdg-open\n[Desktop Entry]\nEncoding=UTF-8\nType=Application\nX-Created-By={}\nCategories={};\nIcon={}\nExec="/opt/apps/{}/files/run.sh" --uri {}\nName={}\nComment={}\nMimeType={}\nGenericName={}\nTerminal=false\nStartupNotify=false\n'.format(e4_text.text(), option1_text.currentText(), a, e1_text.text(), e15_text.text(), e8_text.text(), e3_text.text(), e10_text.text(), e1_text.text()))
             elif debArch.currentIndex() == 2:
                 # 直接跳过 .desktop 文件生成
@@ -1529,7 +1531,7 @@ Description: {e3_text.text()}
                         command = f"--uri {iconUiList[i][2].text()}"
                     else:
                         command = iconUiList[i][2].text()
-                    write_txt("{}/opt/apps/{}/entries/applications/{}-{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text(), os.path.splitext(os.path.basename(iconUiList[i][0].text().replace("\\", "/")))[0]), f'''#!/usr/bin/env xdg-open
+                    desktopFile = f'''#!/usr/bin/env xdg-open
 [Desktop Entry]
 Encoding=UTF-8
 Type=Application
@@ -1543,7 +1545,9 @@ MimeType={iconUiList[i][5].text()}
 GenericName={e1_text.text()}
 Terminal=false
 StartupNotify=false
-''')
+''' 
+                    write_txt("{}/opt/apps/{}/entries/applications/{}-{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text(), os.path.splitext(os.path.basename(iconUiList[i][0].text().replace("\\", "/")))[0]), desktopFile)
+                    write_txt("{}/usr/share/applications/{}-{}.desktop".format(debPackagePath, e1_text.text(), os.path.splitext(os.path.basename(iconUiList[i][0].text().replace("\\", "/")))[0]), desktopFile)
             # 要开始分类讨论了
             if debArch.currentIndex() == 0 or debArch.currentIndex() == 1 and debArch.currentIndex() != 2:
                 if desktopIconTab.count() <= 1:
@@ -1601,6 +1605,7 @@ StartupNotify=false
                 #self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/*_with_box86.sh".format(debPackagePath, e1_text.text()))
                 #self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/*_with_exagear.sh".format(debPackagePath, e1_text.text()))
                 self.run_command("chmod -Rv 755 {}/opt/apps/{}/entries/applications/*.desktop".format(debPackagePath, e1_text.text(), e1_text.text()))
+                self.run_command("chmod -Rv 755 {}/usr/share/applications/*.desktop".format(debPackagePath, e1_text.text()))
             ################
             # 构建 deb 包
             ################
