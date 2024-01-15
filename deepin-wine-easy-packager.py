@@ -525,6 +525,7 @@ class RunThread(QtCore.QThread):
             self.RunCommand(f"mkdir -pv '{debBuildPath}/DEBIAN'")
             self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/files'")
             self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/entries/applications'")
+            self.RunCommand(f"mkdir -pv '{debBuildPath}/usr/share/applications'")
             #self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/entries/icons/hicolor/scalable/apps/'")
             ############ 处理容器
             # 对用户目录进行处理
