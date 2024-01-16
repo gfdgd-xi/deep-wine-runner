@@ -16,9 +16,15 @@
 #include <QJsonObject>
 #include <QFile>
 #include <QProcess>
+#include <QMessageBox>
+#include <QObject>
 using namespace std;
 QComboBox *MainWindow::e1;
+QComboBox *MainWindow::e2;
+QComboBox *MainWindow::o1;
 QMap<QString, QString> MainWindow::setting;
+QMap<QString, QString> MainWindow::wine;
+QString MainWindow::lastRunCommand = "";
 MainWindow::MainWindow(){
     /*********
      * 设置变量
@@ -201,22 +207,115 @@ MainWindow::MainWindow(){
     }
     QObject::connect(button3, &QPushButton::clicked, [&](){
         Runexebutton_threading *thread = new Runexebutton_threading();
+        //QObject::connect(thread, &Runexebutton_threading::signal, this, [this](){});
         thread->start();
     });
 
 }
 
 void MainWindow::Runexebutton_threading::run(){
+    QString programPath = QCoreApplication::applicationDirPath();
+    QString wineBottlePath = "";
     if(e1->currentText() == ""){
-        QString wineBottlePath = setting.value("DefultBotton");
+        wineBottlePath = setting.value("DefultBotton");
     }
     else{
-        QString wineBottlePath = e1->currentText();
+        wineBottlePath = e1->currentText();
     }
     QString option = "";
     if(setting.value("Architecture") != "Auto"){
-        QString option = option + "WINEARCH=" + setting.value("Architecture") + " ";
+        option += "WINEARCH=" + setting.value("Architecture") + " ";
     }
+    if(setting.value("MonoGeckoInstaller") == "1"){
+        option += "WINEDLLOVERRIDES=\"mscoree,mshtml=\" ";
+    }
+    if(setting.value("") != "1"){
+        option += "WINEDEBUG=-all ";
+    }
+    else{
+        option += "WINEDEBUG=FIXME,ERR,WARN,TRACE,Message ";
+    }
+    QString wineUsingOption = "";
+    QString exePath = e2->currentText();
+    QStringList fileName = {".exe"};
+    bool changePath = false;
+    for(QString i: fileName){
+        if(exePath.contains(i)){
+            qDebug() << i;
+            qDebug() << exePath;
+            int l = exePath.indexOf(i);
+            exePath = exePath.mid(0, l + 4) + "' " + exePath.mid(l + 4) + " '";
+            qDebug() << l;
+            qDebug() << exePath;
+            changePath = true;
+            break;
+        }
+    }
+    if(!changePath && QFile::exists(exePath)){
+        // 删除前后无用空格以防止出现问题
+        qDebug() << exePath;
+        exePath = exePath.trimmed();
+        // 有空格再说
+        if(exePath.contains(" ")){
+            int l = exePath.indexOf(" ");
+            exePath = exePath.mid(0, l) + "' " + exePath.mid(l) + " '";
+            qDebug() << l;
+        }
+        qDebug() << exePath;
+    }
+    if(o1->currentText() == "基于 UOS exagear 的 deepin-wine6-stable" ||
+            o1->currentText() == "基于 UOS box86 的 deepin-wine6-stable"){
+        wineUsingOption = "";
+    }
+    if(o1->currentText() == "基于 UOS box86 的 deepin-wine6-stable" ||
+            o1->currentText() == "基于 UOS exagear 的 deepin-wine6-stable"){
+        if(!QDir(programPath + "/dlls-arm").exists()){
+            if(system(("7z x -y \"" + programPath + "/dlls-arm.7z\" -o\"" + programPath + "\"").toUtf8())){
+                QMessageBox::critical(NULL, "错误", "无法解压资源");
+                return;
+            }
+            QFile::remove(programPath + "/dlls-arm.7z");
+        }
+    }
+    //QString runCommand = "";
+    QString runCommand = "";
+    QProcess *process = new QProcess();
+    //if(setting.value("TerminalOpen") == "True"){
+    if(0){
+        if(e2->currentText().mid(-4) == ".msi" && QFile::exists(e2->currentText())){
+            runCommand = "env WINEPREFIX='" + wineBottlePath + "' " + option + wine[o1->currentText()] + " msiexec /i '" + e2->currentText() + "' " + setting.value("WineOption");
+            // OpenTerminal(runCommand)
+        }
+        // ……
+    }
+    else{
+        if(e2->currentText().mid(-4) == ".msi" && QFile::exists(e2->currentText())){
+            runCommand = "env WINEPREFIX='" + wineBottlePath + "' " + option + wine[o1->currentText()] + " msiexec /i '" + e2->currentText() + "' " + setting.value("WineOption");
+        }
+        else if(e2->currentText().mid(-4) == ".bat" && QFile::exists(e2->currentText())){
+            runCommand = "WINEPREFIX='" + wineBottlePath + "' " + option + wine[o1->currentText()] + " wineconsole '" + e2->currentText() + "' " + setting["WineOption"];
+        }
+        else{
+            runCommand = "WINEPREFIX='" + wineBottlePath + "' " + option + wine[o1->currentText()] + " '" + exePath + "' " + setting["WineOption"];
+        }
+
+    }
+    // 实时读取程序返回
+    qDebug() << runCommand;
+    lastRunCommand = runCommand;
+    // 连接槽
+    connect(process, &QProcess::readyReadStandardOutput, this, [this, process](){
+        //emit this->signal(QString::fromUtf8(process.readAll()));
+    });
+    //if(setting.value("TerminalOpen") != "True"){
+    if(1){
+        process->setReadChannel(QProcess::StandardOutput);
+        process->start(runCommand);
+        process->waitForStarted();
+        process->waitForFinished();
+        process->close();
+    }
+    // ……
 }
 
 void MainWindow::DisableButton(bool things){

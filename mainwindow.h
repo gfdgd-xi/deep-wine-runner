@@ -32,10 +32,10 @@ private:
     };
     void runexebutton();
     void DisableButton(bool things);
-    QString lastRunCommand = "";
+    static QString lastRunCommand;
     QString homePath = QDir::homePath();
     QString programPath = QCoreApplication::applicationDirPath();
-    QMap<QString, QString> wine;
+    static QMap<QString, QString> wine;
     QStringList untipsWine = {"使用 Flatpak 安装的 Wine", "基于 exagear 的 deepin-wine6-stable", "基于 UOS box86 的 deepin-wine6-stable", "基于 UOS exagear 的 deepin-wine6-stable", "基于 linglong 的 deepin-wine6-stable（不推荐）"};
     QStringList canUseWine = {};
     QStringList qemuBottleList = {};
@@ -57,8 +57,8 @@ private:
     QPushButton *uninstallProgram;
     QPushButton *trasButton;
     static QComboBox *e1;
-    QComboBox *e2;
-    QComboBox *o1;
+    static QComboBox *e2;
+    static QComboBox *o1;
 
 
 };
