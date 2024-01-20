@@ -8,7 +8,7 @@ import random
 try:
     import xpinyin
 except:
-    os.system("python3 -m pip install --upgrade xpinyin --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple --break-system-packages")
+    os.system("python3 -m pip install --upgrade xpinyin --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple")
     import xpinyin
 import traceback
 import subprocess
