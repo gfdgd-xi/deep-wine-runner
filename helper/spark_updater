@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# 检查是否提供了-c和-s选项
+if [[ ! "$*" =~ "-c" ]] || [[ ! "$*" =~ "-s" ]]; then
+  echo "用法: updater -c <目标目录> -s <源目录> [-v]"
+  exit 1
+fi
+
+# 解析命令行参数
+while getopts ":c:s:v" opt; do
+  case $opt in
+    c)
+      destination_dir=$OPTARG
+      ;;
+    s)
+      source_dir=$OPTARG
+      ;;
+    v)
+      verbose=true
+      ;;
+    \?)
+      echo "无效选项: -$OPTARG" >&2
+      exit 1
+      ;;
+    :)
+      echo "选项 -$OPTARG 需要一个参数." >&2
+      exit 1
+      ;;
+  esac
+done
+
+# 从源目录复制文件到目标目录
+if [ "$verbose" = true ]; then
+  echo "正在从 $source_dir 复制文件到 $destination_dir"
+fi
+
+# 使用cp命令覆盖同名文件
+cp -rf "$source_dir"/* "$destination_dir"
+
+echo "文件复制完成！"
+exit 0
+
