@@ -399,19 +399,7 @@ StartupNotify=true''')
 class Temp:
     webWindow = None
 
-def OpenUrl(url):
-    print(url.url())
-    # 判断是否可以使用小窗打开
-    if not bad:
-        '''Temp.webWindow = QtWidgets.QMainWindow()
-        web = QtWebEngineWidgets.QWebEngineView()
-        web.setUrl(url)
-        Temp.webWindow.setWindowTitle("浏览页面")
-        Temp.webWindow.setCentralWidget(web)
-        Temp.webWindow.setWindowIcon(QtGui.QIcon(iconPath))
-        Temp.webWindow.show()
-        return'''
-    webbrowser.open_new_tab(url.url())
+
         
     #QtCore.QUrl().url()
 
@@ -425,6 +413,8 @@ def about_this_program()->"显示“关于这个程序”窗口":
     QT.message = QtWidgets.QMainWindow()  
     QT.message.setWindowIcon(QtGui.QIcon(iconPath))
     messageWidget = QtWidgets.QWidget()
+    messageWidget.setObjectName("messageWidget")
+    messageWidget.setStyleSheet(f"QWidget#messageWidget {{background: url({programPath}/Icon/Program/about-background.png) no-repeat;background-position: left bottom;}}")
     QT.message.setWindowTitle(f"关于 {title}")
     messageLayout = QtWidgets.QGridLayout()
     iconShow = QtWidgets.QLabel(f"<a href='https://www.gfdgdxi.top'><img width=256 src='{iconPath}'></a>")
@@ -434,10 +424,13 @@ def about_this_program()->"显示“关于这个程序”窗口":
             clickIconTime = clickIconTime + 1
         if clickIconTime > 0:
             clickIconTime = -1
-            for k in ["", "Function"]:
-                for i in os.listdir(f"{programPath}/Icon/{k}"):
-                    if i[-4:] == ".svg" or i[-4:] == ".png":
-                        iconPathList.append(f"{programPath}/Icon/{k}/{i}")
+            for k in ["", "Function", "Program"]:
+                try:
+                    for i in os.listdir(f"{programPath}/Icon/{k}"):
+                        if i[-4:] == ".svg" or i[-4:] == ".png":
+                            iconPathList.append(f"{programPath}/Icon/{k}/{i}")
+                except:
+                    traceback.print_exec()
         randomNumber = random.randint(0, len(iconPathList) - 1)
         iconShow.setText(f"<a href='https://www.gfdgdxi.top'><img width=256 src='{iconPathList[randomNumber]}'></a><p align='center'>{randomNumber + 1}/{len(iconPathList)}</p>")
     iconShow.linkActivated.connect(ChangeIcon)
@@ -454,6 +447,7 @@ def about_this_program()->"显示“关于这个程序”窗口":
     ok.clicked.connect(QT.message.close)
     messageLayout.addWidget(ok, 1, 1, 1, 1, QtCore.Qt.AlignBottom | QtCore.Qt.AlignRight)
     messageWidget.setLayout(messageLayout)
+    
     QT.message.setCentralWidget(messageWidget)
     QT.message.resize(int(messageWidget.frameGeometry().width() * 1.5), int(messageWidget.frameGeometry().height() * 1.5))
     QT.message.show()
@@ -2613,23 +2607,14 @@ exe路径\' 参数 \'
 5、wine 容器如果没有指定，则会默认为 ~/.wine；
 6、如果可执行文件比较大的话，会出现点击“获取该程序运行情况”出现假死的情况，因为正在后台读取 SHA1，只需要等一下即可（读取速度依照您电脑处理速度、读写速度、可执行文件大小等有关）；
 7、如果非 X86 的用户的 UOS 专业版用户想要使用的话，只需要在应用商店安装一个 Wine 版本微信即可在本程序选择正确的 Wine 运行程序；''')
-updateThingsString = QtCore.QCoreApplication.translate("U", '''<b>3.6.1 更新内容：</b>
-※1、修复应用无法打开的问题
-
-<b>3.6.0 更新内容：</b>
-※1、修复高级打包器选择软件适配脚本后无法打包的问题 https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I8I110
-※2、支持调用 Deepin Wine8 Stable
-※3、移除过时的 Wine 安装程序入口
-※4、Wine 安装器支持根据地区自动选择国内源以及国际源
-※5、Wine 安装器新增 Sourceforge 源
-※6、新增 Wine 运行报告生成功能
-※7、初步英语翻译
-※8、新增离线安装包（只支持 amd64）
-※9、支持识别 /opt 文件夹下的 Wine
-10、新增 Wine 运行器视频教程的 Youtube 入口''')
+updateThingsString = QtCore.QCoreApplication.translate("U", '''※1、修复简易打包器在 Deepin/UOS 上无法正常启动的问题
+※2、打包器生成的 deb 修复在非 Deepin/UOS 且未安装星火应用商店的系统中启动器无程序图标的问题
+3、新增公告和新版本提示功能
+4、修复公告的链接在部分机器无法正常打开的问题
+5、新增赞赏入口''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2023年12月24日"
+updateTime = "2024年01月21日"
 aboutProgram = QtCore.QCoreApplication.translate("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序。原版的 Wine 只能使用命令操作，且安装过程较为繁琐，对小白不友好。于是该运行器为了解决该痛点，内置了对Wine图形化的支持、Wine 安装器、微型应用商店、各种Wine工具、自制的Wine程序打包器、运行库安装工具等。</p>
 <p>它同时还内置了基于Qemu/VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作，也能在非 X86 架构安装 X86 架构的 Windows 操作系统（但是效率较低，可以运行些老系统）。</p>
 <p>而且对于部分 Wine 应用适配者来说，提供了图形化的打包工具，以及提供了一些常用工具以及运行库的安装方式，以及能安装多种不同的 Wine 以测试效果，能极大提升适配效率。</p>
@@ -2674,7 +2659,8 @@ gfdgd xi：<a href="https://gfdgd-xi.github.io">https://gfdgd-xi.github.io</a>
 defaultCommandText = """<pre>在此可以看到wine安装应用时的终端输出内容
 =============================================================
 如果解决了你的问题，请不要吝啬你的star哟！
-地址：
+也可以<a href='http://update.gfdgdxi.top/Appreciate'>请作者喝一杯茶</a>
+程序地址：
 <a href='https://gitee.com/gfdgd-xi/deep-wine-runner'>https://gitee.com/gfdgd-xi/deep-wine-runner</a>
 <a href='https://github.com/gfdgd-xi/deep-wine-runner'>https://github.com/gfdgd-xi/deep-wine-runner</a>
 <a href='https://sourceforge.net/projects/deep-wine-runner'>https://sourceforge.net/projects/deep-wine-runner</a>"""
@@ -2885,6 +2871,8 @@ def ReturnTextOpenUrl(url):
         UpdateWindow.ShowWindow()
     elif url.url() == "http://update.gfdgdxi.top/information-wine-runner":
         GetNewInformation()
+    elif url.url() == "http://update.gfdgdxi.top/Appreciate":
+        Appreciate()
     else:
         webbrowser.open_new_tab(url.url())
 returnText.anchorClicked.connect(ReturnTextOpenUrl)

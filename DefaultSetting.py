@@ -9,6 +9,7 @@ import getpass
 import datetime
 import traceback
 import subprocess
+import webbrowser
 import configparser
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
@@ -101,6 +102,11 @@ def FileToBase64(filePath):
 def SaveLogWindow():
     pass
 
+def OpenUrl(url):
+    print(url.url())
+    # 判断是否可以使用小窗打开
+    webbrowser.open_new_tab(url.url())
+
 def Appreciate():
     global messageAppreciate
     messageAppreciate = QtWidgets.QTextBrowser()
@@ -115,9 +121,58 @@ def Appreciate():
     <h3>广告</h3>
     <p>支付宝官方活动，扫描获得支付红包！</p>
     <p><img src="{programPath}/Icon/QR/advertisement0.jpg" width="250" ></p>""")
-    messageAppreciate.resize(int(messageAppreciate.frameGeometry().width() * 2), int(messageAppreciate.frameGeometry().height() * 1.5))
+    messageAppreciate.resize(int(messageAppreciate.frameGeometry().width() * 1.5), int(messageAppreciate.frameGeometry().height() * 1.2))
     messageAppreciate.setWindowTitle("赞赏作者/请作者喝杯茶")
     messageAppreciate.show()
+
+# 显示“关于这个程序”窗口
+def about_this_program()->"显示“关于这个程序”窗口":
+    global about
+    global title
+    global iconPath
+    global clickIconTime
+    clickIconTime = 0
+    QT.message = QtWidgets.QMainWindow()  
+    QT.message.setWindowIcon(QtGui.QIcon(iconPath))
+    messageWidget = QtWidgets.QWidget()
+    messageWidget.setObjectName("messageWidget")
+    messageWidget.setStyleSheet(f"QWidget#messageWidget {{background: url({programPath}/Icon/Program/about-background.png) no-repeat;background-position: left bottom;}}")
+    QT.message.setWindowTitle(f"关于 {title}")
+    messageLayout = QtWidgets.QGridLayout()
+    iconShow = QtWidgets.QLabel(f"<a href='https://www.gfdgdxi.top'><img width=256 src='{iconPath}'></a>")
+    def ChangeIcon():
+        global clickIconTime
+        if clickIconTime >= 0:
+            clickIconTime = clickIconTime + 1
+        if clickIconTime > 0:
+            clickIconTime = -1
+            for k in ["", "Function", "Program"]:
+                try:
+                    for i in os.listdir(f"{programPath}/Icon/{k}"):
+                        if i[-4:] == ".svg" or i[-4:] == ".png":
+                            iconPathList.append(f"{programPath}/Icon/{k}/{i}")
+                except:
+                    traceback.print_exec()
+        randomNumber = random.randint(0, len(iconPathList) - 1)
+        iconShow.setText(f"<a href='https://www.gfdgdxi.top'><img width=256 src='{iconPathList[randomNumber]}'></a><p align='center'>{randomNumber + 1}/{len(iconPathList)}</p>")
+    iconShow.linkActivated.connect(ChangeIcon)
+    messageLayout.addWidget(iconShow, 0, 0, 1, 1, QtCore.Qt.AlignTop)
+    aboutInfo = QtWidgets.QTextBrowser(messageWidget)
+    aboutInfo.setFocusPolicy(QtCore.Qt.NoFocus)
+    #aboutInfo.copyAvailable.connect(lambda: print("b"))
+    aboutInfo.anchorClicked.connect(OpenUrl)
+    aboutInfo.setOpenLinks(False)
+    aboutInfo.setHtml(about)
+    aboutInfo.setOpenExternalLinks(False)
+    messageLayout.addWidget(aboutInfo, 0, 1, 1, 1)
+    ok = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "确定"))
+    ok.clicked.connect(QT.message.close)
+    messageLayout.addWidget(ok, 1, 1, 1, 1, QtCore.Qt.AlignBottom | QtCore.Qt.AlignRight)
+    messageWidget.setLayout(messageLayout)
+    
+    QT.message.setCentralWidget(messageWidget)
+    QT.message.resize(int(messageWidget.frameGeometry().width() * 1.5), int(messageWidget.frameGeometry().height() * 1.5))
+    QT.message.show()
 
 class SaveLogReport():
     userName = getpass.getuser()
