@@ -1,12 +1,13 @@
 #include "mainwindow.h"
 
-#include <QApplication>
 #include <QLocale>
 #include <QTranslator>
+#include <DApplication>
+using namespace Dtk::Widget;
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    DApplication a(argc, argv);
 
     QTranslator translator;
     const QStringList uiLanguages = QLocale::system().uiLanguages();

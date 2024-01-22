@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Icon/MessageBox/dialog-apply.svg</file>
+        <file>Icon/MessageBox/dialog-cancel.svg</file>
+        <file>Icon/MessageBox/dialog-error.svg</file>
+        <file>Icon/MessageBox/dialog-information.svg</file>
+        <file>Icon/MessageBox/dialog-ok.svg</file>
+        <file>Icon/MessageBox/dialog-question.svg</file>
+        <file>Icon/MessageBox/dialog-warning.svg</file>
+    </qresource>
+</RCC>

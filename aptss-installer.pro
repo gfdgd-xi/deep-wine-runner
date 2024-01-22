@@ -1,8 +1,9 @@
 QT       += core gui
+PKGCONFIG += dtkcore dtkgui dtkwidget
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++17
+CONFIG += c++17 link_pkgconfig
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -11,11 +12,13 @@ CONFIG += c++17
 SOURCES += \
     installdeb.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    messagebox.cpp
 
 HEADERS += \
     installdeb.h \
-    mainwindow.h
+    mainwindow.h \
+    messagebox.h
 
 FORMS += \
     mainwindow.ui
@@ -30,3 +33,6 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 unix:!macx: LIBS += -lqtermwidget5  # 这一行让我查了好久
+
+RESOURCES += \
+    Resources.qrc

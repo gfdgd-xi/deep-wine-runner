@@ -31,6 +31,11 @@
     </item>
    </layout>
   </widget>
+  <action name="action1">
+   <property name="text">
+    <string>1</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
