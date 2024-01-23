@@ -10,9 +10,9 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    MessageBox *message = new MessageBox();
+    /*MessageBox *message = new MessageBox();
     message->information("A", "B");
-    this->close();
+    this->close();*/
 }
 
 MainWindow::~MainWindow()
@@ -25,16 +25,11 @@ void MainWindow::on_installPath_clicked()
 {
     QTermWidget *terminal = new QTermWidget(0);
     terminal->setColorScheme("DarkPastels");
-    terminal->setShellProgram("/usr/bin/bash");
-    terminal->setArgs(QStringList() << "-c" << "gedit");
-    connect(terminal, &QTermWidget::finished, this, [&, this](){
-        //QMessageBox::information(NULL, "提示", "系统安装完成");
-        MessageBox *message = new MessageBox();
-        message->information("A", "B");
-    });
-    terminal->startShellProgram();
-
-
+    terminal->setAutoClose(1);
+    InstallDEB *deb = new InstallDEB(terminal, this);
+    deb->AddCommand("aptss update");
+    deb->AddCommand("aptss install \"" + ui->debPath->text() + "\"");
+    deb->RunCommand(1);
     ui->gridLayout->addWidget(terminal, 1, 0);
 }
 

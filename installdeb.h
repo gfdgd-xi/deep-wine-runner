@@ -3,18 +3,19 @@
 
 #include <QObject>
 #include <qtermwidget5/qtermwidget.h>
-#include <QMainWindow>
+#include <DMainWindow>
+using namespace Dtk::Widget;
 
 class InstallDEB
 {
 public:
-    InstallDEB(QTermWidget *terminal, QMainWindow *mainWindow = NULL);
+    InstallDEB(QTermWidget *terminal, DMainWindow *mainWindow = NULL);
     void AddCommand(QString command);
-    void RunCommand();
+    void RunCommand(bool withRoot=false);
     QStringList commandList;
 private:
     QTermWidget *terminal;
-    QMainWindow *mainWindow = NULL;
+    DMainWindow *mainWindow = NULL;
     bool runStatus;
 };
 

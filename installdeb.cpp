@@ -1,10 +1,11 @@
 #include "installdeb.h"
+#include "messagebox.h"
 #include <QDateTime>
 #include <QObject>
 #include <QMessageBox>
 #include <QMainWindow>
 
-InstallDEB::InstallDEB(QTermWidget *terminal, QMainWindow *mainWindow)
+InstallDEB::InstallDEB(QTermWidget *terminal, DMainWindow *mainWindow)
 {
     this->terminal = terminal;
     this->mainWindow = mainWindow;
@@ -14,7 +15,7 @@ void InstallDEB::AddCommand(QString command){
     this->commandList.append(command);
 }
 
-void InstallDEB::RunCommand(){
+void InstallDEB::RunCommand(bool withRoot){
     this->terminal->setEnabled(true);
     this->runStatus = true;
     // 写入为 Bash 文件，方便执行
@@ -33,12 +34,22 @@ void InstallDEB::RunCommand(){
     file.close();
     system(("chmod +x '" + bashPath + "'").toUtf8()); // 赋予运行权限
     this->terminal->setColorScheme("DarkPastels");
-    this->terminal->setShellProgram("/usr/bin/bash");
-    this->terminal->setArgs(QStringList() << bashPath);
+    if(withRoot){
+        this->terminal->setShellProgram("/usr/bin/pkexec");
+        this->terminal->setArgs(QStringList() << "/usr/bin/bash" << bashPath);
+    }
+    else{
+        this->terminal->setShellProgram("/usr/bin/bash");
+        this->terminal->setArgs(QStringList() << bashPath);
+    }
     //this->terminal->setAutoClose(1);
     this->terminal->setAutoFillBackground(1);
-    this->terminal->startShellProgram();
     QObject::connect(this->terminal, &QTermWidget::finished, this->mainWindow, [this](){
-        QMessageBox::information(this->mainWindow, "A", "B");
+        //QMessageBox::information(this->mainWindow, "A", "B");
+        MessageBox *message = new MessageBox();
+        message->information("提示", "应用安装完成");
+        this->mainWindow->sendMessage(QIcon(":/Icon/MessageBox/dialog-information.svg"), "应用安装完成");
     });
+    this->terminal->startShellProgram();
+
 }
