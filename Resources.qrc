@@ -7,5 +7,6 @@
         <file>Icon/MessageBox/dialog-ok.svg</file>
         <file>Icon/MessageBox/dialog-question.svg</file>
         <file>Icon/MessageBox/dialog-warning.svg</file>
+        <file>Icon/deepin-wine-runner.svg</file>
     </qresource>
 </RCC>

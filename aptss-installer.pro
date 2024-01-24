@@ -2,7 +2,7 @@ QT       += core gui
 PKGCONFIG += dtkcore dtkgui dtkwidget
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
+VERSION = 1.0.0
 CONFIG += c++17 link_pkgconfig
 
 # You can make your code fail to compile if it uses deprecated APIs.
