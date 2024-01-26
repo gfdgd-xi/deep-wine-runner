@@ -654,7 +654,7 @@ if __name__ == "__main__":
         "使用 Deepin Wine2 打包应用"
     ]
     wineChooserIndex = 2
-    wineList = ["deepin-wine8-stable", "spark-wine8", "spark-wine7-devel", "deepin-wine6-stable", "deepin-wine6-vannila", "spark-wine8-wow", "deepin-wine5-stable", "deepin-wine5", "deepin-wine"]
+    wineList = ["deepin-wine8-stable", "spark-wine9-wow", "spark-wine9", "spark-wine8", "spark-wine7-devel", "deepin-wine6-stable", "deepin-wine6-vannila", "spark-wine8-wow", "deepin-wine5-stable", "deepin-wine5", "deepin-wine"]
     for i in range(len(wineList)):
         if not os.system(f"which '{wineList[i]}'"):
             wineChooserIndex = i
