@@ -4,6 +4,8 @@
 #include "messagebox.h"
 #include <qtermwidget5/qtermwidget.h>
 #include <QMessageBox>
+#include <qapt/debfile.h>
+using namespace QApt;
 
 MainWindow::MainWindow(QWidget *parent)
     : DMainWindow(parent)
@@ -13,6 +15,9 @@ MainWindow::MainWindow(QWidget *parent)
     /*MessageBox *message = new MessageBox();
     message->information("A", "B");
     this->close();*/
+    //QApt::DebFile *a = new QApt::DebFile();
+    //DebFile *abc = new DebFile("/tmp/apt_2.6.0-1deepin5_amd64.deb");
+    //QMessageBox::information(this, "", abc->version());
 }
 
 MainWindow::~MainWindow()

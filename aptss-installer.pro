@@ -32,7 +32,7 @@ CONFIG += embed_translations
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-unix:!macx: LIBS += -lqtermwidget5  # 这一行让我查了好久
+unix:!macx: LIBS += -lqtermwidget5 -lapt-pkg  # 这一行让我查了好久
 
 RESOURCES += \
     Resources.qrc
