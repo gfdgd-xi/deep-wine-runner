@@ -4,7 +4,7 @@
 #include <QObject>
 #include <qtermwidget5/qtermwidget.h>
 #include <DMainWindow>
-using namespace Dtk::Widget;
+DWIDGET_USE_NAMESPACE
 
 class InstallDEB
 {

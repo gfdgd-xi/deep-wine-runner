@@ -6,7 +6,7 @@
 #include <DMessageBox>
 #include <iostream>
 #include <DApplicationSettings>
-using namespace Dtk::Widget;
+DWIDGET_USE_NAMESPACE
 using namespace std;
 
 int main(int argc, char *argv[])

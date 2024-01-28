@@ -2,7 +2,8 @@
 #define MAINWINDOW_H
 
 #include <DMainWindow>
-using namespace Dtk::Widget;
+#include <qtermwidget5/qtermwidget.h>
+DWIDGET_USE_NAMESPACE
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -19,6 +20,7 @@ private slots:
     void on_installPath_clicked();
 
 private:
+    QTermWidget *terminal = new QTermWidget(0);
     Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H

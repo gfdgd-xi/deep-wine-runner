@@ -4,14 +4,16 @@
 #include <DMainWindow>
 #include <QObject>
 #include <DWidget>
-using namespace Dtk::Widget;
+DWIDGET_USE_NAMESPACE
 class MessageBox
 {
     //Q_OBJECT
 public:
     explicit MessageBox(DWidget *parent = nullptr);
     void information(QString title, QString text);
+    void critical(QString title, QString text);
 private:
+    void ShowMessageBox(QString iconPath, QString title, QString text);
     DWidget *parent;
 signals:
 
