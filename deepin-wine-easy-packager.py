@@ -3,6 +3,7 @@ import os
 import sys
 import json
 import time
+import threading
 import updatekiller
 import random
 try:
@@ -667,14 +668,22 @@ if __name__ == "__main__":
     buildButton = QtWidgets.QPushButton("现在打包……")
     installCmpleteButton = QtWidgets.QPushButton("安装程序执行完成")
     helpButton = QtWidgets.QPushButton("帮助")
+    installUosPackingTool = QtWidgets.QPushButton("安装维护工具箱（可以安装测试 deb）")
     browserExeButton.clicked.connect(BrowserExe)
     buildButton.clicked.connect(RunBuildThread)
     installCmpleteButton.clicked.connect(PressCompleteDownload)
     helpButton.clicked.connect(ReadMe)
+    def InstallUosPackingTool():
+        if os.system("which spark-store"):
+            QtWidgets.QMessageBox.critical(window, "提示", "未安装星火应用商店，无法继续\n星火应用商店官网：https://spark-app.store/")
+            return 0
+        threading.Thread(target=os.system, args=["spark-store spk://store/tools/uos-packaging-tools"]).start()
+    installUosPackingTool.clicked.connect(InstallUosPackingTool)
     installCmpleteButton.setDisabled(True)
     controlLayout.addWidget(buildButton)
     controlLayout.addWidget(installCmpleteButton)
     controlLayout.addWidget(helpButton)
+    controlLayout.addWidget(installUosPackingTool)
     layout.addWidget(QtWidgets.QLabel("选择 EXE："), 0, 0)
     layout.addWidget(exePath, 0, 1)
     layout.addWidget(browserExeButton, 0, 2)
