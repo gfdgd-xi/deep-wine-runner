@@ -1,1 +1,3 @@
 *.user*
+.qmake.stash
+__pycache__

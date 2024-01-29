@@ -195,7 +195,8 @@ buildvbox::buildvbox(QString isoPath, int id, int vm){
                 vm.Start();
                 break;
         }
-
+        // 设置更多参数
+        vm.SetMore("-display vnc=:5 -display gtk -usb -nic model=rtl8139");
 
     }
     else if(vm == 1){

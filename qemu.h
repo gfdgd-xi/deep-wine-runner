@@ -49,8 +49,10 @@ public:
     int UseArmhfEFI();
     int UseLoongarch64EFI();
     int UseOtherEFI(QString fdFilePath);
-private:
+    void SetMore(QString option);
     QString commandOption = "";
+private:
+
 
 };
 

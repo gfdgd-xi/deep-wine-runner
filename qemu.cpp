@@ -193,3 +193,7 @@ int qemu::MountMainISO(QString isoPath){
 int qemu::AutoInstall(QString iso){
     return 0;
 }
+
+void qemu::SetMore(QString option){
+    commandOption += option + " ";
+}
