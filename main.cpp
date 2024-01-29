@@ -6,6 +6,7 @@
 #include <DMessageBox>
 #include <iostream>
 #include <DApplicationSettings>
+#include "messagebox.h"
 DWIDGET_USE_NAMESPACE
 using namespace std;
 
@@ -28,15 +29,36 @@ int main(int argc, char *argv[])
     a.setApplicationDescription("Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序。原版的 Wine 只能使用命令操作，且安装过程较为繁琐，对小白不友好。于是该运行器为了解决该痛点，内置了对Wine图形化的支持、Wine 安装器、微型应用商店、各种Wine工具、自制的Wine程序打包器、运行库安装工具等。");
     a.setApplicationVersion("3.6.1");
     a.setProductIcon(QIcon(":/Icon/deepin-wine-runner.svg"));
-    a.setProductName("aptss 安装器");
+    a.setProductName("aptss 应用安装器");
     a.setApplicationHomePage("https://gitee.com/gfdgd-xi/deep-wine-runner");
     //DApplication::setApplicationHomePage("https://gitee.com/gfdgd-xi/deep-wine-runner");
     DApplication::setOrganizationName("gfdgd_xi");
     DApplication::setApplicationName("deepin-wine-runner-aptss-installer");
 
+    if(argc > 0){
+        // 用于显示对话框
+        qDebug() << argv[1];
+        if(QString(argv[1]) == "--messagebox-information"){
+            if(argc < 4){
+                qDebug() << "参数有误！";
+                return 1;
+            }
+            MessageBox().information(argv[2], argv[3]);
+            return a.exec();
+        }
+        if(QString(argv[1]) == "--messagebox-error"){
+            if(argc < 4){
+                qDebug() << "参数有误！";
+                return 1;
+            }
+            MessageBox().critical(argv[2], argv[3]);
+            return a.exec();
+        }
+    }
 
     if(system("which aptss")){
-        DMessageBox::information(NULL, "错误", "无法检测到 aptss\n请确保您已安装星火应用商店并更新至最新版本");
+        MessageBox().critical("错误", "无法检测到 aptss\n请确保您已安装星火应用商店并更新至最新版本");
+        a.exec();
         return 1;
     }
 

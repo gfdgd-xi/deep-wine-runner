@@ -3,6 +3,7 @@
 #include <DLabel>
 #include <DPushButton>
 #include <DTitlebar>
+#include <QScreen>
 
 
 MessageBox::MessageBox(DWidget *parent){
@@ -37,6 +38,25 @@ void MessageBox::ShowMessageBox(QString iconPath, QString title, QString text){
     messageBox->resize(messageBox->frameSize().width(), messageBox->frameSize().height());
 
     //// 根据窗口信息获取中点
+    if(this->parent == NULL){
+        /// 如果没有传入窗口
+        // 获取主屏幕信息
+        int screenWidth = QGuiApplication::primaryScreen()->geometry().width();
+        int screenHeight = QGuiApplication::primaryScreen()->geometry().height();
+        // 获取对话框信息
+        int messageBoxWidth = messageBox->frameSize().width();
+        int messageBoxHeight = messageBox->frameSize().height();
+        // 计算坐标
+        int x = (screenWidth / 2) - (messageBoxWidth / 2);
+        int y = (screenHeight / 2) - (messageBoxHeight / 2);
+        messageBox->move(x, y);
+        qDebug() << screenWidth;
+        qDebug() << screenHeight;
+        qDebug() << messageBoxWidth;
+        qDebug() << messageBoxHeight;
+        qDebug() << x << y;
+        return;
+    }
     // 获取窗口信息
     int parentWindowX = this->parent->frameGeometry().x();
     int parentWindowY = this->parent->frameGeometry().y();
@@ -44,7 +64,7 @@ void MessageBox::ShowMessageBox(QString iconPath, QString title, QString text){
     int parentWindowHeight = this->parent->frameGeometry().height();
     int messageBoxWidth = messageBox->frameSize().width();
     int messageBoxHeight = messageBox->frameSize().height();
-    // 计算 X 坐标
+    // 计算坐标
     int x = parentWindowX + ((parentWindowWidth / 2) - (messageBoxWidth / 2));
     int y = parentWindowY + ((parentWindowHeight / 2) - (messageBoxHeight / 2));
     messageBox->move(x, y);

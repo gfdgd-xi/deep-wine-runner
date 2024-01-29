@@ -19,6 +19,8 @@ public:
 private slots:
     void on_installPath_clicked();
 
+    void on_browserButton_clicked();
+
 private:
     QTermWidget *terminal = new QTermWidget(0);
     Ui::MainWindow *ui;

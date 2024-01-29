@@ -8,6 +8,7 @@
 #include <DTitlebar>
 #include <QDesktopServices>
 #include <DApplication>
+#include <DFileDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : DMainWindow(parent)
@@ -16,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     // 自定义标题栏
     DTitlebar *bar = this->titlebar();
-    bar->setTitle("应用安装器");
+    bar->setTitle("aptss 应用安装器");
     bar->setIcon(QIcon(":/Icon/deepin-wine-runner.svg"));
     bar->setBackgroundTransparent(true);
     QMenu *openProgramWebsite = bar->menu()->addMenu("项目地址");
@@ -61,10 +62,25 @@ void MainWindow::on_installPath_clicked()
         return;
     }
     InstallDEB *deb = new InstallDEB(terminal, this);
+    deb->AddCommand("set -e");
     deb->AddCommand("aptss update");
     deb->AddCommand("aptss install \"" + ui->debPath->text() + "\" -y");
+    deb->SetCommandAfterRootRun("if [[ $? != 0 ]]; then  \n"\
+                    "    '" + QCoreApplication::applicationFilePath() + "' --messagebox-error 错误 安装失败！ > /dev/null 2>&1  \n"\
+                    "else  \n"
+                    "    '" + QCoreApplication::applicationFilePath() + "' --messagebox-information 提示 安装完成！ > /dev/null 2>&1 \n"\
+                    "fi");
     deb->RunCommand(1);
 
 
+}
+
+
+void MainWindow::on_browserButton_clicked()
+{
+    QString filePath = DFileDialog::getOpenFileName(this, "选择 deb 包", QDir::homePath(), "deb 包(*.deb);;所有文件(*.*)");
+    if(filePath != ""){
+        ui->debPath->setText(filePath);
+    }
 }
 

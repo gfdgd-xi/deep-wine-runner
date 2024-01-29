@@ -12,9 +12,11 @@ public:
     InstallDEB(QTermWidget *terminal, DMainWindow *mainWindow = NULL);
     void AddCommand(QString command);
     void RunCommand(bool withRoot=false);
+    void SetCommandAfterRootRun(QString command);
     QStringList commandList;
 private:
     QTermWidget *terminal;
+    QString commandAfterRootRun;
     DMainWindow *mainWindow = NULL;
     bool runStatus;
 };
