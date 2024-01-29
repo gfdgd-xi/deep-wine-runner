@@ -29,7 +29,16 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
     CpuCoreNum=`grep 'core id' /proc/cpuinfo | sort -u | wc -l`
     # 查看逻辑CPU的个数
     CpuCount=`cat /proc/cpuinfo| grep "processor"| wc -l`
- 
+    # 判断是否检测异常，如果异常则使用默认值
+    if [[ $CpuSocketNum == 0 ]]; then
+        CpuSocketNum=1
+    fi
+    if [[ $CpuCoreNum == 0 ]]; then
+        CpuCoreNum=1
+    fi
+    if [[ $CpuCount == 0 ]]; then
+        CpuCount=2
+    fi
     # 总内存大小GB
     MemTotal=`awk '($1 == "MemTotal:"){printf "%.2f\n",$2/1024/1024}' /proc/meminfo`
     use=$(echo "scale=4; $MemTotal / 3" | bc)
