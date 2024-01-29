@@ -1,0 +1,3 @@
+#!/bin/bash
+TRANSHELL_CONTENT_UNPACKING="Preparing the following APP:"
+TRANSHELL_CONTENT_SPARK_WINDOWS_COMPATIBILITY_TOOL="Spark Windows APP Compatibility Helper"

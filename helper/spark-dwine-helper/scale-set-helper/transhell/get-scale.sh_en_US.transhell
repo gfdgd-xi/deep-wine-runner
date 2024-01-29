@@ -1,0 +1,8 @@
+#!/bin/bash
+TRANSHELL_CONTENT_OPTION="Options"
+TRANSHELL_CONTENT_YOUR_DIMENSION_IS="Your dimension is ："
+TRANSHELL_CONTENT_PLEASE_CHOOSE_ONE_BELOW="Please choose one option below"
+TRANSHELL_CONTENT_1_SCALE_AS_DEFAULT="Setting 1.0 scale as default"
+TRANSHELL_CONTENT_SCALE_IS="Scale multiple is "
+TRANSHELL_CONTENT_SAVED="saved."
+TRANSHELL_CONTENT_YOU_CAN_USE_SPARK_WINE_HELPER_SETTINGS_TO_ADJUST="You can use spark wine helper settings to adjust settings"

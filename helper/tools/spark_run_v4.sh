@@ -13,9 +13,10 @@
 source /opt/durapps/transhell/transhell.sh
 load_transhell_debug
 
-WINEPREFIX="$HOME/.deepinwine/@public_bottle_name@"
-APPDIR="/opt/deepinwine/apps/@public_bottle_name@"
-APPVER="@deb_version_string@"
+BOTTLENAME="$1"
+WINEPREFIX="$HOME/.deepinwine/$1"
+APPDIR="/opt/apps/${DEB_PACKAGE_NAME}/files"
+APPVER=""
 APPTAR="files.7z"
 BOTTLENAME=""
 WINE_CMD="deepin-wine"
@@ -91,11 +92,39 @@ HelpApp()
 	echo " -h/--help      Show program help info"
 }
 #############帮助文件
+
+check_link()
+{
+    if [ ! -d "$1" ];then
+        echo "$1 不是目录，不能创建$2软连接"
+        return
+    fi
+    link_path=$(realpath "$2")
+    target_path=$(realpath "$1")
+    if [ "$link_path" != "$target_path" ];then
+        if [ -d "$2" ];then
+            mv "$2" "${2}.bak"
+        else
+            rm "$2"
+        fi
+        echo "修复$2软连接为$1"
+        ln -s -f "$1" "$2"
+    fi
+}
+
 FixLink()
 {
     if [ -d ${WINEPREFIX} ]; then
         CUR_DIR=$PWD
         cd "${WINEPREFIX}/dosdevices"
+    # Link to Document
+if [ -L "$WINEPREFIX/drive_c/users/$(whoami)/My Documents" ]; then
+        env WINEPREFIX="$WINEPREFIX" $WINE_CMD reg add 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders' /t REG_EXPAND_SZ  /v Personal /d "%USERPROFILE%\My Documents" /f
+
+else
+        env WINEPREFIX="$WINEPREFIX" $WINE_CMD reg add 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders' /t REG_EXPAND_SZ  /v Personal /d "%USERPROFILE%\Documents" /f
+
+fi
         rm c: z: y:
         ln -s -f ../drive_c c:
         ln -s -f / z:
@@ -115,7 +144,7 @@ DisableWrite()
     mkdir "${1}"
     chmod -w "${1}"
 }
-########如果有该文件夹则删除，然后再创建一个不允许写入的（这东西是被用在了QQ启动上，看来腾讯不怎么好对付）
+########如果有该文件夹则删除，然后再创建一个不允许写入的
 is_autostart()
 {
     AUTOSTART="/opt/deepinwine/tools/autostart"
@@ -146,7 +175,7 @@ CallProcess()
     #kill bloack process
     is_autostart $DEB_PACKAGE_NAME
     autostart=$?
-    if [ $autostart -ne 0 ];then
+    if [[ $autostart -ne 0 ]] && [[ "$1" != *"pluginloader.exe" ]];then
         $SHELL_DIR/spark_kill.sh "$BOTTLENAME" block
     fi
 
@@ -161,14 +190,7 @@ CallProcess()
     fi
     # Disable winemenubuilder
     env WINEPREFIX="$WINEPREFIX" $WINE_CMD reg add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v winemenubuilder.exe /f
-    # Link to Document
-if [ -L "$WINEPREFIX/drive_c/users/$(whoami)/My Documents" ]; then
-        env WINEPREFIX="$WINEPREFIX" $WINE_CMD reg add 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders' /t REG_EXPAND_SZ  /v Personal /d "%USERPROFILE%\My Documents" /f
 
-else
-        env WINEPREFIX="$WINEPREFIX" $WINE_CMD reg add 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders' /t REG_EXPAND_SZ  /v Personal /d "%USERPROFILE%\Documents" /f
-
-fi
     
 
     
@@ -209,6 +231,9 @@ UnixUriToDosPath()
 #### CallApp段，根据容器名找专属优化，没有就走通用启动
 CallApp()
 {
+
+PID_BANNER=$!
+    
     FixLink
     debug_log "CallApp $BOTTLENAME arg count $#: $*"
     if [ -f "/opt/apps/${DEB_PACKAGE_NAME}/files/pre_run.sh" ];then
@@ -223,8 +248,9 @@ if [ -f "$APP_CONFIG_PATH" ]; then
   source $APP_CONFIG_PATH
 else
   echo "$APP_CONFIG_PATH 文件不存在，执行通用启动"
-  CallProcess "$@"
+  CallProcess "$@" 
 fi
+
 
 }
 ExtractApp()
@@ -235,10 +261,10 @@ local tmp_log=$(mktemp)
 
 	cmd_pid=$!
 (while kill -0 $cmd_pid 2> /dev/null; do
-        cat "${tmp_log}"
+        tail -n 1 "${tmp_log}"
         sleep 1
-    done)|  zenity --progress --title="$BOTTLENAME" --text="${TRANSHELL_CONTENT_UNPACKING} $BOTTLENAME..."  --width=400 --auto-close --no-cancel 
-
+    done)|  zenity --progress --title="${TRANSHELL_CONTENT_SPARK_WINDOWS_COMPATIBILITY_TOOL}" --text="${TRANSHELL_CONTENT_UNPACKING} $BOTTLENAME..."  --width=600 --auto-close --no-cancel 
+rm $tmp_log
 
 
 	mv "$1/drive_c/users/@current_user@" "$1/drive_c/users/$USER"
@@ -377,7 +403,7 @@ case $4 in
 	"-r" | "--reset")
 		ResetApp
 		;;
-	"-c" | "--create")
+	"-cb" | "--create")
 		CreateBottle
 		;;
 	"-e" | "--remove")
