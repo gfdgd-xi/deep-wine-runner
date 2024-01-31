@@ -1,5 +1,5 @@
 build:
-	make package -j$(nproc)
+	make package-deb -j$(nproc)
 
 replace:
 	rm Icon/Program/*
@@ -15,6 +15,7 @@ clean:
 	rm -rfv VM-source/.qmake.stash
 
 package-pkg:
+	sudo debtap -u
 	debtap -q spark-deepin-wine-runner.deb
 	debtap -q spark-deepin-wine-runner-ace.deb
 
