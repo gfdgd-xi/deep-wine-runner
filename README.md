@@ -37,7 +37,7 @@ Github：https://github.com/gfdgd-xi/deep-wine-runner/releases/
 Sourceforge：https://sourceforge.net/projects/deep-wine-runner/files/  
 更多需求需要私聊作者定制（有偿服务）
 ### ARM
-需要私聊作者定制（有偿服务）
+需要私聊作者定制（有偿服务）  
 
 ## 软件架构
 理论上支持全架构，如果 Python 能运行的话  
@@ -613,20 +613,7 @@ make run
 make install
 ```
 ## Openkylin 如何安装这个 Wine 运行器？
-首先添加作者的源：    
-Gitlink 源（国内推荐）：    
-```bash
-wget https://code.gitlink.org.cn/gfdgd_xi/gfdgd-xi-apt-mirrors/raw/branch/master/sources/gitlink.sh && bash gitlink.sh && rm gitlink.sh
-```
-Github 源（国外推荐）：    
-```bash
-wget https://gfdgd-xi.github.io/gfdgd-xi-apt-mirrors/sources/github.sh && bash github.sh && rm github.sh
-```
-上面二选一，添加完后执行  
-```bash
-sudo apt install spark-deepin-wine-runner
-```
-即可自动补全依赖安装（说实话 openkylin 缺的依赖好多）  
+现在可以直接安装了 
 
 ## 对于 Deepin/UOS（AMD64 平台）小白如何使用该程序？
 下面是送给小白的 wine 运行器简单使用方法，先声明，wine 并***不能完美的运行所有 exe 文件***，利用此 wine 运行器简易安装可执行文件的方法如下：  
@@ -640,42 +627,10 @@ sudo apt install spark-deepin-wine-runner
    ![image.png](https://storage.deepin.org/thread/202207191920282406_image.png)
 
 
-## 稍微讲一下目前 deepin 23 Preview 运行自定义 exe 的方法（Wine 运行器均已支持）
-
-### 方法一
-
-随便安装一个 linglong 格式包的 wine 程序（要记住包名），然后在终端输入
-
-```bash
-ll-cli run 包名 --exec '/bin/deepin-wine6-stable'
-```
-
-即可，缺陷可看运行器上方小提示第 6 点
-
-### 方法二（容易翻车）
-
-添加 Deepin 20 的**官方源和商店源**，然后输入如下的命令：**切记不能sudo apt upgrade**，会出现的问题可以看运行器的小提示第 7 点，以及无法保证所有 Wine 均可运行
-
-```bash
-sudo dpkg --add-architecture i386
-sudo apt update
-# 安装普通的 Wine
-sudo apt install wine
-# 安装 deepin-wine5-stable（本机测试 X64 的 Wine 跑不了）
-sudo apt install deepin-wine5-stable
-# 安装 deepin-wine6-stable
-sudo apt install deepin-wine6-stable
-```
-**使用完后最好删除掉 Deepin 20 的官方源和商店源，防止出问题**  
-可以看 [@ThinkYoung](user/18570) 写的 https://bbs.deepin.org/post/241148，可以参考借鉴  
-
-### 方法三
-我不知道了，希望能有大佬提供更好的解决方案
-
 ## 下载链接
 Gitee：https://gitee.com/gfdgd-xi/deep-wine-runner  
 Github：https://github.com/gfdgd-xi/deep-wine-runner  
-Gitlink：https://www.gitlink.org.cn/gfdgd_xi/deep-wine-runner  
+Sourceforge：https://sourceforge.com/projects/deep-wine-runner
 蓝奏云：https://gfdgdxi.lanzouj.com/b01nz7y3e，密码:7oii  
 星火应用商店：spk://store/tools/spark-deepin-wine-runner  
 
