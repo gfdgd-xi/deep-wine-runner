@@ -3459,8 +3459,7 @@ for i in [
 # 有些功能是 Arch Linux 不适用的，需要屏蔽
 if not os.path.exists("/etc/arch-release"):
     for i in [installLat, installWineHQ, installWineHQOrg,
-              installBox86CN, installBox86, installBox86Own, addWineDebMirrorForDeepin20,
-              installQemuMenu]:
+              installBox86CN, installBox86, installBox86Own, addWineDebMirrorForDeepin20]:
         i.setDisabled(True)
     for i in actionList:
         i.setDisabled(True)
