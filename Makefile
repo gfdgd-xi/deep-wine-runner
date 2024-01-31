@@ -14,7 +14,11 @@ clean:
 	rm VM-source/VirtualMachine -rfv
 	rm -rfv VM-source/.qmake.stash
 
-package:
+package-pkg:
+	debtap -q spark-deepin-wine-runner.deb
+	debtap -q spark-deepin-wine-runner-ace.deb
+
+package-deb:
 	#cd VM-source && qmake
 	#cd VM-source && make
 	#cd wine && make

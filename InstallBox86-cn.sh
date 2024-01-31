@@ -21,13 +21,13 @@ if [[ $? == 0 ]]; then
 fi
 echo 使用国内源
 #sudo wget https://ryanfortner.github.io/box86-debs/box86.list -O /etc/apt/sources.list.d/box86.list
-sudo bash -c "echo deb http://seafile.jyx2048.com:2345/spark-deepin-wine-runner/data/box86-debs/debian ./ > /etc/apt/sources.list.d/box86.list"
-wget -qO- http://seafile.jyx2048.com:2345/spark-deepin-wine-runner/data/box86-debs/KEY.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/box86-debs-archive-keyring.gpg 
+sudo bash -c "echo deb http://gfdgdxi.v5.idcfengye.com/spark-deepin-wine-runner/data/box86-debs/debian ./ > /etc/apt/sources.list.d/box86.list"
+wget -qO- http://gfdgdxi.v5.idcfengye.com/spark-deepin-wine-runner/data/box86-debs/KEY.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/box86-debs-archive-keyring.gpg 
 echo "adding key..."
 installBox=box86-generic-arm
 if [[ $PCArch == "arm64" ]]; then
-    sudo bash -c "echo deb http://seafile.jyx2048.com:2345/spark-deepin-wine-runner/data/box64-debs/debian ./ > /etc/apt/sources.list.d/box64.list"
-    wget -qO- http://seafile.jyx2048.com:2345/spark-deepin-wine-runner/data/box64-debs/KEY.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg
+    sudo bash -c "echo deb http://gfdgdxi.v5.idcfengye.com/spark-deepin-wine-runner/data/box64-debs/debian ./ > /etc/apt/sources.list.d/box64.list"
+    wget -qO- http://gfdgdxi.v5.idcfengye.com/spark-deepin-wine-runner/data/box64-debs/KEY.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg
     installBox="box86-generic-arm box64-generic-arm"
     sudo dpkg --add-architecture armhf
 fi
@@ -40,8 +40,8 @@ echo 按回车键后将会自动安装包名为 box86-generic-arm、box64-generi
 echo 其他特殊版本及其包名可见如下链接（如适用于 rk3399 的版本）：
 echo "    - Box64：https://github.com/ryanfortner/box64-debs/"
 echo "    - Box86：https://github.com/ryanfortner/box86-debs/"
-echo "    - Box64（国内镜像）：http://seafile.jyx2048.com:2345/spark-deepin-wine-runner/data/box64-debs"
-echo "    - Box64（国内镜像）：http://seafile.jyx2048.com:2345/spark-deepin-wine-runner/data/box86-debs"
+echo "    - Box64（国内镜像）：http://gfdgdxi.v5.idcfengye.com/spark-deepin-wine-runner/data/box64-debs"
+echo "    - Box64（国内镜像）：http://gfdgdxi.v5.idcfengye.com/spark-deepin-wine-runner/data/box86-debs"
 read
 sudo apt install -y $installBox
 echo 安装完成！按回车键退出

@@ -38,6 +38,11 @@ def InstallSparkWine(wine):
     else:
         os.system(f"sudo apt install \"{wine}\" -y")
 
+def InstallWineWithYay(wine):
+    if os.system("which yay > /dev/null"):
+        os.system("sudo pacman -S yay")
+    os.system(f"yay -S \"{wine}\"")
+
 ###################
 # 程序功能
 ###################
@@ -53,6 +58,31 @@ m     m   "
 print("请保证你能有 root 权限以便安装")
 print("如果有请按回车，否则按 [Ctrl+C] 退出", end=' ')
 input()
+# 判断系统版本，如果是 Arch Linux，则另外处理
+if os.path.exists("/etc/arch-release"):
+    os.system("sudo pacman -Syu")
+    print("请问是否要安装原版 wine（wine64）？[Y/N]", end=' ')
+    choose = input().upper()
+    if not choose == "N":
+        os.system("sudo pacman -S wine")
+    if os.system("which deepin-wine5-stable > /dev/null"):
+        print("请问是否要安装 deepin-wine5-stable？[Y/N]", end=' ')
+        choose = input().upper()
+        if not choose == "N":
+            InstallWineWithYay("deepin-wine5-stable")
+    if os.system("which deepin-wine6-stable > /dev/null"):
+        print("请问是否要安装 deepin-wine6-stable？[Y/N]", end=' ')
+        choose = input().upper()
+        if not choose == "N":
+            InstallWineWithYay("deepin-wine6-stable")
+    if os.system("which deepin-wine8-stable > /dev/null"):
+        print("请问是否要安装 deepin-wine8-stable？[Y/N]", end=' ')
+        choose = input().upper()
+        if not choose == "N":
+            InstallWineWithYay("deepin-wine8-stable")
+    print("全部完成！")
+    exit()
+    
 os.system("sudo apt update")
 print("请问是否要更新操作系统？[Y/N]", end=' ')
 choose = input().upper()

@@ -2611,9 +2611,11 @@ exe路径\' 参数 \'
 7、如果非 X86 的用户的 UOS 专业版用户想要使用的话，只需要在应用商店安装一个 Wine 版本微信即可在本程序选择正确的 Wine 运行程序；''')
 updateThingsString = QtCore.QCoreApplication.translate("U", '''※1、修复简易打包器在 Deepin/UOS 上无法正常启动的问题
 ※2、打包器生成的 deb 修复在非 Deepin/UOS 且未安装星火应用商店的系统中启动器无程序图标的问题
-3、新增公告和新版本提示功能
-4、修复公告的链接在部分机器无法正常打开的问题
-5、新增赞赏入口''')
+※3、修复 Box86/64 国内源源失效的问题
+※4、支持 Arch Linux
+5、新增公告和新版本提示功能
+6、修复公告的链接在部分机器无法正常打开的问题
+7、新增赞赏入口''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
 updateTime = "2024年01月21日"
@@ -3454,6 +3456,14 @@ for i in [
     if not os.path.exists(i[1]):
         for x in i[0]:
             x.setDisabled(True)
+# 有些功能是 Arch Linux 不适用的，需要屏蔽
+if not os.path.exists("/etc/arch-release"):
+    for i in [installLat, installWineHQ, installWineHQOrg,
+              installBox86CN, installBox86, installBox86Own, addWineDebMirrorForDeepin20,
+              installQemuMenu]:
+        i.setDisabled(True)
+    for i in actionList:
+        i.setDisabled(True)
 # 有些功能是非 X86 不适用的，需要屏蔽
 if subprocess.getoutput("arch").lower() != "x86_64":
     p1.setDisabled(True)
@@ -3462,7 +3472,6 @@ if subprocess.getoutput("arch").lower() != "x86_64":
     #v1.setDisabled(True)
     installWineHQ.setDisabled(True)
     installWineHQOrg.setDisabled(True)
-    pass
 o1.setCurrentText(setting["DefultWine"])
 e1.setEditText(setting["DefultBotton"])
 e2.setEditText("")
