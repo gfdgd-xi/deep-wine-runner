@@ -39,7 +39,7 @@ if [ -d /opt/apps/deepin-wine-runner/dxvk ]; then
 fi
 echo 移除完成
 # 如果为非 X86 PC，可以删除掉一些无用组件（主要是用不了）
-if [ `arch` != "x86_64" ]; then
+if [[ `arch` != "x86_64" ]]; then
 	echo 非X86架构，删除对非X86架构无用的组件
 	# 删除虚拟机功能
 	#rm -rf /opt/apps/deepin-wine-runner/StartVM.sh

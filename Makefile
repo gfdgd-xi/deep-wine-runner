@@ -15,6 +15,9 @@ clean:
 	rm VM-source/VirtualMachine -rfv
 	rm -rfv VM-source/.qmake.stash
 
+#package-rpm:
+
+
 package-pkg:
 	#sudo debtap -u
 	debtap -Q spark-deepin-wine-runner.deb
