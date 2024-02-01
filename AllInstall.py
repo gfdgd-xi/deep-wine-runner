@@ -40,7 +40,7 @@ def InstallSparkWine(wine):
 
 def InstallWineWithYay(wine):
     if os.system("which yay > /dev/null"):
-        os.system("sudo pacman -S yay")
+        os.system("sudo pacman -S yay  --noconfirm")
     os.system(f"yay -S \"{wine}\"")
 
 ###################

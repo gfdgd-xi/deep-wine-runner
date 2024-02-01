@@ -1313,7 +1313,7 @@ python3 "{programPath}/updatekiller.py"
 echo 下载安装包
 wget -P /tmp/spark-deepin-wine-runner/update {UpdateWindow.data["Url-pkg"][0]}
 echo 安装安装包
-pacman -U /tmp/spark-deepin-wine-runner/update/*
+pacman -U /tmp/spark-deepin-wine-runner/update/*  --noconfirm
 notify-send -i "{iconPath}" "更新完毕！"
 zenity --info --text=\"更新完毕！\" --ellipsize
 """)

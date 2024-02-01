@@ -2,7 +2,7 @@
 # 如果是 Arch Linux
 if [[-f /etc/arch-release ]]; then
     sudo pacman -Syu
-    sudo pacman -S qemu-user qemu-user-static qemu-full
+    sudo pacman -S qemu-user qemu-user-static qemu-full  --noconfirm
     exit
 fi
 sudo apt update

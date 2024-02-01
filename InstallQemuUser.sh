@@ -9,7 +9,7 @@ fi
 # 判断是不是 Arch Linux
 if [[ -f /etc/arch-release ]]; then
     sudo pacman -Syu
-    sudo pacman -S qemu-user qemu-user-static 
+    sudo pacman -S qemu-user qemu-user-static  --noconfirm
     echo 安装完成，按回车键后退出
     read
 fi
