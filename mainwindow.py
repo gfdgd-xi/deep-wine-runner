@@ -1279,7 +1279,7 @@ class UpdateWindow():
         isArch = False
         if os.path.exists("/etc/arch-release"):
             isArch = True
-            if UpdateWindow.data["Url-pkg"][0] == None:
+            if UpdateWindow.data["Url-pkg"][0] == "":
                 unPackageNew = True
         try:            
             print(UpdateWindow.data["Url"])
