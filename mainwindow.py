@@ -1275,9 +1275,15 @@ class UpdateWindow():
         if os.path.exists("/tmp/spark-deepin-wine-runner/update"):
             shutil.rmtree("/tmp/spark-deepin-wine-runner/update")
         os.makedirs("/tmp/spark-deepin-wine-runner/update")
+        unPackageNew = False
+        isArch = False
+        if os.path.exists("/etc/arch-release"):
+            isArch = True
+            if UpdateWindow.data["Url-pkg"] == None:
+                unPackageNew = True
         try:            
             print(UpdateWindow.data["Url"])
-            if os.path.exists(f"{programPath}/off-line.lock") or programPath != "/opt/apps/deepin-wine-runner":
+            if os.path.exists(f"{programPath}/off-line.lock") or programPath != "/opt/apps/deepin-wine-runner" or unPackageNew:
                 # 使用解压法更新
                 write_txt("/tmp/spark-deepin-wine-runner/update.sh", f"""#!/bin/bash
 echo 删除多余的安装包
@@ -1297,8 +1303,23 @@ zenity --info --text=\"更新完毕！\" --ellipsize
                 OpenTerminal("bash /tmp/spark-deepin-wine-runner/update.sh")
                 return
             else:
-                # 使用 deb 安装更新
-                write_txt("/tmp/spark-deepin-wine-runner/update.sh", f"""#!/bin/bash
+                if isArch:
+                    # 使用 pacman 安装更新
+                    write_txt("/tmp/spark-deepin-wine-runner/update.sh", f"""#!/bin/bash
+echo 删除多余的安装包
+rm -rfv /tmp/spark-deepin-wine-runner/update/*
+echo 关闭“Wine 运行器”
+python3 "{programPath}/updatekiller.py"
+echo 下载安装包
+wget -P /tmp/spark-deepin-wine-runner/update {UpdateWindow.data["Url"][0]}
+echo 安装安装包
+pacman -U /tmp/spark-deepin-wine-runner/update/*
+notify-send -i "{iconPath}" "更新完毕！"
+zenity --info --text=\"更新完毕！\" --ellipsize
+""")
+                else:
+                    # 使用 deb 安装更新
+                    write_txt("/tmp/spark-deepin-wine-runner/update.sh", f"""#!/bin/bash
 echo 删除多余的安装包
 rm -rfv /tmp/spark-deepin-wine-runner/update/*
 echo 关闭“Wine 运行器”
@@ -3458,6 +3479,9 @@ for i in [
             x.setDisabled(True)
 # 有些功能是 Arch Linux 不适用的，需要屏蔽
 if os.path.exists("/etc/arch-release"):
+    if os.path.exists(f"{programPath}/off-line.lock"):
+        for i in [p1]:
+            i.setDisabled(True)    
     for i in [installLat, installWineHQ, installWineHQOrg,
               installBox86CN, installBox86, installBox86Own, addWineDebMirrorForDeepin20]:
         i.setDisabled(True)
