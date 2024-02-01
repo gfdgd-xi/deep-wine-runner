@@ -48,6 +48,7 @@ def button4_cl():
 
 def disabled_or_NORMAL_all(choose):
     choose = not choose
+    enableCopyIconToDesktop.setDisabled(choose)
     disabledMono.setDisabled(choose)
     e1_text.setDisabled(choose)
     e2_text.setDisabled(choose)
@@ -410,7 +411,18 @@ class make_deb_threading(QtCore.QThread):
                         f"{wine[wineVersion.currentText()]}, deepin-wine-helper (>= 5.1.30-1), fonts-wqy-microhei, fonts-wqy-zenhei",
                         f"{wine[wineVersion.currentText()]}, spark-dwine-helper | store.spark-app.spark-dwine-helper, fonts-wqy-microhei, fonts-wqy-zenhei"
                         ][int(chooseWineHelperValue.isChecked())],
-                    "postinst": "",
+                    "postinst": ['', f'''#!/bin/bash
+PACKAGE_NAME="{e1_text.text()}"
+for username in $(ls /home)  
+do
+    echo /home/$username
+    if [ -d /home/$username/桌面 ]; then
+        cp /opt/apps/$PACKAGE_NAME/entries/applications/* /home/$username/桌面
+    fi
+    if [ -d /home/$username/Desktop ]; then
+        cp /opt/apps/$PACKAGE_NAME/entries/applications/* /home/$username/Desktop
+    fi
+done'''][enableCopyIconToDesktop.isChecked()],
                     "postrm": ["", f"""#!/bin/bash
 if [ "$1" = "remove" ] || [ "$1" = "purge" ];then
 
@@ -623,8 +635,18 @@ fi
                     "Wine": f"WINEPREDLL='{programPath}/dlls-arm' WINEDLLPATH=/opt/deepin-wine6-stable/lib BOX86_NOSIGSEGV=1 /opt/deepin-box86/box86 /opt/deepin-wine6-stable/bin/wine ",
                     "Architecture": "arm64",
                     "Depends": "com.deepin-wine6-stable.deepin (>= 6.0deepin31), com.wine-helper.deepin (>= 0.0.8), com.deepin-box86.deepin (>= 0.2.6deepin3), deepin-elf-verify (>= 1.1.1-1)",
-                    "postinst": f"""#!/bin/sh
-
+                    "postinst": f"""#!/bin/bash
+{['', f'''PACKAGE_NAME="{e1_text.text()}"
+for username in $(ls /home)  
+do
+    echo /home/$username
+    if [ -d /home/$username/桌面 ]; then
+        cp /opt/apps/$PACKAGE_NAME/entries/applications/* /home/$username/桌面
+    fi
+    if [ -d /home/$username/Desktop ]; then
+        cp /opt/apps/$PACKAGE_NAME/entries/applications/* /home/$username/Desktop
+    fi
+done'''][enableCopyIconToDesktop.isChecked()]}
 ACTIVEX_NAME=""
 
 if [ -f "/opt/apps/{e1_text.text()}/files/install.sh" ];then
@@ -1092,7 +1114,19 @@ fi
                     "Depends": "cxoffice20 | cxoffice5 | cxoffice5:i386",
                     "run.sh": None,
                     "info": None,
-                    "postinst": f'''#!/bin/sh
+                    "postinst": f'''#!/bin/bash
+{["", f"""PACKAGE_NAME="{e1_text.text()}"
+for username in $(ls /home)  
+do
+    echo /home/$username
+    if [ -d /home/$username/桌面 ]; then
+        cp /opt/apps/$PACKAGE_NAME/entries/applications/* /home/$username/桌面
+    fi
+    if [ -d /home/$username/Desktop ]; then
+        cp /opt/apps/$PACKAGE_NAME/entries/applications/* /home/$username/Desktop
+    fi
+done"""][enableCopyIconToDesktop.isChecked()]}
+
 # (c) Copyright 2008. CodeWeavers, Inc.
 
 # Setup logging
@@ -2193,8 +2227,8 @@ bottleNameLock = False
 ###############
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 # 如果要添加其他 wine，请在字典添加其名称和执行路径
-wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable": "deepin-wine6-stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine", "okylin-wine": "okylin-wine", "spark-wine8": "spark-wine8", "spark-wine8-wow": "spark-wine8-wow", "deepin-wine6-vannila": "deepin-wine6-vannila", "deepin-wine8-stable": "deepin-wine8-stable", "spark-wine9": "spark-wine9", "spark-wine9-wow": "spark-wine9-wow"}
-wineValue = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5-stable": "deepin-wine5 stable", "deepin-wine6-stable": "deepin-wine6 stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine", "okylin-wine": "okylin-wine", "spark-wine8": "spark-wine8", "spark-wine8-wow": "spark-wine8-wow", "deepin-wine6-vannila": "deepin-wine6-vannila", "deepin-wine8-stable": "deepin-wine8-stable"}
+wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable": "deepin-wine6-stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine", "okylin-wine": "okylin-wine", "spark-wine8": "spark-wine8", "spark-wine8-wow": "spark-wine8-wow", "deepin-wine6-vannila": "deepin-wine6-vannila", "deepin-wine8-stable": "deepin-wine8-stable", "spark-wine9": "spark-wine9", "spark-wine9-wow": "spark-wine9-wow", "spark-wine": "spark-wine"}
+wineValue = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5-stable": "deepin-wine5 stable", "deepin-wine6-stable": "deepin-wine6 stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine", "okylin-wine": "okylin-wine", "spark-wine8": "spark-wine8", "spark-wine8-wow": "spark-wine8-wow", "deepin-wine6-vannila": "deepin-wine6-vannila", "deepin-wine8-stable": "deepin-wine8-stable", "spark-wine": "spark-wine"}
 # 读取 wine 本地列表
 for i in os.listdir("/opt"):
     if os.path.exists(f"/opt/{i}/bin/wine"):
@@ -2281,6 +2315,7 @@ debControlFrame.addWidget(installDeb)
 rmBash = QtWidgets.QCheckBox(transla.transe("U", "设置卸载该 deb 后自动删除该容器"))
 cleanBottonByUOS = QtWidgets.QCheckBox(transla.transe("U", "使用统信 Wine 生态适配活动容器清理脚本"))
 disabledMono = QtWidgets.QCheckBox(transla.transe("U", "禁用 Mono 和 Gecko 安装器"))
+enableCopyIconToDesktop = QtWidgets.QCheckBox(transla.transe("U", "安装时自动拷贝快捷方式至桌面"))
 debArch = QtWidgets.QComboBox()
 debArch.addItems(["默认选项", "arm64(box86+exagear)"])
 #debArch.addItems(["i386", "arm64(box86+exagear)", "all(crossover)"])
@@ -2393,6 +2428,7 @@ moreSettingLayout.addWidget(cleanBottonByUOS)
 moreSettingLayout.addWidget(chooseWineHelperValue)
 moreSettingLayout.addLayout(helperConfigPathLayout)
 moreSettingLayout.addWidget(disabledMono)
+moreSettingLayout.addWidget(enableCopyIconToDesktop)
 moreSettingLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "deb 的依赖(强制，如无特殊需求默认即可)：")))
 moreSettingLayout.addWidget(debDepends)
 moreSettingLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "deb 的推荐依赖(非强制，一般默认即可)：")))
@@ -2553,6 +2589,7 @@ allInfoList = {
     "CleanBottleByUOS": ["Ch", cleanBottonByUOS],
     "ChooseWineHelperValue": ["Ch", chooseWineHelperValue],
     "DisabledMono": ["Ch", disabledMono],
+    "EnableCopyIconToDesktop": ["Ch", enableCopyIconToDesktop],
     "DebDepends": ["L", debDepends],
     "DebRecommend": ["L", debRecommend],
     "DebFirstArch": ["Co", debFirstArch],

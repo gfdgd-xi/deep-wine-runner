@@ -138,7 +138,19 @@ info = f'''{{
         "installed_apps": false
     }}
 }}'''
-
+postinst = f"""#!/bin/bash
+PACKAGE_NAME="@@@Package@@@"
+for username in $(ls /home)  
+do
+    echo /home/$username
+    if [ -d /home/$username/桌面 ]; then
+        cp /opt/apps/$PACKAGE_NAME/entries/applications/* /home/$username/桌面
+    fi
+    if [ -d /home/$username/Desktop ]; then
+        cp /opt/apps/$PACKAGE_NAME/entries/applications/* /home/$username/Desktop
+    fi
+done
+"""
 postrm = f"""#!/bin/bash
 if [ "$1" = "remove" ] || [ "$1" = "purge" ];then
 
@@ -562,16 +574,18 @@ class RunThread(QtCore.QThread):
                 ["@@@Wine@@@", chooseWine]
             ]
             debControl = ReplaceText(control, replaceMap)
+            debPostinst = ReplaceText(postinst, replaceMap)
             debPostrm = ReplaceText(postrm, replaceMap)
             debInfo = ReplaceText(info, replaceMap)
             debRunSh = ReplaceText(runsh, replaceMap)
             debDesktop = ReplaceText(desktopFile, replaceMap)
             ########### 写入文件
             WriteTxt(f"{debBuildPath}/opt/apps/{debPackageName}/entries/applications/{debPackageName}.desktop", debDesktop)
-            WriteTxt(f"{debBuildPath}/opt/usr/share/applications/{debPackageName}.desktop", debDesktop)
+            WriteTxt(f"{debBuildPath}/usr/share/applications/{debPackageName}.desktop", debDesktop)
             WriteTxt(f"{debBuildPath}/opt/apps/{debPackageName}/files/run.sh", debRunSh)
             WriteTxt(f"{debBuildPath}/opt/apps/{debPackageName}/info", debInfo)
             WriteTxt(f"{debBuildPath}/DEBIAN/control", debControl)
+            WriteTxt(f"{debBuildPath}/DEBIAN/postinst", debPostinst)
             WriteTxt(f"{debBuildPath}/DEBIAN/postrm", debPostrm)
             ########### 赋值权限
             self.RunCommand(f"chmod -Rv 644 '{debBuildPath}/opt/apps/{debPackageName}/info'")
@@ -647,15 +661,18 @@ if __name__ == "__main__":
     """)
     wineChooserList = [
         "使用 Deepin Wine8 Stable 打包应用",
+        "使用 Spark Wine9 wow 打包应用",
+        "使用 Spark Wine9 打包应用",
         "使用 Spark Wine8 打包应用",
         "使用 Spark Wine7 Devel 打包应用",
         "使用 Deepin Wine6 Stable 打包应用",
         "使用 Deepin Wine5 Stable 打包应用",
         "使用 Deepin Wine5 打包应用",
-        "使用 Deepin Wine2 打包应用"
+        "使用 Deepin Wine2 打包应用",
+        "使用 Spark Wine 打包应用"
     ]
     wineChooserIndex = 2
-    wineList = ["deepin-wine8-stable", "spark-wine9-wow", "spark-wine9", "spark-wine8", "spark-wine7-devel", "deepin-wine6-stable", "deepin-wine6-vannila", "spark-wine8-wow", "deepin-wine5-stable", "deepin-wine5", "deepin-wine"]
+    wineList = ["deepin-wine8-stable", "spark-wine9-wow", "spark-wine9", "spark-wine8", "spark-wine7-devel", "deepin-wine6-stable", "deepin-wine6-vannila", "spark-wine8-wow", "deepin-wine5-stable", "deepin-wine5", "deepin-wine", "spark-wine"]
     for i in range(len(wineList)):
         if not os.system(f"which '{wineList[i]}'"):
             wineChooserIndex = i

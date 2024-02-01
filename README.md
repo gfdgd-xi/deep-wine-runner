@@ -593,24 +593,15 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ### 1.0.0（2021年01月29日）
 1. 实现内容
 
-## 源码安装教程
-1. 安装需要的依赖  
+## 构建安装包
+### deb
 ```bash
-sudo apt install git make
+make package-deb -j4
 ```
-2. 下载仓库  
+### pkg
 ```bash
-git clone https://gitee.com/gfdgd-xi/deep-wine-runner.git
-cd deep-wine-runner
-```
-3. 从源码运行程序（如果是从源码安装请跳过这一步）  
-```bash
-make depend
-make run
-```
-4. 从源码安装程序  
-```bash
-make install
+make package-deb -j4
+make package-pkg -j4
 ```
 ## Openkylin 如何安装这个 Wine 运行器？
 现在可以直接安装了 

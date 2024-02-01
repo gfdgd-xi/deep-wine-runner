@@ -2636,7 +2636,8 @@ updateThingsString = QtCore.QCoreApplication.translate("U", '''※1、修复简�
 ※4、支持 Arch Linux
 5、新增公告和新版本提示功能
 6、修复公告的链接在部分机器无法正常打开的问题
-7、新增赞赏入口''')
+7、新增赞赏入口
+8、支持识别 spark-wine9、spark-wine9-wow''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
 updateTime = "2024年01月21日"
