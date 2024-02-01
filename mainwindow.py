@@ -1279,7 +1279,7 @@ class UpdateWindow():
         isArch = False
         if os.path.exists("/etc/arch-release"):
             isArch = True
-            if UpdateWindow.data["Url-pkg"][0] == "":
+            if UpdateWindow.data["Url-pkg"][0] == None:
                 unPackageNew = True
         try:            
             print(UpdateWindow.data["Url"])
@@ -1311,7 +1311,7 @@ rm -rfv /tmp/spark-deepin-wine-runner/update/*
 echo 关闭“Wine 运行器”
 python3 "{programPath}/updatekiller.py"
 echo 下载安装包
-wget -P /tmp/spark-deepin-wine-runner/update {UpdateWindow.data["Url"][0]}
+wget -P /tmp/spark-deepin-wine-runner/update {UpdateWindow.data["Url-pkg"][0]}
 echo 安装安装包
 pacman -U /tmp/spark-deepin-wine-runner/update/*
 notify-send -i "{iconPath}" "更新完毕！"
