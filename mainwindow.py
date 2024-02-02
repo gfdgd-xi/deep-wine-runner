@@ -1334,7 +1334,7 @@ rm -rfv /tmp/spark-deepin-wine-runner/update/*
 echo 关闭“Wine 运行器”
 python3 "{programPath}/updatekiller.py"
 echo 下载安装包
-wget -P /tmp/spark-deepin-wine-runner/update {UpdateWindow.data["Url-rpm"][0]} -o spark-deepin-wine-runner.rpm
+wget -O /tmp/spark-deepin-wine-runner/update/spark-deepin-wine-runner.rpm {UpdateWindow.data["Url-rpm"][0]}
 echo 安装安装包
 yum install /tmp/spark-deepin-wine-runner/update/spark-deepin-wine-runner.rpm  -y
 notify-send -i "{iconPath}" "更新完毕！"
