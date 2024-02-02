@@ -31,8 +31,8 @@ package-rpm:
 
 package-pkg:
 	#sudo debtap -u
-	fakeroot debtap -Q spark-deepin-wine-runner.deb
-	fakeroot debtap -Q spark-deepin-wine-runner-ace.deb
+	sudo debtap -Q spark-deepin-wine-runner.deb
+	sudo debtap -Q spark-deepin-wine-runner-ace.deb
 
 package-deb:
 	#cd VM-source && qmake

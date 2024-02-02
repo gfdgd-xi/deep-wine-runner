@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 3.6.1</h1>
+<h1 align="center">Wine 运行器 3.7.0</h1>
 <hr>
 <a href='https://gitee.com/gfdgd-xi/deep-wine-runner/stargazers'><img src='https://gitee.com/gfdgd-xi/deep-wine-runner/badge/star.svg?theme=dark' alt='star'></img></a>
 <a href='https://gitee.com/gfdgd-xi/deep-wine-runner/members'><img src='https://gitee.com/gfdgd-xi/deep-wine-runner/badge/fork.svg?theme=dark' alt='fork'></img></a>  
@@ -147,6 +147,14 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 9、修复公告的链接在部分机器无法正常打开的问题  
 10、新增赞赏入口  
 11、支持识别 spark-wine9、spark-wine9-wow  
+
+
+![截图_deepin-wine-runner_20240202211238.png](https://storage.deepin.org/thread/20240202131540242_截图_deepin-wine-runner_20240202211238.png)
+
+![VirtualBox_Fedora_02_02_2024_21_00_31.png](https://storage.deepin.org/thread/202402021315383577_VirtualBox_Fedora_02_02_2024_21_00_31.png)
+
+![VirtualBox_Manjaro_02_02_2024_20_46_37.png](https://storage.deepin.org/thread/202402021315363571_VirtualBox_Manjaro_02_02_2024_20_46_37.png)
+
 
 ### 3.6.1（2023年12月25日）
 **※1、修复应用无法打开的问题**  
