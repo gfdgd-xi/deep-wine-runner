@@ -17,6 +17,10 @@ clean:
 
 #package-rpm:
 
+package-rpm:
+	sudo rpmbuild -bb rpm/spark-deepin-wine-runner.spec
+	sudo cp /root/rpmbuild/RPMS/x86_64/spark-deepin-wine-runner-*.rpm .
+	sudo rm -rf /root/rpmbuild/
 
 package-pkg:
 	#sudo debtap -u

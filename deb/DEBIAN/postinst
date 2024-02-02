@@ -11,7 +11,7 @@
 # 程序版本号
 version=3.4.1
 echo 安装组件
-#python3 -m pip install --upgrade PyQt5 --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple > /dev/null 2>&1 | true
+#python3 -m pip install --upgrade pyqt5 --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple > /dev/null 2>&1 | true
 #python3 -m pip install --upgrade PyQtWebEngine --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple > /dev/null 2>&1 | true
 python3 -m pip install --upgrade pynput --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple --break-system-packages > /dev/null 2>&1 | true
 python3 -m pip install --upgrade xpinyin --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple --break-system-packages > /dev/null 2>&1 | true

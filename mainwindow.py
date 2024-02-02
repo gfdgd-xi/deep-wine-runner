@@ -29,16 +29,16 @@ import req as requests
 import urllib.parse as parse
 try:
     import PyQt5.QtGui as QtGui
-expect:
-    os.system("python3 -m pip install --upgrade PyQt5 --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple > /dev/null 2>&1 | true")
+except:
+    os.system("python3 -m pip install --upgrade pyqt5 --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple")
     import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
 try:
     import PyQt5.QtWebEngineWidgets as QtWebEngineWidgets
     bad = False
-    threading.Thread(target=os.system, args=["python3 -m pip install --upgrade PyQtWebEngine --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple > /dev/null 2>&1 | true"]).start()
 except:
+    threading.Thread(target=os.system, args=["python3 -m pip install --upgrade PyQtWebEngine --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple"]).start()
     bad = True
 from trans import *
 from Model import *
@@ -2637,12 +2637,13 @@ exe路径\' 参数 \'
 updateThingsString = QtCore.QCoreApplication.translate("U", '''※1、修复简易打包器在 Deepin/UOS 上无法正常启动的问题
 ※2、打包器生成的 deb 修复在非 Deepin/UOS 且未安装星火应用商店的系统中启动器无程序图标的问题
 ※3、修复 Box86/64 国内源源失效的问题
-※4、支持 Arch Linux
-※5、打包器支持将 deb 包转换为其它格式
-6、新增公告和新版本提示功能
-7、修复公告的链接在部分机器无法正常打开的问题
-8、新增赞赏入口
-9、支持识别 spark-wine9、spark-wine9-wow''')
+※4、适配 Arch Linux
+※5、适配 Fedora
+※6、打包器支持将 deb 包转换为其它格式
+7、新增公告和新版本提示功能
+8、修复公告的链接在部分机器无法正常打开的问题
+9、新增赞赏入口
+10、支持识别 spark-wine9、spark-wine9-wow''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
 updateTime = "2024年02月02日"

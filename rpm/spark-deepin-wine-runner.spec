@@ -21,6 +21,7 @@ Requires: deepin-terminal
 Requires: python3-dbus
 Requires: python3-pip
 Requires: p7zip
+Requires: p7zip-plugins
 Requires: sudo
 Requires: python3-pyperclip
 Requires: bubblewrap
