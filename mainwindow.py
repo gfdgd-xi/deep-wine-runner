@@ -27,13 +27,17 @@ import updatekiller
 import subprocess
 import req as requests
 import urllib.parse as parse
-
-import PyQt5.QtGui as QtGui
+try:
+    import PyQt5.QtGui as QtGui
+expect:
+    os.system("python3 -m pip install --upgrade PyQt5 --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple > /dev/null 2>&1 | true")
+    import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
 try:
     import PyQt5.QtWebEngineWidgets as QtWebEngineWidgets
     bad = False
+    threading.Thread(target=os.system, args=["python3 -m pip install --upgrade PyQtWebEngine --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple > /dev/null 2>&1 | true"]).start()
 except:
     bad = True
 from trans import *
