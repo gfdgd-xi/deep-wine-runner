@@ -23,7 +23,7 @@ jobs:
       - name: upload result
         uses: actions/upload-artifact@v1
         with:
-          name: spark-deepin-wine-runner.deb
+          name: spark-deepin-wine-runner.rpm
           path: /home/runner/spark-deepin-wine-runner.rpm
       
     

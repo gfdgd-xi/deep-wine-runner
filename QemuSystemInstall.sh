@@ -1,8 +1,18 @@
 #!/bin/bash
+# 如果是 Fedora
+if [[-f /etc/fedora-release ]]; then
+    sudo yum update -y
+    sudo yum install qemu
+    echo 安装完成！按回车键退出
+    read
+    exit
+fi
 # 如果是 Arch Linux
 if [[-f /etc/arch-release ]]; then
     sudo pacman -Syu
     sudo pacman -S qemu-user qemu-user-static qemu-full  --noconfirm
+    echo 安装完成！按回车键退出
+    read
     exit
 fi
 sudo apt update

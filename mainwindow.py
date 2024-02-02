@@ -1281,9 +1281,14 @@ class UpdateWindow():
         os.makedirs("/tmp/spark-deepin-wine-runner/update")
         unPackageNew = False
         isArch = False
+        isFedora = False
         if os.path.exists("/etc/arch-release"):
             isArch = True
             if UpdateWindow.data["Url-pkg"][0] == None:
+                unPackageNew = True
+        if os.path.exists("/etc/fedora-release"):
+            isFedora = True
+            if UpdateWindow.data["Url-rpm"][0] == None:
                 unPackageNew = True
         try:            
             print(UpdateWindow.data["Url"])
@@ -1318,6 +1323,20 @@ echo 下载安装包
 wget -P /tmp/spark-deepin-wine-runner/update {UpdateWindow.data["Url-pkg"][0]}
 echo 安装安装包
 pacman -U /tmp/spark-deepin-wine-runner/update/*  --noconfirm
+notify-send -i "{iconPath}" "更新完毕！"
+zenity --info --text=\"更新完毕！\" --ellipsize
+""")
+                elif isFedora:
+                    # 使用 yum 安装更新
+                    write_txt("/tmp/spark-deepin-wine-runner/update.sh", f"""#!/bin/bash
+echo 删除多余的安装包
+rm -rfv /tmp/spark-deepin-wine-runner/update/*
+echo 关闭“Wine 运行器”
+python3 "{programPath}/updatekiller.py"
+echo 下载安装包
+wget -P /tmp/spark-deepin-wine-runner/update {UpdateWindow.data["Url-rpm"][0]} -o spark-deepin-wine-runner.rpm
+echo 安装安装包
+yum install /tmp/spark-deepin-wine-runner/update/spark-deepin-wine-runner.rpm  -y
 notify-send -i "{iconPath}" "更新完毕！"
 zenity --info --text=\"更新完毕！\" --ellipsize
 """)
@@ -3485,7 +3504,7 @@ for i in [
         for x in i[0]:
             x.setDisabled(True)
 # 有些功能是 Arch Linux 不适用的，需要屏蔽
-if os.path.exists("/etc/arch-release"):
+if os.path.exists("/etc/arch-release") or os.path.exists("/etc/fedora-release"):
     if os.path.exists(f"{programPath}/off-line.lock"):
         for i in [p1]:
             i.setDisabled(True)    

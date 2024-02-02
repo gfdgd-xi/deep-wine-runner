@@ -58,6 +58,15 @@ m     m   "
 print("请保证你能有 root 权限以便安装")
 print("如果有请按回车，否则按 [Ctrl+C] 退出", end=' ')
 input()
+# 如果是 Fedora，则
+if os.path.exists("/etc/fedora-release"):
+    os.system("sudo pacman -Syu")
+    print("请问是否要安装原版 wine（wine64）？[Y/N]", end=' ')
+    choose = input().upper()
+    if not choose == "N":
+        os.system("sudo yum install wine")
+    print("全部完成！")
+    exit()
 # 判断系统版本，如果是 Arch Linux，则另外处理
 if os.path.exists("/etc/arch-release"):
     os.system("sudo pacman -Syu")

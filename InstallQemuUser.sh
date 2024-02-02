@@ -6,12 +6,21 @@ if [[ $? == 0 ]]; then
     read
     exit 1
 fi
+# 判断是不是 Fedora
+if [[ -f /etc/fedora-release ]]; then
+    sudo yum update -y
+    sudo yum install qemu-user qemu-user-static -y
+    echo 安装完成，按回车键后退出
+    read
+    exit
+fi
 # 判断是不是 Arch Linux
 if [[ -f /etc/arch-release ]]; then
     sudo pacman -Syu
     sudo pacman -S qemu-user qemu-user-static  --noconfirm
     echo 安装完成，按回车键后退出
     read
+    exit
 fi
 sudo apt update
 sudo apt install binfmt-support qemu-user qemu-user-static -y

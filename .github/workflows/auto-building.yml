@@ -1,5 +1,5 @@
-name: Auto Building Wine Runner
-run-name: ${{ github.actor }} Auto Building Wine Runner 🚀
+name: Auto Building Wine Runner（deb）
+run-name: ${{ github.actor }} Auto Building Wine Runner（deb） 🚀
 on:
   push:
   workflow_dispatch:
