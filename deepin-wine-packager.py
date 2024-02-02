@@ -2233,7 +2233,7 @@ def ToRpm():
     QtWidgets.QMessageBox.information(window, "提示", "打包完成！")
 
 def ToTarZst():
-    if os.system("debtap"):
+    if os.system("which debtap"):
         QtWidgets.QMessageBox.critical(window, "错误", "无法找到 debtap 命令，请先安装 debtap")
         return
     os.system(f"debtap -Q '{e12_text.text()}'")
