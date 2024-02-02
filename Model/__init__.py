@@ -36,3 +36,21 @@ if terminal == "":
     app = QtWidgets.QApplication(sys.argv)
     QtWidgets.QMessageBox.critical(None, "错误", "无法识别到以下的任意一个终端\n" + " ".join(terminalList))
     exit()
+
+# 转包
+class TurnDeb():
+    debPath = ""
+    def __init__(self, debPath):
+        self.debPath = debPath
+
+    def ToRpm(self):
+        if os.system("which alien"):
+            raise NameError("无法找到 alien 命令，请先安装 alien")
+        if os.system("which fakeroot"):
+            raise NameError("无法找到 fakeroot 命令，请先安装 fakeroot")
+        os.system(f"fakeroot alien -r '{self.debPath}' -c")
+
+    def ToTarZst(self):
+        if os.system("debtap"):
+            raise NameError("无法找到 debtap 命令，请先安装 debtap")
+        os.system(f"debtap -Q '{self.debPath}'")

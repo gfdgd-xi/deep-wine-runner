@@ -26,6 +26,7 @@ import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
 from trans import *
 from DefaultSetting import *
+from Model import *
 
 #################
 # 程序所需事件
@@ -279,9 +280,9 @@ def make_deb(build=False):
             if QtWidgets.QMessageBox.warning(window, "警告", "输入的路径似乎是在容器的用户目录内，打包后可能会出现找不到 exe 的情况，是否继续？", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No) == QtWidgets.QMessageBox.No:
                 disabled_or_NORMAL_all(True)
                 return
-        if i[0][:2].lower() == "c:" and not os.path.exists("{}/drive_c/{}".format(
+        if i[0].text()[:2].lower() == "c:" and not os.path.exists("{}/drive_c/{}".format(
             e6_text.text(), 
-            i[0][3:].replace("\\", '/'))):
+            i[0].text()[3:].replace("\\", '/'))):
             if QtWidgets.QMessageBox.warning(window, "警告", "输入的路径似乎在 Wine 容器不存在（如果只是大小写错误导致的误判，请忽略）\n是否继续打包？", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No) == QtWidgets.QMessageBox.No:
                 disabled_or_NORMAL_all(True)
                 return
@@ -2221,6 +2222,23 @@ def LockBottleName():
 def get_now_lang()->"获取当前语言":
     return os.getenv('LANG')
 
+def ToRpm():
+    if os.system("which alien"):
+        QtWidgets.QMessageBox.critical(window, "错误", "无法找到 alien 命令，请先安装 alien")
+        return
+    if os.system("which fakeroot"):
+        QtWidgets.QMessageBox.critical(window, "错误", "无法找到 fakeroot 命令，请先安装 fakeroot")
+        return
+    os.system(f"cd '{os.path.dirname(e12_text.text())}' ; fakeroot alien -r '{e12_text.text()}' -c")
+    QtWidgets.QMessageBox.information(window, "提示", "打包完成！")
+
+def ToTarZst():
+    if os.system("debtap"):
+        QtWidgets.QMessageBox.critical(window, "错误", "无法找到 debtap 命令，请先安装 debtap")
+        return
+    os.system(f"debtap -Q '{e12_text.text()}'")
+    QtWidgets.QMessageBox.information(window, "提示", "打包完成！")
+
 bottleNameLock = False
 ###############
 # 程序信息
@@ -2494,6 +2512,13 @@ uosPackingTools.triggered.connect(lambda: threading.Thread(target=os.system, arg
 sparkStoreWebsite.triggered.connect(lambda: webbrowser.open_new_tab("https://spark-app.store/"))
 wineDepend.addAction(sparkStoreWebsite)
 wineDepend.addAction(uosPackingTools)
+turnDebToOther = menu.addMenu("转换安装包格式")
+toRpm = QtWidgets.QAction("转 rpm")
+toTarZst = QtWidgets.QAction("转 tar.zst")
+toRpm.triggered.connect(ToRpm)
+toTarZst.triggered.connect(ToTarZst)
+turnDebToOther.addAction(toRpm)
+turnDebToOther.addAction(toTarZst)
 programmenu.addAction(openFile)
 programmenu.addAction(saveFile)
 #programmenu.addSeparator()
