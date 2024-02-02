@@ -2634,13 +2634,14 @@ updateThingsString = QtCore.QCoreApplication.translate("U", '''※1、修复简�
 ※2、打包器生成的 deb 修复在非 Deepin/UOS 且未安装星火应用商店的系统中启动器无程序图标的问题
 ※3、修复 Box86/64 国内源源失效的问题
 ※4、支持 Arch Linux
-5、新增公告和新版本提示功能
-6、修复公告的链接在部分机器无法正常打开的问题
-7、新增赞赏入口
-8、支持识别 spark-wine9、spark-wine9-wow''')
+※5、打包器支持将 deb 包转换为其它格式
+6、新增公告和新版本提示功能
+7、修复公告的链接在部分机器无法正常打开的问题
+8、新增赞赏入口
+9、支持识别 spark-wine9、spark-wine9-wow''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2024年01月21日"
+updateTime = "2024年02月02日"
 aboutProgram = QtCore.QCoreApplication.translate("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序。原版的 Wine 只能使用命令操作，且安装过程较为繁琐，对小白不友好。于是该运行器为了解决该痛点，内置了对Wine图形化的支持、Wine 安装器、微型应用商店、各种Wine工具、自制的Wine程序打包器、运行库安装工具等。</p>
 <p>它同时还内置了基于Qemu/VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作，也能在非 X86 架构安装 X86 架构的 Windows 操作系统（但是效率较低，可以运行些老系统）。</p>
 <p>而且对于部分 Wine 应用适配者来说，提供了图形化的打包工具，以及提供了一些常用工具以及运行库的安装方式，以及能安装多种不同的 Wine 以测试效果，能极大提升适配效率。</p>
@@ -3496,6 +3497,8 @@ if subprocess.getoutput("arch").lower() != "x86_64":
     #v1.setDisabled(True)
     installWineHQ.setDisabled(True)
     installWineHQOrg.setDisabled(True)
+    if os.path.exists("/etc/arch-release"):
+        p1.setEnabled(True)
 o1.setCurrentText(setting["DefultWine"])
 e1.setEditText(setting["DefultBotton"])
 e2.setEditText("")
