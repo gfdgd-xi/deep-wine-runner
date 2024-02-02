@@ -19,10 +19,10 @@ python3 -m pip install --upgrade xpinyin --trusted-host https://repo.huaweicloud
 python3 -m pip install --upgrade pynput --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple > /dev/null 2>&1 | true
 python3 -m pip install --upgrade xpinyin --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple > /dev/null 2>&1 | true
 # 修改 box86/64 国内源错误数据
-if [[ -f /etc/apt/sources.list.d/box64.list ]]; then
+if [ -f /etc/apt/sources.list.d/box64.list ]; then
 	sed -i 's/http:\/\/seafile.jyx2048.com:2345/http:\/\/gfdgdxi.v5.idcfengye.com/g' /etc/apt/sources.list.d/box64.list
 fi
-if [[ -f /etc/apt/sources.list.d/box86.list ]]; then
+if [ -f /etc/apt/sources.list.d/box86.list ]; then
 	sed -i 's/http:\/\/seafile.jyx2048.com:2345/http:\/\/gfdgdxi.v5.idcfengye.com/g' /etc/apt/sources.list.d/box86.list
 fi
 echo 执行完成
