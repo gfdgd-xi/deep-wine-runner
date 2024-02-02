@@ -31,6 +31,7 @@ try:
     import PyQt5.QtGui as QtGui
 except:
     os.system("python3 -m pip install --upgrade pyqt5 --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple")
+    os.system("python3 -m pip install --upgrade pyqt5 --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple --break-system-packages")
     import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
@@ -39,6 +40,7 @@ try:
     bad = False
 except:
     threading.Thread(target=os.system, args=["python3 -m pip install --upgrade PyQtWebEngine --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple"]).start()
+    threading.Thread(target=os.system, args=["python3 -m pip install --upgrade PyQtWebEngine --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple --break-system-packages"]).start()
     bad = True
 from trans import *
 from Model import *
@@ -1336,7 +1338,7 @@ python3 "{programPath}/updatekiller.py"
 echo 下载安装包
 wget -O /tmp/spark-deepin-wine-runner/update/spark-deepin-wine-runner.rpm {UpdateWindow.data["Url-rpm"][0]}
 echo 安装安装包
-yum install /tmp/spark-deepin-wine-runner/update/spark-deepin-wine-runner.rpm  -y
+yum reinstall /tmp/spark-deepin-wine-runner/update/spark-deepin-wine-runner.rpm  -y
 notify-send -i "{iconPath}" "更新完毕！"
 zenity --info --text=\"更新完毕！\" --ellipsize
 """)
