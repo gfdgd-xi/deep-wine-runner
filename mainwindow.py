@@ -2661,10 +2661,11 @@ updateThingsString = QtCore.QCoreApplication.translate("U", '''※1、修复简�
 ※4、适配 Arch Linux
 ※5、适配 Fedora
 ※6、打包器支持将 deb 包转换为其它格式
-7、新增公告和新版本提示功能
-8、修复公告的链接在部分机器无法正常打开的问题
-9、新增赞赏入口
-10、支持识别 spark-wine9、spark-wine9-wow''')
+※7、适配 deepin 23 beta3
+8、新增公告和新版本提示功能
+9、修复公告的链接在部分机器无法正常打开的问题
+10、新增赞赏入口
+11、支持识别 spark-wine9、spark-wine9-wow''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
 updateTime = "2024年02月02日"
