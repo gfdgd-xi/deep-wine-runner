@@ -167,7 +167,7 @@ package-deb:
 	ln -s /opt/apps/deepin-wine-runner/InstallVisualCPlusPlus.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-runner-wine-vscppruntime-installer
 	ln -s /opt/apps/deepin-wine-runner/deepin-wine-venturi-setter.py /tmp/spark-deepin-wine-runner-builder/usr/bin/deepin-wine-venturi-setter
 	bash builddeb/ChangeDebVersion.sh
-	sudo chown -R root:root /tmp/spark-deepin-wine-runner-builder
+	chmod -Rv 777 /tmp/spark-deepin-wine-runner-builder
 	
 	dpkg-deb -Z xz -z 9 -b /tmp/spark-deepin-wine-runner-builder spark-deepin-wine-runner.deb
 	sudo rm -rfv /tmp/spark-deepin-wine-runner-builder
