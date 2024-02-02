@@ -18,9 +18,16 @@ clean:
 #package-rpm:
 
 package-rpm:
-	sudo rpmbuild -bb rpm/spark-deepin-wine-runner.spec
-	sudo cp /root/rpmbuild/RPMS/x86_64/spark-deepin-wine-runner-*.rpm .
 	sudo rm -rf /root/rpmbuild/
+	sudo rm -rf /tmp/deep-wine-runner-builder-source
+	mkdir /tmp/deep-wine-runner-builder-source -pv
+	cp * /tmp/deep-wine-runner-builder-source -rv
+	cp rpm/spark-deepin-wine-runner.spec /tmp/spark-deepin-wine-runner.spec
+	bash builddeb/ChangeDebVersion.sh
+	sudo rpmbuild -bb /tmp/spark-deepin-wine-runner.spec --target noarch
+	sudo bash -c 'cp /root/rpmbuild/RPMS/noarch/spark-deepin-wine-runner-*.rpm .'
+	sudo rm -rf /root/rpmbuild/
+	sudo rm -rf /tmp/deep-wine-runner-builder-source
 
 package-pkg:
 	#sudo debtap -u
@@ -35,7 +42,6 @@ package-deb:
 	mkdir deb/opt/apps/deepin-wine-runner/LANG -pv
 	cp -rv helperset deb/opt/apps/deepin-wine-runner/
 	#cp -rv VM-source/VirtualMachine VM
-	
 	cp -rv VM-source/deepin-wine-runner.svg VM
 	cp -rv VM-source/Windows7X64Auto.iso VM
 	cp -rv VM-source/Windows7X86Auto.iso VM

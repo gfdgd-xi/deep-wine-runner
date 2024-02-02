@@ -1,7 +1,8 @@
 Summary: 它同时还内置了基于Qemu/VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作，也能在非 X86 架构安装 X86 架构的 Windows 操作系统（但是效率较低）。
 Name: spark-deepin-wine-runner
-Version: 3.6.1
-Release: 200
+Version: @@VERSION@@
+Release: 0
+BuildArch: noarch
 License: GPLv3+
 AutoReqProv: no
 URL: https://gitee.com/gfdgd-xi/deep-wine-runner 
@@ -14,7 +15,6 @@ Requires: aria2
 Requires: curl
 Requires: unrar
 Requires: unzip
-Requires: python3-pyqt6
 Requires: python3-psutil
 Requires: python3-requests
 Requires: deepin-terminal
@@ -29,9 +29,9 @@ Requires: zenity
 Requires: tree
 Requires: dpkg
 Requires: fakeroot
-Requires: python3-pyqt6-webengine
 Requires: qemu
 
+%define _binaries_in_noarch_packages_terminate_build   0
 %define __os_install_post %{nil}
 %description
 Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序。原版的 Wine 只能使用命令操作，且安装过程较为繁琐，对小白不友好。于是该运行器为了解决该痛点，内置了对Wine图形化的支持、Wine 安装器、微型应用商店、各种Wine工具、自制的Wine程序打包器、运行库安装工具等。
@@ -41,12 +41,10 @@ Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程�
 
 %prep
 %build
-git clone https://gitlink.org.cn/gfdgd_xi/deep-wine-runner --depth=1 | true
-cd deep-wine-runner
-git pull
+cd /tmp/deep-wine-runner-builder-source
 make package-deb -j4
 %install
-cd deep-wine-runner
+cd /tmp/deep-wine-runner-builder-source
 dpkg -x spark-deepin-wine-runner.deb ~/rpmbuild/BUILDROOT/*
 chmod 0755 -Rv ~/rpmbuild/BUILDROOT/*/opt
 chmod 777 -Rv ~/rpmbuild/BUILDROOT/*/opt/apps/deepin-wine-runner
