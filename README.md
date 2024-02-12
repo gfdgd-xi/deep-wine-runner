@@ -22,6 +22,7 @@ Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程�
 打包器视频教程：https://www.bilibili.com/video/BV1Bh4y1Q7nT/  
 Wine 运行器 QQ 交流群：762985460  
 Wine运行器 QQ 频道：https://pd.qq.com/s/edqkgeydx  
+Telegram 频道：https://t.me/wine_runner  
 Wine 运行器离线包下载地址：https://www.123pan.com/s/pDSKVv-pAJWv.html     
 
 
