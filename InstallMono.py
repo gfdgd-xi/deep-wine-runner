@@ -14,7 +14,10 @@ import os
 import sys
 import updatekiller
 import traceback
-import pyquery
+try:
+    import pyquery
+except:
+    os.system("python3 -m pip install --upgrade pyquery --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple")
 
 if "--help" in sys.argv:
     print("作者：gfdgd xi")
