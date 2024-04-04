@@ -1,2 +1,3 @@
 *.user*
 __pycache__
+*.deb
