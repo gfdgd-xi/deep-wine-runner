@@ -8,7 +8,7 @@ Certainty: possible
 Check: binaries
 Type: binary, udeb
 Priority: optional
-Depends: cn.flamescion.bookworm-compatibility-mode,bash,wget,sudo,libnotify-bin
+Depends: amber-ce-loongnix | cn.flamescion.bookworm-compatibility-mode,bash,wget,sudo,libnotify-bin
 Section: utils
 Installed-Size: @@SIZE@@
 Description: Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序，内置了对Wine图形化的支持、各种Wine工具、自制的Wine程序打包器和运行库安装工具等。

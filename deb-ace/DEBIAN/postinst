@@ -17,21 +17,39 @@ function zenity(){
 sudo -u $user DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$uid/bus zenity "$@"
 }
 
-###检查aptss在不在
-if [ -z `which bookworm-run` ];then
-echo "Oh no, ssinstall have not installed bookworm-run dependency yet! Exit"
-exit 1
+### 判断 ACE 类型
+if [[ `arch` == "loongarch64" ]]; then
+    # loongarch 架构有多个 ACE，优先安装至旧世界的 ACE
+    if [[ ! -z `which bookworm-run` ]]; then
+        aceCommand="bookworm-run"
+    fi
+    if [[ ! -z `which loongnix-run` ]]; then
+        aceCommand="loongnix-run"
+    fi
+    if [[ $aceCommand == "" ]]; then
+        echo "Oh no, ssinstall have not installed bookworm-run dependency yet! Exit"
+        exit 1
+    fi
+    echo "Installing Wine Runner to " $aceCommand
+else
+    ###检查aptss在不在
+    if [ -z `which bookworm-run` ];then
+        echo "Oh no, ssinstall have not installed bookworm-run dependency yet! Exit"
+        exit 1
+    fi
+    aceCommand="bookworm-run"
 fi
-bookworm-run echo "Welcome to BCM! Trying to install package"
+
+$aceCommand echo "Welcome to BCM! Trying to install package"
 if [ -z "`bookworm-run which aptss`" ];then
 wget https://zunyun01.store.deepinos.org.cn/store/depends/spark-store-console-in-container_4.2.6.2_all.deb -O /tmp/ssconsole.deb
-bookworm-run apt install /tmp/ssconsole.deb -y
+$aceCommand apt install /tmp/ssconsole.deb -y
 rm /tmp/ssconsole.deb -f
 fi
 notify-send "Installing Wine Runner BCM, may cost some time please ensure your network is fine" 
 notify-send "正在书虫兼容环境中安装 Wine 运行器，可能会花费一些时间，请保持网络畅通" 
-bookworm-run aptss update
+$aceCommand aptss update
 cp /opt/apps/spark-deepin-wine-runner-ace/spark-deepin-wine-runner.deb /tmp
-bookworm-run aptss reinstall /tmp/spark-deepin-wine-runner.deb -y
+$aceCommand aptss reinstall /tmp/spark-deepin-wine-runner.deb -y
 
-bookworm-run aptss clean
+$aceCommand aptss clean

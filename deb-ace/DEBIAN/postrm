@@ -7,48 +7,33 @@
 # 感谢：感谢 wine、deepin-wine 以及星火团队，提供了 wine、deepin-wine、spark-wine-devel 给大家使用，让我能做这个程序
 # 基于 sh
 #################################################################################################################
-# 删除软件残留，简单粗暴一点直接全部删掉，防止出现警告
-# 加判断是为了怕 reinstall 后程序就再也打不开了（除非卸载后重新安装）
-if [ "$1" = "remove" ] || [ "$1" = "purge" ]; then
-	rm -rf /opt/apps/deepin-wine-runner/
-fi
-# 删除软件缓存（留着也没什么用了）
-# 缓存目录：~/.cache/deepin-wine-runner
-if [ "$1" = "remove" ] || [ "$1" = "purge" ]; then
 
-	echo "清理程序缓存"
-
-	for username in $(ls /home); do
-		echo /home/$username
-		if [ -d "/home/$username/.cache/deepin-wine-runner/" ]; then
-			rm -rf "/home/$username/.cache/deepin-wine-runner/"
-		fi
-	done
-	# 清理 root 用户的缓存文件
-	echo /root
-	if [ -d "/root/.cache/deepin-wine-runner/" ]; then
-		rm -rf "/root/.cache/deepin-wine-runner/"
+if [ "$1" = "remove" ] || [ "$1" = "purge" ]; then
+	### 判断 ACE 类型
+	if [[ `arch` == "loongarch64" ]]; then
+    	# loongarch 架构有多个 ACE，优先安装至旧世界的 ACE
+    	if [[ ! -z `which bookworm-run` ]]; then
+        	aceCommand="bookworm-run"
+    	fi
+    	if [[ ! -z `which loongnix-run` ]]; then
+        	aceCommand="loongnix-run"
+    	fi
+    	if [[ $aceCommand == "" ]]; then
+        	echo "Oh no, ssinstall have not installed bookworm-run dependency yet! Exit"
+        	#exit 1
+    	fi
+    	echo "Removing Wine Runner to " $aceCommand
+	else
+	    ###检查aptss在不在
+    	if [ -z `which bookworm-run` ];then
+        	echo "Oh no, ssinstall have not installed bookworm-run dependency yet! Exit"
+        	#exit 1
+    	fi
+    	aceCommand="bookworm-run"
 	fi
+	# 卸载应用
+	$aceCommand apt purge spark-deepin-wine-runner -y | true
+
 else
 	echo "非卸载，跳过清理"
-fi
-# 删除软件配置文件（只限“purge”）
-# 配置目录：~/.config/deepin-wine-runner
-if [ "$1" = "purge" ]; then
-
-	echo "清理程序配置文件"
-
-	for username in $(ls /home); do
-		echo /home/$username
-		if [ -d "/home/$username/.config/deepin-wine-runner/" ]; then
-			rm -rf "/home/$username/.config/deepin-wine-runner/"
-		fi
-	done
-	# 清理 root 用户的配置文件
-	echo /root
-	if [ -d "/root/.config/deepin-wine-runner/" ]; then
-		rm -rf "/root/.config/deepin-wine-runner/"
-	fi
-else
-	echo "非 purge，跳过清理"
 fi
