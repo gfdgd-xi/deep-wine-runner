@@ -41,7 +41,7 @@ else
 fi
 
 $aceCommand echo "Welcome to BCM! Trying to install package"
-if [ -z "`bookworm-run which aptss`" ];then
+if [ -z "`$aceCommand which aptss`" ];then
 wget https://zunyun01.store.deepinos.org.cn/store/depends/spark-store-console-in-container_4.2.6.2_all.deb -O /tmp/ssconsole.deb
 $aceCommand apt install /tmp/ssconsole.deb -y
 rm /tmp/ssconsole.deb -f
