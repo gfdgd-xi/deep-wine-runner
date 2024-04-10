@@ -6,7 +6,7 @@ if [[ -f $CURRENT_DIR/usr/ ]]; then
     read
     exit
 fi
-aria2c -x 16 -s 16 -d /tmp https://jihulab.com/gfdgd-xi/bwrapruntime/-/raw/main/library.tar.xz
+aria2c -x 16 -s 16 -d /tmp https://sourceforge.net/projects/deep-wine-runner-wine-download/files/bwrap-runtime/library.tar.xz/download
 if [[ $? != 0 ]]; then
     echo 安装包下载失败！按回车键退出
     read

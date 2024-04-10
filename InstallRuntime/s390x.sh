@@ -2,8 +2,9 @@
 arch=s390x
 libPath=/usr/lib/s390x-linux-gnu/
 version=1.0.0
-url="https://jihulab.com/gfdgd-xi/qemu-runtime/-/raw/main/$arch-runtime-for-qemu_${version}_all.deb"
+url="https://sourceforge.net/projects/deep-wine-runner-wine-download/files/${version}-${arch}-runtime-for-qemu/${arch}-runtime-for-qemu_${version}_all.deb/download"
 fileName=`basename $url`
+fileName=`basename $filename`
 
 if [[ -d $libPath ]]; then
     echo "已安装 $arch 运行库，按回车键退出"
