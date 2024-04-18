@@ -21,10 +21,13 @@ Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程�
 
 打包器视频教程：https://www.bilibili.com/video/BV1Bh4y1Q7nT/  
 Wine 运行器 QQ 交流群：762985460  
-Wine运行器 QQ 频道：https://pd.qq.com/s/edqkgeydx  
-Telegram 频道：https://t.me/wine_runner  
 Wine 运行器离线包下载地址：https://www.123pan.com/s/pDSKVv-pAJWv.html     
 
+### 如何在 deepin23 for loong64 安装
+可以在 星火应用商店 for loong64 安装，也可以手动补充依赖进行安装  
+依赖包地址（二选一）：https://gitee.com/gfdgd-xi/deep-wine-runner-deepin23-loong64-depends  
+或 https://gfdgdxi.lanzouw.com/b0plktfvc  
+密码:f67c
 
 ### 注
 spark-deepin-wine-runner 是普通包，spark-deepin-wine-runner-ace 是使用 ace 兼容环境运行的运行器
