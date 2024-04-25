@@ -23,6 +23,10 @@ Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程�
 Wine 运行器 QQ 交流群：762985460  
 Wine 运行器离线包下载地址：https://www.123pan.com/s/pDSKVv-pAJWv.html     
 
+### Debian sid 依赖
+https://gfdgdxi.lanzouw.com/b0plly5cj  
+密码:b346  
+
 ### 如何在 deepin23 for loong64 安装
 可以在 星火应用商店 for loong64 安装，也可以手动补充依赖进行安装  
 依赖包地址（二选一）：https://gitee.com/gfdgd-xi/deep-wine-runner-deepin23-loong64-depends  
