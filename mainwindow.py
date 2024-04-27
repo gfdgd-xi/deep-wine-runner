@@ -2660,8 +2660,10 @@ updateThingsString = QtCore.QCoreApplication.translate("U", '''※1、修复系�
 ※3、更新 Geek Uninstaller 版本
 ※4、默认开启英语翻译
 ※5、更新 dxvk 版本
-6、修复问题 https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I9B4L0
-7、针对 Loongarch ACE 做特别优化''')
+※6、修复新版本 Qemu 没有 --soundhw 参数导致无法正常开启虚拟机的问题
+※7、支持 Qemu 磁盘扩容
+8、修复问题 https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I9B4L0
+9、针对 Loongarch ACE 做特别优化''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
 updateTime = "2024年04月27日"
