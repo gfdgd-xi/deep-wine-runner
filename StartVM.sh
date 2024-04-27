@@ -60,11 +60,19 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
         ./VM/kvm-ok
         if [[ $? == 0 ]] && [[ `arch` == "x86_64" ]]; then
             echo X86 架构，使用 kvm 加速
-            qemu-system-x86_64 --enable-kvm -cpu host --hda "$HOME/Qemu/Windows/Windows.qcow2" -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI  > /tmp/windows-virtual-machine-installer-for-wine-runner-run.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
+            qemu-system-x86_64 --enable-kvm -cpu host --hda "$HOME/Qemu/Windows/Windows.qcow2" \
+                -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) \
+                -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI \
+                -device AC97 -device ES1370 -device intel-hda -device hda-duplex  \
+                > /tmp/windows-virtual-machine-installer-for-wine-runner-run.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
             exit
         fi
         echo 不使用 kvm 加速
-        qemu-system-x86_64 --hda "$HOME/Qemu/Windows/Windows.qcow2" -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI  > /tmp/windows-virtual-machine-installer-for-wine-runner-run.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
+        qemu-system-x86_64 --hda "$HOME/Qemu/Windows/Windows.qcow2" \
+            -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) \
+            -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI \
+            -device AC97 -device ES1370 -device intel-hda -device hda-duplex  \
+            > /tmp/windows-virtual-machine-installer-for-wine-runner-run.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
         exit
     fi
     cat ~/.config/deepin-wine-runner/QEMU-ARCH | grep armhf
@@ -81,10 +89,26 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
         echo $qemuUEFI
         ./VM/kvm-ok
         if [[ $? == 0 ]] && [[ `arch` == "aarch64" ]]; then
-            qemu-system-arm --enable-kvm --hda "$HOME/Qemu/Windows/Windows.qcow2" -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI -cpu max -M virt -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
+            qemu-system-arm --enable-kvm --hda "$HOME/Qemu/Windows/Windows.qcow2" \
+                -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) \
+                -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI \
+                -cpu max -M virt -device virtio-gpu-pci \
+                -device nec-usb-xhci,id=xhci,addr=0x1b \
+                -device usb-tablet,id=tablet,bus=xhci.0,port=1 \
+                -device usb-kbd,id=keyboard,bus=xhci.0,port=2 \
+                -device AC97 -device ES1370 -device intel-hda -device hda-duplex \
+                > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
             exit
         fi
-        qemu-system-arm --hda "$HOME/Qemu/Windows/Windows.qcow2" -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI -cpu max -M virt -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
+        qemu-system-arm --hda "$HOME/Qemu/Windows/Windows.qcow2" \
+            -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) \
+            -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI \
+            -cpu max -M virt -device virtio-gpu-pci \
+            -device nec-usb-xhci,id=xhci,addr=0x1b \
+            -device usb-tablet,id=tablet,bus=xhci.0,port=1 \
+            -device usb-kbd,id=keyboard,bus=xhci.0,port=2 \
+            -device AC97 -device ES1370 -device intel-hda -device hda-duplex \
+            > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
         exit
     fi
     cat ~/.config/deepin-wine-runner/QEMU-ARCH | grep aarch64
@@ -101,10 +125,28 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
         echo $qemuUEFI
         ./VM/kvm-ok
         if [[ $? == 0 ]] && [[ `arch` == "aarch64" ]]; then
-            qemu-system-aarch64 --enable-kvm --hda "$HOME/Qemu/Windows/Windows.qcow2" -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI -cpu max -M virt -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
+            qemu-system-aarch64 --enable-kvm --hda "$HOME/Qemu/Windows/Windows.qcow2" \
+                -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) \
+                -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI \
+                -cpu max -M virt \
+                -device virtio-gpu-pci \
+                -device nec-usb-xhci,id=xhci,addr=0x1b \
+                -device usb-tablet,id=tablet,bus=xhci.0,port=1 \
+                -device usb-kbd,id=keyboard,bus=xhci.0,port=2 \
+                -device AC97 -device ES1370 -device intel-hda -device hda-duplex \
+                > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
             exit
         fi
-        qemu-system-aarch64 --hda "$HOME/Qemu/Windows/Windows.qcow2" -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI -cpu max -M virt -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
+        qemu-system-aarch64 --hda "$HOME/Qemu/Windows/Windows.qcow2" \
+            -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) \
+            -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI \
+            -cpu max -M virt \
+            -device virtio-gpu-pci \
+            -device nec-usb-xhci,id=xhci,addr=0x1b \
+            -device usb-tablet,id=tablet,bus=xhci.0,port=1 \
+            -device usb-kbd,id=keyboard,bus=xhci.0,port=2 \
+            -device AC97 -device ES1370 -device intel-hda -device hda-duplex \
+            > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
         exit
     fi
     

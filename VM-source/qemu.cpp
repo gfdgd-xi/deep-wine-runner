@@ -120,7 +120,7 @@ int qemu::InstallGuessAdditions(QString controlName, int port, int device){
     return 0;
 }
 int qemu::EnabledAudio(){
-    commandOption += "-soundhw all ";
+    commandOption += "-device AC97 -device ES1370 -device intel-hda -device hda-duplex ";
     return 0;
 }
 int qemu::EnabledClipboardMode(){
