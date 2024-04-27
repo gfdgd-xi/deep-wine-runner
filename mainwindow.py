@@ -2655,20 +2655,16 @@ exe路径\' 参数 \'
 5、wine 容器如果没有指定，则会默认为 ~/.wine；
 6、如果可执行文件比较大的话，会出现点击“获取该程序运行情况”出现假死的情况，因为正在后台读取 SHA1，只需要等一下即可（读取速度依照您电脑处理速度、读写速度、可执行文件大小等有关）；
 7、如果非 X86 的用户的 UOS 专业版用户想要使用的话，只需要在应用商店安装一个 Wine 版本微信即可在本程序选择正确的 Wine 运行程序；''')
-updateThingsString = QtCore.QCoreApplication.translate("U", '''※1、修复简易打包器在 Deepin/UOS 上无法正常启动的问题
-※2、打包器生成的 deb 修复在非 Deepin/UOS 且未安装星火应用商店的系统中启动器无程序图标的问题
-※3、修复 Box86/64 国内源源失效的问题
-※4、适配 Arch Linux
-※5、适配 Fedora
-※6、打包器支持将 deb 包转换为其它格式
-※7、适配 deepin 23 beta3
-8、新增公告和新版本提示功能
-9、修复公告的链接在部分机器无法正常打开的问题
-10、新增赞赏入口
-11、支持识别 spark-wine9、spark-wine9-wow''')
+updateThingsString = QtCore.QCoreApplication.translate("U", '''※1、修复系统/应用运行库无法下载的问题
+※2、打包器支持指定打包架构为 loong64、loongarch64、armhf 和 amd64
+※3、更新 Geek Uninstaller 版本
+※4、默认开启英语翻译
+※5、更新 dxvk 版本
+6、修复问题 https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I9B4L0
+7、针对 Loongarch ACE 做特别优化''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2024年02月02日"
+updateTime = "2024年04月27日"
 aboutProgram = QtCore.QCoreApplication.translate("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序。原版的 Wine 只能使用命令操作，且安装过程较为繁琐，对小白不友好。于是该运行器为了解决该痛点，内置了对Wine图形化的支持、Wine 安装器、微型应用商店、各种Wine工具、自制的Wine程序打包器、运行库安装工具等。</p>
 <p>它同时还内置了基于Qemu/VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作，也能在非 X86 架构安装 X86 架构的 Windows 操作系统（但是效率较低，可以运行些老系统）。</p>
 <p>而且对于部分 Wine 应用适配者来说，提供了图形化的打包工具，以及提供了一些常用工具以及运行库的安装方式，以及能安装多种不同的 Wine 以测试效果，能极大提升适配效率。</p>
