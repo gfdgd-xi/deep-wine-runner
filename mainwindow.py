@@ -1861,7 +1861,7 @@ class ProgramSetting():
         widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "图标生成：")), 10, 0, 1, 1)
         widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "自动根据EXE名称生成路径：")), 11, 0, 1, 1)
         widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "Qemu + Chroot 挂载用户目录：")), 12, 0, 1, 1)
-        widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "程序翻译：")), 13, 0, 1, 1)
+        #widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "程序翻译：")), 13, 0, 1, 1)
         widgetLayout.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "字体缩小比例（数值越大字体越小，默认为 1）：")), 14, 0, 1, 1)
         ProgramSetting.wineBottonA = QtWidgets.QComboBox()
         ProgramSetting.wineDebug = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "开启 DEBUG 输出"))
@@ -1884,7 +1884,7 @@ class ProgramSetting():
         ProgramSetting.buildByBottleName = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "本软件构建的图标后面添加容器名"))
         ProgramSetting.autoPath = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "自动根据文件名生成容器路径（开启后必须通过修改默认wine容器路径才可指定其它路径，重启程序后生效）"))
         ProgramSetting.qemuUnmountHome = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "使用 Qemu + Chroot 时不挂载用户目录并与系统隔离（修改后重启操作系统生效）"))
-        ProgramSetting.chineseLanguage = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "禁用程序界面翻译"))
+        #ProgramSetting.chineseLanguage = QtWidgets.QCheckBox(QtCore.QCoreApplication.translate("U", "禁用程序界面翻译"))
         ProgramSetting.fontSize = QtWidgets.QDoubleSpinBox()
         ProgramSetting.wineBottonA.addItems(["Auto", "win32", "win64"])
         ProgramSetting.wineBottonA.setCurrentText(setting["Architecture"])
@@ -1900,7 +1900,7 @@ class ProgramSetting():
         ProgramSetting.buildByBottleName.setChecked(setting["BuildByBottleName"])
         ProgramSetting.autoPath.setChecked(setting["AutoPath"])
         ProgramSetting.qemuUnmountHome.setChecked(setting["QemuUnMountHome"])
-        ProgramSetting.chineseLanguage.setChecked(setting["Chinese"])
+        #ProgramSetting.chineseLanguage.setChecked(setting["Chinese"])
         ProgramSetting.fontSize.setValue(setting["FontSize"])
         # QemuUnMountHome
         widgetLayout.addWidget(ProgramSetting.wineBottonA, 0, 1, 1, 1)
@@ -1918,7 +1918,7 @@ class ProgramSetting():
         widgetLayout.addWidget(ProgramSetting.buildByBottleName, 10, 1, 1, 1)
         widgetLayout.addWidget(ProgramSetting.autoPath, 11, 1, 1, 2)
         widgetLayout.addWidget(ProgramSetting.qemuUnmountHome, 12, 1, 1, 2)
-        widgetLayout.addWidget(ProgramSetting.chineseLanguage, 13, 1, 1, 2)
+        #widgetLayout.addWidget(ProgramSetting.chineseLanguage, 13, 1, 1, 2)
         widgetLayout.addWidget(ProgramSetting.fontSize, 14, 1, 1, 2)
         widgetLayout.addWidget(save, 15, 2, 1, 1)
         widget.setLayout(widgetLayout)
@@ -1951,7 +1951,7 @@ class ProgramSetting():
         setting["BuildByBottleName"] = ProgramSetting.buildByBottleName.isChecked()
         setting["AutoPath"] = ProgramSetting.autoPath.isChecked()
         setting["QemuUnMountHome"] = ProgramSetting.qemuUnmountHome.isChecked()
-        setting["Chinese"] = ProgramSetting.chineseLanguage.isChecked()
+        #setting["Chinese"] = ProgramSetting.chineseLanguage.isChecked()
         setting["FontSize"] = ProgramSetting.fontSize.value()
         try:
             write_txt(get_home() + "/.config/deepin-wine-runner/WineSetting.json", json.dumps(setting))
@@ -2628,7 +2628,7 @@ transeObject = QtCore.QObject()
 transla = QtCore.QCoreApplication.translate
 #transeObject.tr("")
 # 语言载入
-if not "zh_CN".lower() in get_now_lang().lower() and not setting["Chinese"]:
+if not "zh_CN".lower() in get_now_lang().lower():
     trans.load(f"{programPath}/LANG/deepin-wine-runner-en_US.qm")
 else:
     pass
