@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 3.7.0</h1>
+<h1 align="center">Wine 运行器 3.8.0</h1>
 <hr>
 <a href='https://gitee.com/gfdgd-xi/deep-wine-runner/stargazers'><img src='https://gitee.com/gfdgd-xi/deep-wine-runner/badge/star.svg?theme=dark' alt='star'></img></a>
 <a href='https://gitee.com/gfdgd-xi/deep-wine-runner/members'><img src='https://gitee.com/gfdgd-xi/deep-wine-runner/badge/fork.svg?theme=dark' alt='fork'></img></a>  
@@ -143,6 +143,20 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志 
+### 3.8.0（2023年04月27日）
+**※1、修复系统/应用运行库无法下载的问题**  
+**※2、打包器支持指定打包架构为 loong64、loongarch64、armhf 和 amd64**  
+**※3、更新 Geek Uninstaller 版本**  
+**※4、默认开启英语翻译**  
+**※5、更新 dxvk 版本**  
+**※6、修复新版本 Qemu 没有 --soundhw 参数导致无法正常开启虚拟机的问题**  
+**※7、支持 Qemu 磁盘扩容**  
+8、修复问题 https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I9B4L0  
+9、针对 Loongarch ACE 做特别优化  
+
+![image.png](https://storage.deepin.org/thread/202404271014409954_image.png)
+
+
 ### 3.7.0（2024年02月02日）
 **※1、修复简易打包器在 Deepin/UOS 上无法正常启动的问题**  
 **※2、打包器生成的 deb 修复在非 Deepin/UOS 且未安装星火应用商店的系统中启动器无程序图标的问题**  
