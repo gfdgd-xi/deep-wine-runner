@@ -2710,7 +2710,7 @@ Deepin 论坛：<a href="https://bbs.deepin.org">https://bbs.deepin.org</a>
 gfdgd xi：<a href="https://gfdgd-xi.github.io">https://gfdgd-xi.github.io</a>
 <hr>
 <h1>©2020~{time.strftime("%Y")} By gfdgd xi</h1>'''
-defaultCommandText = """<pre>在此可以看到wine安装应用时的终端输出内容
+defaultCommandText = "<pre>" + QtCore.QCoreApplication.translate("MainWindow", "在此可以看到wine安装应用时的终端输出内容") + """
 =============================================================
 如果解决了你的问题，请不要吝啬你的star哟！
 也可以<a href='http://update.gfdgdxi.top/Appreciate'>请作者喝一杯茶</a>
