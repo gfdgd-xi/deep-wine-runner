@@ -27,6 +27,8 @@
 #include "vbox.h"
 #include "qemu.h"
 
+#include <QInputDialog>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -455,5 +457,28 @@ void MainWindow::on_action_StopQemu_triggered()
 {
     qemu vmControl("");
     vmControl.Stop();
+}
+
+
+void MainWindow::on_actionQemuDiskAddSpace_triggered()
+{
+    double data = QInputDialog::getDouble(this, tr("磁盘扩容"), "输入扩容多少GB\n注：1、扩容所需要的时间较长，程序可能会出现假死的情况，请不要关闭否则会导致虚拟磁盘损坏\n2、扩展后需要自行在虚拟机使用 Deepin Community Live CD、Live CD、Windows PE\n等工具调整系统分区大小才能使用");
+    if(data <= 0) {
+        return;
+    }
+    // 开始扩容
+    int result = qemu("").AddDiskSpace(QDir::homePath() + "/Qemu/Windows/Windows.qcow2", data);
+    qDebug() << "Exit Code: " << result;
+    if(result) {
+        QMessageBox::critical(this, tr("错误"), tr("扩容失败！"));
+        return;
+    }
+    QMessageBox::information(this, tr("提示"), tr("扩容完成！"));
+}
+
+
+void MainWindow::on_getDCLC_triggered()
+{
+    QDesktopServices::openUrl(QUrl("https://github.com/gfdgd-xi/deepin-community-live-cd/"));
 }
 

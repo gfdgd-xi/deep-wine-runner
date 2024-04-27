@@ -145,17 +145,27 @@ buildvbox::buildvbox(QString isoPath, int id, int vm){
         }
         vm.CreateDiskControl();
         //vm.CreateDiskControl("storage_controller_2");
-        vm.CreateDisk(QDir::homePath() + "/Qemu/Windows/Windows.qcow2", 131072);
+        if(id == 0 || id == 1) {
+            vm.CreateDisk(QDir::homePath() + "/Qemu/Windows/Windows.qcow2", 131072);
+        }
+        else {
+            vm.CreateDisk(QDir::homePath() + "/Qemu/Windows/Windows.qcow2", 131072 * 5);
+        }
+
         //vm.MountDisk(QDir::homePath() + "/Qemu/Windows/Windows.qcow2");
         vm.MountMainDisk(QDir::homePath() + "/Qemu/Windows/Windows.qcow2");
         if(!setISOAlready){
             vm.MountISO(isoPath, "storage_controller_1", 0, 1);
             switch (id) {
                 case 0:
-                    vm.MountISO(programPath + "/Windows7X86Auto.iso", "storage_controller_1", 1, 2);
+                    if(QFile::exists(programPath + "/Windows7X86Auto.iso")) {
+                        vm.MountISO(programPath + "/Windows7X86Auto.iso", "storage_controller_1", 1, 2);
+                    }
                     break;
                 case 1:
-                    vm.MountISO(programPath + "/Windows7X64Auto.iso", "storage_controller_1", 1, 2);
+                    if(QFile::exists(programPath + "/Windows7X64Auto.iso")) {
+                        vm.MountISO(programPath + "/Windows7X64Auto.iso", "storage_controller_1", 1, 2);
+                    }
                     break;
             }
         }
@@ -247,16 +257,25 @@ buildvbox::buildvbox(QString isoPath, int id, int vm){
         dir.mkpath("/home/gfdgd_xi/Qemu/Windows/");
         vm.CreateDiskControl();
         //vm.CreateDiskControl("storage_controller_2");
-        vm.CreateDisk(QDir::homePath() + "/VirtualBox VMs/Windows/Windows.vdi", 131072);
+        if(id == 0 || id == 1) {
+            vm.CreateDisk(QDir::homePath() + "/Qemu/Windows/Windows.qcow2", 131072);
+        }
+        else {
+            vm.CreateDisk(QDir::homePath() + "/Qemu/Windows/Windows.qcow2", 131072 * 5);
+        }
         vm.MountDisk(QDir::homePath() + "/VirtualBox VMs/Windows/Windows.vdi");
         if(!setISOAlready){
             vm.MountISO(isoPath, "storage_controller_1", 0, 1);
             switch (id) {
                 case 0:
-                    vm.MountISO(programPath + "/Windows7X86Auto.iso", "storage_controller_1", 1, 0);
+                    if(QFile::exists(programPath + "/Windows7X86Auto.iso")) {
+                        vm.MountISO(programPath + "/Windows7X86Auto.iso", "storage_controller_1", 1, 0);
+                    }
                     break;
                 case 1:
-                    vm.MountISO(programPath + "/Windows7X64Auto.iso", "storage_controller_1", 1, 0);
+                    if(QFile::exists(programPath + "/Windows7X64Auto.iso")) {
+                        vm.MountISO(programPath + "/Windows7X64Auto.iso", "storage_controller_1", 1, 0);
+                    }
                     break;
             }
         }

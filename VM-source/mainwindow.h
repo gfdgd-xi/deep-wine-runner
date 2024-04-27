@@ -58,6 +58,10 @@ private slots:
 
     void on_action_StopQemu_triggered();
 
+    void on_actionQemuDiskAddSpace_triggered();
+
+    void on_getDCLC_triggered();
+
 private:
     bool stopShowTime = 0;
     Ui::MainWindow *ui;

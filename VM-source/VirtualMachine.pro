@@ -62,3 +62,17 @@ RESOURCES += \
 DISTFILES += \
     en_US.qm \
     en_US.ts
+
+# 编译时拷贝所需文件
+file_need.files += Windows7X64Auto.iso \
+    Windows7X86Auto.iso \
+    kvm-ok \
+    AAVMF32_CODE.fd \
+    deepin-wine-runner.svg \
+    OVMF.fd \
+    QEMU_AARCH64_EFI.fd \
+    QEMU_EFI_LOONG64_7.1.fd \
+    test.qcow2
+file_need.path += $$OUT_PWD
+COPIES += file_need
+system(chmod 777 $$OUT_PWD/kvm-ok)
