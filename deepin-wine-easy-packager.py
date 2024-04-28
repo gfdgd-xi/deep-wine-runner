@@ -572,7 +572,7 @@ class RunThread(QtCore.QThread):
                 ["@@@Name@@@", exeName],
                 ["@@@EXEC_PATH@@@", exePathInBottle],
                 ["@@@Icon@@@", programIconPath],
-                ["@@@Wine@@@", chooseWine]
+                ["@@Wine@@", chooseWine]
             ]
             debControl = ReplaceText(control, replaceMap)
             debPostinst = ReplaceText(postinst, replaceMap)
