@@ -1,0 +1,6 @@
+*.user*
+__pycache__
+*.deb
+VM-source/Makefile
+*.rpm
+*.pro.user
