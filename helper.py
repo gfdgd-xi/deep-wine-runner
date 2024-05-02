@@ -4,7 +4,9 @@ import sys
 import time
 import subprocess
 import threading
-import PyQt5.QtWidgets as QtWidgets
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
 
 def check_window():
     # 使用 wmctrl 命令列出所有窗口，并使用 grep 过滤出特定的 WMCLASS
@@ -26,13 +28,16 @@ def check_wmclass():
         window.close()
         return
     # 循环检测窗口是否存在的函数
-
     # 每隔一段时间检测一次窗口是否存在
+    showtimeout = 60  # 为防止因为应用无法打开而无法正常关闭窗口，于是设置 time out
     while True:
         if check_window():
             break
         # 等待一段时间后再次检测
         time.sleep(1)
+        showtimeout -= 1
+        if showtimeout <= 0:
+            break
     window.close()
 
 
@@ -46,11 +51,53 @@ if os.system("which wmctrl"):
 
 target_wmclass = os.getenv("WINE_WMCLASS")
 
+def GetRecommendWindowSize(window: QMainWindow):
+    # 计算屏幕分辨率
+    screen = QGuiApplication.primaryScreen()
+    width = screen.geometry().width()
+    height = screen.geometry().height()
+    # 如果为竖状屏幕
+    if width < height:
+        temp = height
+        height = width
+        width = temp
+    return [int(width / 4), window.geometry().height()]
 
-app = QtWidgets.QApplication(sys.argv)
+def SetWindowSize(window: QMainWindow):
+    # 计算比例
+    size = GetRecommendWindowSize(window)
+    window.resize(size[0], size[1])
+
+def MoveCenter(window: QMainWindow):
+    # 计算屏幕分辨率
+    screen = QGuiApplication.primaryScreen()
+    width = screen.geometry().width()
+    height = screen.geometry().height()
+    print(window.geometry().height())
+    # 计算窗口坐标
+    window.move(int(width / 2 - window.geometry().width() / 2),
+                int(height / 2.8 - window.geometry().height() / 2)
+                )
+
+
+app = QApplication(sys.argv)
 # 构建窗口
-window = QtWidgets.QMainWindow()
-window.setCentralWidget(QtWidgets.QLabel(f"正在为您启动以下应用：{os.getenv('WINE_APP_NAME')}"))
+window = QMainWindow()
+widget = QWidget()
+layout = QGridLayout()
+
+window.setWindowTitle("星火Windows应用兼容助手")
+
+layout.addWidget(QLabel(f"<h3 align='center'>星火Windows应用兼容助手</h3><p align='center'>正在为您启动以下应用：{os.getenv('WINE_APP_NAME')}</p>"), 1, 0)
+#layout.addWidget(processBar, 2, 0)
+layout.addWidget(QLabel(f"由 Wine 运行器提供支持"), 3, 0)
+widget.setLayout(layout)
+window.setCentralWidget(widget)
+window.setWindowFlag(Qt.WindowCloseButtonHint, False)
 window.show()
+SetWindowSize(window)
+
+layout.addWidget(QLabel(f"<p align='center'><img width='{window.geometry().width()}' src='/home/gfdgd_xi/Pictures/炎夏凉梦.jpg'></p>"), 0, 0)
 threading.Thread(target=check_wmclass).start()
+MoveCenter(window)
 app.exec_()
