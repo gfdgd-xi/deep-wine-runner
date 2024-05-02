@@ -35,6 +35,7 @@ def check_wmclass():
             break
         # 等待一段时间后再次检测
         time.sleep(1)
+        AppInfoShowerRefresh()
         showtimeout -= 1
         if showtimeout <= 0:
             break
@@ -79,6 +80,11 @@ def MoveCenter(window: QMainWindow):
                 int(height / 2.8 - window.geometry().height() / 2)
                 )
 
+def AppInfoShowerRefresh():
+    global appInfoShowerTime
+    appInfoShower.setText(f"<h3 align='center'>星火Windows应用兼容助手</h3><p align='center'>正在为您启动以下应用：{os.getenv('WINE_APP_NAME')} {'.' * (appInfoShowerTime % 3 + 1)}</p>")
+
+    appInfoShowerTime += 1
 
 app = QApplication(sys.argv)
 # 构建窗口
@@ -86,18 +92,27 @@ window = QMainWindow()
 widget = QWidget()
 layout = QGridLayout()
 
-window.setWindowTitle("星火Windows应用兼容助手")
+appInfoShower = QLabel()
+appInfoShowerTime = 0
+AppInfoShowerRefresh()
 
-layout.addWidget(QLabel(f"<h3 align='center'>星火Windows应用兼容助手</h3><p align='center'>正在为您启动以下应用：{os.getenv('WINE_APP_NAME')}</p>"), 1, 0)
+backgroundImgPath = "/home/gfdgd_xi/Pictures/炎夏凉梦.jpg"
+# GXDE 彩蛋
+if os.path.exists("/usr/share/gxde-resources/spark-dwine-helper.png"):
+    backgroundImgPath = "/usr/share/gxde-resources/spark-dwine-helper.png"
+
+window.setWindowTitle("星火Windows应用兼容助手")
+layout.addWidget(QLabel(f""), 1, 0)
+layout.addWidget(appInfoShower, 2, 0)
 #layout.addWidget(processBar, 2, 0)
-layout.addWidget(QLabel(f"由 Wine 运行器提供支持"), 3, 0)
+layout.addWidget(QLabel(f"<hr>由 Wine 运行器提供支持"), 4, 0)
 widget.setLayout(layout)
 window.setCentralWidget(widget)
 window.setWindowFlag(Qt.WindowCloseButtonHint, False)
 window.show()
 SetWindowSize(window)
 
-layout.addWidget(QLabel(f"<p align='center'><img width='{window.geometry().width()}' src='/home/gfdgd_xi/Pictures/炎夏凉梦.jpg'></p>"), 0, 0)
+layout.addWidget(QLabel(f"<p align='center'><img width='{window.geometry().width()}' src='{backgroundImgPath}'></p>"), 0, 0)
 threading.Thread(target=check_wmclass).start()
 MoveCenter(window)
 app.exec_()
