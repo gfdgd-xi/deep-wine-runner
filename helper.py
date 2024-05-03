@@ -109,7 +109,7 @@ layout.addWidget(appInfoShower, 2, 0)
 layout.addWidget(QLabel(f"<hr>由 Wine 运行器提供支持"), 4, 0)
 widget.setLayout(layout)
 window.setCentralWidget(widget)
-window.setWindowFlags(Qt.WindowMaximizeButtonHint | Qt.MSWindowsFixedSizeDialogHint)
+window.setWindowFlags(Qt.CustomizeWindowHint | Qt.WindowStaysOnTopHint)
 window.show()
 SetWindowSize(window)
 
