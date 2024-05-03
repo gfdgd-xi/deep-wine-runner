@@ -86,6 +86,8 @@ def AppInfoShowerRefresh():
 
     appInfoShowerTime += 1
 
+programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
+
 app = QApplication(sys.argv)
 # 构建窗口
 window = QMainWindow()
@@ -96,7 +98,7 @@ appInfoShower = QLabel()
 appInfoShowerTime = 0
 AppInfoShowerRefresh()
 
-backgroundImgPath = "/home/gfdgd_xi/Pictures/炎夏凉梦.jpg"
+backgroundImgPath = f"{programPath}/back.jpg"
 # GXDE 彩蛋
 if os.path.exists("/usr/share/gxde-resources/spark-dwine-helper.png"):
     backgroundImgPath = "/usr/share/gxde-resources/spark-dwine-helper.png"
@@ -104,11 +106,10 @@ if os.path.exists("/usr/share/gxde-resources/spark-dwine-helper.png"):
 window.setWindowTitle("星火Windows应用兼容助手")
 layout.addWidget(QLabel(f""), 1, 0)
 layout.addWidget(appInfoShower, 2, 0)
-#layout.addWidget(processBar, 2, 0)
 layout.addWidget(QLabel(f"<hr>由 Wine 运行器提供支持"), 4, 0)
 widget.setLayout(layout)
 window.setCentralWidget(widget)
-window.setWindowFlag(Qt.WindowCloseButtonHint, False)
+window.setWindowFlags(Qt.WindowMaximizeButtonHint | Qt.MSWindowsFixedSizeDialogHint)
 window.show()
 SetWindowSize(window)
 
