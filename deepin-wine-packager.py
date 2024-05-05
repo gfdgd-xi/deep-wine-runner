@@ -1651,7 +1651,7 @@ StartupNotify=false
             ################
             if not self.build:
                 self.label.emit("正在构建 deb 包……")
-                self.run_command("bash -c 'dpkg-deb -Z xz -b \"{}\" \"{}\"'".format(debPackagePath, e12_text.text()))
+                self.run_command("bash -c 'dpkg-deb -Z xz -z 0 -b \"{}\" \"{}\"'".format(debPackagePath, e12_text.text()))
             ################
             # 删除临时文件
             ################

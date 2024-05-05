@@ -596,7 +596,7 @@ class RunThread(QtCore.QThread):
             self.RunCommand(f"chmod -Rv 755 '{debBuildPath}/usr/share/applications/'*.desktop")
             ########### 打包 deb
             print(debPackageVersion)
-            self.RunCommand(f"dpkg-deb -Z xz -b '{debBuildPath}' '{desktopPath}/{debPackageName}_{debPackageVersion}_all.deb'")
+            self.RunCommand(f"dpkg-deb -Z xz -z 0 -b '{debBuildPath}' '{desktopPath}/{debPackageName}_{debPackageVersion}_all.deb'")
             self.info.emit("打包完成！")
             self.disbledAll.emit(False)
             ########### 移除临时文件
