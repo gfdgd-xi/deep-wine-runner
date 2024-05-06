@@ -7,22 +7,54 @@
 #               Peng Hao <penghao@linuxdeepin.com>
 #
 #   Modifier:   shenmo <shenmo@spark-app.store>
-#               gfdgd xi <3025613752@qq.com>
 #		   
 #
-WINEPREFIX="$HOME/.deepinwine/@public_bottle_name@"
-APPDIR="/opt/deepinwine/apps/@public_bottle_name@"
-APPVER="@deb_version_string@"
+
+source /opt/durapps/transhell/transhell.sh
+load_transhell_debug
+source $(dirname $0)/log-function.bashimport
+#########Preload functions
+function get_app_name() {
+    local app_name_orig=$(grep -m 1 '^Name=' "/usr/share/applications/$1.desktop" | cut -d '=' -f 2)
+    local app_name_i18n=$(grep -m 1 "^Name\[$LANGUAGE\]\=" "/usr/share/applications/$1.desktop" | cut -d '=' -f 2)
+    local app_name=""
+    
+    if [ -z "$app_name_i18n" ]; then
+        app_name="$app_name_orig"
+    else
+        app_name="$app_name_i18n"
+    fi
+    
+    echo "$app_name"
+}
+######### Vars
+BOTTLENAME="$1"
+WINEPREFIX="$HOME/.deepinwine/$1"
+APPDIR="/opt/apps/${DEB_PACKAGE_NAME}/files"
+APPVER=""
 APPTAR="files.7z"
 BOTTLENAME=""
 WINE_CMD="deepin-wine"
-#这里会被后续覆盖，似乎没啥用
+#这里会被后续覆盖
 LOG_FILE=$0
 PUBLIC_DIR="/var/public"
-# arm 的东西
-EMU_CMD="/opt/deepin-box86/box86"
-WINESERVER="/opt/deepin-wine6-stable/bin/wineserver"
-# Helper 多架构通吃计划！
+
+export WINE_WMCLASS="$DEB_PACKAGE_NAME"
+export WINE_APP_NAME=$(get_app_name ${DEB_PACKAGE_NAME})
+if [ -z "$WINE_APP_NAME" ];then
+export WINE_APP_NAME=$BOTTLENAME
+fi
+
+
+
+
+if [ -e /opt/p7zip-legacy/bin/7z ];then
+log.debug "Using p7zip-legacy as unpacker"
+UNPACK_CMD=/opt/p7zip-legacy/bin/7z
+else
+UNPACK_CMD=7z
+log.debug "Using system 7z as unpacker"
+fi
 SHELL_DIR=$(dirname $0)
 SHELL_DIR=$(realpath "$SHELL_DIR")
 if [ $SPECIFY_SHELL_DIR ]; then
@@ -33,81 +65,27 @@ if [ $APPRUN_CMD ]; then
     WINE_CMD=$APPRUN_CMD
 fi
 
+#####################
+
+if [ "$WINE_CMD" = "deepin-wine8-stable" ] && [ "$(arch)" != "x86_64" ];then
+
+WINE_CMD="/opt/durapps/spark-dwine-helper/deepin-wine8-stable-wrapper/deepin-wine8-stable"
+log.warn "Using deepin-wine8-stable wrapper to fix arm problem"
+fi
+
+#####################
+
 if [ $SPECIFY_SHELL_DIR ]; then
     SHELL_DIR=$SPECIFY_SHELL_DIR
 fi
 
-########## 看起来是对 box86 逻辑的处理
-if [ -n "$APPRUN_CMD" ]; then
-    WINE_CMD=$APPRUN_CMD
-    if [ ! -f "WINE_CMD" ];then
-        WINE_CMD="/opt/${WINE_CMD}/bin/wine"
-    fi
-fi
+##################### Functions
+	progressbar()
+	{
+		WINDOWID="" zenity --progress --title="$1" --text="$2" --pulsate --width=400 --auto-close --no-cancel ||
+		WINDOWID="" zenity --progress --title="$1" --text="$2" --pulsate --width=400 --auto-close
+	}
 
-if [ -n "$BOX86_EMU_CMD" ];then
-    EMU_CMD="$BOX86_EMU_CMD"
-fi
-########## exagear 的
-if [ "$EMU_NAME" = "exagear" ];then
-    IMAGE_PATH=$HOME/.deepinwine/debian-buster
-    IMG_ARCHIVE_DIR=/opt/deepin-wine-exagear-images/debian-buster
-    EMU_CMD="${SHELL_DIR}/exagear/ubt_x64a64_al"
-    EMU_ARGS="--path-prefix $IMAGE_PATH --utmp-paths-list $IMAGE_PATH/.exagear/utmp-list --vpaths-list $IMAGE_PATH/.exagear/vpaths-list --opaths-list $IMAGE_PATH/.exagear/opaths-list --smo-mode fbase --smo-severity smart --fd-limit 8192 --foreign-ubt-binary ${SHELL_DIR}/exagear/ubt_x32a64_al -- "
-    WINESERVER="${SHELL_DIR}/exagear/wineserver"
-
-    #新版本wine需要udis86的库
-    UDIS86="/usr/lib/i386-linux-gnu/libudis86.so.0"
-    if [[ -f "$UDIS86" ]] && [[ ! -f "${IMAGE_PATH}${UDIS86}" ]]; then
-        cp "$UDIS86" "${IMAGE_PATH}${UDIS86}"
-    fi
-fi
-
-# 用于 exagear 的函数
-extract_image() {
-    LOCALTIME=`readlink -f /etc/localtime`
-    7z x "$IMG_ARCHIVE_DIR/files.7z" -o"$IMAGE_PATH" -aoa
-    cp /usr/bin/dde-file-manager $IMAGE_PATH/usr/bin/dde-file-manager
-    rm $IMAGE_PATH/etc/localtime
-    ln -s $LOCALTIME $IMAGE_PATH/etc/localtime
-    if [ -d $IMAGE_PATH/etc/resolvconf ];then
-        rm $IMAGE_PATH/etc/resolvconf
-    fi
-    if [ -d /etc/resolvconf ];then
-    	cp /etc/resolvconf $IMAGE_PATH/etc/ -rf
-    fi
-    cp /etc/resolv.conf $IMAGE_PATH/etc/
-    cp /etc/hosts $IMAGE_PATH/etc/
-    echo $IMAGE_VER > $IMAGE_PATH/VERSION
-}
-
-get_link_err_nums() {
-	find  $IMAGE_PATH -type l ! -exec test -e {} \; -print | wc -l
-}
-
-init_exagear_runtime()
-{
-    ## 解压文件
-    if [ ! -e $IMAGE_PATH/VERSION ];then
-        extract_image
-    fi
-    
-    OLD_IMAGE_VER=`cat $IMAGE_PATH/VERSION`
-    if [ "$OLD_IMAGE_VER" != "$IMAGE_VER" ];then
-        extract_image
-    fi
-    
-    echo "======$(get_link_err_nums)===="
-    if [ "$(get_link_err_nums)" -gt "120" ];then
-        extract_image
-    fi
-    
-    ## mount /data/ dir to geust
-    if [ -d $IMAGE_PATH ] && [ ! -d $IMAGE_PATH/data ];then
-    	mkdir $IMAGE_PATH/data
-    	cp $SHELL_DIR/exagear/vpaths-list $IMAGE_PATH/.exagear
-    fi
-}
 
 _DeleteRegistry()
 {
@@ -137,7 +115,7 @@ debug_log_to_file()
 
 debug_log()
 {
-    echo "${1}"
+    log.debug "${1}"
 }
 ################log相关功能
 HelpApp()
@@ -148,17 +126,47 @@ HelpApp()
 	echo " -h/--help      Show program help info"
 }
 #############帮助文件
+
+check_link()
+{
+    if [ ! -d "$1" ];then
+        echo "$1 不是目录，不能创建$2软连接"
+        return
+    fi
+    link_path=$(realpath "$2")
+    target_path=$(realpath "$1")
+    if [ "$link_path" != "$target_path" ];then
+        if [ -d "$2" ];then
+            mv "$2" "${2}.bak"
+        else
+            rm "$2"
+        fi
+        echo "修复$2软连接为$1"
+        ln -s -f "$1" "$2"
+    fi
+}
+
 FixLink()
 {
     if [ -d ${WINEPREFIX} ]; then
         CUR_DIR=$PWD
-        cd "${WINEPREFIX}/dosdevices"
-        rm c: z: y:
-        ln -s -f ../drive_c c:
-        ln -s -f / z:
-        ln -s -f $HOME y:
+	cd "${WINEPREFIX}/dosdevices"
+ 	check_link ../drive_c c:
+        check_link / z:
+        check_link $HOME y:
+        cd "../drive_c/users/$USER"
+        check_link "$HOME/Desktop" Desktop
+        check_link "$HOME/Downloads" Downloads
+        # Link to Document
+if [ -L "$WINEPREFIX/drive_c/users/$(whoami)/My Documents" ]; then
+        env WINEPREFIX="$WINEPREFIX" $WINE_CMD reg add 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders' /t REG_EXPAND_SZ  /v Personal /d "%USERPROFILE%\My Documents" /f
+
+else
+        env WINEPREFIX="$WINEPREFIX" $WINE_CMD reg add 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders' /t REG_EXPAND_SZ  /v Personal /d "%USERPROFILE%\Documents" /f
+
+fi
         cd $CUR_DIR
-        ls -l "${WINEPREFIX}/dosdevices"
+        #ls -l "${WINEPREFIX}/dosdevices"
     fi
 }
 ###########会在应用启动和解压时执行，驱动器绑定
@@ -172,7 +180,7 @@ DisableWrite()
     mkdir "${1}"
     chmod -w "${1}"
 }
-########如果有该文件夹则删除，然后再创建一个不允许写入的（这东西是被用在了QQ启动上，看来腾讯不怎么好对付）
+########如果有该文件夹则删除，然后再创建一个不允许写入的
 is_autostart()
 {
     AUTOSTART="/opt/deepinwine/tools/autostart"
@@ -188,6 +196,29 @@ is_autostart()
     return 1
 }
 #########自动启动相关，等用到了再研究
+
+Test_GL_wine()
+{
+    gl_wine_path="/opt/deepinwine/tools/spark_gl-wine"
+
+    #如果不支持32的GLX,d3d改为gdi的实现
+    if [[ ! -f "${WINEPREFIX}/.init_d3d" ]];then
+        if [[ $WINE_CMD == *"deepin-wine8-stable"* ]];then
+            gl_wine="${gl_wine_path}/gl-wine64"
+        else
+            gl_wine="${gl_wine_path}/run_gl.sh"
+        fi
+
+        run_gl=`${gl_wine} 2>&1`
+
+        #如果opengl测试程序运行失败，所有进程的渲染方式改为gdi渲染模式
+        if [ $? != 0 ];then
+            WINEPREFIX="$WINEPREFIX" $WINE_CMD regedit /S "${gl_wine_path}/gdid3d.reg"
+        fi
+
+        touch "${WINEPREFIX}/.init_d3d"
+    fi
+}
 urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; }
 #######url转义
 
@@ -203,10 +234,14 @@ CallProcess()
     #kill bloack process
     is_autostart $DEB_PACKAGE_NAME
     autostart=$?
-    if [ $autostart -ne 0 ];then
-        $SHELL_DIR/kill.sh "$BOTTLENAME" block
+    if [[ $autostart -ne 0 ]] && [[ "$1" != *"pluginloader.exe" ]];then
+        $SHELL_DIR/spark_kill.sh "$BOTTLENAME" block
     fi
-
+	#run gl-wine for test opengl
+    get_arch=`uname -m`
+    if [[ $get_arch = "x86_64" ]];then
+        Test_GL_wine
+    fi
     #change current dir to excute path
     path=$(dirname "$path")
     cd "$path"
@@ -217,12 +252,17 @@ CallProcess()
         xdg-mime default "$DEB_PACKAGE_NAME".desktop "$MIME_TYPE"
     fi
     # Disable winemenubuilder
-    env WINEPREFIX="$WINEPREFIX" $WINE_CMD reg add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v winemenubuilder.exe /f
-    debug_log_to_file "Starting process $* ..."
+    env WINE_WMCLASS="$DEB_PACKAGE_NAME" WINEPREFIX="$WINEPREFIX" $WINE_CMD reg add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v winemenubuilder.exe /f
+
+    
+
+    
+    
+    debug_log "Starting process $* ..."
+
 	#############  WARNING: Here is the modified content: Now will run set-dwine-scale.sh
 	/opt/durapps/spark-dwine-helper/scale-set-helper/set-wine-scale.sh "$WINEPREFIX"
-    #env WINEPREFIX="$WINEPREFIX" $WINE_CMD "$@" &
-    env WINEPREFIX="$WINEPREFIX" $EMU_CMD $EMU_ARGS $WINE_CMD "$@" &
+    env WINEPREFIX="$WINEPREFIX" $WINE_CMD "$@"
 
     #start autobottle
     if [ $autostart -eq 0 ];then
@@ -234,274 +274,7 @@ CallProcess()
 ###有设置mimetype和自动启动(这个暂时没分析)的功能
 
 ###########专属优化段：
-CallDouyin()
-{
-    if [ -f "${WINEPREFIX}/drive_c/users/${USER}/Application Data/douyin" ]; then
-       rm "${WINEPREFIX}/drive_c/users/${USER}/Application Data/douyin"
-       mv ${WINEPREFIX}/drive_c/users/${USER}/Application\ Data/*.tmp ${WINEPREFIX}/drive_c/users/${USER}/Application\ Data/douyin
-       chmod 755 ${WINEPREFIX}/drive_c/users/${USER}/Application\ Data/douyin
-    fi
-    CallProcess "$@"
-}
 
-CallMuBu()
-{
-    if [ -f "${WINEPREFIX}/drive_c/ProgramData/Microsoft/Windows/Start\ Menu/Programs/MuBu.lnk" ]; then
-       chmod 555 ${WINEPREFIX}/drive_c/ProgramData/Microsoft/Windows/Start\ Menu/Programs/MuBu.lnk
-    fi
-    CallProcess "$@"
-}
-
-CallFlyele() 
-{
-    if [ -w ${WINEPREFIX}/drive_c/users/${USER}/Application\ Data/飞项/Crashpad/reports ]; then
-       rm -rf ${WINEPREFIX}/drive_c/users/${USER}/Application\ Data/飞项/Crashpad/reports/*
-       chmod 555 ${WINEPREFIX}/drive_c/users/${USER}/Application\ Data/飞项/Crashpad/reports
-    fi
-    CallProcess "$@"
-}
-
-CallZhuMu()
-{
-    #change current dir to excute path
-    path=$(dirname "$path")
-    cd "$path"
-    pwd
-
-    #Set default mime type
-    if [ -n "$MIME_TYPE" ]; then
-        xdg-mime default "$DEB_PACKAGE_NAME".desktop "$MIME_TYPE"
-    fi
-
-    debug_log_to_file "Starting process $* ..."
-    if [ -n "$2" ];then
-        env WINEPREFIX="$WINEPREFIX" $WINE_CMD "$1" "--url=$2" &
-    else
-        env WINEPREFIX="$WINEPREFIX" $WINE_CMD "$1" &
-    fi
-}
-
-CallQQGame()
-{
-    debug_log "run $1"
-    $SHELL_DIR/kill.sh qqgame block
-    env WINEPREFIX="$WINEPREFIX" $WINE_CMD "$1" &
-}
-
-CallQQ()
-{
-    if [ ! -f "$WINEPREFIX/../.QQ_run" ]; then
-        debug_log "first run time"
-        $SHELL_DIR/add_hotkeys
-        $SHELL_DIR/fontconfig
-        touch "$WINEPREFIX/../.QQ_run"
-    fi
-
-    DisableWrite "${WINEPREFIX}/drive_c/Program Files/Tencent/QQ/Bin/QQLiveMPlayer"
-    DisableWrite "${WINEPREFIX}/drive_c/Program Files/Tencent/QQ/Bin/QQLiveMPlayer1"
-    DisableWrite "${WINEPREFIX}/drive_c/Program Files/Tencent/QzoneMusic"
-
-    DisableWrite "${WINEPREFIX}/drive_c/Program Files/Tencent/QQBrowser"
-    DisableWrite "${WINEPREFIX}/drive_c/Program Files/Common Files/Tencent/QQBrowser"
-    DisableWrite "${WINEPREFIX}/drive_c/users/Public/Application Data/Tencent/QQBrowserBin"
-    DisableWrite "${WINEPREFIX}/drive_c/users/Public/Application Data/Tencent/QQBrowserDefault"
-    DisableWrite "${WINEPREFIX}/drive_c/users/${USER}/Application Data/Tencent/QQBrowserDefault"
-
-    DisableWrite "${WINEPREFIX}/drive_c/users/Public/Application Data/Tencent/QQPCMgr"
-    DisableWrite "${WINEPREFIX}/drive_c/Program Files/Common Files/Tencent/QQPCMgr"
-
-    DisableWrite "${WINEPREFIX}/drive_c/Program Files/Common Files/Tencent/HuaYang"
-    DisableWrite "${WINEPREFIX}/drive_c/users/${USER}/Application Data/Tencent/HuaYang"
-
-    CallProcess "$@"
-}
-
-
-CallTIM()
-{
-    if [ ! -f "$WINEPREFIX/../.QQ_run" ]; then
-        debug_log "first run time"
-        $SHELL_DIR/add_hotkeys
-####似乎是给dde-control-center添加快捷键
-        $SHELL_DIR/fontconfig
-####暂时无法得知用途和用法
-        # If the bottle not exists, run reg may cost lots of times
-        # So create the bottle befor run reg
-        env WINEPREFIX="$WINEPREFIX" $WINE_CMD uninstaller --list
-        touch $WINEPREFIX/../.QQ_run
-    fi
-
-    CallProcess "$@"
-
-    #disable Tencent MiniBrowser
-    _DeleteRegistry "HKCU\\Software\\Tencent\\MiniBrowser"
-}
-
-CallWeChat()
-{
-    export DISABLE_RENDER_CLIPBOARD=1
-    CallProcess "$@"
-}
-
-CallWangWang()
-{
-    chmod 700 "$WINEPREFIX/drive_c/Program Files/AliWangWang/9.12.10C/wwbizsrv.exe"
-    chmod 700 "$WINEPREFIX/drive_c/Program Files/Alibaba/wwbizsrv/wwbizsrv.exe"
-    if [ $# = 3 ] && [ -z "$3" ];then
-        EXEC_PATH="c:/Program Files/AliWangWang/9.12.10C/WWCmd.exe"
-        env WINEPREFIX="$WINEPREFIX" $WINE_CMD "$EXEC_PATH" "$2" &
-    else
-    	CallProcess "$@"
-    fi
-}
-
-CallWXWork()
-{
-    if [ -d "${WINEPREFIX}/drive_c/users/${USER}/Application Data/Tencent/WXWork/Update" ]; then
-        rm -rf "${WINEPREFIX}/drive_c/users/${USER}/Application Data/Tencent/WXWork/Update"
-    fi
-    if [ -d "${WINEPREFIX}/drive_c/users/${USER}/Application Data/Tencent/WXWork/upgrade" ]; then
-        rm -rf "${WINEPREFIX}/drive_c/users/${USER}/Application Data/Tencent/WXWork/upgrade"
-    fi
-    #Support use native file dialog
-
-    CallProcess "$@"
-}
-
-CallDingTalk()
-{
-    debug_log "run $1"
-    $SHELL_DIR/kill.sh DingTalk block
-
-    CallProcess "$@"
-}
-
-
-
-CallMeiTuXiuXiu()
-{
-    #set -- "$1" "${2#file://*}"
-    local path=$(urldecode "$2")
-    path=${path/file:\/\//}
-    set -- "$1" "$path"
-	if [ "$path" ];then 
-    CallProcess "$@"
-	else
-	CallProcess "$1"
-	fi
-}
-
-CallFastReadPDF()
-{
-    #set -- "$1" "${2#file://*}"
-    local path=$(urldecode "$2")
-    path=${path/file:\/\//}
-    set -- "$1" "$path"
-	if [ "$path" ];then 
-    CallProcess "$@"
-	else
-	CallProcess "$1"
-	fi
-}
-
-CallEvernote()
-{
-    #set -- "$1" "${2#file://*}"
-    local path=$(urldecode "$2")
-    path=${path/file:\/\//}
-    set -- "$1" "$path"
-	if [ "$path" ];then 
-    CallProcess "$@"
-	else
-	CallProcess "$1"
-	fi
-}
-
-CallTencentVideo()
-{
-    if [ -f "${WINEPREFIX}/drive_c/Program Files/Tencent/QQLive/Upgrade.dll" ]; then
-        rm -rf "${WINEPREFIX}/drive_c/Program Files/Tencent/QQLive/Upgrade.dll"
-    fi
-
-    CallProcess "$@"
-}
-
-CallFoxmail()
-{
-    sed -i '/LogPixels/d' ${WINEPREFIX}/user.reg
-    CallProcess "$@"
-}
-
-CallTHS()
-{
-    $SHELL_DIR/kill.sh ths block
-
-    debug_log "Start run $1"
-    #get file full path
-    path="$1"
-    path=$(echo ${path/c:/${WINEPREFIX}/drive_c})
-    path=$(echo ${path//\\/\/})
-
-    #kill bloack process
-    name="${path##*/}"
-    $SHELL_DIR/kill.sh "$name" block
-
-    #change current dir to excute path
-    path=$(dirname "$path")
-    cd "$path"
-    pwd
-
-    #Set default mime type
-    if [ -n "$MIME_TYPE" ]; then
-        xdg-mime default "$DEB_PACKAGE_NAME".desktop "$MIME_TYPE"
-    fi
-
-    CallProcess "$@"
-}
-
-CallQQGameV2()
-{
-    debug_log "run $1"
-    $SHELL_DIR/kill.sh QQMicroGameBox block
-    CallProcess "$1" -action:force_download -appid:${2} -pid:8 -bin_version:1.1.2.4 -loginuin: 
-}
-
-
-
-CallPsCs6()
-{
-    #get file full path
-    path="$1"
-    path=$(echo ${path/c:/${WINEPREFIX}/drive_c})
-    path=$(echo ${path//\\/\/})
-
-    #kill bloack process
-    name="${path##*/}"
-    $SHELL_DIR/kill.sh "$name" block
-
-    #change current dir to excute path
-    path=$(dirname "$path")
-    cd "$path"
-    pwd
-
-    #Set default mime type
-    if [ -n "$MIME_TYPE" ]; then
-        xdg-mime default "$DEB_PACKAGE_NAME".desktop "$MIME_TYPE"
-    fi
-
-    debug_log_to_file "Starting process $* ..."
-
-    CallProcess "$@"
-}
-
-CallIE8()
-{
-    rm -f "$WINEPREFIX/system.reg"
-    cp $APPDIR/system.reg "$WINEPREFIX/system.reg"
-    CallProcess "$@"
-}
-
-#####专属优化段结束
 
 UnixUriToDosPath()
 {
@@ -521,91 +294,44 @@ UnixUriToDosPath()
 #### CallApp段，根据容器名找专属优化，没有就走通用启动
 CallApp()
 {
+
+
+    $SHELL_DIR/spark-wine-banner &
     FixLink
     debug_log "CallApp $BOTTLENAME arg count $#: $*"
+    if [ -f "/opt/apps/${DEB_PACKAGE_NAME}/files/pre_run.sh" ];then
+        source "/opt/apps/${DEB_PACKAGE_NAME}/files/pre_run.sh"
+        CallPreRun "$@"
+    fi
 
-    case $BOTTLENAME in
-        "Deepin-WangWang")
-            CallWangWang "$@"
-            ;;
-        "Deepin-ZhuMu")
-            CallZhuMu "$@"
-            ;;
-        "Deepin-QQ"|"Wine-QQ"|"Spark-QQ"|"Deepin-QQ-Spark")
-            CallQQ "$@"
-            ;;
-        "Deepin-TIM"|"Spark-TIM")
-            CallTIM "$@"
-            ;;
-        "Deepin-QQGame"*)
-            CallQQGame "$@"
-            ;;
-        "Deepin-ATM")
-            CallATM "$@"
-            ;;
-        "Deepin-WeChat")
-            CallWeChat "$@"
-            ;;
-        "Deepin-WXWork"|"Spark-WeCom")
-            CallWXWork "$@"
-            ;;
-        "Deepin-Dding")
-            CallDingTalk "$@"
-            ;;
-        "Deepin-MTXX")
-            CallMeiTuXiuXiu "$@"
-            ;;
-        "Deepin-FastReadPDF")
-            CallFastReadPDF "$@"
-            ;;
-        "Deepin-Evernote")
-            CallEvernote "$@"
-            ;;
-        "Deepin-TencentVideo")
-            CallTencentVideo "$@"
-            ;;
-        "Deepin-Foxmail")
-            CallFoxmail "$@"
-            ;;
-        "Deepin-THS")
-            CallTHS "$@"
-            ;;
-        "Deepin-QQHlddz")
-            CallQQGameV2 "$1" 363
-            ;;
-        "Deepin-QQBydr")
-            CallQQGameV2 "$1" 1104632801
-            ;;
-        "Deepin-QQMnsj")
-            CallQQGameV2 "$1" 1105856612
-            ;;
-        "Deepin-QQSszb")
-            CallQQGameV2 "$1" 1105640244
-            ;;
-        "Deepin-CS6")
-            CallPsCs6 "$@"
-            ;;
-        "Spark-MuBu")
-            CallMuBu "$@"
-            ;;
-        "Spark-flyele")
-            CallFlyele "$@"
-            ;;
-	    "Spark-douyin")
-            CallDouyin "$@"
-            ;;
-	    "IE8")
-            CallIE8 "$@"
-            ;;
-        *)
-            CallProcess "$@"
-            ;;
-    esac
+APP_CONFIG_PATH="/opt/deepinwine/tools/spark_run_v4_app_configs/${BOTTLENAME}.sh"
+
+if [ -f "$APP_CONFIG_PATH" ]; then
+  echo "执行 ${BOTTLENAME}.sh ..."
+  source $APP_CONFIG_PATH
+else
+  echo "$APP_CONFIG_PATH 文件不存在，执行通用启动"
+  CallProcess "$@" 
+fi
+
+
 }
 ExtractApp()
 {
+
+
+local tmp_log=$(mktemp)
 	mkdir -p "$1"
-	7z x "$APPDIR/$APPTAR" -o"$1"
+	(${UNPACK_CMD} x "$APPDIR/$APPTAR" -o"$1" -bsp1 -bb1 -bse2 | grep --line-buffered -oP "(\d+(\.\d+)?(?=%))" > $tmp_log)&
+
+	cmd_pid=$!
+(while kill -0 $cmd_pid 2> /dev/null; do
+        tail -n 1 "${tmp_log}"
+        sleep 1
+    done)|  zenity --progress --title="${TRANSHELL_CONTENT_SPARK_WINDOWS_COMPATIBILITY_TOOL}" --text="${TRANSHELL_CONTENT_UNPACKING} $WINE_APP_NAME..."  --width=600 --auto-close --no-cancel 
+rm $tmp_log
+
+
 	mv "$1/drive_c/users/@current_user@" "$1/drive_c/users/$USER"
 	sed -i "s#@current_user@#$USER#" $1/*.reg
     FixLink
@@ -634,12 +360,19 @@ ResetApp()
 }
 UpdateApp()
 {
-	if [ -f "$WINEPREFIX/PACKAGE_VERSION" ] && [ "$(cat "$WINEPREFIX/PACKAGE_VERSION")" = "$APPVER" ]; then
-		return
-	fi
 	if [ -d "${WINEPREFIX}.tmpdir" ]; then
 		rm -rf "${WINEPREFIX}.tmpdir"
 	fi
+	if [ -f "$WINEPREFIX/PACKAGE_VERSION" ] && [ "$(cat "$WINEPREFIX/PACKAGE_VERSION")" = "$APPVER" ]; then
+		return
+	fi
+
+    if [ -f "/opt/apps/${DEB_PACKAGE_NAME}/files/pre_update.sh" ];then
+        source "/opt/apps/${DEB_PACKAGE_NAME}/files/pre_update.sh"
+        CallPreUpdate
+        return
+    fi
+
 
     case $BOTTLENAME in
         "Deepin-Intelligent" | "Deepin-QQ" | "Deepin-TIM" | "Deepin-WeChat" | "Deepin-WXWork" | "Deepin-Dding" | "Wine-QQ" | "Spark-QQ" | "Spark-weixin")
@@ -650,7 +383,7 @@ UpdateApp()
     esac
 
 	ExtractApp "${WINEPREFIX}.tmpdir"
-	$SHELL_DIR/updater -s "${WINEPREFIX}.tmpdir" -c "${WINEPREFIX}" -v
+	$SHELL_DIR/spark_updater -s "${WINEPREFIX}.tmpdir" -c "${WINEPREFIX}" -v
 
 
 	rm -rf "${WINEPREFIX}.tmpdir"
@@ -658,16 +391,21 @@ UpdateApp()
 }
 RunApp()
 {
+
+
     progpid=$(ps -ef | grep "zenity --progress --title=${BOTTLENAME}" | grep -v grep)
     debug_log "run ${BOTTLENAME} progress pid $progpid"
     if [ -n "$progpid" ]; then
         debug_log "$BOTTLENAME is running"
         exit 0
     fi
+    	
  	if [ -d "$WINEPREFIX" ]; then
-        UpdateApp | progressbar "$BOTTLENAME" "更新$BOTTLENAME中..."
+        	    if [ ! -f "$WINEPREFIX/PACKAGE_VERSION" ] || [ "$(cat "$WINEPREFIX/PACKAGE_VERSION")" != "$APPVER" ]; then
+			UpdateApp
+	    fi
  	else
-        DeployApp | progressbar $BOTTLENAME "初始化$BOTTLENAME中..."
+        DeployApp 
  	fi
 
     CallApp "$@"
@@ -676,7 +414,9 @@ RunApp()
 CreateBottle()
 {
     if [ -d "$WINEPREFIX" ]; then
-        UpdateApp
+	    if [ ! -f "$WINEPREFIX/PACKAGE_VERSION" ] || [ "$(cat "$WINEPREFIX/PACKAGE_VERSION")" != "$APPVER" ]; then
+            UpdateApp
+	    fi
     else
         DeployApp
     fi
@@ -697,32 +437,17 @@ ParseArgs()
     fi
 }
 
-init_log_file
-
-# Check if some visual feedback is possible
-if command -v zenity >/dev/null 2>&1; then
-	progressbar()
-	{
-		WINDOWID="" zenity --progress --title="$1" --text="$2" --pulsate --width=400 --auto-close --no-cancel ||
-		WINDOWID="" zenity --progress --title="$1" --text="$2" --pulsate --width=400 --auto-close
-	}
-
-else
-	progressbar()
-	{
-		cat -
-	}
-fi
+#init_log_file
 
 
-#####准备启动进程，分析在 https://shenmo7192.gitee.io/post/deepin-wine6%E7%9A%84run_v4%E8%84%9A%E6%9C%AC%E6%8E%A2%E7%B4%A2%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F/
+
+
+
+#####准备启动进程，分析在 https://blog.shenmo.tech/post/deepin-wine6%E7%9A%84run_v4%E8%84%9A%E6%9C%AC%E6%8E%A2%E7%B4%A2%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F/
 if [ $# -lt 3 ]; then
     debug_log "参数个数小于3个"
     exit 0
 fi
-
-BOTTLENAME="$1"
-WINEPREFIX="$HOME/.deepinwine/$1"
 
 
 APPDIR="/opt/apps/${DEB_PACKAGE_NAME}/files"
@@ -733,6 +458,7 @@ else
 fi
 
 debug_log "Run $*"
+
 
 #执行lnk文件通过判断第5个参数是否是“/Unix”来判断
 if [ "$4" == "/Unix" ];then
@@ -748,7 +474,7 @@ case $4 in
 	"-r" | "--reset")
 		ResetApp
 		;;
-	"-c" | "--create")
+	"-cb" | "--create")
 		CreateBottle
 		;;
 	"-e" | "--remove")
