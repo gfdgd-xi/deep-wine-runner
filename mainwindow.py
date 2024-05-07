@@ -3530,7 +3530,7 @@ e2.setEditText("")
 combobox1.setEditText("")
 if len(sys.argv) > 1 and sys.argv[1]:
     e2.setEditText(sys.argv[1])
-if not os.path.exists("/opt/durapps/spark-dwine-helper/spark-dwine-helper-settings/settings.sh"):
+if not os.path.exists("/opt/durapps/spark-dwine-helper/wine-app-launcher/wine-app-launcher.sh"):
     sparkWineSetting.setEnabled(False)
 if o1.currentText() == "":
     # 一个 Wine 都没有却用 Wine 的功能
