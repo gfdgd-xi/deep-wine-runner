@@ -2896,7 +2896,7 @@ button_r_6 = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "RegSh
 button_r_6.clicked.connect(lambda: RunWineProgram(f"{programPath}/RegShot/regshot.exe"))
 programManager.addWidget(button_r_6, 3, 4, 1, 1)
 sparkWineSetting = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "星火wine配置"))
-sparkWineSetting.clicked.connect(lambda: threading.Thread(target=os.system, args=["bash /opt/durapps/spark-dwine-helper/spark-dwine-helper-settings/settings.sh"]).start())
+sparkWineSetting.clicked.connect(lambda: threading.Thread(target=os.system, args=["bash /opt/durapps/spark-dwine-helper/wine-app-launcher/wine-app-launcher.sh"]).start())
 programManager.addWidget(sparkWineSetting, 3, 6, 1, 1)
 wineAutoConfig = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "自动/手动配置 Wine 容器"))
 wineAutoConfig.clicked.connect(WineBottonAutoConfig)
