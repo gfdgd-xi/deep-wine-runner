@@ -1872,12 +1872,12 @@ build: |
   install_dep $SOURCES $PREFIX
   # use a script as program
   echo "#!/usr/bin/env bash" > start.sh
-  echo "cd $PREFIX/ && ./StartVM.sh \$@" >> start.sh
+  echo "cd $PREFIX/ && ./deepin-wine-runner \$@" >> start.sh
   install -d $PREFIX/share
   install -d $PREFIX/bin
   install -d $PREFIX/lib
   install -m 0755 start.sh $PREFIX/bin
   # move files
-  cp -r $SOURCES/spark-deepin-wine-runner/opt/apps/deepin-wine-runner/entries/applications/spark-deepin-wine-runner.desktop $PREFIX/share
+  cp -r $SOURCES/spark-deepin-wine-runner/opt/apps/deepin-wine-runner/entries/* $PREFIX/share
   cp -r $SOURCES/spark-deepin-wine-runner/opt/apps/deepin-wine-runner/* $PREFIX
   #>>> auto generate by ll-pica end
