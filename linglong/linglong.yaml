@@ -16,8 +16,7 @@ command:
 
 sources:
   - kind: file
-    url: https://com-store-packages.uniontech.com/appstorev23/pool/appstore/s/spark-deepin-wine-runner/spark-deepin-wine-runner_3.8.0_amd64.deb
-    digest: d967cd378660d35b1b61098c609e66bb4b896ea816f52bbdaf57e13b946e3f82
+    url: https://gitee.com/gfdgd-xi/deep-wine-runner/releases/download/3.8.0/spark-deepin-wine-runner_3.8.0_all.deb
 
   - kind: file
     url: https://community-packages.deepin.com/beige/pool/main/libi/libinput/libinput-bin_1.23.0-2_amd64.deb
