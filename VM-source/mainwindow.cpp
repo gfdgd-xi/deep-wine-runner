@@ -145,7 +145,7 @@ void MainWindow::ShowCPUMessage(){
     }
     m_cpuAll = cpuAll;
     m_cpuFree = cpuFree;
-    ui->retranslateUi(this);
+    //ui->retranslateUi(this);
 }
 
 QString MainWindow::GetRunCommand(QString command){

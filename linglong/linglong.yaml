@@ -3139,7 +3139,7 @@ build: |
   #>>> auto generate by ll-pica begin
   # set the linglong/sources directory
   SOURCES="linglong/sources"
-  dpkg-deb -x $SOURCES/spark-deepin-wine-runner_3.8.0_amd64.deb $SOURCES/spark-deepin-wine-runner
+  dpkg-deb -x $SOURCES/spark-deepin-wine-runner_3.8.0_all.deb $SOURCES/spark-deepin-wine-runner
   # modify desktop, Exec and Icon should not contanin absolut paths
   sed -i '/Exec*/c\Exec=start.sh %F' $SOURCES/spark-deepin-wine-runner/opt/apps/deepin-wine-runner/entries/applications/spark-deepin-wine-runner.desktop
   sed -i '/Icon*/c\Icon=deepin-wine-runner' $SOURCES/spark-deepin-wine-runner/opt/apps/deepin-wine-runner/entries/applications/spark-deepin-wine-runner.desktop
