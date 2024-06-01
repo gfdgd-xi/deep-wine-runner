@@ -5,6 +5,8 @@
         <file>LANG/virtualmachine-en_US.qm</file>
         <file>LANG/virtualmachine-en_US.ts</file>
         <file>application-vnd.oasis.opendocument.text.svg</file>
+        <file>boot.jpg</file>
+        <file>boot.svg</file>
     </qresource>
     <qresource prefix="/picture">
         <file>截图_VirtualBox Machine_20220712142929.png</file>

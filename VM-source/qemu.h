@@ -53,6 +53,7 @@ public:
 private:
     QString commandOption = "";
     bool isUEFI = false;
+    QString GetBootLogoPath();
 
 };
 
