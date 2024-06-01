@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 3.8.0</h1>
+<h1 align="center">Wine 运行器 3.8.1</h1>
 <hr>
 <a href='https://gitee.com/gfdgd-xi/deep-wine-runner/stargazers'><img src='https://gitee.com/gfdgd-xi/deep-wine-runner/badge/star.svg?theme=dark' alt='star'></img></a>
 <a href='https://gitee.com/gfdgd-xi/deep-wine-runner/members'><img src='https://gitee.com/gfdgd-xi/deep-wine-runner/badge/fork.svg?theme=dark' alt='fork'></img></a>  
@@ -143,7 +143,24 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志 
-### 3.8.0（2023年04月27日）
+### 3.9.0（2024年06月01日）
+**※1、UOS Mips64（如 3a4000）用户无需手动降级 Qemu 即可正常开启使用虚拟机**  
+**※2、修复开启部分 exe 提示参数有误的问题**  
+**※3、Qemu 在启动时可以按 ESC 键打开启动菜单**  
+**※4、虚拟机工具 Windows 7 自动安装镜像文件选项内置 Virtio 驱动安装包**  
+**※5、Qemu 虚拟机参数调整若干**  
+**※6、修复虚拟机安装工具系统安装选项会自动跳回第一项的问题**  
+**※7、优化简易打包器包名识别机制**  
+**※8、减少不必要的压缩以减少打包器打包 deb 所需时间**  
+**※9、修复简易打包器生成的 deb 包无法运行的问题**  
+10、优化 lat 安装脚本  
+11、调整星火 Wine 助手路径  
+
+
+![F87D3721C30A235F9F47E8A8899FC3B7.png](https://storage.deepin.org/thread/20240601073716327_F87D3721C30A235F9F47E8A8899FC3B7.png)
+
+
+### 3.8.0（2024年04月27日）
 **※1、修复系统/应用运行库无法下载的问题**  
 **※2、打包器支持指定打包架构为 loong64、loongarch64、armhf 和 amd64**  
 **※3、更新 Geek Uninstaller 版本**  

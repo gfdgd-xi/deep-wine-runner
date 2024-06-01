@@ -301,7 +301,8 @@ class Runexebutton_threading(QtCore.QThread):
             option += "WINEDEBUG=FIXME,ERR,WARN,TRACE,Message "
         wineUsingOption = ""
         exePath = e2.currentText()
-        if True:
+        # 禁用没什么用还一堆坑的参数识别问题
+        if False:
             fileName = [".exe"]
             changePath = False
             for i in fileName:
@@ -2655,18 +2656,20 @@ exe路径\' 参数 \'
 5、wine 容器如果没有指定，则会默认为 ~/.wine；
 6、如果可执行文件比较大的话，会出现点击“获取该程序运行情况”出现假死的情况，因为正在后台读取 SHA1，只需要等一下即可（读取速度依照您电脑处理速度、读写速度、可执行文件大小等有关）；
 7、如果非 X86 的用户的 UOS 专业版用户想要使用的话，只需要在应用商店安装一个 Wine 版本微信即可在本程序选择正确的 Wine 运行程序；''')
-updateThingsString = QtCore.QCoreApplication.translate("U", '''※1、修复系统/应用运行库无法下载的问题
-※2、打包器支持指定打包架构为 loong64、loongarch64、armhf 和 amd64
-※3、更新 Geek Uninstaller 版本
-※4、默认开启英语翻译
-※5、更新 dxvk 版本
-※6、修复新版本 Qemu 没有 --soundhw 参数导致无法正常开启虚拟机的问题
-※7、支持 Qemu 磁盘扩容
-8、修复问题 https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I9B4L0
-9、针对 Loongarch ACE 做特别优化''')
+updateThingsString = QtCore.QCoreApplication.translate("U", '''※1、UOS Mips64（如 3a4000）用户无需手动降级 Qemu 即可正常开启使用虚拟机
+※2、修复开启部分 exe 提示参数有误的问题
+※3、Qemu 在启动时可以按 ESC 键打开启动菜单
+※4、虚拟机工具 Windows 7 自动安装镜像文件选项内置 Virtio 驱动安装包
+※5、Qemu 虚拟机参数调整若干
+※6、修复虚拟机安装工具系统安装选项会自动跳回第一项的问题
+※7、优化简易打包器包名识别机制
+※8、减少不必要的压缩以减少打包器打包 deb 所需时间
+※9、修复简易打包器生成的 deb 包无法运行的问题
+10、优化 lat 安装脚本
+11、调整星火 Wine 助手路径''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2024年04月27日"
+updateTime = "2024年06月01日"
 aboutProgram = QtCore.QCoreApplication.translate("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序。原版的 Wine 只能使用命令操作，且安装过程较为繁琐，对小白不友好。于是该运行器为了解决该痛点，内置了对Wine图形化的支持、Wine 安装器、微型应用商店、各种Wine工具、自制的Wine程序打包器、运行库安装工具等。</p>
 <p>它同时还内置了基于Qemu/VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作，也能在非 X86 架构安装 X86 架构的 Windows 操作系统（但是效率较低，可以运行些老系统）。</p>
 <p>而且对于部分 Wine 应用适配者来说，提供了图形化的打包工具，以及提供了一些常用工具以及运行库的安装方式，以及能安装多种不同的 Wine 以测试效果，能极大提升适配效率。</p>
@@ -2896,7 +2899,7 @@ button_r_6 = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "RegSh
 button_r_6.clicked.connect(lambda: RunWineProgram(f"{programPath}/RegShot/regshot.exe"))
 programManager.addWidget(button_r_6, 3, 4, 1, 1)
 sparkWineSetting = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "星火wine配置"))
-sparkWineSetting.clicked.connect(lambda: threading.Thread(target=os.system, args=["bash /opt/durapps/spark-dwine-helper/wine-app-launcher/wine-app-launcher.sh"]).start())
+sparkWineSetting.clicked.connect(lambda: threading.Thread(target=os.system, args=["bash /opt/apps/store.spark-app.spark-dwine-helper/files/deepinwine/tools/spark-dwine-helper/wine-app-launcher/wine-app-launcher.sh"]).start())
 programManager.addWidget(sparkWineSetting, 3, 6, 1, 1)
 wineAutoConfig = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "自动/手动配置 Wine 容器"))
 wineAutoConfig.clicked.connect(WineBottonAutoConfig)
@@ -3530,7 +3533,7 @@ e2.setEditText("")
 combobox1.setEditText("")
 if len(sys.argv) > 1 and sys.argv[1]:
     e2.setEditText(sys.argv[1])
-if not os.path.exists("/opt/durapps/spark-dwine-helper/wine-app-launcher/wine-app-launcher.sh"):
+if not os.path.exists("/opt/apps/store.spark-app.spark-dwine-helper/files/deepinwine/tools/spark-dwine-helper/wine-app-launcher/wine-app-launcher.sh"):
     sparkWineSetting.setEnabled(False)
 if o1.currentText() == "":
     # 一个 Wine 都没有却用 Wine 的功能
