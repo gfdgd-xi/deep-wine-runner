@@ -151,11 +151,11 @@ int qemu::Start(bool unShown)
     }
     // UOS 3a4000 使用程序自带的 qemu
     QString info = SystemInfo().toLower();
-    if(!info.contains("uos") || info.contains("unio")) {
+    if(info.contains("uos") || info.contains("unio")) {
         // 判断架构
         QString arch = GetArch();
-        if(arch != "mips64" || arch == "mipsel64") {
-            qemuPath = "bwrap --dev-bind / / --bind '" + QCoreApplication::applicationDirPath() + "/MipsQemu/usr/lib/mips64el-linux-gnuabi64/qemu/ui-gtk.so' /usr/lib/mips64el-linux-gnuabi64/qemu/ui-gtk.so qemu-system-x86_64";
+        if(arch == "mips64" || arch == "mipsel64") {
+            qemuPath = "bwrap --dev-bind / / --bind '" + QCoreApplication::applicationDirPath() + "/MipsQemu/usr/lib/mips64el-linux-gnuabi64/qemu/ui-gtk.so' /usr/lib/mips64el-linux-gnuabi64/qemu/ui-gtk.so '" + QCoreApplication::applicationDirPath() + "/MipsQemu/usr/bin/qemu-system-x86_64' ";
         }
     }
     qDebug() << commandOption;

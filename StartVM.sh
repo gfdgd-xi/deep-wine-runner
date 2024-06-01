@@ -8,6 +8,7 @@
 # 基于 Python3 的 tkinter 构建
 ###########################################################################################
 cd `dirname $0`
+CURRENT_DIR=$(cd $(dirname $0); pwd)
 VBoxManage showvminfo Windows
 if [[ 0 == $? ]]; then
     # 检测到虚拟机存在，启动虚拟机
@@ -70,8 +71,25 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
                 > /tmp/windows-virtual-machine-installer-for-wine-runner-run.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
             exit
         fi
+        # 判断系统版本以选择 Qemu
+        isUOS=0
+        qemuPath=qemu-system-x86_64
+        cat /etc/os-version | grep -i uos
+        if [[ $? == 0 ]]; then
+            isUOS=1
+        fi
+        cat /etc/os-version | grep -i unio
+        if [[ $? == 0 ]]; then
+            isUOS=1
+        fi
+        if [[ $isUOS == 1 ]]; then
+            arch=`uname -m`
+            if [[ $arch == "mips64" ]] || [[ $arch == "mips64el" ]]; then
+                qemuPath="bwrap --dev-bind / / --bind ./VM/MipsQemu/usr/lib/mips64el-linux-gnuabi64/qemu/ui-gtk.so /usr/lib/mips64el-linux-gnuabi64/qemu/ui-gtk.so ./VM/MipsQemu/usr/bin/qemu-system-x86_64"
+            fi
+        fi
         echo 不使用 kvm 加速
-        qemu-system-x86_64 --hda "$HOME/Qemu/Windows/Windows.qcow2" \
+        $qemuPath --hda "$HOME/Qemu/Windows/Windows.qcow2" \
             -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) \
             -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI \
             -device AC97 -device ES1370 -device intel-hda -device hda-duplex  \
