@@ -52,6 +52,7 @@ public:
     int AddDiskSpace(QString path, double data);
 private:
     QString commandOption = "";
+    bool isUEFI = false;
 
 };
 
