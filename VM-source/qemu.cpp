@@ -141,6 +141,7 @@ int qemu::StartLoong64()
 int qemu::Start(bool unShown)
 {
     QString newCommandOption = commandOption;
+    QString qemuPath = "qemu-system-x86_64";
     qDebug() << GetBootLogoPath();
     if(isUEFI) {
         newCommandOption += " -vga none -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 ";
@@ -148,11 +149,20 @@ int qemu::Start(bool unShown)
     else {
         newCommandOption += " -vga virtio -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 ";
     }
+    // UOS 3a4000 使用程序自带的 qemu
+    QString info = SystemInfo().toLower();
+    if(!info.contains("uos") || info.contains("unio")) {
+        // 判断架构
+        QString arch = GetArch();
+        if(arch != "mips64" || arch == "mipsel64") {
+            qemuPath = "bwrap --dev-bind / / --bind '" + QCoreApplication::applicationDirPath() + "/MipsQemu/usr/lib/mips64el-linux-gnuabi64/qemu/ui-gtk.so' /usr/lib/mips64el-linux-gnuabi64/qemu/ui-gtk.so qemu-system-x86_64";
+        }
+    }
     qDebug() << commandOption;
     if(Command().GetCommand("arch").replace("\n", "").replace(" ", "") == "x86_64" && !system((QCoreApplication::applicationDirPath() + "/kvm-ok").toUtf8())){
-        return system(("qemu-system-x86_64 --boot 'splash=" + GetBootLogoPath() + ",order=d,menu=on,splash-time=2000' -display vnc=:5 -display gtk --enable-kvm -cpu host " + newCommandOption + " > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
+        return system((qemuPath + " --boot 'splash=" + GetBootLogoPath() + ",order=d,menu=on,splash-time=2000' -display vnc=:5 -display gtk --enable-kvm -cpu host " + newCommandOption + " > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
     }
-    return system(("qemu-system-x86_64 --boot 'splash=" + GetBootLogoPath() + ",order=d,menu=on,splash-time=2000' -display vnc=:5 -display gtk -nic model=rtl8139 " + newCommandOption + " > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
+    return system((qemuPath + " --boot 'splash=" + GetBootLogoPath() + ",order=d,menu=on,splash-time=2000' -display vnc=:5 -display gtk -nic model=rtl8139 " + newCommandOption + " > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
 }
 int qemu::Stop()
 {
@@ -304,4 +314,24 @@ QString qemu::GetBootLogoPath()
         bootScreenLogo = "/tmp/deep-wine-runner-boot.jpg";
     }
     return bootScreenLogo;
+}
+
+QString qemu::SystemInfo()
+{
+    QFile file("/etc/os-version");
+    file.open(QFile::ReadOnly);
+    QString data = file.readAll();
+    file.close();
+    return data;
+}
+
+QString qemu::GetArch()
+{
+    QProcess process;
+    process.start("uname", QStringList() << "-m");
+    process.waitForStarted();
+    process.waitForFinished();
+    QString data = process.readAllStandardError();
+    process.close();
+    return data.replace("\n", "").replace(" ", "");
 }

@@ -54,6 +54,8 @@ private:
     QString commandOption = "";
     bool isUEFI = false;
     QString GetBootLogoPath();
+    QString SystemInfo();
+    QString GetArch();
 
 };
 
