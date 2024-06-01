@@ -157,7 +157,9 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 11、调整星火 Wine 助手路径  
 
 
-![F87D3721C30A235F9F47E8A8899FC3B7.png](https://storage.deepin.org/thread/20240601073716327_F87D3721C30A235F9F47E8A8899FC3B7.png)
+![F87D3721C30A235F9F47E8A8899FC3B7.png](https://storage.deepin.org/thread/20240601073716327_F87D3721C30A235F9F47E8A8899FC3B7.png)  
+
+![image.png](https://storage.deepin.org/thread/202406010841258081_image.png)
 
 
 ### 3.8.0（2024年04月27日）
