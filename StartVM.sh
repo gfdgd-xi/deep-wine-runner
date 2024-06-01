@@ -49,14 +49,16 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
         if [[ -f $HOME/.config/deepin-wine-runner/QEMU-EFI ]]; then
             echo 使用 UEFI 启动
             if [[ -f /usr/share/qemu/OVMF.fd ]]; then
-                qemuUEFI="--bios /usr/share/qemu/OVMF.fd"
+                qemuUEFI="--bios /usr/share/qemu/OVMF.fd -vga none -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 "
             else
                 if [[ -f `dirname $0`/VM/OVMF.fd ]]; then   
-                    qemuUEFI="--bios `dirname $0`/VM/OVMF.fd"
+                    qemuUEFI="--bios `dirname $0`/VM/OVMF.fd -vga none -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 "
                 fi
             fi
-            echo $qemuUEFI
+        else
+            qemuUEFI="-vga virtio -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 "
         fi
+        echo $qemuUEFI
         ./VM/kvm-ok
         if [[ $? == 0 ]] && [[ `arch` == "x86_64" ]]; then
             echo X86 架构，使用 kvm 加速
@@ -64,6 +66,7 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
                 -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) \
                 -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI \
                 -device AC97 -device ES1370 -device intel-hda -device hda-duplex  \
+                --boot 'splash=VM/boot.jpg,menu=on,splash-time=2000' \
                 > /tmp/windows-virtual-machine-installer-for-wine-runner-run.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
             exit
         fi
@@ -72,6 +75,7 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
             -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) \
             -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI \
             -device AC97 -device ES1370 -device intel-hda -device hda-duplex  \
+            --boot 'splash=VM/boot.jpg,menu=on,splash-time=2000' \
             > /tmp/windows-virtual-machine-installer-for-wine-runner-run.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
         exit
     fi
@@ -97,6 +101,7 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
                 -device usb-tablet,id=tablet,bus=xhci.0,port=1 \
                 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 \
                 -device AC97 -device ES1370 -device intel-hda -device hda-duplex \
+                --boot 'splash=VM/boot.jpg,menu=on,splash-time=2000' \
                 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
             exit
         fi
@@ -108,6 +113,7 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
             -device usb-tablet,id=tablet,bus=xhci.0,port=1 \
             -device usb-kbd,id=keyboard,bus=xhci.0,port=2 \
             -device AC97 -device ES1370 -device intel-hda -device hda-duplex \
+            --boot 'splash=VM/boot.jpg,menu=on,splash-time=2000' \
             > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
         exit
     fi
@@ -134,6 +140,7 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
                 -device usb-tablet,id=tablet,bus=xhci.0,port=1 \
                 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 \
                 -device AC97 -device ES1370 -device intel-hda -device hda-duplex \
+                --boot 'splash=VM/boot.jpg,menu=on,splash-time=2000' \
                 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
             exit
         fi
@@ -146,6 +153,7 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
             -device usb-tablet,id=tablet,bus=xhci.0,port=1 \
             -device usb-kbd,id=keyboard,bus=xhci.0,port=2 \
             -device AC97 -device ES1370 -device intel-hda -device hda-duplex \
+            --boot 'splash=VM/boot.jpg,menu=on,splash-time=2000' \
             > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
         exit
     fi

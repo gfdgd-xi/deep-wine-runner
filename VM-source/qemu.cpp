@@ -146,7 +146,7 @@ int qemu::Start(bool unShown)
         newCommandOption += " -vga none -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 ";
     }
     else {
-        newCommandOption += " -vga virtio -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1  ";
+        newCommandOption += " -vga virtio -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 ";
     }
     qDebug() << commandOption;
     if(Command().GetCommand("arch").replace("\n", "").replace(" ", "") == "x86_64" && !system((QCoreApplication::applicationDirPath() + "/kvm-ok").toUtf8())){
@@ -257,6 +257,7 @@ int qemu::UseOtherEFI(QString fdFilePath)
 
 int qemu::EnabledUEFI(bool status)
 {
+    isUEFI = status;
     if(!status){
         return 0;
     }
@@ -268,7 +269,6 @@ int qemu::EnabledUEFI(bool status)
         commandOption += "--bios '" + QCoreApplication::applicationDirPath() + "/OVMF.fd' ";
         return 0;
     }
-    isUEFI = status;
     return 1;
 }
 
