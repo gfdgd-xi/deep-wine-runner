@@ -6,13 +6,17 @@
 
 ## 介绍
 Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序。原版的 Wine 只能使用命令操作，且安装过程较为繁琐，对小白不友好。于是该运行器为了解决该痛点，内置了对Wine图形化的支持、Wine 安装器、微型应用商店、各种Wine工具、自制的Wine程序打包器、运行库安装工具等。  
-它同时还内置了基于Qemu/VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作，也能在非 X86 架构安装 X86 架构的 Windows 操作系统（但是效率较低，可以运行些老系统）。  
+它同时还内置了基于Qemu/VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作，也能在非 X86 架构安装 X86 架构的 Windows 操作系统（但是效率较低，可以运行些老系统）。    
+
 而且对于部分 Wine 应用适配者来说，提供了图形化的打包工具，以及提供了一些常用工具以及运行库的安装方式，以及能安装多种不同的 Wine 以测试效果，能极大提升适配效率。  
 且对于 Deepin23 用户做了特别优化，以便能在缺少 i386 运行库的情况下运行 Wine32。同时也为非 X86 架构用户提供了 Box86/64、Qemu User 的安装方式  
 
 注：  
 **在使用运行器时不要随便动  .deepinwine 下的容器，否则会导致安装的 wine 应用无法正常打开**  
 **除非你有把握不会损坏容器**  
+
+
+Wine Runner is a program that allows Linux users to run Windows applications more conveniently. It has built-in support for Wine graphics, various Wine tools, self-made Wine program packager and runtime installation tools. It also has a built-in Windows virtual machine installation tool based on VirtualBox, which is specially used by Xiaobai. You can download the system image and click Install without considering the installation, creation and partitioning of virtual machines.   
  
 ![截图_选择区域_20221002221112.png](https://storage.deepin.org/thread/202210022215217037_截图_选择区域_20221002221112.png)  
 
@@ -172,6 +176,16 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 **※7、支持 Qemu 磁盘扩容**  
 8、修复问题 https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I9B4L0  
 9、针对 Loongarch ACE 做特别优化  
+
+**※1. Repair system/application library download failed problem**  
+**※2. Support building loong64, loongarch64, armhf and amd64 architecture deb with packager** 
+**※3. Update Geek Uninstaller version**  
+**※4. Enable English translation by default**  
+**※5. Update dxvk version**  
+**※6. Repair virtual machine running problem with newer Qemu**  
+**※7. Support adding space with Qemu virtual disk**  
+8. Fixed an issue related to https://gitee.com/gfdgd-xi/deep-wine-runner/issues/I9B4L0  
+9. Added support for Loongarch ACE
 
 ![image.png](https://storage.deepin.org/thread/202404271014409954_image.png)
 
