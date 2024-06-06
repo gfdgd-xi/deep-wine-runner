@@ -221,7 +221,7 @@ BOTTLENAME="@@@Package@@@"
 APPVER="@@@Version@@@"
 EXEC_PATH="@@@EXEC_PATH@@@"
 ##### 软件在wine中的启动路径
-START_SHELL_PATH="/opt/deepinwine/tools/spark_run_v4.sh"
+START_SHELL_PATH="/opt/deepinwine/tools/run_v4.sh"
 ENABLE_DOT_NET=""
 ####若使用spark-wine时需要用到.net，则请把ENABLE_DOT_NET设为true，同时在依赖中写spark-wine7-mono
 export MIME_TYPE=""
@@ -549,7 +549,7 @@ class RunThread(QtCore.QThread):
                 self.RunCommand(f"cp -rv '{folderExePath}' '{bottlePath}/drive_c/Program Files'")
                 debPackageVersion = self.GetEXEVersion(exePath.text(), bottlePath)
             debDescription = f"{exeName} By Build By Wine Runner Easy Packager"
-            debDepends = f"{chooseWine} | {chooseWine}-bcm | {chooseWine}-dcm, spark-dwine-helper | store.spark-app.spark-dwine-helper, fonts-wqy-microhei, fonts-wqy-zenhei"
+            debDepends = f"{chooseWine} | {chooseWine}-bcm | {chooseWine}-dcm, deepin-wine-helper | com.wine-helper.deepin, fonts-wqy-microhei, fonts-wqy-zenhei"
             self.RunCommand(f"mkdir -pv '{debBuildPath}/DEBIAN'")
             self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/files'")
             self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/entries/applications'")

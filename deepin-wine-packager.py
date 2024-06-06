@@ -409,7 +409,7 @@ class make_deb_threading(QtCore.QThread):
                     "Wine": wine[wineVersion.currentText()],
                     "Architecture": debFirstArch.currentText(),
                     "Depends": [
-                        f"{wine[wineVersion.currentText()]}, deepin-wine-helper (>= 5.1.30-1), fonts-wqy-microhei, fonts-wqy-zenhei",
+                        f"{wine[wineVersion.currentText()]}, deepin-wine-helper | com.wine-helper.deepin, fonts-wqy-microhei, fonts-wqy-zenhei",
                         f"{wine[wineVersion.currentText()]}, spark-dwine-helper | store.spark-app.spark-dwine-helper, fonts-wqy-microhei, fonts-wqy-zenhei"
                         ][int(chooseWineHelperValue.isChecked())],
                     "postinst": ['', f'''#!/bin/bash
@@ -1295,7 +1295,7 @@ true
             ]
             print("c")
             if os.path.exists(wine[wineVersion.currentText()]):
-                debInformation[0]["Depends"] = ["deepin-wine-helper (>= 5.1.30-1)",
+                debInformation[0]["Depends"] = ["deepin-wine-helper | com.wine-helper.deepin",
                         "spark-dwine-helper | store.spark-app.spark-dwine-helper"
                         ][int(chooseWineHelperValue.isChecked())] #+ ["", "libasound2 (>= 1.0.16), libc6 (>= 2.28), libglib2.0-0 (>= 2.12.0), libgphoto2-6 (>= 2.5.10), libgphoto2-port12 (>= 2.5.10), libgstreamer-plugins-base1.0-0 (>= 1.0.0), libgstreamer1.0-0 (>= 1.4.0), liblcms2-2 (>= 2.2+git20110628), libldap-2.4-2 (>= 2.4.7), libmpg123-0 (>= 1.13.7), libopenal1 (>= 1.14), libpcap0.8 (>= 0.9.8), libpulse0 (>= 0.99.1), libudev1 (>= 183), libvkd3d1 (>= 1.0), libx11-6, libxext6, libxml2 (>= 2.9.0), ocl-icd-libopencl1 | libopencl1, udis86, zlib1g (>= 1:1.1.4), libasound2-plugins, libncurses6 | libncurses5 | libncurses, deepin-wine-plugin-virtual\nRecommends: libcapi20-3, libcups2, libdbus-1-3, libfontconfig1, libfreetype6, libglu1-mesa | libglu1, libgnutls30 | libgnutls28 | libgnutls26, libgsm1, libgssapi-krb5-2, libjpeg62-turbo | libjpeg8, libkrb5-3, libodbc1, libosmesa6, libpng16-16 | libpng12-0, libsane | libsane1, libsdl2-2.0-0, libtiff5, libv4l-0, libxcomposite1, libxcursor1, libxfixes3, libxi6, libxinerama1, libxrandr2, libxrender1, libxslt1.1, libxxf86vm1"][]
                 print("d")
@@ -1846,14 +1846,14 @@ def BrowserHelperConfigPathText():
 
 def ChangeWine():
     useInstallWineArch.setEnabled(os.path.exists(wine[wineVersion.currentText()]))
-    debDepends.setText([f"{wine[wineVersion.currentText()]} | {wine[wineVersion.currentText()]}-bcm | {wine[wineVersion.currentText()]}-dcm, deepin-wine-helper (>= 5.1.30-1), fonts-wqy-microhei, fonts-wqy-zenhei",
+    debDepends.setText([f"{wine[wineVersion.currentText()]} | {wine[wineVersion.currentText()]}-bcm | {wine[wineVersion.currentText()]}-dcm, deepin-wine-helper | com.wine-helper.deepin, fonts-wqy-microhei, fonts-wqy-zenhei",
                         f"{wine[wineVersion.currentText()]} | {wine[wineVersion.currentText()]}-bcm | {wine[wineVersion.currentText()]}-dcm, spark-dwine-helper | store.spark-app.spark-dwine-helper, fonts-wqy-microhei, fonts-wqy-zenhei"
                         ][int(chooseWineHelperValue.isChecked())])
     debRecommend.setText("")
     helperConfigPathText.setEnabled(chooseWineHelperValue.isChecked())
     helperConfigPathButton.setEnabled(chooseWineHelperValue.isChecked())
     if os.path.exists(wine[wineVersion.currentText()]):
-        debDepends.setText(["deepin-wine-helper (>= 5.1.30-1)",
+        debDepends.setText(["deepin-wine-helper | com.wine-helper.deepin",
                         "spark-dwine-helper | store.spark-app.spark-dwine-helper"
                         ][int(chooseWineHelperValue.isChecked())])
         #if "deepin-wine5-stable" in wine[wineVersion.currentText()]:

@@ -84,7 +84,7 @@ export deb_version_string="{versionName.text()}"
 #读取和最终解压的包名
 export bottle_name="{bottonName.text()}"
 
-export package_depends="deepin-wine6-stable | deepin-wine6-stable-bcm | deepin-wine6-stable-dcm, spark-dwine-helper | store.spark-app.spark-dwine-helper"
+export package_depends="deepin-wine6-stable | deepin-wine6-stable-bcm | deepin-wine6-stable-dcm, deepin-wine-helper | com.wine-helper.deepin"
 export apprun_cmd="deepin-wine6-stable"
 #export package_depends="deepin-wine5-stable | deepin-wine5-stable-bcm | deepin-wine5-stable-dcm, spark-dwine-helper | store.spark-app.spark-dwine-helper"
 #export apprun_cmd="deepin-wine5-stable"
