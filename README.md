@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 3.8.1</h1>
+<h1 align="center">Wine 运行器 3.9.1</h1>
 <hr>
 <a href='https://gitee.com/gfdgd-xi/deep-wine-runner/stargazers'><img src='https://gitee.com/gfdgd-xi/deep-wine-runner/badge/star.svg?theme=dark' alt='star'></img></a>
 <a href='https://gitee.com/gfdgd-xi/deep-wine-runner/members'><img src='https://gitee.com/gfdgd-xi/deep-wine-runner/badge/fork.svg?theme=dark' alt='fork'></img></a>  
@@ -147,6 +147,10 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志 
+### 3.9.1（2024/06/07）
+**※1、修复 Windows 虚拟机安装工具安装程序在 Mips 架构无法正确启动虚拟机的问题**  
+**※2、优化打包器依赖**  
+
 ### 3.9.0（2024年06月01日）
 **※1、UOS Mips64（如 3a4000）用户无需手动降级 Qemu 即可正常开启使用虚拟机**  
 **※2、修复开启部分 exe 提示参数有误的问题**  
