@@ -549,7 +549,7 @@ class RunThread(QtCore.QThread):
                 self.RunCommand(f"cp -rv '{folderExePath}' '{bottlePath}/drive_c/Program Files'")
                 debPackageVersion = self.GetEXEVersion(exePath.text(), bottlePath)
             debDescription = f"{exeName} By Build By Wine Runner Easy Packager"
-            debDepends = f"{chooseWine} | {chooseWine}-bcm | {chooseWine}-dcm, deepin-wine-helper | com.wine-helper.deepin, fonts-wqy-microhei, fonts-wqy-zenhei"
+            debDepends = f"{chooseWine} | {chooseWine}-bcm | {chooseWine}-dcm | com.{chooseWine}.deepin, deepin-wine-helper | com.wine-helper.deepin, fonts-wqy-microhei, fonts-wqy-zenhei"
             self.RunCommand(f"mkdir -pv '{debBuildPath}/DEBIAN'")
             self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/files'")
             self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/entries/applications'")

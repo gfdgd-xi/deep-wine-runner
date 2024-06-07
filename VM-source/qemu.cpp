@@ -331,7 +331,7 @@ QString qemu::GetArch()
     process.start("uname", QStringList() << "-m");
     process.waitForStarted();
     process.waitForFinished();
-    QString data = process.readAllStandardError();
+    QString data = process.readAllStandardOutput();
     process.close();
     return data.replace("\n", "").replace(" ", "");
 }

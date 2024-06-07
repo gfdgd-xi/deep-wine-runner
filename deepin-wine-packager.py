@@ -1846,8 +1846,8 @@ def BrowserHelperConfigPathText():
 
 def ChangeWine():
     useInstallWineArch.setEnabled(os.path.exists(wine[wineVersion.currentText()]))
-    debDepends.setText([f"{wine[wineVersion.currentText()]} | {wine[wineVersion.currentText()]}-bcm | {wine[wineVersion.currentText()]}-dcm, deepin-wine-helper | com.wine-helper.deepin, fonts-wqy-microhei, fonts-wqy-zenhei",
-                        f"{wine[wineVersion.currentText()]} | {wine[wineVersion.currentText()]}-bcm | {wine[wineVersion.currentText()]}-dcm, spark-dwine-helper | store.spark-app.spark-dwine-helper, fonts-wqy-microhei, fonts-wqy-zenhei"
+    debDepends.setText([f"{wine[wineVersion.currentText()]} | {wine[wineVersion.currentText()]}-bcm | {wine[wineVersion.currentText()]}-dcm | com.{wine[wineVersion.currentText()]}.deepin, deepin-wine-helper | com.wine-helper.deepin, fonts-wqy-microhei, fonts-wqy-zenhei",
+                        f"{wine[wineVersion.currentText()]} | {wine[wineVersion.currentText()]}-bcm | {wine[wineVersion.currentText()]}-dcm | com.{wine[wineVersion.currentText()]}.deepin, spark-dwine-helper | store.spark-app.spark-dwine-helper, fonts-wqy-microhei, fonts-wqy-zenhei"
                         ][int(chooseWineHelperValue.isChecked())])
     debRecommend.setText("")
     helperConfigPathText.setEnabled(chooseWineHelperValue.isChecked())
