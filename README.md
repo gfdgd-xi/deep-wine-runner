@@ -27,6 +27,10 @@ Wine Runner is a program that allows Linux users to run Windows applications mor
 Wine 运行器 QQ 交流群：762985460  
 Wine 运行器离线包下载地址：https://www.123pan.com/s/pDSKVv-pAJWv.html     
 
+### 如何手动下载 Wine？
+下载链接: http://ctfile.gfdgdxi.top/d/31540479-61624693-080e74?p=2061 (访问密码: 2061)
+
+
 ### Debian sid 依赖
 https://gfdgdxi.lanzouw.com/b0plly5cj  
 密码:b346  
