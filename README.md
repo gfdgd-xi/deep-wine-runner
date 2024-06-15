@@ -740,8 +740,8 @@ Sourceforge：https://sourceforge.com/projects/deep-wine-runner
 （屏蔽微信在Wine中运行时产生的水印/黑块？可以参考：https://12101111.github.io/block-wine-wechat-black-window/ 和 https://blog.csdn.net/ericden/article/details/122118443 ）
 ### 拉取
 ***（需要先安装 Docker 后再输入以下命令）***  
+Docker 镜像下载链接：  
 ```bash
-wget https://code.gitlink.org.cn/gfdgd_xi/wine-building-docker/raw/branch/master/wine-latest-debian10.tar.gz
 sudo docker load -i wine-latest-debian10.tar.gz
 ```
 ### 启用
