@@ -5,6 +5,6 @@ Name[zh_CN]=Wine 运行器 Qemu 拓展
 Comment=Wine 运行器 Qemu 拓展
 Type=Application
 Exec=/opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh 
-Icon=deepin-wine-runner-qemu-system-extra
+Icon=/opt/apps/deepin-wine-runner-qemu-system-extra/entries/icons/apps/deepin-wine-runner-qemu-system-extra.svg
 Categories=System
 Terminal=true
