@@ -14,6 +14,8 @@
 # Package maintainers to append LDFLAGS.
 #export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
 
+override_dh_usrlocal:
+
 
 %:
 	dh $@
