@@ -18,6 +18,10 @@ override_dh_usrlocal:
 
 override_dh_strip:
 
+override_dh_install:
+        dh_install $@
+        rm -rf debian/qemu-system-deep-wine-runner/usr
+
 %:
 	dh $@
 
