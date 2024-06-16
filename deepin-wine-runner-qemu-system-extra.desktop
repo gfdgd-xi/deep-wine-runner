@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Wine 运行器 Qemu 拓展
+Name[zh_CN]=Wine 运行器 Qemu 拓展
+Comment=Wine 运行器 Qemu 拓展
+Type=Application
+Exec=/opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh 
+Icon=deepin-wine-runner-qemu-system-extra
+Categories=System
+Terminal=true

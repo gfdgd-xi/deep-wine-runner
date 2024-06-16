@@ -1,4 +1,4 @@
-Source: qemu-system-deep-wine-runner
+Source: deep-wine-runner-qemu-system
 Section: utils
 Priority: optional
 Maintainer: gfdgd_xi <3025613752@qq.com>
@@ -10,11 +10,11 @@ Build-Depends:
 Standards-Version: 4.6.2
 Homepage: https://gitee.com/gfdgd-xi/deep-wine-runner
 
-Package: qemu-system-deep-wine-runner
+Package: spark-deepin-wine-runner-qemu-system-extra
 Architecture: any
 Depends:
  ${shlibs:Depends},
  ${misc:Depends},
 Recommends:
  spark-deepin-wine-runner,
-Description: Qemu extra for Wine Runner Virtual Machine Tool
+Description: Qemu System extra for Wine Runner Virtual Machine Tool
