@@ -1,0 +1,19 @@
+# ignore anything begin with dot
+.*
+
+# exceptions we need even begin with dot
+!.clang-format
+!.gitignore
+
+# Object files
+*.o
+*.a
+*.dep
+
+#Build & install directories
+build/
+install/
+
+# Development friendly files
+tags
+cscope*
