@@ -12,9 +12,11 @@ install:
 	cd qemu-build ; make install DESTDIR=$(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/files/  -j$(CPU_CORES)
 	mkdir $(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/entries/applications -p
 	mkdir $(DESTDIR)/usr/share/applications -p
+	mkdir $(DESTDIR)/usr/share/icons/apps -p
 	mkdir $(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/entries/icons/apps -p
 
 	cp deepin-wine-runner-qemu-system-extra.svg $(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/entries/icons/apps -r
+	cp deepin-wine-runner-qemu-system-extra.svg $(DESTDIR)/usr/share/icons/apps -r
 	cp deepin-wine-runner-qemu-system-extra.desktop $(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/entries/applications -r
 	cp deepin-wine-runner-qemu-system-extra.desktop $(DESTDIR)/usr/share/applications -r
 	cp run.sh $(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/files/ -r
