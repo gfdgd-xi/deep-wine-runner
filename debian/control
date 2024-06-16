@@ -4,16 +4,16 @@ Priority: optional
 Maintainer: gfdgd_xi <3025613752@qq.com>
 Rules-Requires-Root: no
 Build-Depends:
- debhelper-compat (= 13),
+ debhelper-compat (= 9),
+ python3-pip,
+ git,
 Standards-Version: 4.6.2
-Homepage: <insert the upstream URL, if relevant>
-#Vcs-Browser: https://salsa.debian.org/debian/qemu-system-deep-wine-runner
-#Vcs-Git: https://salsa.debian.org/debian/qemu-system-deep-wine-runner.git
-
+Homepage: https://gitee.com/gfdgd-xi/deep-wine-runner
 Package: qemu-system-deep-wine-runner
 Architecture: any
 Depends:
  ${shlibs:Depends},
  ${misc:Depends},
-Description: <insert up to 60 chars description>
- <Insert long description, indented with spaces.>
+Recommends:
+ spark-deepin-wine-runner,
+Description: Qemu extra for Wine Runner Virtual Machine Tool
