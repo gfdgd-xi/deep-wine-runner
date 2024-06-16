@@ -8,7 +8,5 @@ build:
 clean:
 	rm -rf qemu-build
 
-
-
 install:
-	cd qemu-build ; make install DESTDIR=$(DESTDIR)  -j$(CPU_CORES)
+	cd qemu-build ; make install DESTDIR=$(DESTDIR)/opt/apps/deepin-wine-runner/VM/qemu-extra  -j$(CPU_CORES)
