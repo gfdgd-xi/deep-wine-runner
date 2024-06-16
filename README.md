@@ -30,6 +30,12 @@ Wine 运行器离线包下载地址：https://www.123pan.com/s/pDSKVv-pAJWv.html
 ### 如何手动下载 Wine？
 下载链接: http://ctfile.gfdgdxi.top/d/31540479-61624693-080e74?p=2061 (访问密码: 2061)
 
+### 如果使用更新版本的 Qemu？
+后续版本将支持调用以下链接 deb 包安装的 Qemu  
+Wine运行器Qemu: http://ctfile.gfdgdxi.top/d/31540479-61635610-54327c?p=2061 (访问密码: 2061)  
+https://sourceforge.net/projects/deep-wine-runner/files/Wine%20Runner%20Qemu%20Extra/  
+
+
 
 ### Debian sid 依赖
 https://gfdgdxi.lanzouw.com/b0plly5cj  
