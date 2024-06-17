@@ -22,8 +22,12 @@ qemu::qemu(QString name, QString managerPath)
     }
     this->managerPath = managerPath;
     //Command command = Command();
-
-    this->vboxVersion = Command().GetCommand("'" + managerPath + "qemu-system-i386' --version");
+    QString qemuPath = "qemu-system-i386";
+    if(QFile::exists("/opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh")) {
+        // 如果存在拓展 Qemu，则调用此
+        qemuPath = "/opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh qemu-system-i386";
+    }
+    this->vboxVersion = Command().GetCommand(qemuPath + " --version");
 }
 
 int qemu::Create(QString type)
@@ -108,15 +112,21 @@ int qemu::MountMainDisk(QString diskPath)
 int qemu::StartArmhf()
 {
     qDebug() << commandOption;
-    if(Command().GetCommand("arch").replace("\n", "").replace(" ", "") == "aarch64" && !system((QCoreApplication::applicationDirPath() + "/kvm-ok").toUtf8())){
-        return system(("qemu-system-arm --boot 'splash=" + GetBootLogoPath() + ",order=d,menu=on,splash-time=2000' -display vnc=:5 -display gtk --enable-kvm -cpu host -M virt " + commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
+    QString qemuPath = "qemu-system-arm";
+    if(QFile::exists("/opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh")) {
+        // 如果存在拓展 Qemu，则调用此
+        qemuPath = "/opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh qemu-system-arm";
     }
-    return system(("qemu-system-arm --boot 'splash=" + GetBootLogoPath() + ",order=d,menu=on,splash-time=2000'  -display vnc=:5 -display gtk -cpu max -M virt " + commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
+    if(Command().GetCommand("arch").replace("\n", "").replace(" ", "") == "aarch64" && !system((QCoreApplication::applicationDirPath() + "/kvm-ok").toUtf8())){
+        return system((qemuPath + " --boot 'splash=" + GetBootLogoPath() + ",order=d,menu=on,splash-time=2000' -display vnc=:5 -display gtk --enable-kvm -cpu host -M virt " + commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
+    }
+    return system((qemuPath + " --boot 'splash=" + GetBootLogoPath() + ",order=d,menu=on,splash-time=2000'  -display vnc=:5 -display gtk -cpu max -M virt " + commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
 }
 
 int qemu::StartAarch64()
 {
     QString bootScreenLogo = "";
+    QString qemuPath = "qemu-system-aarch64";
     // 判断 boot 文件是否存在
     if(QFile::exists(QCoreApplication::applicationDirPath() + "/boot.jpg")) {
         bootScreenLogo = QCoreApplication::applicationDirPath() + "/boot.jpg";
@@ -126,11 +136,15 @@ int qemu::StartAarch64()
         QFile::copy(":/boot.jpg", "/tmp/deep-wine-runner-boot.jpg");
         bootScreenLogo = "/tmp/deep-wine-runner-boot.jpg";
     }
+    if(QFile::exists("/opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh")) {
+        // 如果存在拓展 Qemu，则调用此
+        qemuPath = "/opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh qemu-system-aarch64";
+    }
     qDebug() << commandOption;
     if(Command().GetCommand("arch").replace("\n", "").replace(" ", "") == "aarch64" && !system((QCoreApplication::applicationDirPath() + "/kvm-ok").toUtf8())){
-        return system(("qemu-system-aarch64 --boot 'splash=" + GetBootLogoPath() + ",order=d,menu=on,splash-time=2000' -display vnc=:5 -display gtk --enable-kvm -cpu host -M virt " + commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
+        return system((qemuPath + " --boot 'splash=" + GetBootLogoPath() + ",order=d,menu=on,splash-time=2000' -display vnc=:5 -display gtk --enable-kvm -cpu host -M virt " + commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
     }
-    return system(("qemu-system-aarch64 --boot 'splash=" + GetBootLogoPath() + ",order=d,menu=on,splash-time=2000'  -display vnc=:5 -display gtk -cpu max -M virt " + commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
+    return system((qemuPath + " --boot 'splash=" + GetBootLogoPath() + ",order=d,menu=on,splash-time=2000'  -display vnc=:5 -display gtk -cpu max -M virt " + commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &").toLatin1());
 }
 
 int qemu::StartLoong64()
@@ -157,6 +171,10 @@ int qemu::Start(bool unShown)
         if(arch == "mips64" || arch == "mipsel64") {
             qemuPath = "bwrap --dev-bind / / --bind '" + QCoreApplication::applicationDirPath() + "/MipsQemu/usr/lib/mips64el-linux-gnuabi64/qemu/ui-gtk.so' /usr/lib/mips64el-linux-gnuabi64/qemu/ui-gtk.so '" + QCoreApplication::applicationDirPath() + "/MipsQemu/usr/bin/qemu-system-x86_64' ";
         }
+    }
+    if(QFile::exists("/opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh")) {
+        // 如果存在拓展 Qemu，则调用此
+        qemuPath = "/opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh qemu-system-x86_64";
     }
     qDebug() << commandOption;
     if(Command().GetCommand("arch").replace("\n", "").replace(" ", "") == "x86_64" && !system((QCoreApplication::applicationDirPath() + "/kvm-ok").toUtf8())){
