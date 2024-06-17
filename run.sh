@@ -7,5 +7,12 @@ echo ==========================
 echo 也可以通过命令调用，输入 qemu-system-x86_64 开始吧
 echo 当前 Qemu 版本：
 qemu-system-x86_64 --version
-bash $@
+echo ©2020~`date +%Y` gfdgd xi
+echo ==========================
+if [ $# -eq 0 ]; then
+    echo 进入交互环境：
+    bash
+else
+    bash -c $@
+fi
 exit $?
