@@ -2,7 +2,7 @@ CPU_CORES=$(($(grep -c processor < /proc/cpuinfo)*2))
 
 build:
 	mkdir -p qemu-build
-	ifeq ($(wildcard python3-exec/usr/local/bin/python3))
+	ifeq ($(wildcard python3-exec/usr/local/bin/python3),)
 		cd qemu-build ; ../qemu/configure --target-list=x86_64-linux-user,aarch64-linux-user,loongarch64-linux-user,i386-linux-user,arm-linux-user,aarch64-softmmu,arm-softmmu,loongarch64-softmmu,x86_64-softmmu --enable-kvm --enable-slirp --enable-system --enable-tools --enable-vhost-user --enable-slirp --enable-kvm --python=python3-exec/usr/local/bin/python3
 	else
 		cd qemu-build ; ../qemu/configure --target-list=x86_64-linux-user,aarch64-linux-user,loongarch64-linux-user,i386-linux-user,arm-linux-user,aarch64-softmmu,arm-softmmu,loongarch64-softmmu,x86_64-softmmu --enable-kvm --enable-slirp --enable-system --enable-tools --enable-vhost-user --enable-slirp --enable-kvm 
