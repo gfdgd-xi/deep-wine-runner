@@ -34,4 +34,6 @@ install:
 	cp deepin-wine-runner-qemu-system-extra.desktop $(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/entries/applications -r
 	cp deepin-wine-runner-qemu-system-extra.desktop $(DESTDIR)/usr/share/applications -r
 	cp run.sh $(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/files/ -r
+	cp qemu-commands-list.sh $(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/files/usr/local/bin/qemu-commands-list -r
+	chmod +x $(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/files/usr/local/bin/qemu-commands-list
 	chmod +x $(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh
