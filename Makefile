@@ -24,8 +24,8 @@ clean:
 
 install:
 	cd qemu-build ; make install DESTDIR=$(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/files/  -j$(CPU_CORES)
-	if [[ -d $(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/files/usr/local/lib ]]; then mkdir $(DESTDIR)/usr/lib -p fi
-	if [[ -d $(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/files/usr/local/lib ]]; then cp $(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/files/usr/local/lib/* $(DESTDIR)/usr/lib -r fi
+	if [ -d $(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/files/usr/local/lib ]; then mkdir $(DESTDIR)/usr/lib -p ; fi
+	if [ -d $(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/files/usr/local/lib ]; then cp $(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/files/usr/local/lib/* $(DESTDIR)/usr/lib -r ; fi
 	mkdir $(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/entries/applications -p
 	mkdir $(DESTDIR)/usr/share/applications -p
 	mkdir $(DESTDIR)/usr/share/icons/apps -p
