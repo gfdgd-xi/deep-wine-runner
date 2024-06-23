@@ -1,6 +1,6 @@
 #!/bin/bash
 cp /etc/apt/sources.list /etc/apt/sources.list.d/sources.list
-sed -i "/s/deb /deb-src /g" /etc/apt/sources.list.d/sources.list
+sed -i "s/deb /deb-src /g" /etc/apt/sources.list.d/sources.list
 cat /etc/apt/sources.list
 cat /etc/apt/sources.list.d/sources.list
 apt update

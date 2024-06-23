@@ -5,16 +5,7 @@ on:
   push:
   workflow_dispatch:
 
-jobs:
-  Device:
-    runs-on: ubuntu-latest
-    steps:
-        - name: Information
-          run: |
-            sudo apt update
-            sudo apt install neofetch -y
-            neofetch
-        
+jobs:  
   Debian10:
     runs-on: ubuntu-latest
     container: debian:buster
@@ -25,3 +16,7 @@ jobs:
         - name: Configure System
           run: |
             bash .github/workflows/configure-building-enviroment.sh
+
+        - name: Building Python3
+          run: |
+            bash .github/workflows/configure-python3.sh
