@@ -1,0 +1,42 @@
+name: Wine Runner Qemu Extra Builder (arm)
+run-name: ${{ github.action }} Building Wine Runner Qemu Extra (arm)
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:  
+  Debian10:
+    runs-on: ubuntu-latest
+    container: debian:buster
+    steps:
+        - name: Clone Repository
+          uses: actions/checkout@v3
+
+        - name: Configure System
+          run: |
+            bash .github/workflows/configure-building-enviroment-without-x86.sh
+
+        - name: Building Python3
+          run: |
+            bash .github/workflows/run-command-in-chroot.sh .github/workflows/configure-python3.sh
+
+        - name: Building Qemu Packager
+          id: buildingQemuPackager
+          run: |
+            # 修改版本号
+            bash .github/workflows/run-command-in-chroot.sh sed -i "s/) UNRELEASED; urgency=medium/~buster) UNRELEASED; urgency=medium/g" debian/changelog
+            # 构建 deb 包
+            bash .github/workflows/run-command-in-chroot.sh dpkg-buildpackage -b
+            # 删除 dbg 包
+            bash .github/workflows/run-command-in-chroot.sh rm -v ../*dbg*.deb -rfv
+            # 获取 deb 位置
+            cp system-bottle/*.deb . -rv | true
+            echo "fileName=$(ls -1 *.deb)" >> $GITHUB_OUTPUT
+
+        - name: Upload Result
+          uses: actions/upload-artifact@v1
+          with:
+            name: spark-deepin-wine-runner-qemu-system-extra~buster
+            path: ${{ steps.buildingQemuPackager.outputs.fileName }}
+

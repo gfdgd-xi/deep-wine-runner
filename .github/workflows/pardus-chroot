@@ -1,0 +1,38 @@
+#!/bin/bash
+set +e
+DESTDIR="$1"
+if [[ $UID -ne 0 ]] ; then
+    echo "You must be root!"
+    exit 1
+fi
+if [[ -b "$1" ]] ; then
+    DESTDIR=$(mktemp -d)
+    mount "$1" "$DESTDIR"
+fi
+shift
+if [[ "$DESTDIR" == "" ||  ! -f "$DESTDIR/etc/os-release" ]] ; then
+    echo "Target filesystem is invalid: $DESTDIR"
+    exit 1
+fi
+mount --bind /dev "$DESTDIR/dev"
+mount --bind /run  "$DESTDIR/run"
+mount --bind /media  "$DESTDIR/media"
+mount -t devpts devpts "$DESTDIR/dev/pts"
+mount -t sysfs sysfs "$DESTDIR/sys"
+mount -t proc proc "$DESTDIR/proc"
+mount -t tmpfs tmpfs  "$DESTDIR/dev/shm"
+mount --bind /tmp "$DESTDIR/tmp"
+#if [[ -d /sys/firmware/efi/ ]] ; then
+#    mount -t efivarfs efivarfs  "$DESTDIR/sys/firmware/efi/efivars"
+#fi
+#cat /etc/resolv.conf > $DESTDIR/etc/resolv.conf
+#SHELL=/bin/bash unshare --fork --pid chroot "$DESTDIR" "$@"
+#exit
+# 下面的因为有问题，不使用
+#if [[ -d /sys/firmware/efi/ ]] ; then
+#    while umount "$DESTDIR/sys/firmware/efi/efivars" 2>/dev/null ; do : ;done
+#fi
+#for dir in dev/pts dev/shm dev sys proc run media ; do
+#    while umount "$DESTDIR/$dir" 2>/dev/null; do : ;done
+#done
+#umount -lf "$DESTDIR"  2>/dev/null
