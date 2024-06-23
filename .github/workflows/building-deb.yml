@@ -37,7 +37,7 @@ jobs:
           uses: actions/upload-artifact@v1
           with:
             name: spark-deepin-wine-runner-qemu-system-extra~buster
-            path: ${{ steps.buildingQemuPackager.outputs.jbr_image }}
+            path: ${{ path: ${{ steps.buildingQemuPackager.outputs.fileName }}
 
   Debian11:
     runs-on: ubuntu-latest
@@ -66,7 +66,7 @@ jobs:
           uses: actions/upload-artifact@v1
           with:
             name: spark-deepin-wine-runner-qemu-system-extra~bullseye
-            path: ${{ steps.buildingQemuPackager.outputs.jbr_image }}
+            path: ${{ path: ${{ steps.buildingQemuPackager.outputs.fileName }}
 
   Debian12:
     runs-on: ubuntu-latest
@@ -95,7 +95,7 @@ jobs:
           uses: actions/upload-artifact@v1
           with:
             name: spark-deepin-wine-runner-qemu-system-extra~bookworm
-            path: ${{ steps.buildingQemuPackager.outputs.jbr_image }}
+            path: ${{ path: ${{ steps.buildingQemuPackager.outputs.fileName }}
 
   DebianSid:
     runs-on: ubuntu-latest
@@ -124,7 +124,7 @@ jobs:
           uses: actions/upload-artifact@v1
           with:
             name: spark-deepin-wine-runner-qemu-system-extra~sid
-            path: ${{ steps.buildingQemuPackager.outputs.jbr_image }}
+            path: ${{ path: ${{ steps.buildingQemuPackager.outputs.fileName }}
 
   Ubuntu22:
     runs-on: ubuntu-latest
@@ -154,4 +154,4 @@ jobs:
           uses: actions/upload-artifact@v1
           with:
             name: spark-deepin-wine-runner-qemu-system-extra~jammy
-            path: ${{ steps.buildingQemuPackager.outputs.jbr_image }}
+            path: ${{ steps.buildingQemuPackager.outputs.fileName }}
