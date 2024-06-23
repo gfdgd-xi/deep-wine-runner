@@ -2,17 +2,17 @@ name: Wine Runner Qemu Extra Builder
 run-name: ${{ github.action }} Building Wine Runner Qemu Extra
 
 on:
-    push:
-    workflow_dispatch:
+  push:
+  workflow_dispatch:
 
 jobs:
-    Debian10:
-        runs-on: ubuntu-latest
-        container: debian:buster
-        steps:
-            - name: Clone Repository
-            uses: actions/checkout@v3
+  Debian10:
+    runs-on: ubuntu-latest
+    container: debian:buster
+    steps:
+        - name: Clone Repository
+          uses: actions/checkout@v3
 
-            - name: Configure System
-            run: |
-                bash .github/workflows/configure-building-enviroment.sh
+        - name: Configure System
+          run: |
+            bash .github/workflows/configure-building-enviroment.sh
