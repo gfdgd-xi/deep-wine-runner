@@ -17,6 +17,14 @@ fi
 apt update
 apt install sudo neofetch -y
 neofetch
+if [[ `arch` != "x86_64" ]]; then
+    apt source qemu
+    cd qemu-*
+    sed -i "s/gcc-s390x-linux-gnu,//g" debian/control
+    sed -i "s/gcc-alpha-linux-gnu,//g" debian/control
+    apt build-dep . -y
+    cd ..
+fi
 apt build-dep qemu -y
 # 如果是 Debian10 就需要安装 Python3 的依赖
 apt build-dep python3.7 -y
