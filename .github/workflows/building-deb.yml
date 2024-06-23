@@ -31,7 +31,8 @@ jobs:
             # 删除 dbg 包
             rm -v ../*dbg*.deb -rfv
             # 获取 deb 位置
-            echo "fileName=$(readlink -f $(ls -1 ../*.deb))" >> $GITHUB_OUTPUT
+            mv ../*.deb .
+            echo "fileName=$(ls -1 *.deb)" >> $GITHUB_OUTPUT
 
         - name: Upload Result
           uses: actions/upload-artifact@v1
@@ -60,7 +61,8 @@ jobs:
             # 删除 dbg 包
             rm -v ../*dbg*.deb -rfv
             # 获取 deb 位置
-            echo "fileName=$(readlink -f $(ls -1 ../*.deb))" >> $GITHUB_OUTPUT
+            mv ../*.deb .
+            echo "fileName=$(ls -1 *.deb)" >> $GITHUB_OUTPUT
 
         - name: Upload Result
           uses: actions/upload-artifact@v1
@@ -89,7 +91,8 @@ jobs:
             # 删除 dbg 包
             rm -v ../*dbg*.deb -rfv
             # 获取 deb 位置
-            echo "fileName=$(readlink -f $(ls -1 ../*.deb))" >> $GITHUB_OUTPUT
+            mv ../*.deb .
+            echo "fileName=$(ls -1 *.deb)" >> $GITHUB_OUTPUT
 
         - name: Upload Result
           uses: actions/upload-artifact@v1
@@ -118,7 +121,8 @@ jobs:
             # 删除 dbg 包
             rm -v ../*dbg*.deb -rfv
             # 获取 deb 位置
-            echo "fileName=$(readlink -f $(ls -1 ../*.deb))" >> $GITHUB_OUTPUT
+            mv ../*.deb .
+            echo "fileName=$(ls -1 *.deb)" >> $GITHUB_OUTPUT
 
         - name: Upload Result
           uses: actions/upload-artifact@v1
@@ -148,7 +152,8 @@ jobs:
             rm -v ../*dbg*.deb -rfv
             # 获取 deb 位置
             echo $(readlink -f $(ls -1 ../*.deb))
-            echo "fileName=$(readlink -f $(ls -1 ../*.deb))" >> $GITHUB_OUTPUT
+            mv ../*.deb .
+            echo "fileName=$(ls -1 *.deb)" >> $GITHUB_OUTPUT
 
         - name: Upload Result
           uses: actions/upload-artifact@v1

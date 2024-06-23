@@ -16,7 +16,7 @@ fi
 apt update
 apt install sudo neofetch -y
 neofetch
-apt build-dep qemu -y
+apt build-dep qemu -y | echo -e "1\n1\n1\n1\n"
 # 如果是 Debian10 就需要安装 Python3 的依赖
 apt build-dep python3.7 -y
 apt build-dep . -y
