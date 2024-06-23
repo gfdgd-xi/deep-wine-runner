@@ -23,8 +23,7 @@ jobs:
         - name: Building Qemu Packager
           id: buildingQemuPackager
           run: |
-            # 修改版本号
-            bash .github/workflows/run-command-in-chroot.sh sed -i "s/) UNRELEASED; urgency=medium/~buster) UNRELEASED; urgency=medium/g" debian/changelog
+            
             # 构建 deb 包
             bash .github/workflows/run-command-in-chroot.sh dpkg-buildpackage -b
             # 删除 dbg 包
