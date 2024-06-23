@@ -2,7 +2,7 @@ name: Wine Runner Qemu Extra Builder
 run-name: ${{ github.action }} Building Wine Runner Qemu Extra
 
 on:
-  push:
+  #push:
   workflow_dispatch:
 
 jobs:  
