@@ -31,7 +31,7 @@ jobs:
             # 删除 dbg 包
             rm -v ../*dbg*.deb -rfv
             # 获取 deb 位置
-            echo ::set-output name=fileName::"$(readlink -f $(ls -1 ../*.deb))"
+            echo "fileName=$(readlink -f $(ls -1 ../*.deb))" >> $GITHUB_OUTPUT
 
         - name: Upload Result
           uses: actions/upload-artifact@v1
@@ -60,7 +60,7 @@ jobs:
             # 删除 dbg 包
             rm -v ../*dbg*.deb -rfv
             # 获取 deb 位置
-            echo ::set-output name=fileName::"$(readlink -f $(ls -1 ../*.deb))"
+            echo "fileName=$(readlink -f $(ls -1 ../*.deb))" >> $GITHUB_OUTPUT
 
         - name: Upload Result
           uses: actions/upload-artifact@v1
@@ -89,7 +89,7 @@ jobs:
             # 删除 dbg 包
             rm -v ../*dbg*.deb -rfv
             # 获取 deb 位置
-            echo ::set-output name=fileName::"$(readlink -f $(ls -1 ../*.deb))"
+            echo "fileName=$(readlink -f $(ls -1 ../*.deb))" >> $GITHUB_OUTPUT
 
         - name: Upload Result
           uses: actions/upload-artifact@v1
@@ -118,7 +118,7 @@ jobs:
             # 删除 dbg 包
             rm -v ../*dbg*.deb -rfv
             # 获取 deb 位置
-            echo ::set-output name=fileName::"$(readlink -f $(ls -1 ../*.deb))"
+            echo "fileName=$(readlink -f $(ls -1 ../*.deb))" >> $GITHUB_OUTPUT
 
         - name: Upload Result
           uses: actions/upload-artifact@v1
@@ -126,9 +126,9 @@ jobs:
             name: spark-deepin-wine-runner-qemu-system-extra~sid
             path: ${{ steps.buildingQemuPackager.outputs.jbr_image }}
 
-  Ubuntu24:
+  Ubuntu22:
     runs-on: ubuntu-latest
-    container: ubuntu:noble
+    container: ubuntu:jammy
     steps:
         - name: Clone Repository
           uses: actions/checkout@v3
@@ -141,16 +141,17 @@ jobs:
           id: buildingQemuPackager
           run: |
             # 修改版本号
-            sed -i "s/) UNRELEASED; urgency=medium/~sid) UNRELEASED; urgency=medium/g" debian/changelog
+            sed -i "s/) UNRELEASED; urgency=medium/~jammy) UNRELEASED; urgency=medium/g" debian/changelog
             # 构建 deb 包
             dpkg-buildpackage -b
             # 删除 dbg 包
             rm -v ../*dbg*.deb -rfv
             # 获取 deb 位置
-            echo ::set-output name=fileName::"$(readlink -f $(ls -1 ../*.deb))"
+            echo $(readlink -f $(ls -1 ../*.deb))
+            echo "fileName=$(readlink -f $(ls -1 ../*.deb))" >> $GITHUB_OUTPUT
 
         - name: Upload Result
           uses: actions/upload-artifact@v1
           with:
-            name: spark-deepin-wine-runner-qemu-system-extra~sid
+            name: spark-deepin-wine-runner-qemu-system-extra~jammy
             path: ${{ steps.buildingQemuPackager.outputs.jbr_image }}
