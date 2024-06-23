@@ -21,6 +21,12 @@ jobs:
           run: |
             bash .github/workflows/configure-python3.sh
 
+        - name: Get Resources
+          run: |
+            CPU_CORES=$(($(grep -c processor < /proc/cpuinfo)*2))
+            make download-loong64-ed2k -j$CPU_CORES
+            make download-virtio-iso -j$CPU_CORES
+
         - name: Building Qemu Packager
           id: buildingQemuPackager
           run: |
@@ -50,6 +56,12 @@ jobs:
         - name: Configure System
           run: |
             bash .github/workflows/configure-building-enviroment.sh
+
+        - name: Get Resources
+          run: |
+            CPU_CORES=$(($(grep -c processor < /proc/cpuinfo)*2))
+            make download-loong64-ed2k -j$CPU_CORES
+            make download-virtio-iso -j$CPU_CORES
 
         - name: Building Qemu Packager
           id: buildingQemuPackager
@@ -81,6 +93,12 @@ jobs:
           run: |
             bash .github/workflows/configure-building-enviroment.sh
 
+        - name: Get Resources
+          run: |
+            CPU_CORES=$(($(grep -c processor < /proc/cpuinfo)*2))
+            make download-loong64-ed2k -j$CPU_CORES
+            make download-virtio-iso -j$CPU_CORES
+
         - name: Building Qemu Packager
           id: buildingQemuPackager
           run: |
@@ -110,6 +128,12 @@ jobs:
         - name: Configure System
           run: |
             bash .github/workflows/configure-building-enviroment.sh
+
+        - name: Get Resources
+          run: |
+            CPU_CORES=$(($(grep -c processor < /proc/cpuinfo)*2))
+            make download-loong64-ed2k -j$CPU_CORES
+            make download-virtio-iso -j$CPU_CORES
 
         - name: Building Qemu Packager
           id: buildingQemuPackager
@@ -141,6 +165,12 @@ jobs:
           run: |
             bash .github/workflows/configure-building-enviroment.sh
 
+        - name: Get Resources
+          run: |
+            CPU_CORES=$(($(grep -c processor < /proc/cpuinfo)*2))
+            make download-loong64-ed2k -j$CPU_CORES
+            make download-virtio-iso -j$CPU_CORES
+
         - name: Building Qemu Packager
           id: buildingQemuPackager
           run: |
@@ -171,6 +201,12 @@ jobs:
         - name: Configure System
           run: |
             bash .github/workflows/configure-building-enviroment.sh
+
+        - name: Get Resources
+          run: |
+            CPU_CORES=$(($(grep -c processor < /proc/cpuinfo)*2))
+            make download-loong64-ed2k -j$CPU_CORES
+            make download-virtio-iso -j$CPU_CORES
 
         - name: Building Qemu Packager
           id: buildingQemuPackager

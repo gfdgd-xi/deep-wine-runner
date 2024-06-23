@@ -1,4 +1,6 @@
 CPU_CORES=$(($(grep -c processor < /proc/cpuinfo)*2))
+virtioISOUrl=https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.248-1/virtio-win.iso
+loongEFI=https://mirrors.wsyu.edu.cn/loongarch/archlinux/images/QEMU_EFI_8.2.fd
 
 build:
 	mkdir -p qemu-build
@@ -39,3 +41,14 @@ install:
 	cp qemu-commands-list.sh $(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/files/usr/local/bin/qemu-commands-list -r
 	chmod +x $(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/files/usr/local/bin/qemu-commands-list
 	chmod +x $(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh
+
+	# 拷贝资源文件
+	mkdir $(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/files/resources -p
+	if [ -f virtio-win.iso ]; then cp virtio-win.iso $(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/files/resources -rv -p ; fi
+	if [ -f loong64-efi-ed2k.fd ]; then cp loong64-efi-ed2k.fd $(DESTDIR)/opt/apps/deepin-wine-runner-qemu-system-extra/files/resources -rv -p ; fi
+	
+download-loong64-ed2k:
+	aria2c -x 16 -s 16 $(loongEFI) -c -o loong64-efi-ed2k.fd
+
+download-virtio-iso:
+	aria2c -x 16 -s 16 $(virtioISOUrl) -c -o virtio-win.iso
