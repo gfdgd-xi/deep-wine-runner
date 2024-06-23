@@ -191,33 +191,3 @@ jobs:
           with:
             name: spark-deepin-wine-runner-qemu-system-extra~jammy
             path: ${{ steps.buildingQemuPackager.outputs.fileName }}
-
-  DebianSidArm:
-    runs-on: ubuntu-latest
-    container: debian:sid/arm64
-    steps:
-        - name: Clone Repository
-          uses: actions/checkout@v3
-
-        - name: Configure System
-          run: |
-            bash .github/workflows/configure-building-enviroment.sh
-
-        - name: Building Qemu Packager
-          id: buildingQemuPackager
-          run: |
-            # 修改版本号
-            sed -i "s/) UNRELEASED; urgency=medium/~sid) UNRELEASED; urgency=medium/g" debian/changelog
-            # 构建 deb 包
-            dpkg-buildpackage -b
-            # 删除 dbg 包
-            rm -v ../*dbg*.deb -rfv
-            # 获取 deb 位置
-            mv ../*.deb .
-            echo "fileName=$(ls -1 *.deb)" >> $GITHUB_OUTPUT
-
-        - name: Upload Result
-          uses: actions/upload-artifact@v1
-          with:
-            name: spark-deepin-wine-runner-qemu-system-extra~sid
-            path: ${{ steps.buildingQemuPackager.outputs.fileName }}

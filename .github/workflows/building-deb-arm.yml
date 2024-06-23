@@ -8,7 +8,6 @@ on:
 jobs:  
   Debian10:
     runs-on: ubuntu-latest
-    container: debian:buster
     steps:
         - name: Clone Repository
           uses: actions/checkout@v3
