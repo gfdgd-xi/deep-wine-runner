@@ -6,6 +6,15 @@ on:
   workflow_dispatch:
 
 jobs:
+  Device:
+    runs-on: ubuntu-latest
+    steps:
+        - name: Information
+          run: |
+            sudo apt update
+            sudo apt install neofetch -y
+            neofetch
+        
   Debian10:
     runs-on: ubuntu-latest
     container: debian:buster
