@@ -29,9 +29,9 @@ jobs:
             # 构建 deb 包
             dpkg-buildpackage -b
             # 删除 dbg 包
-            rm -v ../*dbg*.deb -rv
+            rm -v ../*dbg*.deb -rfv
             # 获取 deb 位置
-            echo ::set-output name=fileName::"$(readlink -f (ls -1 ../*.deb))"
+            echo ::set-output name=fileName::"$(readlink -f $(ls -1 ../*.deb))"
 
         - name: Upload Result
           uses: actions/upload-artifact@v1
@@ -58,9 +58,9 @@ jobs:
             # 构建 deb 包
             dpkg-buildpackage -b
             # 删除 dbg 包
-            rm -v ../*dbg*.deb -rv
+            rm -v ../*dbg*.deb -rfv
             # 获取 deb 位置
-            echo ::set-output name=fileName::"$(readlink -f (ls -1 ../*.deb))"
+            echo ::set-output name=fileName::"$(readlink -f $(ls -1 ../*.deb))"
 
         - name: Upload Result
           uses: actions/upload-artifact@v1
@@ -87,9 +87,9 @@ jobs:
             # 构建 deb 包
             dpkg-buildpackage -b
             # 删除 dbg 包
-            rm -v ../*dbg*.deb -rv
+            rm -v ../*dbg*.deb -rfv
             # 获取 deb 位置
-            echo ::set-output name=fileName::"$(readlink -f (ls -1 ../*.deb))"
+            echo ::set-output name=fileName::"$(readlink -f $(ls -1 ../*.deb))"
 
         - name: Upload Result
           uses: actions/upload-artifact@v1
@@ -118,7 +118,7 @@ jobs:
             # 删除 dbg 包
             rm -v ../*dbg*.deb -rfv
             # 获取 deb 位置
-            echo ::set-output name=fileName::"$(readlink -f (ls -1 ../*.deb))"
+            echo ::set-output name=fileName::"$(readlink -f $(ls -1 ../*.deb))"
 
         - name: Upload Result
           uses: actions/upload-artifact@v1
@@ -126,3 +126,31 @@ jobs:
             name: spark-deepin-wine-runner-qemu-system-extra~sid
             path: ${{ steps.buildingQemuPackager.outputs.jbr_image }}
 
+  Ubuntu24:
+    runs-on: ubuntu-latest
+    container: ubuntu:noble
+    steps:
+        - name: Clone Repository
+          uses: actions/checkout@v3
+
+        - name: Configure System
+          run: |
+            bash .github/workflows/configure-building-enviroment.sh
+
+        - name: Building Qemu Packager
+          id: buildingQemuPackager
+          run: |
+            # 修改版本号
+            sed -i "s/) UNRELEASED; urgency=medium/~sid) UNRELEASED; urgency=medium/g" debian/changelog
+            # 构建 deb 包
+            dpkg-buildpackage -b
+            # 删除 dbg 包
+            rm -v ../*dbg*.deb -rfv
+            # 获取 deb 位置
+            echo ::set-output name=fileName::"$(readlink -f $(ls -1 ../*.deb))"
+
+        - name: Upload Result
+          uses: actions/upload-artifact@v1
+          with:
+            name: spark-deepin-wine-runner-qemu-system-extra~sid
+            path: ${{ steps.buildingQemuPackager.outputs.jbr_image }}
