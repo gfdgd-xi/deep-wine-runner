@@ -9,6 +9,6 @@ sudo bash .github/workflows/pardus-chroot $bottlePath
 # 配置 git
 sudo chroot $bottlePath apt update
 sudo chroot $bottlePath apt install git -y
-sudo chroot $bottlePath git clone https://github.com/gfdgd-xi/deep-wine-runner-qemu-system
-sudo chroot $bottlePath bash -c 'cd deep-wine-runner-qemu-system; bash .github/workflows/configure-building-enviroment-without.sh'
+sudo chroot $bottlePath git clone https://github.com/gfdgd-xi/deep-wine-runner-qemu-system --depth=1
+.github/workflows/run-command-in-chroot.sh -c 'cd deep-wine-runner-qemu-system; bash .github/workflows/configure-building-enviroment-without.sh'
 exit 0
