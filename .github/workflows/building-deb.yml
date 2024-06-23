@@ -116,7 +116,7 @@ jobs:
             # 构建 deb 包
             dpkg-buildpackage -b
             # 删除 dbg 包
-            rm -v ../*dbg*.deb -rv
+            rm -v ../*dbg*.deb -rfv
             # 获取 deb 位置
             echo ::set-output name=fileName::"$(readlink -f (ls -1 ../*.deb))"
 
