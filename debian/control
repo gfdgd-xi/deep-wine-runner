@@ -7,6 +7,7 @@ Build-Depends:
  debhelper-compat (= 9),
  python3-pip,
  git,
+ python3-sphinx,
 Standards-Version: 4.6.2
 Homepage: https://gitee.com/gfdgd-xi/deep-wine-runner
 
