@@ -20,3 +20,51 @@ jobs:
         - name: Building Python3
           run: |
             bash .github/workflows/configure-python3.sh
+
+        - name: Building Qemu Packager
+          id: buildingQemuPackager
+          run: |
+            # 修改版本号
+            sed -i "s/) UNRELEASED; urgency=medium/~buster) UNRELEASED; urgency=medium/g" debian/changelog
+            # 构建 deb 包
+            dpkg-buildpackage -b
+            # 删除 dbg 包
+            rm -v ../*dbg*.deb
+            # 获取 deb 位置
+            echo ::set-output name=fileName::"$(readlink -f (ls -1 ../*.deb))"
+
+        - name: Upload Result
+          uses: actions/upload-artifact@v1
+          with:
+            name: spark-deepin-wine-runner-qemu-system-extra~buster
+            path: ${{ steps.buildingQemuPackager.outputs.jbr_image }}
+
+  Debian11:
+    runs-on: ubuntu-latest
+    container: debian:bullseye
+    steps:
+        - name: Clone Repository
+          uses: actions/checkout@v3
+
+        - name: Configure System
+          run: |
+            bash .github/workflows/configure-building-enviroment.sh
+
+        - name: Building Qemu Packager
+          id: buildingQemuPackager
+          run: |
+            # 修改版本号
+            sed -i "s/) UNRELEASED; urgency=medium/~bullseye) UNRELEASED; urgency=medium/g" debian/changelog
+            # 构建 deb 包
+            dpkg-buildpackage -b
+            # 删除 dbg 包
+            rm -v ../*dbg*.deb
+            # 获取 deb 位置
+            echo ::set-output name=fileName::"$(readlink -f (ls -1 ../*.deb))"
+
+        - name: Upload Result
+          uses: actions/upload-artifact@v1
+          with:
+            name: spark-deepin-wine-runner-qemu-system-extra~bullseye
+            path: ${{ steps.buildingQemuPackager.outputs.jbr_image }}
+
