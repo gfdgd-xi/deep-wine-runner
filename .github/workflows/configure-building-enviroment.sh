@@ -15,7 +15,7 @@ if [[ $? == 0 ]]; then
     echo "deb-src http://deb.debian.org/debian sid main" > /etc/apt/sources.list.d/debian-sources.list
 fi
 apt update
-apt install sudo neofetch -y
+apt install dpkg-dev sudo neofetch -y
 neofetch
 if [[ `arch` != "x86_64" ]]; then
     apt source qemu
