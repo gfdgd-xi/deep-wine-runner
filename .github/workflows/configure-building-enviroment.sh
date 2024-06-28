@@ -19,7 +19,7 @@ apt install dpkg-dev sudo neofetch -y
 neofetch
 if [[ `arch` != "x86_64" ]]; then
     apt source qemu
-    cd qemu-*
+    cd qemu-*/
     sed -i "s/gcc-s390x-linux-gnu,//g" debian/control
     sed -i "s/gcc-alpha-linux-gnu,//g" debian/control
     apt build-dep . -y
