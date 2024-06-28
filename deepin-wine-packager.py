@@ -410,7 +410,7 @@ class make_deb_threading(QtCore.QThread):
                     "Architecture": debFirstArch.currentText(),
                     "Depends": [
                         f"{wine[wineVersion.currentText()]}, deepin-wine-helper | com.wine-helper.deepin, fonts-wqy-microhei, fonts-wqy-zenhei",
-                        f"{wine[wineVersion.currentText()]}, spark-dwine-helper | store.spark-app.spark-dwine-helper, fonts-wqy-microhei, fonts-wqy-zenhei"
+                        f"{wine[wineVersion.currentText()]}, spark-dwine-helper | store.spark-app.spark-dwine-helper | deepin-wine-helper | com.wine-helper.deepin, fonts-wqy-microhei, fonts-wqy-zenhei"
                         ][int(chooseWineHelperValue.isChecked())],
                     "postinst": ['', f'''#!/bin/bash
 PACKAGE_NAME="{e1_text.text()}"
@@ -527,7 +527,6 @@ Get_Dist_Name()
 }}
 
 
-
 ####获得发行版名称
 
 #########################预设值段
@@ -538,11 +537,16 @@ BOTTLENAME="@@@BOTTLENAME@@@"
 APPVER="@@@APPVER@@@"
 EXEC_PATH="@@@EXEC_PATH@@@"
 ##### 软件在wine中的启动路径
-START_SHELL_PATH="/opt/deepinwine/tools/spark_run_v4.sh"
-{['''ENABLE_DOT_NET=true''', 'ENABLE_DOT_NET=""'][int(disabledMono.isChecked())]}
+if [ -e "/opt/deepinwine/tools/spark_run_v4.sh"] ;then
+    START_SHELL_PATH="/opt/deepinwine/tools/spark_run_v4.sh"
+else
+    START_SHELL_PATH="/opt/deepinwine/tools/run_v4.sh"
+fi
+ENABLE_DOT_NET=""
 ####若使用spark-wine时需要用到.net，则请把ENABLE_DOT_NET设为true，同时在依赖中写spark-wine7-mono
+#export BOX86_EMU_CMD="/opt/spark-box86/box86"
+####仅在Arm且不可使用exagear时可用，作用是强制使用box86而不是deepin-box86.如果你想要这样做，请取消注释
 export MIME_TYPE=""
-
 
 export DEB_PACKAGE_NAME="@@@DEB_PACKAGE_NAME@@@"
 ####这里写包名才能在启动的时候正确找到files.7z,似乎也和杀残留进程有关
@@ -582,7 +586,7 @@ fi
 ##默认屏蔽mono和gecko安装器
 if [ "$APPRUN_CMD" = "spark-wine7-devel" ] || [ "$APPRUN_CMD" = "spark-wine" ]|| [ "$APPRUN_CMD" = "spark-wine8" ] && [ -z "$ENABLE_DOT_NET" ];then
 
-export WINEDLLOVERRIDES="mscoree=d,mshtml=d"
+#export WINEDLLOVERRIDES="mscoree=d,mshtml=d,control.exe=d"
 export WINEDLLOVERRIDES="control.exe=d"
 #### "为了降低打包体积，默认关闭gecko和momo，如有需要，注释此行（仅对spark-wine7-devel有效）"
 
@@ -611,6 +615,9 @@ if [ -n "$EXEC_PATH" ];then
 else
     $START_SHELL_PATH $BOTTLENAME $APPVER "uninstaller.exe" "$@"
 fi
+
+
+
 """
                         ][chooseWineHelperValue.isChecked()],
                         "info": f'''{{
@@ -1003,52 +1010,110 @@ echo "非卸载，跳过清理"
 fi
 """][int(rmBash.isChecked())],
 
-                # 又又又改
-                "run.sh": f"""#!/bin/bash
+
+                "run.sh": f"""
+#!/bin/sh
 
 #   Copyright (C) 2016 Deepin, Inc.
 #
 #   Author:     Li LongYu <lilongyu@linuxdeepin.com>
 #               Peng Hao <penghao@linuxdeepin.com>
+#
+#
+#   Copyright (C) 2022 The Spark Project
+#
+#
+#   Modifier    shenmo <shenmo@spark-app.store>
+#
+#
+#
+
+#######################函数段。下文调用的额外功能会在此处声明
+
+Get_Dist_Name()
+{{
+    if grep -Eqii "Deepin" /etc/issue || grep -Eq "Deepin" /etc/*-release; then
+        DISTRO='Deepin'
+    elif grep -Eqi "UnionTech" /etc/issue || grep -Eq "UnionTech" /etc/*-release; then
+        DISTRO='UniontechOS'
+    elif grep -Eqi "UOS" /etc/issue || grep -Eq "UOS" /etc/*-release; then
+        DISTRO='UniontechOS'
+    else
+	 DISTRO='OtherOS'
+	fi
+}}
+
+
+####获得发行版名称
+
+#########################预设值段
 
 version_gt() {{ test "$(echo "$@" | tr " " "\n" | sort -V | head -n 1)" != "$1"; }}
-
-ACTIVEX_NAME=""
+####用于比较版本？未实装
 BOTTLENAME="@@@BOTTLENAME@@@"
 APPVER="@@@APPVER@@@"
 EXEC_PATH="@@@EXEC_PATH@@@"
-START_SHELL_PATH="{['/opt/deepinwine/tools/run_v4.sh', '/opt/deepinwine/tools/spark_run_v4.sh'][chooseWineHelperValue.isChecked()]}"
+##### 软件在wine中的启动路径
+if [ -e "/opt/deepinwine/tools/spark_run_v4.sh"] ;then
+    START_SHELL_PATH="/opt/deepinwine/tools/spark_run_v4.sh"
+else
+    START_SHELL_PATH="/opt/deepinwine/tools/run_v4.sh"
+fi
+ENABLE_DOT_NET=""
+####若使用spark-wine时需要用到.net，则请把ENABLE_DOT_NET设为true，同时在依赖中写spark-wine7-mono
+#export BOX86_EMU_CMD="/opt/spark-box86/box86"
+####仅在Arm且不可使用exagear时可用，作用是强制使用box86而不是deepin-box86.如果你想要这样做，请取消注释
 export MIME_TYPE=""
-export MIME_EXEC=""
+
 export DEB_PACKAGE_NAME="{e1_text.text()}"
-export APPRUN_CMD="deepin-wine6-stable"
-DISABLE_ATTACH_FILE_DIALOG=""
-EXPORT_ENVS=""
-EXEC_NAME="@@@EXEC_NAME@@@"
-INSTALL_SETUP=""
-export BOX86_EMU_CMD="/opt/deepin-box86/stable/box86"
+####这里写包名才能在启动的时候正确找到files.7z,似乎也和杀残留进程有关
+export APPRUN_CMD="@@@APPRUN_CMD@@@"
+#####wine启动指令，建议
+#EXPORT_ENVS="wine的动态链接库路径"
+##例如我的wine应用是使用的dwine6的32位容器，那么我要填LD_LIBRARY_PATH=$LD_LIBRARY;/opt/deepin-wine6-stable/lib
+## 如果用不到就不填，不要删除前面的注释用的#
 
 export SPECIFY_SHELL_DIR=`dirname $START_SHELL_PATH`
 
 ARCHIVE_FILE_DIR="/opt/apps/$DEB_PACKAGE_NAME/files"
 
-if [ -z "$APPRUN_CMD" ];then
-    export APPRUN_CMD="/opt/deepin-wine6-stable/bin/wine"
-fi
-if [ -f "$APPRUN_CMD" ];then
-    wine_path=$(dirname $APPRUN_CMD)
-    wine_path=$(realpath "$wine_path/../")
-    export WINEDLLPATH=$wine_path/lib:$wine_path/lib64
-else
-    export WINEDLLPATH=/opt/$APPRUN_CMD/lib:/opt/$APPRUN_CMD/lib64
-fi
+export WINEDLLPATH=/opt/$APPRUN_CMD/lib:/opt/$APPRUN_CMD/lib64
 
 export WINEPREDLL="$ARCHIVE_FILE_DIR/dlls"
 
-_SetRegistryValue()
-{{
-    env WINEPREFIX="$BOTTLEPATH" $APPRUN_CMD reg ADD "$1" /v "$2" /t "$3" /d "$4" /f
-}}
+DISABLE_ATTACH_FILE_DIALOG=""
+##默认为空。若为1，则不使用系统自带的文件选择，而是使用wine的
+##对于deepin/UOS，大部分的应用都不需要使用wine的，如果有需求（比如wine应用选择的限定种类文件系统的文管不支持）
+##请填1。
+##注意：因为非DDE的环境不确定，所以默认会在非Deepin/UOS发行版上禁用这个功能。如果你确认在适配的发行版上可以正常启动，请注释或者删除下面这段
+
+##############<<<<<<<<<禁用文件选择工具开始
+Get_Dist_Name
+#此功能实现参见开头函数段
+if [ "$DISTRO" != "Deepin" ] && [ "$DISTRO" != "UniontechOS" ];then
+DISABLE_ATTACH_FILE_DIALOG="1"
+echo "非deepin/UOS，默认关闭系统自带的文件选择工具，使用Wine的"
+echo "如果你想改变这个行为，请到/opt/apps/$DEB_PACKAGE_NAME/files/$0处修改"
+echo "To打包者：如果你要打开自带请注意在适配的发行版上进行测试"
+echo "To用户：打包者没有打开这个功能，这证明启用这个功能可能造成运行问题。如果你要修改这个行为，请确保你有一定的动手能力"
+fi
+##############>>>>>>>>>禁用文件选择工具结束
+
+##############<<<<<<<<<屏蔽mono和gecko安装器开始
+##默认屏蔽mono和gecko安装器
+if [ "$APPRUN_CMD" = "spark-wine7-devel" ] || [ "$APPRUN_CMD" = "spark-wine" ]|| [ "$APPRUN_CMD" = "spark-wine8" ] && [ -z "$ENABLE_DOT_NET" ];then
+
+#export WINEDLLOVERRIDES="mscoree=d,mshtml=d,control.exe=d"
+export WINEDLLOVERRIDES="control.exe=d"
+#### "为了降低打包体积，默认关闭gecko和momo，如有需要，注释此行（仅对spark-wine7-devel有效）"
+
+fi
+##############>>>>>>>>>屏蔽mono和gecko安装器结束
+
+#########################执行段
+
+
+
 
 if [ -z "$DISABLE_ATTACH_FILE_DIALOG" ];then
     export ATTACH_FILE_DIALOG=1
@@ -1058,38 +1123,18 @@ if [ -n "$EXPORT_ENVS" ];then
     export $EXPORT_ENVS
 fi
 
-# 打包安装程序的情况
-if [[ -z "$EXEC_PATH" ]] && [[ -n "$INSTALL_SETUP" ]];then
-    $START_SHELL_PATH $BOTTLENAME $APPVER "$EXEC_PATH" -c
-    BOTTLEPATH="$HOME/.deepinwine/$BOTTLENAME"
-    EXEC_PATH=$(find "$BOTTLEPATH" -name $EXEC_NAME | head -1)
-    if [ -z "$EXEC_PATH" ];then
-        _SetRegistryValue "HKCU\\Software\\Wine\\DllOverrides" winemenubuilder.exe REG_SZ
-        WINEPREFIX="$BOTTLEPATH" $APPRUN_CMD "$ARCHIVE_FILE_DIR/$INSTALL_SETUP"
-        EXEC_PATH=$(find "$BOTTLEPATH" -name $EXEC_NAME | head -1)
-
-        cp "$ARCHIVE_FILE_DIR/setup.md5sum" "$BOTTLEPATH"
-    fi
-
-    if [ -z "$EXEC_PATH" ];then
-        echo "安装失败退出"
-        exit
-    fi
-fi
-
 if [ -n "$EXEC_PATH" ];then
     if [ -z "${{EXEC_PATH##*.lnk*}}" ];then
         $START_SHELL_PATH $BOTTLENAME $APPVER "C:/windows/command/start.exe" "/Unix" "$EXEC_PATH" "$@"
-    elif [ -z "${{EXEC_PATH##*.bat}}" ];then
-        $START_SHELL_PATH $BOTTLENAME $APPVER "cmd" -f /c "$EXEC_PATH" "${{@:2}}"
     else
-        $START_SHELL_PATH $BOTTLENAME $APPVER "$EXEC_PATH" "$@"
+        $START_SHELL_PATH $BOTTLENAME $APPVER "C:/windows/command/start.exe" "/Unix" "$EXEC_PATH" "$@"
     fi
-elif [ -n "$ACTIVEX_NAME" ] && [ $# -gt 1 ];then
-    $START_SHELL_PATH $BOTTLENAME $APPVER "$1" -f "${{@:2}}"
 else
     $START_SHELL_PATH $BOTTLENAME $APPVER "uninstaller.exe" "$@"
 fi
+
+
+
 """,
                 "info": f'''{{
     "appid": "{e1_text.text()}",
@@ -1296,7 +1341,7 @@ true
             print("c")
             if os.path.exists(wine[wineVersion.currentText()]):
                 debInformation[0]["Depends"] = ["deepin-wine-helper | com.wine-helper.deepin",
-                        "spark-dwine-helper | store.spark-app.spark-dwine-helper"
+                        "spark-dwine-helper | store.spark-app.spark-dwine-helper | deepin-wine-helper | com.wine-helper.deepin"
                         ][int(chooseWineHelperValue.isChecked())] #+ ["", "libasound2 (>= 1.0.16), libc6 (>= 2.28), libglib2.0-0 (>= 2.12.0), libgphoto2-6 (>= 2.5.10), libgphoto2-port12 (>= 2.5.10), libgstreamer-plugins-base1.0-0 (>= 1.0.0), libgstreamer1.0-0 (>= 1.4.0), liblcms2-2 (>= 2.2+git20110628), libldap-2.4-2 (>= 2.4.7), libmpg123-0 (>= 1.13.7), libopenal1 (>= 1.14), libpcap0.8 (>= 0.9.8), libpulse0 (>= 0.99.1), libudev1 (>= 183), libvkd3d1 (>= 1.0), libx11-6, libxext6, libxml2 (>= 2.9.0), ocl-icd-libopencl1 | libopencl1, udis86, zlib1g (>= 1:1.1.4), libasound2-plugins, libncurses6 | libncurses5 | libncurses, deepin-wine-plugin-virtual\nRecommends: libcapi20-3, libcups2, libdbus-1-3, libfontconfig1, libfreetype6, libglu1-mesa | libglu1, libgnutls30 | libgnutls28 | libgnutls26, libgsm1, libgssapi-krb5-2, libjpeg62-turbo | libjpeg8, libkrb5-3, libodbc1, libosmesa6, libpng16-16 | libpng12-0, libsane | libsane1, libsdl2-2.0-0, libtiff5, libv4l-0, libxcomposite1, libxcursor1, libxfixes3, libxi6, libxinerama1, libxrandr2, libxrender1, libxslt1.1, libxxf86vm1"][]
                 print("d")
                 debInformation[0]["run.sh"] = f'''#!/bin/sh
@@ -1847,14 +1892,14 @@ def BrowserHelperConfigPathText():
 def ChangeWine():
     useInstallWineArch.setEnabled(os.path.exists(wine[wineVersion.currentText()]))
     debDepends.setText([f"{wine[wineVersion.currentText()]} | {wine[wineVersion.currentText()]}-bcm | {wine[wineVersion.currentText()]}-dcm | com.{wine[wineVersion.currentText()]}.deepin, deepin-wine-helper | com.wine-helper.deepin, fonts-wqy-microhei, fonts-wqy-zenhei",
-                        f"{wine[wineVersion.currentText()]} | {wine[wineVersion.currentText()]}-bcm | {wine[wineVersion.currentText()]}-dcm | com.{wine[wineVersion.currentText()]}.deepin, spark-dwine-helper | store.spark-app.spark-dwine-helper, fonts-wqy-microhei, fonts-wqy-zenhei"
+                        f"{wine[wineVersion.currentText()]} | {wine[wineVersion.currentText()]}-bcm | {wine[wineVersion.currentText()]}-dcm | com.{wine[wineVersion.currentText()]}.deepin, spark-dwine-helper | store.spark-app.spark-dwine-helper | deepin-wine-helper | com.wine-helper.deepin, fonts-wqy-microhei, fonts-wqy-zenhei"
                         ][int(chooseWineHelperValue.isChecked())])
     debRecommend.setText("")
     helperConfigPathText.setEnabled(chooseWineHelperValue.isChecked())
     helperConfigPathButton.setEnabled(chooseWineHelperValue.isChecked())
     if os.path.exists(wine[wineVersion.currentText()]):
         debDepends.setText(["deepin-wine-helper | com.wine-helper.deepin",
-                        "spark-dwine-helper | store.spark-app.spark-dwine-helper"
+                        "spark-dwine-helper | store.spark-app.spark-dwine-helper | deepin-wine-helper | com.wine-helper.deepin"
                         ][int(chooseWineHelperValue.isChecked())])
         #if "deepin-wine5-stable" in wine[wineVersion.currentText()]:
         #    debDepends.setText("libasound2 (>= 1.0.16), libc6 (>= 2.28), libglib2.0-0 (>= 2.12.0), libgphoto2-6 (>= 2.5.10), libgphoto2-port12 (>= 2.5.10), libgstreamer-plugins-base1.0-0 (>= 1.0.0), libgstreamer1.0-0 (>= 1.4.0), liblcms2-2 (>= 2.2+git20110628), libldap-2.4-2 (>= 2.4.7), libmpg123-0 (>= 1.13.7), libopenal1 (>= 1.14), libpcap0.8 (>= 0.9.8), libpulse0 (>= 0.99.1), libudev1 (>= 183), libvkd3d1 (>= 1.0), libx11-6, libxext6, libxml2 (>= 2.9.0), ocl-icd-libopencl1 | libopencl1, udis86, zlib1g (>= 1:1.1.4), libasound2-plugins, libncurses6 | libncurses5 | libncurses, deepin-wine-plugin-virtual")

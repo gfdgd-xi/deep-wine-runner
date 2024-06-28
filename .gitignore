@@ -4,3 +4,4 @@ __pycache__
 VM-source/Makefile
 *.rpm
 *.pro.user
+.vscode

@@ -210,7 +210,6 @@ Get_Dist_Name()
 }}
 
 
-
 ####获得发行版名称
 
 #########################预设值段
@@ -221,9 +220,15 @@ BOTTLENAME="@@@Package@@@"
 APPVER="@@@Version@@@"
 EXEC_PATH="@@@EXEC_PATH@@@"
 ##### 软件在wine中的启动路径
-START_SHELL_PATH="/opt/deepinwine/tools/run_v4.sh"
+if [ -e "/opt/deepinwine/tools/spark_run_v4.sh"] ;then
+    START_SHELL_PATH="/opt/deepinwine/tools/spark_run_v4.sh"
+else
+    START_SHELL_PATH="/opt/deepinwine/tools/run_v4.sh"
+fi
 ENABLE_DOT_NET=""
 ####若使用spark-wine时需要用到.net，则请把ENABLE_DOT_NET设为true，同时在依赖中写spark-wine7-mono
+#export BOX86_EMU_CMD="/opt/spark-box86/box86"
+####仅在Arm且不可使用exagear时可用，作用是强制使用box86而不是deepin-box86.如果你想要这样做，请取消注释
 export MIME_TYPE=""
 
 export DEB_PACKAGE_NAME="@@@Package@@@"
@@ -264,7 +269,7 @@ fi
 ##默认屏蔽mono和gecko安装器
 if [ "$APPRUN_CMD" = "spark-wine7-devel" ] || [ "$APPRUN_CMD" = "spark-wine" ]|| [ "$APPRUN_CMD" = "spark-wine8" ] && [ -z "$ENABLE_DOT_NET" ];then
 
-export WINEDLLOVERRIDES="mscoree=d,mshtml=d"
+#export WINEDLLOVERRIDES="mscoree=d,mshtml=d,control.exe=d"
 export WINEDLLOVERRIDES="control.exe=d"
 #### "为了降低打包体积，默认关闭gecko和momo，如有需要，注释此行（仅对spark-wine7-devel有效）"
 
@@ -293,6 +298,9 @@ if [ -n "$EXEC_PATH" ];then
 else
     $START_SHELL_PATH $BOTTLENAME $APPVER "uninstaller.exe" "$@"
 fi
+
+
+
 '''
 
 desktopFile = f'''#!/usr/bin/env xdg-open
@@ -549,7 +557,7 @@ class RunThread(QtCore.QThread):
                 self.RunCommand(f"cp -rv '{folderExePath}' '{bottlePath}/drive_c/Program Files'")
                 debPackageVersion = self.GetEXEVersion(exePath.text(), bottlePath)
             debDescription = f"{exeName} By Build By Wine Runner Easy Packager"
-            debDepends = f"{chooseWine} | {chooseWine}-bcm | {chooseWine}-dcm | com.{chooseWine}.deepin, deepin-wine-helper | com.wine-helper.deepin, fonts-wqy-microhei, fonts-wqy-zenhei"
+            debDepends = f"{chooseWine} | {chooseWine}-bcm | {chooseWine}-dcm | com.{chooseWine}.deepin, spark-dwine-helper | store.spark-app.spark-dwine-helper | deepin-wine-helper | com.wine-helper.deepin, fonts-wqy-microhei, fonts-wqy-zenhei"
             self.RunCommand(f"mkdir -pv '{debBuildPath}/DEBIAN'")
             self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/files'")
             self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/entries/applications'")
