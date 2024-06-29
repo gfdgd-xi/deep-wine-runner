@@ -537,7 +537,7 @@ BOTTLENAME="@@@BOTTLENAME@@@"
 APPVER="@@@APPVER@@@"
 EXEC_PATH="@@@EXEC_PATH@@@"
 ##### 软件在wine中的启动路径
-if [ -e "/opt/deepinwine/tools/spark_run_v4.sh"] ;then
+if [ -e "/opt/deepinwine/tools/spark_run_v4.sh" ] ;then
     START_SHELL_PATH="/opt/deepinwine/tools/spark_run_v4.sh"
 else
     START_SHELL_PATH="/opt/deepinwine/tools/run_v4.sh"
@@ -1054,7 +1054,7 @@ BOTTLENAME="@@@BOTTLENAME@@@"
 APPVER="@@@APPVER@@@"
 EXEC_PATH="@@@EXEC_PATH@@@"
 ##### 软件在wine中的启动路径
-if [ -e "/opt/deepinwine/tools/spark_run_v4.sh"] ;then
+if [ -e "/opt/deepinwine/tools/spark_run_v4.sh" ] ;then
     START_SHELL_PATH="/opt/deepinwine/tools/spark_run_v4.sh"
 else
     START_SHELL_PATH="/opt/deepinwine/tools/run_v4.sh"
@@ -2395,6 +2395,7 @@ option1_text.addItems(["Network", "Chat", "Audio", "Video", "Graphics", "Office"
 option1_text.setCurrentText("Network")
 wineFrame = QtWidgets.QHBoxLayout()
 chooseWineHelperValue = QtWidgets.QCheckBox(transla.transe("U", "使用星火wine helper\n（如不勾选默认为deepin-wine-helper）"))
+chooseWineHelperValue.setVisible(False)
 helperConfigPathLayout = QtWidgets.QHBoxLayout()
 helperConfigPathButton = QtWidgets.QPushButton("浏览")
 helperConfigPathText = QtWidgets.QLabel("点击浏览按钮指定软件包适配脚本")

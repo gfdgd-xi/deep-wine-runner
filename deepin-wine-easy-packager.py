@@ -220,7 +220,7 @@ BOTTLENAME="@@@Package@@@"
 APPVER="@@@Version@@@"
 EXEC_PATH="@@@EXEC_PATH@@@"
 ##### 软件在wine中的启动路径
-if [ -e "/opt/deepinwine/tools/spark_run_v4.sh"] ;then
+if [ -e "/opt/deepinwine/tools/spark_run_v4.sh" ] ;then
     START_SHELL_PATH="/opt/deepinwine/tools/spark_run_v4.sh"
 else
     START_SHELL_PATH="/opt/deepinwine/tools/run_v4.sh"
