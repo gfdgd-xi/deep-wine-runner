@@ -1,5 +1,5 @@
-name: Wine Runner Qemu Extra Builder (arm)
-run-name: ${{ github.action }} Building Wine Runner Qemu Extra (arm)
+name: Wine Runner Qemu Extra Builder (mips)
+run-name: ${{ github.action }} Building Wine Runner Qemu Extra (mips)
 
 on:
   push:
