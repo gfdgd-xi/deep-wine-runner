@@ -27,9 +27,9 @@ def readtxt(path):
     return str  # 返回结果
 
 fontSize = 1
-tempSys = QtWidgets.QApplication(sys.argv)
+'''tempSys = QtWidgets.QApplication(sys.argv)
 if tempSys.primaryScreen().availableGeometry().size().width() < 1366 or tempSys.primaryScreen().availableGeometry().size().height() < 768:
-    fontSize = 1.1
+    fontSize = 1.1'''
 
 defultProgramList = {
     "Architecture": "Auto",

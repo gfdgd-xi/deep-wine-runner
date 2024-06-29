@@ -2474,7 +2474,7 @@ updateThingsString = QtCore.QCoreApplication.translate("U", '''※1、精简冗�
 ※3、Wine 打包器不允许版本号开头输入首字母以及版本号不允许出现空格
 ※4、Wine 打包器生成的 deb 同时支持使用 spark-dwine-helper 和 deepin-wine-helper
 ※5、支持调用拓展 Qemu
-※6、优化小屏幕使用体验''')
+※6、新增滚动条，优化小屏幕使用体验''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
 updateTime = "2024年06月29日"
@@ -2746,8 +2746,6 @@ mainLayout.setRowStretch(1, 1)
 mainLayout.setColumnStretch(0, 2)
 mainLayout.setColumnStretch(1, 1)
 mainLayout.addWidget(returnText, 0, 1, 2, 1)
-
-window.setStyleSheet("""word-wrap: break-word;""")
 
 # 版权
 if offLineInformation.replace("\n", "").replace(" ", "") == "":
@@ -3333,6 +3331,15 @@ if o1.currentText() == "":
     canUseWine.append("没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用")
     o1.addItem("没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用")
 SetFont(setting["FontSize"])
+
+# 设置滚动条
+areaScroll = QtWidgets.QScrollArea(window)
+areaScroll.setWidgetResizable(True)
+areaScroll.setWidget(widget)
+areaScroll.setFrameShape(QtWidgets.QFrame.NoFrame)
+
+window.setCentralWidget(areaScroll)
+window.resize(int(app.primaryScreen().availableGeometry().size().width() * 0.9), int(app.primaryScreen().availableGeometry().size().height() * 0.9))
 
 # Mini 模式
 # MiniMode(True)

@@ -2348,6 +2348,7 @@ tips = transla.transe("U", """提示：
 app = QtWidgets.QApplication(sys.argv)
 window = QtWidgets.QMainWindow()
 widget = QtWidgets.QWidget()
+
 defaultFont = window.font()
 #hScroll = QtWidgets.QScrollArea()
 #hScroll.setWidget(widget)
@@ -2605,7 +2606,6 @@ cleanBottonByUOS.setChecked(True)
 chooseWineHelperValue.setChecked(True)
 e12_text.setText(f"{get_desktop_path()}/demo_1.0.0_all.deb")
 widget.setLayout(widgetLayout)
-window.setCentralWidget(widget)
 window.setWindowTitle(f"wine 应用打包器 {version}")
 window.setWindowIcon(QtGui.QIcon(iconPath))
 window.resize(int(window.frameSize().width() * 2.1), int(window.frameSize().height()))
@@ -2678,6 +2678,16 @@ allInfoList = {
 # 设置字体
 SetFont(app)
 #window.setWindowFlag(QtGui.Qt)
+
+# 设置滚动条
+areaScroll = QtWidgets.QScrollArea(window)
+areaScroll.setWidgetResizable(True)
+areaScroll.setWidget(widget)
+areaScroll.setFrameShape(QtWidgets.QFrame.NoFrame)
+
+window.setCentralWidget(areaScroll)
+window.resize(int(app.primaryScreen().availableGeometry().size().width() * 0.9), int(app.primaryScreen().availableGeometry().size().height() * 0.9))
+
 window.show()
 sys.exit(app.exec_())
 # Flag：解包只读control和解包全部读取
