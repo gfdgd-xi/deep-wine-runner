@@ -17,7 +17,7 @@ import traceback
 try:
     import pyquery
 except:
-    os.system("python3 -m pip install --upgrade pyquery --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple")
+    os.system("python3 -m pip install --upgrade pyquery --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple --break-system-packages")
 
 if "--help" in sys.argv:
     print("作者：gfdgd xi")
