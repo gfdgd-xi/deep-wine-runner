@@ -4,7 +4,7 @@
 sudo apt update
 sudo apt install debootstrap qemu-user-static -y
 bottlePath=./system-bottle
-sudo debootstrap --arch=$1 $2 $bottlePath
+sudo debootstrap --arch=$1 $2 $bottlePath $3
 sudo bash .github/workflows/pardus-chroot $bottlePath
 # 配置 git
 sudo chroot $bottlePath apt update

@@ -14,7 +14,7 @@ jobs:
 
         - name: Configure System
           run: |
-            bash .github/workflows/configure-building-enviroment-without-x86.sh mips64el buster
+            bash .github/workflows/configure-building-enviroment-without-x86.sh mips64el buster https://archive.debian.org/debian/
 
         - name: Building Python3
           run: |
