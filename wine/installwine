@@ -272,6 +272,8 @@ class DownloadThread(QtCore.QThread):
         except:
             traceback.print_exc()
             self.MessageBoxError.emit(traceback.format_exc())
+            self.ChangeDialog.emit(self.dialog, 100, 100, 100)
+            self.Finish.emit()
 
 def MessageBoxInfo(info):
     QtWidgets.QMessageBox.information(window, "提示", info)
