@@ -14,7 +14,7 @@ jobs:
 
         - name: Configure System
           run: |
-            bash .github/workflows/configure-building-enviroment-without-x86.sh arm64 buster
+            bash .github/workflows/configure-building-enviroment-without-x86.sh mips64el buster
 
         - name: Building Python3
           run: |
@@ -52,7 +52,7 @@ jobs:
 
         - name: Configure System
           run: |
-            bash .github/workflows/configure-building-enviroment-without-x86.sh arm64 bullseye
+            bash .github/workflows/configure-building-enviroment-without-x86.sh mips64el bullseye
 
         - name: Building Python3
           run: |
@@ -90,7 +90,7 @@ jobs:
 
         - name: Configure System
           run: |
-            bash .github/workflows/configure-building-enviroment-without-x86.sh arm64 bookworm
+            bash .github/workflows/configure-building-enviroment-without-x86.sh mips64el bookworm
 
         - name: Building Python3
           run: |
