@@ -15,6 +15,6 @@ if [ $# -eq 0 ]; then
     echo 进入交互环境：
     bash
 else
-    bash -c $@
+    $*
 fi
 exit $?
