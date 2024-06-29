@@ -2247,7 +2247,14 @@ def DelTab():
 def ChangeBottleName():
     global bottleNameLock
     global bottleNameChangeLock
-    e1_text.setText(e1_text.text().replace(" ", ""))
+    replaceForum = [e1_text, e2_text]
+    for i in replaceForum:
+        if " " in i.text():
+            i.setText(i.text().replace(" ", ""))
+    # 进行版本号限制
+    if len(e2_text.text()) > 0:
+        if ord(e2_text.text()[0]) < 48 or ord(e2_text.text()[0]) > 57:
+            e2_text.setText(e2_text.text()[1:])
     if bottleNameLock:
         return
     if os.path.basename(e6_text.text()) == ".wine" or e6_text.text() == "":
@@ -2409,6 +2416,7 @@ build7z.clicked.connect(Build7zButton_Clicked)
 installDeb.clicked.connect(InstallDeb)
 wineFrame.addWidget(wineVersion)
 e1_text.textChanged.connect(ChangeBottleName)
+e2_text.textChanged.connect(ChangeBottleName)
 e5_text.textChanged.connect(LockBottleName)
 e6_text.textChanged.connect(ChangeBottleName)
 e7_text.textChanged.connect(ChangeTapTitle)
