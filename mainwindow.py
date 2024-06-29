@@ -1209,8 +1209,7 @@ def UOSPackageScript():
 def RunVM():
     threading.Thread(target=os.system, args=[f"bash '{programPath}/RunVM.sh'"]).start()
 
-def CleanProgram():
-    OpenTerminal(f"{programPath}/clean-unuse-program.py")
+
 
 class UpdateWindow():
     data = {}
@@ -2470,7 +2469,11 @@ exe路径\' 参数 \'
 5、wine 容器如果没有指定，则会默认为 ~/.wine；
 6、如果可执行文件比较大的话，会出现点击“获取该程序运行情况”出现假死的情况，因为正在后台读取 SHA1，只需要等一下即可（读取速度依照您电脑处理速度、读写速度、可执行文件大小等有关）；
 7、如果非 X86 的用户的 UOS 专业版用户想要使用的话，只需要在应用商店安装一个 Wine 版本微信即可在本程序选择正确的 Wine 运行程序；''')
-updateThingsString = QtCore.QCoreApplication.translate("U", '''''')
+updateThingsString = QtCore.QCoreApplication.translate("U", '''※1、精简冗余组件
+※2、修复 Wine 安装器在文件下载失败后无法自动关闭进度条和解除控件禁用的问题
+※3、Wine 打包器不允许版本号开头输入首字母以及版本号不允许出现空格
+4、Wine 打包器生成的 deb 同时支持使用 spark-dwine-helper 和 deepin-wine-helper
+5、支持调用拓展 Qemu''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
 updateTime = "2024年06月29日"
@@ -2784,7 +2787,6 @@ installBox86CN = QtWidgets.QAction(QtGui.QIcon.fromTheme("box"), QtCore.QCoreApp
 installBox86 = QtWidgets.QAction(QtGui.QIcon.fromTheme("box"), QtCore.QCoreApplication.translate("U", "安装 Box86/Box64 日构建（国外 Github 源）"))
 installBox86Own = QtWidgets.QAction(QtGui.QIcon.fromTheme("box"), QtCore.QCoreApplication.translate("U", "安装 Box86/Box64（使用自建源，支持 riscv64）"))
 installLat = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "安装 lat（只限 Loongarch64 架构）"))
-addWineDebMirrorForDeepin20 = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/wine.png"), QtCore.QCoreApplication.translate("U", "添加 Wine 运行器源以安装较新版本的 WineHQ（支持 Deepin20/Debian10）"))
 p2 = QtWidgets.QAction(QtGui.QIcon.fromTheme("settings"), QtCore.QCoreApplication.translate("U", "设置程序(&S)"))
 enabledAll = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "强制启用所有被禁用的组件（不推荐）"))
 setMiniFont = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "临时设置小字体"))
@@ -2792,31 +2794,22 @@ setTinyFont = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "临时�
 setDefaultFont = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "临时设置默认字体"))
 p3 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(47), QtCore.QCoreApplication.translate("U", "清空软件历史记录(&C)"))
 cleanCache = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(47), QtCore.QCoreApplication.translate("U", "清空软件缓存"))
-cleanProgramUnuse = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(47), QtCore.QCoreApplication.translate("U", "删除程序组件"))
 p4 = QtWidgets.QAction(QtGui.QIcon.fromTheme("exit"), QtCore.QCoreApplication.translate("U", "退出程序(&E)"))
 programmenu.addAction(p1)
-#programmenu.addAction(installWineOnDeepin23)
-#programmenu.addAction(installWineOnDeepin23Alpha)
 programmenu.addAction(installWineHQ)
 programmenu.addAction(installWineHQOrg)
-programmenu.addAction(addWineDebMirrorForDeepin20)
 programmenu.addAction(installMoreWine)
 programmenu.addAction(downloadChrootBottle)
 programmenu.addAction(installBox86CN)
 programmenu.addAction(installBox86)
 programmenu.addAction(installBox86Own)
 programmenu.addAction(installLat)
-#programmenu.addSeparator()
-#programmenu.addAction(setMiniFont)
-#programmenu.addAction(setTinyFont)
-#programmenu.addAction(setDefaultFont)
 programmenu.addSeparator()
 programmenu.addAction(p2)
 programmenu.addAction(enabledAll)
 programmenu.addSeparator()
 programmenu.addAction(p3)
 programmenu.addAction(cleanCache)
-programmenu.addAction(cleanProgramUnuse)
 programmenu.addSeparator()
 programmenu.addAction(p4)
 setDefaultFont.triggered.connect(lambda: SetFont(1))
@@ -2828,7 +2821,6 @@ p1.triggered.connect(InstallWine)
 installWineHQ.triggered.connect(InstallWineHQ)
 installWineHQOrg.triggered.connect(lambda: threading.Thread(target=OpenTerminal, args=[f"{programPath}/InstallNewWineHQOrg.sh"]).start())
 installLat.triggered.connect(lambda: threading.Thread(target=OpenTerminal, args=[f"{programPath}/InstallLat.sh"]).start())
-addWineDebMirrorForDeepin20.triggered.connect(lambda: threading.Thread(target=OpenTerminal, args=[f"bash '{programPath}/AddWineDebMirrorForDeepin20.sh'"]).start())
 def InstallMoreWine():
     os.system(f"'{programPath}/wine/installwine'")
     # 更新 Wine 列表
@@ -2848,7 +2840,6 @@ installBox86.triggered.connect(lambda: OpenTerminal(f"sudo bash '{programPath}/I
 installBox86Own.triggered.connect(lambda: OpenTerminal(f"sudo bash '{programPath}/InstallBox86-own.sh'"))
 p3.triggered.connect(CleanProgramHistory)
 cleanCache.triggered.connect(CleanProgramCache)
-cleanProgramUnuse.triggered.connect(CleanProgram)
 p4.triggered.connect(window.close)
 
 wineOption = menu.addMenu(QtCore.QCoreApplication.translate("U", "Wine(&W)"))
@@ -3218,7 +3209,6 @@ h5 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "更新这个程�
 appreciate = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "赞赏作者/请作者喝杯茶"))
 programInformation = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "获取程序公告（也可以在这里看程序安装/打开量）"))
 h6 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "反馈这个程序的建议和问题"))
-fenUpload = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "程序评分"))
 h7 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(9), QtCore.QCoreApplication.translate("U", "关于这个程序"))
 h8 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(9), QtCore.QCoreApplication.translate("U", "关于 Qt"))
 gfdgdxiio = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(20), QtCore.QCoreApplication.translate("U", "作者个人站"))
@@ -3247,7 +3237,6 @@ videoHelp.addAction(videoHelpAction)
 help.addSeparator()
 help.addAction(h5)
 help.addAction(h6)
-help.addAction(fenUpload)
 help.addAction(programInformation)
 help.addAction(appreciate)
 help.addAction(h7)
@@ -3270,7 +3259,6 @@ h4.triggered.connect(ThankWindow)
 wikiHelp.triggered.connect(lambda: webbrowser.open_new_tab("https://gfdgd-xi.github.io/wine-runner-wiki"))
 h5.triggered.connect(UpdateWindow.ShowWindow)
 h6.triggered.connect(WineRunnerBugUpload)
-fenUpload.triggered.connect(lambda: threading.Thread(target=os.system, args=[f"python3 '{programPath}/ProgramFen.py'"]).start())
 h7.triggered.connect(about_this_program)
 h8.triggered.connect(lambda: QtWidgets.QMessageBox.aboutQt(widget))
 hm1_1.triggered.connect(lambda: webbrowser.open_new_tab("https://gitee.com/gfdgd-xi/uengine-runner"))
@@ -3311,7 +3299,7 @@ if os.path.exists("/etc/arch-release") or os.path.exists("/etc/fedora-release"):
         for i in [p1]:
             i.setDisabled(True)    
     for i in [installLat, installWineHQ, installWineHQOrg,
-              installBox86CN, installBox86, installBox86Own, addWineDebMirrorForDeepin20]:
+              installBox86CN, installBox86, installBox86Own]:
         i.setDisabled(True)
     for i in actionList:
         i.setDisabled(True)

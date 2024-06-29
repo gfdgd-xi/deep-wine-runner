@@ -62,7 +62,6 @@ package-deb:
 	cp -rv QemuRun.py deb/opt/apps/deepin-wine-runner
 	cp -rv kill.sh deb/opt/apps/deepin-wine-runner
 	cp -rv updatekiller.py deb/opt/apps/deepin-wine-runner
-	cp -rv AddWineDebMirrorForDeepin20.sh deb/opt/apps/deepin-wine-runner
 	cp -rv InstallNewWineHQOrg.sh deb/opt/apps/deepin-wine-runner
 	cp -rv InstallWineOnDeepin23Alpha.py deb/opt/apps/deepin-wine-runner
 	cp -rv wrestool deb/opt/apps/deepin-wine-runner
@@ -100,7 +99,6 @@ package-deb:
 	cp -rv geek.exe deb/opt/apps/deepin-wine-runner
 	#cp -rv uengineapi deb/opt/apps/deepin-wine-runner
 	cp -rv getxmlimg.py deb/opt/apps/deepin-wine-runner
-	cp -rv ProgramFen.py deb/opt/apps/deepin-wine-runner
 	cp -rv information.json deb/opt/apps/deepin-wine-runner
 	cp -rv InstallMono.py deb/opt/apps/deepin-wine-runner
 	cp -rv InstallMsxml.py deb/opt/apps/deepin-wine-runner
@@ -128,7 +126,6 @@ package-deb:
 	cp -rv sparkstore.list deb/opt/apps/deepin-wine-runner
 	cp -rv arm-package.7z deb/opt/apps/deepin-wine-runner
 	#cp -rv exa.7z deb/opt/apps/deepin-wine-runner
-	cp -rv clean-unuse-program.py deb/opt/apps/deepin-wine-runner
 	cp -rv InstallNewWineHQ.sh deb/opt/apps/deepin-wine-runner
 	cp -rv cleanbottle.sh deb/opt/apps/deepin-wine-runner
 	cp -rv StartVM.sh deb/opt/apps/deepin-wine-runner
