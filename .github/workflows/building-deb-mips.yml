@@ -39,7 +39,7 @@ jobs:
             echo "fileName=$(ls -1 *.deb)" >> $GITHUB_OUTPUT
 
         - name: Upload Result
-          uses: actions/upload-artifact@v1
+          uses: actions/upload-artifact@v3
           with:
             name: spark-deepin-wine-runner-qemu-system-extra~buster
             path: ${{ steps.buildingQemuPackager.outputs.fileName }}
@@ -73,7 +73,7 @@ jobs:
             echo "fileName=$(ls -1 *.deb)" >> $GITHUB_OUTPUT
 
         - name: Upload Result
-          uses: actions/upload-artifact@v1
+          uses: actions/upload-artifact@v3
           with:
             name: spark-deepin-wine-runner-qemu-system-extra~bullseye
             path: ${{ steps.buildingQemuPackager.outputs.fileName }}
@@ -107,7 +107,7 @@ jobs:
             echo "fileName=$(ls -1 *.deb)" >> $GITHUB_OUTPUT
 
         - name: Upload Result
-          uses: actions/upload-artifact@v1
+          uses: actions/upload-artifact@v3
           with:
             name: spark-deepin-wine-runner-qemu-system-extra~bookworm
             path: ${{ steps.buildingQemuPackager.outputs.fileName }}

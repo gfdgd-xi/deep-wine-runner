@@ -11,6 +11,6 @@ sudo chroot $bottlePath apt update
 sudo chroot $bottlePath apt install git -y
 sudo chroot $bottlePath git clone https://github.com/gfdgd-xi/deep-wine-runner-qemu-system --depth=1
 # 修改版本号
-bash .github/workflows/run-command-in-chroot.sh sed -i "'s/) UNRELEASED; urgency=medium/~$2) UNRELEASED; urgency=medium/g'" $bottlePath/deep-wine-runner-qemu-system/debian/changelog
+sudo sed -i "s/) UNRELEASED; urgency=medium/~$2) UNRELEASED; urgency=medium/g" $bottlePath/deep-wine-runner-qemu-system/debian/changelog
 bash .github/workflows/run-command-in-chroot.sh .github/workflows/configure-building-enviroment.sh
 exit 0
