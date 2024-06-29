@@ -2472,8 +2472,9 @@ exe路径\' 参数 \'
 updateThingsString = QtCore.QCoreApplication.translate("U", '''※1、精简冗余组件
 ※2、修复 Wine 安装器在文件下载失败后无法自动关闭进度条和解除控件禁用的问题
 ※3、Wine 打包器不允许版本号开头输入首字母以及版本号不允许出现空格
-4、Wine 打包器生成的 deb 同时支持使用 spark-dwine-helper 和 deepin-wine-helper
-5、支持调用拓展 Qemu''')
+※4、Wine 打包器生成的 deb 同时支持使用 spark-dwine-helper 和 deepin-wine-helper
+※5、支持调用拓展 Qemu
+※6、优化小屏幕使用体验''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
 updateTime = "2024年06月29日"
@@ -2664,7 +2665,7 @@ createDesktopLink.addWidget(combobox1)
 button5 = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "创建到桌面"))
 button5.clicked.connect(make_desktop_on_desktop)
 createDesktopLink.addWidget(button5)
-saveDesktopFileOnLauncher = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "创建到开始菜单"))
+saveDesktopFileOnLauncher = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "创建到启动器"))
 saveDesktopFileOnLauncher.clicked.connect(make_desktop_on_launcher)
 createDesktopLink.addWidget(saveDesktopFileOnLauncher)
 leftDownLayout.addLayout(createDesktopLink)
@@ -2682,11 +2683,14 @@ uninstallProgram = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", 
 uninstallProgram.clicked.connect(lambda: RunWineProgram(f"{programPath}/geek.exe"))
 programManager.addWidget(QtWidgets.QLabel(" "*5), 1, 3, 1, 1)
 programManager.addWidget(uninstallProgram, 1, 4, 1, 1)
-getLoseDll = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "检测静态下程序缺少DLL"))
+getLoseDll = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "简易dll检测工具"))
 getLoseDll.clicked.connect(GetLoseDll)
 programManager.addWidget(QtWidgets.QLabel(" "*5), 1, 5, 1, 1)
 programManager.addWidget(getLoseDll, 1, 6, 1, 1)
 programManager.addWidget(QtWidgets.QLabel(" "*5), 1, 7, 1, 1)
+wineBottleReboot = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "重启指定Wine容器"))
+wineBottleReboot.clicked.connect(lambda: RunWineProgram(f"wineboot' '-k"))
+programManager.addWidget(wineBottleReboot, 1, 8, 1, 1)
 programManager.addWidget(QtWidgets.QLabel(" "*5), 1, 9, 1, 1)
 programManager.addItem(QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum), 1, 11, 1, 1)
 programManager.addWidget(QtWidgets.QLabel(QtCore.QCoreApplication.translate("U", "WINE配置：")), 2, 0, 1, 1)
@@ -2702,12 +2706,10 @@ programManager.addWidget(button_r_6, 3, 4, 1, 1)
 sparkWineSetting = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "星火wine配置"))
 sparkWineSetting.clicked.connect(lambda: threading.Thread(target=os.system, args=["bash /opt/apps/store.spark-app.spark-dwine-helper/files/deepinwine/tools/spark-dwine-helper/wine-app-launcher/wine-app-launcher.sh"]).start())
 programManager.addWidget(sparkWineSetting, 3, 6, 1, 1)
-wineAutoConfig = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "自动/手动配置 Wine 容器"))
+wineAutoConfig = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "Wine容器自动配置工具"))
 wineAutoConfig.clicked.connect(WineBottonAutoConfig)
 programManager.addWidget(wineAutoConfig, 3, 8, 1, 1)
-wineBottleReboot = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("U", "重启指定Wine容器"))
-wineBottleReboot.clicked.connect(lambda: RunWineProgram(f"wineboot' '-k"))
-programManager.addWidget(wineBottleReboot, 3, 10, 1, 1)
+
 # 权重
 button5.setSizePolicy(size)
 saveDesktopFileOnLauncher.setSizePolicy(size)
@@ -2745,6 +2747,8 @@ mainLayout.setColumnStretch(0, 2)
 mainLayout.setColumnStretch(1, 1)
 mainLayout.addWidget(returnText, 0, 1, 2, 1)
 
+window.setStyleSheet("""word-wrap: break-word;""")
+
 # 版权
 if offLineInformation.replace("\n", "").replace(" ", "") == "":
     copy = QtWidgets.QLabel(f"""程序版本：{version}，<b>提示：Wine 无法保证可以运行所有的 Windows 程序，如果想要运行更多 Windows 程序，可以考虑虚拟机和双系统</b><br/>
@@ -2755,6 +2759,7 @@ else:
 <b>注：部分二进制兼容层会自动注册 binfmt（如原版的 Box86/64、Qemu User Static），则意味着无需在 Wine 版本那里特别指定兼容层，直接指定 Wine 即可</b><br/>
 {offLineInformation}<br/>
 ©2020~{time.strftime("%Y")} gfdgd xi""")
+copy.setWordWrap(True)
 mainLayout.addWidget(copy, 2, 0, 1, 1)
 
 # 程序运行
@@ -3207,7 +3212,7 @@ h3 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "更新内容"))
 h4 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "鸣谢名单"))
 h5 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "更新这个程序"))
 appreciate = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "赞赏作者/请作者喝杯茶"))
-programInformation = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "获取程序公告（也可以在这里看程序安装/打开量）"))
+programInformation = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "获取程序公告"))
 h6 = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "反馈这个程序的建议和问题"))
 h7 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(9), QtCore.QCoreApplication.translate("U", "关于这个程序"))
 h8 = QtWidgets.QAction(QtWidgets.QApplication.style().standardIcon(9), QtCore.QCoreApplication.translate("U", "关于 Qt"))
