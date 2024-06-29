@@ -54,10 +54,6 @@ jobs:
           run: |
             bash .github/workflows/configure-building-enviroment-without-x86.sh arm64 bullseye
 
-        - name: Building Python3
-          run: |
-            bash .github/workflows/run-command-in-chroot.sh .github/workflows/configure-python3.sh
-
         - name: Get Resources
           run: |
             CPU_CORES=$(($(grep -c processor < /proc/cpuinfo)*2))
@@ -91,10 +87,6 @@ jobs:
         - name: Configure System
           run: |
             bash .github/workflows/configure-building-enviroment-without-x86.sh arm64 bookworm
-
-        - name: Building Python3
-          run: |
-            bash .github/workflows/run-command-in-chroot.sh .github/workflows/configure-python3.sh
 
         - name: Get Resources
           run: |
