@@ -154,6 +154,9 @@ buildvbox::buildvbox(QString isoPath, int id, int vm){
 
         //vm.MountDisk(QDir::homePath() + "/Qemu/Windows/Windows.qcow2");
         vm.MountMainDisk(QDir::homePath() + "/Qemu/Windows/Windows.qcow2");
+        if(QFile::exists("/opt/apps/deepin-wine-runner-qemu-system-extra/files/resources/virtio-win.iso")) {
+            vm.MountISO("/opt/apps/deepin-wine-runner-qemu-system-extra/files/resources/virtio-win.iso", "storage_controller_2", 1, 3);
+        }
         if(!setISOAlready){
             vm.MountISO(isoPath, "storage_controller_1", 0, 1);
             switch (id) {
