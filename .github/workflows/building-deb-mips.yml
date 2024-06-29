@@ -75,7 +75,7 @@ jobs:
         - name: Upload Result
           uses: actions/upload-artifact@v1
           with:
-            name: spark-deepin-wine-runner-qemu-system-extra~buster
+            name: spark-deepin-wine-runner-qemu-system-extra~bullseye
             path: ${{ steps.buildingQemuPackager.outputs.fileName }}
 
   Debian12:
@@ -109,6 +109,6 @@ jobs:
         - name: Upload Result
           uses: actions/upload-artifact@v1
           with:
-            name: spark-deepin-wine-runner-qemu-system-extra~buster
+            name: spark-deepin-wine-runner-qemu-system-extra~bookworm
             path: ${{ steps.buildingQemuPackager.outputs.fileName }}
 
