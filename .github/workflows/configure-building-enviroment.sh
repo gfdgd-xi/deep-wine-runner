@@ -22,6 +22,10 @@ if [[ `arch` != "x86_64" ]]; then
     cd qemu-*/
     sed -i "s/gcc-s390x-linux-gnu,//g" debian/control
     sed -i "s/gcc-alpha-linux-gnu,//g" debian/control
+    sed -i "s/gcc-sparc64-linux-gnu,//g" debian/control
+    sed -i "s/gcc-powerpc64-linux-gnu,//g" debian/control
+    sed -i "s/gcc-hppa-linux-gnu,//g" debian/control
+    sed -i "s/gcc-riscv64-linux-gnu,//g" debian/control
     apt build-dep . -y
     cd ..
 fi
