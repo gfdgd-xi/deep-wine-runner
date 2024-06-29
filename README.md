@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 3.9.1</h1>
+<h1 align="center">Wine 运行器 3.9.2</h1>
 <hr>
 <a href='https://gitee.com/gfdgd-xi/deep-wine-runner/stargazers'><img src='https://gitee.com/gfdgd-xi/deep-wine-runner/badge/star.svg?theme=dark' alt='star'></img></a>
 <a href='https://gitee.com/gfdgd-xi/deep-wine-runner/members'><img src='https://gitee.com/gfdgd-xi/deep-wine-runner/badge/fork.svg?theme=dark' alt='fork'></img></a>  
@@ -157,6 +157,17 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志 
+### 3.9.2（2024/06/29）
+**※1、移除冗余组件**  
+**※2、修复 Wine 安装器在文件下载失败后无法自动关闭进度条和解除控件禁用的问题**  
+**※3、Wine 打包器不允许版本号开头输入首字母以及版本号不允许出现空格**  
+**※4、Wine 打包器生成的 deb 同时支持使用 spark-dwine-helper 和 deepin-wine-helper**  
+**※5、支持调用拓展 Qemu**  
+**※6、新增滚动条，优化小屏幕使用体验**  
+
+![image.png](https://storage.deepin.org/thread/202406290742035395_image.png)
+
+
 ### 3.9.1（2024/06/07）
 **※1、修复 Windows 虚拟机安装工具安装程序在 Mips 架构无法正确启动虚拟机的问题**  
 **※2、优化打包器依赖**  
