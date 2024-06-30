@@ -16,6 +16,7 @@ if [[ 0 == $? ]]; then
     exit
 fi
 # 检查是否有 QEMU
+export PATH=/opt/apps/deepin-wine-runner-qemu-system-extra/files/usr/local/bin:$PATH
 which qemu-system-x86_64
 if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
     if [[ -f "$HOME/.config/deepin-wine-runner/QemuSetting.json" ]]; then
@@ -23,6 +24,10 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
         cd `dirname $0`
         python3 ./VM/StartQemu.py
         exit
+    fi
+    # 判断是否有安装增强 Qemu
+    if [[ -f /opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh ]]; then
+        qemuMore=/opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh
     fi
     # 查看CPU个数
     CpuSocketNum=`cat /proc/cpuinfo | grep "cpu cores" | uniq | wc -l`
@@ -63,7 +68,7 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
         ./VM/kvm-ok
         if [[ $? == 0 ]] && [[ `arch` == "x86_64" ]]; then
             echo X86 架构，使用 kvm 加速
-            qemu-system-x86_64 --enable-kvm -cpu host --hda "$HOME/Qemu/Windows/Windows.qcow2" \
+            $qemuMore qemu-system-x86_64 --enable-kvm -cpu host --hda "$HOME/Qemu/Windows/Windows.qcow2" \
                 -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) \
                 -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI \
                 -device AC97 -device ES1370 -device intel-hda -device hda-duplex  \
@@ -88,6 +93,9 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
                 qemuPath="bwrap --dev-bind / / --bind ./VM/MipsQemu/usr/lib/mips64el-linux-gnuabi64/qemu/ui-gtk.so /usr/lib/mips64el-linux-gnuabi64/qemu/ui-gtk.so ./VM/MipsQemu/usr/bin/qemu-system-x86_64"
             fi
         fi
+        if [[ $qemuMore != "" ]]; then
+            qemuPath=$qemuMore 
+        fi
         echo 不使用 kvm 加速
         $qemuPath --hda "$HOME/Qemu/Windows/Windows.qcow2" \
             -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) \
@@ -111,7 +119,7 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
         echo $qemuUEFI
         ./VM/kvm-ok
         if [[ $? == 0 ]] && [[ `arch` == "aarch64" ]]; then
-            qemu-system-arm --enable-kvm --hda "$HOME/Qemu/Windows/Windows.qcow2" \
+            $qemuMore qemu-system-arm --enable-kvm --hda "$HOME/Qemu/Windows/Windows.qcow2" \
                 -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) \
                 -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI \
                 -cpu max -M virt -device virtio-gpu-pci \
@@ -123,7 +131,7 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
                 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
             exit
         fi
-        qemu-system-arm --hda "$HOME/Qemu/Windows/Windows.qcow2" \
+        $qemuMore qemu-system-arm --hda "$HOME/Qemu/Windows/Windows.qcow2" \
             -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) \
             -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI \
             -cpu max -M virt -device virtio-gpu-pci \
@@ -149,7 +157,7 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
         echo $qemuUEFI
         ./VM/kvm-ok
         if [[ $? == 0 ]] && [[ `arch` == "aarch64" ]]; then
-            qemu-system-aarch64 --enable-kvm --hda "$HOME/Qemu/Windows/Windows.qcow2" \
+            $qemuMore qemu-system-aarch64 --enable-kvm --hda "$HOME/Qemu/Windows/Windows.qcow2" \
                 -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) \
                 -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI \
                 -cpu max -M virt \
@@ -162,7 +170,7 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
                 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
             exit
         fi
-        qemu-system-aarch64 --hda "$HOME/Qemu/Windows/Windows.qcow2" \
+        $qemuMore qemu-system-aarch64 --hda "$HOME/Qemu/Windows/Windows.qcow2" \
             -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) \
             -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI \
             -cpu max -M virt \
