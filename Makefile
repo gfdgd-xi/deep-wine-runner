@@ -8,6 +8,13 @@ build:
 	if [ ! -f python3-exec/usr/local/bin/python3 ]; then cd qemu-build ; ../qemu/configure --target-list=x86_64-linux-user,aarch64-linux-user,loongarch64-linux-user,i386-linux-user,arm-linux-user,aarch64-softmmu,arm-softmmu,loongarch64-softmmu,x86_64-softmmu --enable-kvm --enable-slirp --enable-system --enable-tools --enable-vhost-user --enable-slirp --enable-kvm ; fi
 	cd qemu-build ; make -j$(CPU_CORES)
 
+build-user-x86-only:
+	mkdir -p qemu-build
+	if [ -f python3-exec/usr/local/bin/python3 ]; then cd qemu-build ; ../qemu/configure --target-list=x86_64-linux-user --python=../python3-exec/usr/local/bin/python3; fi
+	if [ ! -f python3-exec/usr/local/bin/python3 ]; then cd qemu-build ; ../qemu/configure --target-list=x86_64-linux-user ; fi
+	cd qemu-build ; make -j$(CPU_CORES)
+
+
 build-python:
 	mkdir -p python3-build
 	cd python3-build ; ../python3/configure 
