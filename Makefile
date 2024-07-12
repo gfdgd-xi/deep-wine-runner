@@ -49,6 +49,7 @@ package-deb:
 	cp -rv VM-source/*.fd VM
 	cp -rv wine/ deb/opt/apps/deepin-wine-runner/
 	cp -rv Test/ deb/opt/apps/deepin-wine-runner/
+	cp -rv dxvk/ deb/opt/apps/deepin-wine-runner
 	cp -rv information.json package-script
 	zip -v -q -r package-script.zip package-script
 	cp -rv InstallBox86-cn.sh deb/opt/apps/deepin-wine-runner/
@@ -116,7 +117,6 @@ package-deb:
 	cp -rv UpdateGeek.sh deb/opt/apps/deepin-wine-runner
 	cp -rv AppStore.py deb/opt/apps/deepin-wine-runner
 	cp -rv InstallWineOnDeepin23.py deb/opt/apps/deepin-wine-runner
-	cp -rv dxvk.7z deb/opt/apps/deepin-wine-runner
 	cp -rv InstallFont.py deb/opt/apps/deepin-wine-runner
 	cp -rv CheckDLL deb/opt/apps/deepin-wine-runner
 	cp -rv InstallLat.sh deb/opt/apps/deepin-wine-runner
