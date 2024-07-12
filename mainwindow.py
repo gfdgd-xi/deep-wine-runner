@@ -1018,11 +1018,6 @@ def InstallMSXML():
     OpenTerminal(f"'{programPath}/InstallMsxml.py' '{wineBottonPath}' '{wine[o1.currentText()]}' {int(setting['RuntimeCache'])}")
 
 def InstallDXVK():
-    if not os.path.exists(f"{programPath}/dxvk"):
-        if os.system(f"7z x -y \"{programPath}/dxvk.7z\" -o\"{programPath}\""):
-            QtWidgets.QMessageBox.critical(widget, "错误", "无法解压资源")
-            return
-        os.remove(f"{programPath}/dxvk.7z")
     if e1.currentText() == "":
         wineBottonPath = setting["DefultBotton"]
     else:
