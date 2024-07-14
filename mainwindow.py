@@ -3327,14 +3327,19 @@ if o1.currentText() == "":
     o1.addItem("没有识别到任何Wine，请在菜单栏“程序”安装Wine或安装任意Wine应用")
 SetFont(setting["FontSize"])
 
-# 设置滚动条
-areaScroll = QtWidgets.QScrollArea(window)
-areaScroll.setWidgetResizable(True)
-areaScroll.setWidget(widget)
-areaScroll.setFrameShape(QtWidgets.QFrame.NoFrame)
+window.setCentralWidget(widget)
+# 判断是否为小屏幕，是则设置滚动条并全屏
+if (window.frameGeometry().width() > app.primaryScreen().availableGeometry().size().width() * 0.8 or 
+   window.frameGeometry().height() > app.primaryScreen().availableGeometry().size().height() * 0.9):
+    # 设置滚动条
+    areaScroll = QtWidgets.QScrollArea(window)
+    areaScroll.setWidgetResizable(True)
+    areaScroll.setWidget(widget)
+    areaScroll.setFrameShape(QtWidgets.QFrame.NoFrame)
+    window.setCentralWidget(areaScroll)
+    window.showMaximized()  # 设置全屏
+window.show()
 
-window.setCentralWidget(areaScroll)
-window.resize(int(app.primaryScreen().availableGeometry().size().width() * 0.9), int(app.primaryScreen().availableGeometry().size().height() * 0.9))
 
 # Mini 模式
 # MiniMode(True)

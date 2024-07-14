@@ -2669,14 +2669,18 @@ allInfoList = {
 SetFont(app)
 #window.setWindowFlag(QtGui.Qt)
 
-# 设置滚动条
-areaScroll = QtWidgets.QScrollArea(window)
-areaScroll.setWidgetResizable(True)
-areaScroll.setWidget(widget)
-areaScroll.setFrameShape(QtWidgets.QFrame.NoFrame)
-
-window.setCentralWidget(areaScroll)
-window.resize(int(app.primaryScreen().availableGeometry().size().width() * 0.9), int(app.primaryScreen().availableGeometry().size().height() * 0.9))
+window.setCentralWidget(widget)
+# 判断是否为小屏幕，是则设置滚动条并全屏
+if (window.frameGeometry().width() > app.primaryScreen().availableGeometry().size().width() * 0.8 or 
+   window.frameGeometry().height() > app.primaryScreen().availableGeometry().size().height() * 0.9):
+    # 设置滚动条
+    areaScroll = QtWidgets.QScrollArea(window)
+    areaScroll.setWidgetResizable(True)
+    areaScroll.setWidget(widget)
+    areaScroll.setFrameShape(QtWidgets.QFrame.NoFrame)
+    window.setCentralWidget(areaScroll)
+    window.showMaximized()  # 设置全屏
+window.show()
 
 window.show()
 sys.exit(app.exec_())
