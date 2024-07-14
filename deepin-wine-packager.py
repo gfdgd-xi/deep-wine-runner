@@ -2255,20 +2255,10 @@ def ChangeBottleName():
     if len(e2_text.text()) > 0:
         if ord(e2_text.text()[0]) < 48 or ord(e2_text.text()[0]) > 57:
             e2_text.setText(e2_text.text()[1:])
-    if bottleNameLock:
-        return
-    if os.path.basename(e6_text.text()) == ".wine" or e6_text.text() == "":
-        bottleNameChangeLock = True
-        e5_text.setText(e1_text.text())
-        return
+    # 调整逻辑，容器名默认与包名相同
     bottleNameChangeLock = True
-    e5_text.setText(os.path.basename(e6_text.text().replace(" ", "")))
+    e5_text.setText(e1_text.text())
 
-def LockBottleName():
-    global bottleNameLock
-    if bottleNameChangeLock:
-        return
-    bottleNameLock = True
 
 # 获取当前语言
 def get_now_lang()->"获取当前语言":
@@ -2419,14 +2409,13 @@ installDeb.clicked.connect(InstallDeb)
 wineFrame.addWidget(wineVersion)
 e1_text.textChanged.connect(ChangeBottleName)
 e2_text.textChanged.connect(ChangeBottleName)
-e5_text.textChanged.connect(LockBottleName)
 e6_text.textChanged.connect(ChangeBottleName)
 e7_text.textChanged.connect(ChangeTapTitle)
 widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "要打包的 deb 包的包名（※必填）：")), 0, 0, 1, 1)
 widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "deb 包版本号（※必填）：")), 1, 0, 1, 1)
 widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "deb 包说明（※必填）：")), 2, 0, 1, 1)
 widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "deb 包维护者（※必填）：")), 3, 0, 1, 1)
-widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "要解压 wine 容器的名称（※必填）：")), 4, 0, 1, 1)
+widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "Wine 容器名称（※必填，推荐默认）：")), 4, 0, 1, 1)
 widgetLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "要打包 wine 容器的路径（※必填）：")), 5, 0, 1, 1)
 desktopIconTab = QtWidgets.QTabWidget()
 controlWidget = QtWidgets.QWidget()
