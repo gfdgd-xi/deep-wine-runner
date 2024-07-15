@@ -142,6 +142,10 @@ def runexebutton(self):
 class QT:
     message = None
     def ShowWineReturn(things):
+        global unUseLnk
+        unUseLnk = True
+        # 不显示超链接
+        #returnText.setStyleSheet(returnText.styleSheet() + "a {color: white; text-decoration: none;}")
         returnText.insertPlainText(things)
 
     def ShowHistory(temp):
@@ -2718,8 +2722,11 @@ returnText = QtWidgets.QTextBrowser()
 getUpdate = GetUpdateToShow()
 getUpdate.signal.connect(returnText.setHtml)
 getUpdate.start()
+unUseLnk = False
 def ReturnTextOpenUrl(url):
     print(url)
+    if unUseLnk:
+        return
     if url.url() == "http://update.gfdgdxi.top/update-wine-runner":
         UpdateWindow.ShowWindow()
     elif url.url() == "http://update.gfdgdxi.top/information-wine-runner":

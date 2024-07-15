@@ -14,12 +14,14 @@ programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 terminal = ""
 terminalList = [
     "deepin-terminal",
+    "deepin-terminal-gtk",
     "mate-terminal",
     "gnome-terminal",
     "xfce4-terminal"
 ]
 terminalEnd = {
     f"{programPath}/../launch.sh\" \"deepin-terminal": ["-e", 0],
+    f"{programPath}/../launch.sh\" \"deepin-terminal-gtk": ["-e", 0],
     "mate-terminal": ["-e", 1],
     "gnome-terminal": ["--", 0],
     "xfce4-terminal": ["-e", 1]
@@ -28,6 +30,8 @@ for i in terminalList:
     if not os.system(f"which {i}"):
         if i == "deepin-terminal":
             i = f"{programPath}/../launch.sh\" \"deepin-terminal"
+        if i == "deepin-terminal-gtk":
+            i = f"{programPath}/../launch.sh\" \"deepin-terminal-gtk"
         terminal = i
         break
 if terminal == "":
