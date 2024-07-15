@@ -112,7 +112,7 @@ class Ui_MainWindow(object):
         self.delButton.setText(_translate("MainWindow", ">>"))
         self.unzip.setText(_translate("MainWindow", "不解压Wine资源文件"))
         self.deleteZip.setText(_translate("MainWindow", "删除下载的资源包，只解压保留（两个选项都选相互抵消）"))
-        self.addOtherWine.setText(_translate("MainWindow", "导入自己的Wine"))
+        self.addOtherWine.setText(_translate("MainWindow", "导入 Wine 7z 包"))
         self.downloadWineFromCloudDisk.setText(_translate("MainWindow", "从网盘下载 Wine"))
 
 def ReadLocalInformation():
@@ -136,7 +136,7 @@ def ReadLocalInformation():
             QtWidgets.QMessageBox.critical(window, "错误", traceback.format_exc())
 
 def InstallOtherWine():
-    path = QtWidgets.QFileDialog.getOpenFileName(window, "选择 Wine", os.getenv("~"), "wine(wine);;wine64(wine64);;全部文件(*.*)")
+    path = QtWidgets.QFileDialog.getOpenFileName(window, "选择 Wine 运行器 Wine 7z 包", os.getenv("~"), "Wine 运行器 Wine 7z 包(*.7z);;全部文件(*.*)")
     if path[0] == "" or not path[1]:
         return
     try:
@@ -145,13 +145,15 @@ def InstallOtherWine():
         list = json.loads(rfile.read())
         rfile.close()
         # 创建映射
-        name = os.path.basename(os.path.dirname(os.path.dirname(path[0])))
-        if name == "" or name == None:
-            name = f"useradd-wine-{random.randint(0, 99999)}"
-        #binPath = os.path.dirname(os.path.dirname(path[0]))
-        os.makedirs(f"{programPath}/{name}/bin")
-        if os.system(f"ln -s '{path[0]}' '{programPath}/{name}/bin/wine'") != 0:
-            QtWidgets.QMessageBox.critical(window, "新建wine映射失败")
+        name = os.path.splitext(os.path.basename(path[0]))[0]
+        unpackPath = f"{programPath}/{name}"
+        shellCommand = f"""mkdir -p \"{unpackPath}\"
+7z x -y \"{path[0]}\" -o\"{unpackPath}\"
+"""
+        shellFile = open("/tmp/depein-wine-runner-wine-install.sh", "w")
+        shellFile.write(shellCommand)
+        shellFile.close()
+        OpenTerminal("bash /tmp/depein-wine-runner-wine-install.sh")
         # C++ 版注释：不直接用 readwrite 是因为不能覆盖写入
         file = open(f"{programPath}/winelist.json", "w")
         list.append(name)
