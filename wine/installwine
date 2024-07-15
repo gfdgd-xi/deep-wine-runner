@@ -16,6 +16,7 @@ import sys
 import json
 import traceback
 import requests
+import webbrowser
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 sys.path.append(f"{programPath}/../")
 from Model import *
@@ -68,6 +69,8 @@ class Ui_MainWindow(object):
         self.deleteZip.setObjectName("deleteZip")
         self.horizontalLayout.addWidget(self.deleteZip)
         self.addOtherWine = QtWidgets.QPushButton(self.centralWidget)
+        self.downloadWineFromCloudDisk = QtWidgets.QPushButton(self.centralWidget)
+        self.horizontalLayout.addWidget(self.downloadWineFromCloudDisk)
         self.horizontalLayout.addWidget(self.addOtherWine)
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem2)
@@ -110,6 +113,7 @@ class Ui_MainWindow(object):
         self.unzip.setText(_translate("MainWindow", "不解压Wine资源文件"))
         self.deleteZip.setText(_translate("MainWindow", "删除下载的资源包，只解压保留（两个选项都选相互抵消）"))
         self.addOtherWine.setText(_translate("MainWindow", "导入自己的Wine"))
+        self.downloadWineFromCloudDisk.setText(_translate("MainWindow", "从网盘下载 Wine"))
 
 def ReadLocalInformation():
     try:
@@ -357,6 +361,10 @@ def on_delButton_clicked():
         traceback.print_exc()
         QtWidgets.QMessageBox.critical(window, "错误", traceback.format_exc())
 
+def on_downloadWineFromCloudDisk_clicked():
+    QtWidgets.QMessageBox.information(window, "提示", "即将在浏览器打开下载页面\n访问密码为 2061")
+    webbrowser.open_new_tab("http://ctfile.gfdgdxi.top/d/31540479-61624693-080e74?p=2061")
+
 # 获取当前语言
 def get_now_lang()->"获取当前语言":
     return os.getenv('LANG')
@@ -403,6 +411,7 @@ if __name__ == "__main__":
     # 连接信号
     ui.addButton.clicked.connect(on_addButton_clicked)
     ui.delButton.clicked.connect(on_delButton_clicked)
+    ui.downloadWineFromCloudDisk.clicked.connect(on_downloadWineFromCloudDisk_clicked)
     ui.addOtherWine.clicked.connect(InstallOtherWine)
     ui.changeSourcesGroup.triggered.connect(ChangeSources)
     ## 加载内容
