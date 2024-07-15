@@ -144,8 +144,15 @@ def InstallOtherWine():
         rfile = open(f"{programPath}/winelist.json", "r")
         list = json.loads(rfile.read())
         rfile.close()
-        # 创建映射
         name = os.path.splitext(os.path.basename(path[0]))[0]
+        removeSymbol = ["(", ")", "（", "）", " ", "!", "@", "#", 
+                        "$", "%", "^", "&", "*", "=", "[", "]",
+                        "{", "}", "\\", "/", "|", "?",
+                        "<", ">", "·", "「", ";", ":", "：",
+                        "？", "《", "》", "，", "。", ",", ".",
+                        "`", "~", "～", "、"]
+        for i in removeSymbol:
+            name.replace(i, "")
         unpackPath = f"{programPath}/{name}"
         shellCommand = f"""mkdir -p \"{unpackPath}\"
 7z x -y \"{path[0]}\" -o\"{unpackPath}\"
