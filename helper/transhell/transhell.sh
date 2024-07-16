@@ -1,1 +1,0 @@
-../../bashimport/transhell.sh

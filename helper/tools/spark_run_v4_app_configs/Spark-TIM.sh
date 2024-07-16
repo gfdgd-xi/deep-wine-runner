@@ -1,1 +1,0 @@
-Deepin-TIM.sh
