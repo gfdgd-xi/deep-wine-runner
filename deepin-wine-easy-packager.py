@@ -223,10 +223,6 @@ EXEC_PATH="@@@EXEC_PATH@@@"
 ##### 软件在wine中的启动路径
 SHELL_DIR=$(dirname $(realpath $0))
 START_SHELL_PATH="/opt/deepinwine/tools/run_v4.sh"
-if [ -e "/opt/apps/deepin-wine-runner/helper/deepinwine/tools/spark_run_v4.sh" ] ;then  
-    # 方便在找不到 helper 依赖的情况下临时使用 Wine 运行器作为顶替
-    START_SHELL_PATH="/opt/apps/deepin-wine-runner/helper/deepinwine/tools/spark_run_v4.sh"
-fi
 if [ -e "$SHELL_DIR/deepinwine/tools/spark_run_v4.sh" ] ;then
     # 如果 helper 在 run.sh 相同目录的 deepinwine/tools/spark_run_v4.sh 则可以调用
     START_SHELL_PATH="$SHELL_DIR/deepinwine/tools/spark_run_v4.sh"
@@ -569,7 +565,7 @@ class RunThread(QtCore.QThread):
                 self.RunCommand(f"cp -rv '{folderExePath}' '{bottlePath}/drive_c/Program Files'")
                 debPackageVersion = self.GetEXEVersion(exePath.text(), bottlePath)
             debDescription = f"{exeName} By Build By Wine Runner Easy Packager"
-            debDepends = f"{chooseWine} | {chooseWine}-bcm | {chooseWine}-dcm | com.{chooseWine}.deepin, spark-dwine-helper | store.spark-app.spark-dwine-helper | deepin-wine-helper | com.wine-helper.deepin | spark-deepin-wine-runner (>= 3.9.3), fonts-wqy-microhei, fonts-wqy-zenhei"
+            debDepends = f"{chooseWine} | {chooseWine}-bcm | {chooseWine}-dcm | com.{chooseWine}.deepin, spark-dwine-helper | store.spark-app.spark-dwine-helper | deepin-wine-helper | com.wine-helper.deepinwinerunner, fonts-wqy-microhei, fonts-wqy-zenhei"
             self.RunCommand(f"mkdir -pv '{debBuildPath}/DEBIAN'")
             self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/files'")
             self.RunCommand(f"mkdir -pv '{debBuildPath}/opt/apps/{debPackageName}/entries/applications'")
