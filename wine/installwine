@@ -14,6 +14,7 @@ import shutil
 import random
 import sys
 import json
+import subprocess
 import traceback
 import requests
 import webbrowser
@@ -185,6 +186,136 @@ def ChangeSources():
             break
     print(urlSources)
 
+class GetInfo():
+    arch = subprocess.getoutput("dpkg --print-architecture").replace("\n", "").replace(" ", "")
+    isBinfmt = os.path.exists("/proc/sys/fs/binfmt_misc")
+    isBox64 = not os.system("which box64 > /dev/null") >> 8 or not os.system("which spark-box64 > /dev/null") >> 8
+    isBox86 = not os.system("which box86 > /dev/null") >> 8 or not os.system("which spark-box86 > /dev/null") >> 8
+    isLat = not os.system("which lat-i386-static > /dev/null") >> 8 or not os.system("which latx-i386 > /dev/null") >> 8
+    isLati386Runtime = os.path.exists("/usr/gnemul/latx-i386") or os.path.exists("/usr/gnemul/lat-i386")
+    isLatamd64Runtime = os.path.exists("/usr/gnemul/latx-x86_64") or os.path.exists("/usr/gnemul/lat-x86_64")
+    isQemuUseri386Runtime = os.path.exists("/usr/lib/i386-linux-gnu/ld-linux.so.2")
+    isQemuUseramd64Runtime = os.path.exists("/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2")
+    isQemuUser = not os.system("which qemu-i386-static > /dev/null") >> 8 and (not "amd64" in arch) and (not "i386" in arch)
+    glibcVersion = "2.28"
+
+    def __init__(self):
+        self.getGlibcVersion()
+
+    def getGlibcVersion(self):
+        version = None
+        glibcPath = ""
+        glibcPathList = [
+            "/usr/lib/i386-linux-gnu/ld-linux.so.2",
+            "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2",
+            "/usr/lib/arm-linux-gnueabihf/ld-linux-armhf.so.3",
+            "/usr/lib/arm-linux-gnueabi/ld-linux.so.3",
+            "/usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1",
+            "/usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1",
+            "/usr/lib/riscv64-linux-gnu/ld-linux-riscv64-lp64d.so.1",
+            "/usr/lib/mips64el-linux-gnuabi64/ld.so.1",
+            "/usr/lib/powerpc64le-linux-gnu/ld64.so.2",
+            "/usr/lib/loongarch64-linux-gnu/ld-linux-loongarch-lp64d.so.1",
+            "/usr/lib/loongarch64-linux-gnu/ld.so.1"
+        ]
+        for i in glibcPathList:
+            if (os.path.exists(i)):
+                glibcPath = i
+                break
+        if glibcPath != "":
+            glibcStr = subprocess.getoutput("strings " + glibcPath + " | grep GLIBC_")
+            newestVersion = "1.0"
+            for i in glibcStr.splitlines():
+                i = i.replace("GLIBC_", "")
+                # 判断是不是版本号行
+                try:
+                    int(i[0])
+                except:
+                    # 非版本号行
+                    continue
+                if (self.compareVersion(newestVersion, i) == -1):
+                    newestVersion = i
+            version = newestVersion
+        self.glibcVersion = version
+        return version
+    
+    def compareVersion(self, version1: str, version2: str):
+        # 判断是不是版本号
+        if ((not "." in version1) or (not "." in version2)):
+            return -2
+        if (version1 == version2):
+            return 0
+        version1List = version1.split(".")
+        version2List = version2.split(".")
+        for i in range(len(version1List)):
+            # 判断 version2List 是否有该长度
+            try:
+                version2List[i]
+            except:
+                return 1
+            try:
+                version1 = int(version1List[i])
+                version2 = int(version2List[i])
+            except:
+                continue
+            if (version1 > version2):
+                return 1
+            if (version1 < version2):
+                return -1
+        if (len(version1List) < len(version2List)):
+            return -1
+        return 0
+
+    def checkTag(self, data: str):
+        if (data == self.arch):
+            return True
+        if (data == "binfmt" and self.isBinfmt):
+            return True
+        if (data == "box86" and self.isBox86):
+            return True
+        if (data == "box64" and self.isBox64):
+            return True
+        if (data == "lat" and self.isLat):
+            return True
+        if (data == "lat-i386" and self.isLati386Runtime):
+            return True
+        if (data == "lat-x86_64" and self.isLatamd64Runtime):
+            return True
+        if (data == "qemu-user" and self.isQemuUser):
+            return True
+        if (data == "qemu-user-i386" and self.isQemuUseri386Runtime):
+            return True
+        if (data == "qemu-user-amd64" and self.isQemuUseramd64Runtime):
+            return True
+        if (self.compareVersion(self.glibcVersion, data) == 1):
+            return True
+        if (os.path.exists(data)):
+            return True
+        return False
+
+    def checkList(self, data:list):
+        succeed = 0
+        for i in data:
+            if (type(i) == list):
+                succeed += self.checkList(i)
+                continue
+            if (self.checkTag(i)):
+                succeed += 1
+        return succeed == len(data)
+
+    def check(self, data: list):
+        for i in data:
+            if ("all" == i):
+                return True
+            if (type(i) == list):
+                result = self.checkList(i)
+                if (result):
+                    return True
+                continue
+            if (self.checkTag(i)):
+                return True
+        return False
+
 # 下面内容均翻译自 C++ 版本
 def ReadInternetInformation():
     global internetJsonList
@@ -199,6 +330,8 @@ def ReadInternetInformation():
         return
     nmodel = QtGui.QStandardItemModel(window)
     for i in internetJsonList:
+        if (not systemInfo.check(i[2])):
+            continue
         item = QtGui.QStandardItem(i[0])
         nmodel.appendRow(item)
     ui.internetWineList.setModel(nmodel)
@@ -395,6 +528,8 @@ if __name__ == "__main__":
         trans = QtCore.QTranslator()
         trans.load(f"{programPath}/../LANG/installwine-en_US.qm")
         app.installTranslator(trans)
+    # 获取信息
+    systemInfo = GetInfo()
     # 窗口构建
     window = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
