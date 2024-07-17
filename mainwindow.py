@@ -2468,12 +2468,16 @@ exe路径\' 参数 \'
 5、wine 容器如果没有指定，则会默认为 ~/.wine；
 6、如果可执行文件比较大的话，会出现点击“获取该程序运行情况”出现假死的情况，因为正在后台读取 SHA1，只需要等一下即可（读取速度依照您电脑处理速度、读写速度、可执行文件大小等有关）；
 7、如果非 X86 的用户的 UOS 专业版用户想要使用的话，只需要在应用商店安装一个 Wine 版本微信即可在本程序选择正确的 Wine 运行程序；''')
-updateThingsString = QtCore.QCoreApplication.translate("U", '''※1、移除冗余组件
-※2、修复 Wine 安装器在文件下载失败后无法自动关闭进度条和解除控件禁用的问题
-※3、Wine 打包器不允许版本号开头输入首字母以及版本号不允许出现空格
-※4、Wine 打包器生成的 deb 同时支持使用 spark-dwine-helper 和 deepin-wine-helper
-※5、支持调用拓展 Qemu
-※6、新增滚动条，优化小屏幕使用体验''')
+updateThingsString = QtCore.QCoreApplication.translate("U", '''※1、优化运行器窗口大小机制
+※2、Wine 安装器支持根据机器实际情况自动推荐适合的 Wine
+※3、Wine 安装器支持手动导入 Wine 7z 包并提供相应 7z 包的网盘下载地址
+※4、兼容 Deepin 终端（deepin 15 经典版本，deepin-terminal-gtk）
+※5、跟进 dxvk 2.4
+※6、修复 deepin 23 无法使用 Mono/Gecko 安装器的问题
+※7、修复 debian testing 打包时会把 / 打入 .7z 包内导致系统死机的问题
+8、修复虚拟机启动器入口不会调用安装的 Qemu Extra 的问题
+9、优化高级打包器容器名称生成机制
+''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
 updateTime = "2024年06月29日"
