@@ -68,7 +68,10 @@ class Ui_MainWindow(object):
         self.deleteZip.setChecked(True)
         self.deleteZip.setTristate(False)
         self.deleteZip.setObjectName("deleteZip")
-        self.horizontalLayout.addWidget(self.deleteZip)
+        self.m_recommendWine = QtWidgets.QCheckBox(self.centralWidget)
+        self.m_recommendWine.setChecked(True)
+        self.m_recommendWine.setObjectName("recommendWine")
+        self.horizontalLayout.addWidget(self.m_recommendWine)
         self.addOtherWine = QtWidgets.QPushButton(self.centralWidget)
         self.downloadWineFromCloudDisk = QtWidgets.QPushButton(self.centralWidget)
         self.horizontalLayout.addWidget(self.downloadWineFromCloudDisk)
@@ -115,6 +118,7 @@ class Ui_MainWindow(object):
         self.deleteZip.setText(_translate("MainWindow", "删除下载的资源包，只解压保留（两个选项都选相互抵消）"))
         self.addOtherWine.setText(_translate("MainWindow", "导入 Wine 7z 包"))
         self.downloadWineFromCloudDisk.setText(_translate("MainWindow", "从网盘下载 Wine"))
+        self.m_recommendWine.setText(_translate("MainWindow", "隐藏不可用 Wine"))
 
 def ReadLocalInformation():
     try:
@@ -330,7 +334,7 @@ def ReadInternetInformation():
         return
     nmodel = QtGui.QStandardItemModel(window)
     for i in internetJsonList:
-        if (not systemInfo.check(i[2])):
+        if (ui.m_recommendWine.isChecked() and not systemInfo.check(i[2])):
             continue
         item = QtGui.QStandardItem(i[0])
         nmodel.appendRow(item)
@@ -536,6 +540,9 @@ if __name__ == "__main__":
     window.setWindowIcon(QtGui.QIcon(f"{programPath}/../deepin-wine-runner.svg"))
     ui.setupUi(window)
     window.show()
+    # 隐藏选项
+    ui.unzip.setVisible(False)
+    ui.deleteZip.setVisible(False)
     # 判断机器所在国家并自动分配源
     try:
         isChina = requests.get("https://ip.useragentinfo.com/json").json()["country"] == "中国"
@@ -558,6 +565,7 @@ if __name__ == "__main__":
     ui.downloadWineFromCloudDisk.clicked.connect(on_downloadWineFromCloudDisk_clicked)
     ui.addOtherWine.clicked.connect(InstallOtherWine)
     ui.changeSourcesGroup.triggered.connect(ChangeSources)
+    ui.m_recommendWine.clicked.connect(ReadInternetInformation)
     ## 加载内容
     # 设置列表双击不会编辑
     ui.localWineList.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
