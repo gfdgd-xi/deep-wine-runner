@@ -589,7 +589,7 @@ class RunThread(QtCore.QThread):
             self.RunCommand(f"rm -fv '{bottlePath}/drive_c/users/@current_user@/Downloads'")
             self.RunCommand(f"rm -fv '{bottlePath}/drive_c/users/@current_user@/Templates'")
             ########### 打包容器
-            self.RunCommand(f"7z a '{bottlePackagePath}' '{bottlePath}/'*")
+            self.RunCommand(f"7z a -snh -snl '{bottlePackagePath}' '{bottlePath}/'*")
             ########### 生成文件内容
             buildProgramSize = getFileFolderSize(debBuildPath) / 1000
             replaceMap = [

@@ -215,9 +215,9 @@ def Build7z(b, self, debInformation, debPackagePath):
             os.system(f"cp -rv '{b}' '{debPackagePath}/opt/cxoffice/support/{e5_text.text()}'")
             return
         if debPackagePath[-3: ] == ".7z":
-            self.run_command("7z a '{}' '{}/'*".format(debPackagePath, b))
+            self.run_command("7z a -snh -snl '{}' '{}/'*".format(debPackagePath, b))
         else:
-            self.run_command("7z a {}/opt/apps/{}/files/files.7z '{}/'*".format(debPackagePath, e1_text.text(), b))
+            self.run_command("7z a -snh -snl {}/opt/apps/{}/files/files.7z '{}/'*".format(debPackagePath, e1_text.text(), b))
 
 
 def Build7zButton_Clicked():
@@ -1514,7 +1514,7 @@ fi
                     # 都有了为什么要打包呢？
                     shutil.copy(wine[wineVersion.currentText()], f"{debPackagePath}/opt/apps/{e1_text.text()}/files/wine_archive.7z")
                 else:
-                    self.run_command(f"7z a '{debPackagePath}/opt/apps/{e1_text.text()}/files/wine_archive.7z' '{wine[wineVersion.currentText()]}/*'")
+                    self.run_command(f"7z a -snh -snl '{debPackagePath}/opt/apps/{e1_text.text()}/files/wine_archive.7z' '{wine[wineVersion.currentText()]}/*'")
             ###############
             # 复制文件
             ###############

@@ -150,10 +150,10 @@ checkWineDepends()
 
     cp /usr/lib/i386-linux-gnu/deepin-wine/gtkGetFileNameDlg "$outfiles"
 
-    7z a -t7z -mx=9 -ms=on -mmt=on -m0=BCJ2 -m1=LZMA2:d=64m:fb=273 "$outfiles/wine_archive.7z" /usr/lib/i386-linux-gnu/deepin-wine5-stable/*
+    7z a -snh -snl -t7z -mx=9 -ms=on -mmt=on -m0=BCJ2 -m1=LZMA2:d=64m:fb=273 "$outfiles/wine_archive.7z" /usr/lib/i386-linux-gnu/deepin-wine5-stable/*
     echo "$WINELIBVER" > "$outfiles/wine_archive.md5sum"
 
-    7z a -t7z -mx=9 -ms=on -mmt=on -m0=BCJ2 -m1=LZMA2:d=64m:fb=273 "$outfiles/helper_archive.7z" /opt/deepinwine/tools/*
+    7z a -snh -snl -t7z -mx=9 -ms=on -mmt=on -m0=BCJ2 -m1=LZMA2:d=64m:fb=273 "$outfiles/helper_archive.7z" /opt/deepinwine/tools/*
     echo "$WINEHELPERVER" > "$outfiles/helper_archive.md5sum"
 }
 
@@ -279,7 +279,7 @@ else
         ls -l "$stgdir/winx/extensions.so"
     fi
 
-    7z a -t7z -mx=9 -ms=on -mmt=on -m0=BCJ2 -m1=LZMA2:d=64m:fb=273 "$outfiles/files.7z" "$stgdir/*"
+    7z a -snh -snl -t7z -mx=9 -ms=on -mmt=on -m0=BCJ2 -m1=LZMA2:d=64m:fb=273 "$outfiles/files.7z" "$stgdir/*"
 fi
 
 md5sum "$outfiles/files.7z" | awk '{print $1}' > "$outfiles/files.md5sum"
