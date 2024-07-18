@@ -185,7 +185,7 @@ package-deb:
 	cp -rv spark-deepin-wine-runner.deb /tmp/spark-deepin-wine-runner-builder/opt/apps/spark-deepin-wine-runner-ace
 	bash builddeb/ChangeDebVersion.sh
 	sudo chown -R root:root /tmp/spark-deepin-wine-runner-builder
-	dpkg-deb -Z xz -z 9 -b /tmp/spark-deepin-wine-runner-builder spark-deepin-wine-runner-ace.deb
+	dpkg-deb -Z xz -z 0 -b /tmp/spark-deepin-wine-runner-builder spark-deepin-wine-runner-ace.deb
 	sudo rm -rfv /tmp/spark-deepin-wine-runner-builder
 	
 install:
