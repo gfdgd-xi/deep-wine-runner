@@ -201,6 +201,13 @@ class GetInfo():
     isQemuUseri386Runtime = os.path.exists("/usr/lib/i386-linux-gnu/ld-linux.so.2")
     isQemuUseramd64Runtime = os.path.exists("/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2")
     isQemuUser = not os.system("which qemu-i386-static > /dev/null") >> 8 and (not "amd64" in arch) and (not "i386" in arch)
+    pageSize = subprocess.getoutput("getconf PAGESIZE").replace(" ", "").replace("\n", "")
+    is4kPageSize = (pageSize == "4096")
+    is8kPageSize = (pageSize == "8096")
+    is16kPageSize = (pageSize == "16192")
+    is32kPageSize = (pageSize == "32384")
+    is64kPageSize = (pageSize == "64768")
+    isLoongarch = (arch == "loong64") or (arch == "loongarch64")
     glibcVersion = "2.28"
 
     def __init__(self):
@@ -271,31 +278,50 @@ class GetInfo():
         return 0
 
     def checkTag(self, data: str):
+        result = False
+        no = False
+        if (len(data) > 0 and data[0] == "!"):
+            no = True
+            data = data[1:]
         if (data == self.arch):
-            return True
+            result = True
         if (data == "binfmt" and self.isBinfmt):
-            return True
+            result = True
         if (data == "box86" and self.isBox86):
-            return True
+            result = True
         if (data == "box64" and self.isBox64):
-            return True
+            result = True
         if (data == "lat" and self.isLat):
-            return True
+            result = True
         if (data == "lat-i386" and self.isLati386Runtime):
-            return True
+            result = True
         if (data == "lat-x86_64" and self.isLatamd64Runtime):
-            return True
+            result = True
         if (data == "qemu-user" and self.isQemuUser):
-            return True
+            result = True
         if (data == "qemu-user-i386" and self.isQemuUseri386Runtime):
-            return True
+            result = True
         if (data == "qemu-user-amd64" and self.isQemuUseramd64Runtime):
-            return True
+            result = True
+        if (data == "kernel-4k-pagesize" and self.is4kPageSize):
+            result = True
+        if (data == "loong64-kernel-4k-pagesize" and self.isLoongarch and self.is4kPageSize):
+            result = True
+        if (data == "loong64-kernel-8k-pagesize" and self.isLoongarch and self.is8kPageSize):
+            result = True
+        if (data == "loong64-kernel-16k-pagesize" and self.isLoongarch and self.is16kPageSize):
+            result = True
+        if (data == "loong64-kernel-32k-pagesize" and self.isLoongarch and self.is32kPageSize):
+            result = True
+        if (data == "loong64-kernel-64k-pagesize" and self.isLoongarch and self.is64kPageSize):
+            result = True
         if (self.compareVersion(self.glibcVersion, data) == 1):
-            return True
+            result = True
         if (os.path.exists(data)):
-            return True
-        return False
+            result = True
+        if (no):
+            result = not result
+        return result
 
     def checkList(self, data:list):
         succeed = 0
