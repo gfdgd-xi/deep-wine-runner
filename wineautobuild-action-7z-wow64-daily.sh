@@ -24,7 +24,7 @@ type=`cat /wine-type.txt`
 cpu=$(cat /proc/cpuinfo | grep processor | wc -l)
 #aria2c -x 16 -s 16 $url
 #tar -xvf `basename $url`
-git clone git://source.winehq.org/git/wine.git
+git clone https://gitlab.winehq.org/wine/wine
 echo Wine version `date` > wine/VERSION
 mv wine wine-$version
 # 使用 wow64 support
@@ -36,5 +36,5 @@ make -j$cpu
 mkdir ../program
 make install -j$cpu DESTDIR=../program
 cd ../program/usr/local/
-echo Building Time: `date`, source from git://source.winehq.org/git/wine.git > info.txt
+echo Building Time: `date`, source from https://gitlab.winehq.org/wine/wine > info.txt
 7z a /wine/wine-wow64-daily-debian10-amd64.7z *
