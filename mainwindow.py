@@ -19,7 +19,11 @@ import base64
 import shutil
 import hashlib
 import platform
-import pyperclip
+try:
+    import pyperclip
+except:
+    os.system("python3 -m pip install --upgrade pyperclip --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple --break-system-packages")
+    import pyperclip
 import threading
 import traceback
 import webbrowser
