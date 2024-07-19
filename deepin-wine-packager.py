@@ -1419,6 +1419,13 @@ export WINEDLLPATH=/opt/$APPRUN_CMD/lib:/opt/$APPRUN_CMD/lib64
 
 export WINEPREDLL="$ARCHIVE_FILE_DIR/dlls"
 
+##### 软件在wine中的启动路径
+if [ -e "/opt/deepinwine/tools/spark_run_v4.sh"] ;then
+    START_SHELL_PATH="/opt/deepinwine/tools/spark_run_v4.sh"
+else
+    START_SHELL_PATH="/opt/deepinwine/tools/run_v4.sh"
+fi
+
 if [ -n "$PATCH_LOADER_ENV" ] && [ -n "$EXEC_PATH" ];then
     export $PATCH_LOADER_ENV
 fi
