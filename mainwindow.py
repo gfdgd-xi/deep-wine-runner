@@ -3307,7 +3307,7 @@ for i in [
         for x in i[0]:
             x.setDisabled(True)
 # 有些功能是 Arch Linux 不适用的，需要屏蔽
-if os.path.exists("/etc/arch-release") or os.path.exists("/etc/fedora-release"):
+if not os.path.exists("/etc/debian_version"):
     if os.path.exists(f"{programPath}/off-line.lock"):
         for i in [p1]:
             i.setDisabled(True)    
