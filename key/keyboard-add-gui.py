@@ -6,7 +6,12 @@ sys.path.append(f"{programPath}/..")
 
 import os
 import sys
-import dbus
+try:
+    import dbus
+except:
+    os.system("python3 -m pip install --upgrade dbus-python --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple --break-system-packages")
+    os.system("python3 -m pip install --upgrade dbus-python --trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple")
+    import dbus
 import json
 import threading
 import traceback

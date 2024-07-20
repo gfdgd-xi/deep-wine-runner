@@ -34,7 +34,7 @@ package-pkg:
 	sudo debtap -Q spark-deepin-wine-runner.deb
 	sudo debtap -Q spark-deepin-wine-runner-ace.deb
 
-package-deb:
+copy-files:
 	#cd VM-source && qmake
 	#cd VM-source && make
 	#cd wine && make
@@ -177,16 +177,33 @@ package-deb:
 	bash builddeb/ChangeDebVersion.sh
 	chmod -Rv 777 /tmp/spark-deepin-wine-runner-builder/opt
 	chmod -Rv 777 /tmp/spark-deepin-wine-runner-builder/usr
-	
-	dpkg-deb -Z xz -z 9 -b /tmp/spark-deepin-wine-runner-builder spark-deepin-wine-runner.deb
+
+remove-copy-files:
 	sudo rm -rfv /tmp/spark-deepin-wine-runner-builder
+
+package-deb:
+	make copy-files -j$(nproc)
+	dpkg-deb -Z xz -z 9 -b /tmp/spark-deepin-wine-runner-builder spark-deepin-wine-runner.deb
+	make remove-copy-files -j$(nproc)
 	# 构建 ace 包
 	cp -rv deb-ace /tmp/spark-deepin-wine-runner-builder
 	cp -rv spark-deepin-wine-runner.deb /tmp/spark-deepin-wine-runner-builder/opt/apps/spark-deepin-wine-runner-ace
 	bash builddeb/ChangeDebVersion.sh
 	sudo chown -R root:root /tmp/spark-deepin-wine-runner-builder
 	dpkg-deb -Z xz -z 0 -b /tmp/spark-deepin-wine-runner-builder spark-deepin-wine-runner-ace.deb
-	sudo rm -rfv /tmp/spark-deepin-wine-runner-builder
+	make remove-copy-files -j$(nproc)
+
+package-termux-deb:
+	make copy-files -j$(nproc)
+	# 替换 DEBIAN
+	sudo rm -rf /tmp/spark-deepin-wine-runner-builder/DEBIAN
+	sudo mkdir -pv /tmp/spark-deepin-wine-runner-builder/data/data/com.termux/files/
+	sudo mv /tmp/spark-deepin-wine-runner-builder/usr/ /tmp/spark-deepin-wine-runner-builder/data/data/com.termux/files/ -v
+	sudo mv /tmp/spark-deepin-wine-runner-builder/opt /tmp/spark-deepin-wine-runner-builder/data/data/com.termux/files/usr/opt -v
+	sudo cp deb-termux/DEBIAN /tmp/spark-deepin-wine-runner-builder/DEBIAN -rv
+	sudo bash builddeb/ChangeDebVersion.sh
+	dpkg-deb -Z xz -z 9 -b /tmp/spark-deepin-wine-runner-builder spark-deepin-wine-runner-termux.deb
+	make remove-copy-files -j$(nproc)
 	
 install:
 	make build -j$(nproc)

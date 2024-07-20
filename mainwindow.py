@@ -2395,11 +2395,12 @@ def CheckWine():
         except:
             traceback.print_exc()
         try:
-            for i in os.listdir(f"{get_home()}/.deepinwine/"):
-                for j in wine7zUse:
-                    if os.path.exists(f"{get_home()}/.deepinwine/{i}/bin/{j}"):
-                        wine[f"{get_home()}/.deepinwine/{i}/bin/{j}"] = f"{get_home()}/.deepinwine/{i}/bin/{j}"
-                        canUseWine.append(f"{get_home()}/.deepinwine/{i}/bin/{j}")
+            if os.path.exists(f"{get_home()}/.deepinwine/"):
+                for i in os.listdir(f"{get_home()}/.deepinwine/"):
+                    for j in wine7zUse:
+                        if os.path.exists(f"{get_home()}/.deepinwine/{i}/bin/{j}"):
+                            wine[f"{get_home()}/.deepinwine/{i}/bin/{j}"] = f"{get_home()}/.deepinwine/{i}/bin/{j}"
+                            canUseWine.append(f"{get_home()}/.deepinwine/{i}/bin/{j}")
                 
         except:
             traceback.print_exc()
