@@ -21,8 +21,12 @@ Depends: python3,
  zenity, 
  tree, 
  dpkg, 
- fakeroot，
- which
+ fakeroot,
+ which,
+ git,
+ xfwm4,
+ tigervnc,
+ proot
 Recommends: winbind, 
  wimtools | wimlib, 
  python3-pyquery, 
@@ -34,9 +38,14 @@ Recommends: winbind,
  qemu-system, 
  qemu-full, 
  qemu,
+ qemu-system-x86-64,
+ qemu-system-i386,
+ qemu-system-arm,
+ qemu-system-aarch64,
+ qemu-utils,
  alien, 
  spark-deepin-wine-runner-qemu-system-extra, 
- deepin-wine8-stable | spark-wine | spark-wine9 | spark-wine9-wow | spark-wine8 | spark-wine8-wow | spark-wine7-devel | deepin-wine6-stable | deepin-wine5-stable | deepin-wine5 | deepin-wine | wine, 
+ deepin-wine8-stable | spark-wine | spark-wine9 | spark-wine9-wow | spark-wine8 | spark-wine8-wow | spark-wine7-devel | deepin-wine6-stable | deepin-wine5-stable | deepin-wine5 | deepin-wine | wine | wine-stable, 
  spark-dwine-helper | store.spark-app.spark-dwine-helper | deepin-wine-helper | com.wine-helper.deepin
 Section: utils
 Conflicts: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, spark-deepin-wine-runner-52

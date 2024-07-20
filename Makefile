@@ -197,10 +197,19 @@ package-termux-deb:
 	make copy-files -j$(nproc)
 	# 替换 DEBIAN
 	sudo rm -rf /tmp/spark-deepin-wine-runner-builder/DEBIAN
+	sudo rm -rf /tmp/spark-deepin-wine-runner-builder/usr/bin/*
+	sudo rm -rf /tmp/spark-deepin-wine-runner-builder/usr/share/applications/*
+	sudo rm -rf /tmp/spark-deepin-wine-runner-builder/opt/apps/deepin-wine-runner/entries/applications/*
 	sudo mkdir -pv /tmp/spark-deepin-wine-runner-builder/data/data/com.termux/files/
 	sudo mv /tmp/spark-deepin-wine-runner-builder/usr/ /tmp/spark-deepin-wine-runner-builder/data/data/com.termux/files/ -v
 	sudo mv /tmp/spark-deepin-wine-runner-builder/opt /tmp/spark-deepin-wine-runner-builder/data/data/com.termux/files/usr/opt -v
+	sudo ln -s /data/data/com.termux/files/usr/opt/apps/deepin-wine-runner/deepin-wine-runner /tmp/spark-deepin-wine-runner-builder/data/data/com.termux/files/usr/bin/deepin-wine-runner
+	sudo ln -s /data/data/com.termux/files/usr/opt/apps/deepin-wine-runner/deepin-wine-packager.py /tmp/spark-deepin-wine-runner-builder/data/data/com.termux/files/usr/bin/deepin-wine-package-builder 
+	sudo ln -s /data/data/com.termux/files/usr/opt/apps/deepin-wine-runner/deepin-wine-packager-with-script.py /tmp/spark-deepin-wine-runner-builder/data/data/com.termux/files/usr/bin/deepin-wine-packager-with-script
+	sudo ln -s /data/data/com.termux/files/usr/opt/apps/deepin-wine-runner/deepin-wine-easy-packager.py /tmp/spark-deepin-wine-runner-builder/data/data/com.termux/files/usr/bin/deepin-wine-packager-easy-builder
 	sudo cp deb-termux/DEBIAN /tmp/spark-deepin-wine-runner-builder/DEBIAN -rv
+	sudo cp -rv deb-termux/usr/share/applications /tmp/spark-deepin-wine-runner-builder/data/data/com.termux/files/usr/opt/apps/deepin-wine-runner/entries/applications
+	sudo cp -rv deb-termux/usr/share/applications /tmp/spark-deepin-wine-runner-builder/data/data/com.termux/files/usr/share/applications
 	sudo bash builddeb/ChangeDebVersion.sh
 	dpkg-deb -Z xz -z 9 -b /tmp/spark-deepin-wine-runner-builder spark-deepin-wine-runner-termux.deb
 	make remove-copy-files -j$(nproc)

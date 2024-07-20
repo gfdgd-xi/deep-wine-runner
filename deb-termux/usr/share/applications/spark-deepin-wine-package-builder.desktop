@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Application
 X-Categories=System;Wine;
-Exec=/usr/bin/deepin-wine-package-builder "~/.wine" %F
-Icon=/opt/apps/deepin-wine-runner/deepin-wine-runner.svg
+Exec=/data/data/com.termux/files/usr/bin/deepin-wine-package-builder "~/.wine" %F
+Icon=/data/data/com.termux/files/usr/opt/apps/deepin-wine-runner/deepin-wine-runner.svg
 Name=Wine Package Builder
 Name[zh]=Wine 打包器
 Terminal=false
