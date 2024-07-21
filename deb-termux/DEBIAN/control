@@ -26,7 +26,8 @@ Depends: python3,
  git,
  xfwm4,
  tigervnc,
- proot
+ proot,
+ bash
 Recommends: winbind, 
  wimtools | wimlib, 
  python3-pyquery, 

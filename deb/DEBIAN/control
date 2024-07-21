@@ -27,7 +27,8 @@ Depends: python3,
  zenity, 
  tree, 
  dpkg, 
- fakeroot
+ fakeroot,
+ bash
 Recommends: winbind, 
  wimtools | wimlib, 
  python3-pyquery, 

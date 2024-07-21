@@ -146,7 +146,7 @@ copy-files:
 	cp -rv RemoveQemuUser.sh deb/opt/apps/deepin-wine-runner
 	cp -rv InstallBox86.sh  deb/opt/apps/deepin-wine-runner
 	cp -rv InstallRuntime   deb/opt/apps/deepin-wine-runner
-	if [[ ! -d novnc/utils/websockify ]]; then ; git submodule update --init --recursive ; fi
+	if [[ ! -d novnc/utils/websockify ]]; then git submodule update --init --recursive ; fi
 	cp -rv novnc   deb/opt/apps/deepin-wine-runner
 	mkdir -pv deb/opt/apps/deepin-wine-runner/entries/
 	cp -rv deb/usr/share/applications deb/opt/apps/deepin-wine-runner/entries/applications
@@ -212,6 +212,9 @@ package-termux-deb:
 	sudo cp deb-termux/DEBIAN /tmp/spark-deepin-wine-runner-builder/DEBIAN -rv
 	sudo cp -rv deb-termux/usr/share/applications /tmp/spark-deepin-wine-runner-builder/data/data/com.termux/files/usr/opt/apps/deepin-wine-runner/entries/applications
 	sudo cp -rv deb-termux/usr/share/applications /tmp/spark-deepin-wine-runner-builder/data/data/com.termux/files/usr/share/applications
+	# 加入 termux loader
+	sudo cp -rv mainwindow-termux-loader.sh /tmp/spark-deepin-wine-runner-builder/data/data/com.termux/files/usr/opt/apps/deepin-wine-runner/deepin-wine-runner
+	sudo cp -rv mainwindow.py /tmp/spark-deepin-wine-runner-builder/data/data/com.termux/files/usr/opt/apps/deepin-wine-runner/mainwindow.py
 	sudo bash builddeb/ChangeDebVersion.sh
 	dpkg-deb -Z xz -z 9 -b /tmp/spark-deepin-wine-runner-builder spark-deepin-wine-runner-termux.deb
 	make remove-copy-files -j$(nproc)
