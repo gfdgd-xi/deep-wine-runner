@@ -1283,6 +1283,11 @@ class UpdateWindow():
         unPackageNew = False
         isArch = False
         isFedora = False
+        isTermux = False
+        if os.path.exists("/data/data/com.termux"):
+            isTermux = True
+            if UpdateWindow.data["Url-termux"][0] == None:
+                unPackageNew = True
         if os.path.exists("/etc/arch-release"):
             isArch = True
             if UpdateWindow.data["Url-pkg"][0] == None:
@@ -1341,6 +1346,20 @@ yum reinstall $TMPDIR/tmp/spark-deepin-wine-runner/update/spark-deepin-wine-runn
 notify-send -i "{iconPath}" "更新完毕！"
 zenity --info --text=\"更新完毕！\" --ellipsize
 """)
+                elif isTermux:
+                    # 使用 pkg 安装更新
+                    write_txt(TMPDIR + "/tmp/spark-deepin-wine-runner/update.sh", f"""#!/data/data/com.termux/files/usr/bin/bash
+echo 删除多余的安装包
+rm -rfv $TMPDIR/tmp/spark-deepin-wine-runner/update/*
+echo 关闭“Wine 运行器”
+python3 "{programPath}/updatekiller.py"
+echo 下载安装包
+wget -O $TMPDIR/tmp/spark-deepin-wine-runner/update/spark-deepin-wine-runner-termux.deb {UpdateWindow.data["Url-termux"][0]}
+echo 安装安装包
+pkg reinstall $TMPDIR/tmp/spark-deepin-wine-runner/update/spark-deepin-wine-runner.rpm  -y
+notify-send -i "{iconPath}" "更新完毕！"
+zenity --info --text=\"更新完毕！\" --ellipsize
+""")
                 else:
                     # 使用 deb 安装更新
                     write_txt(TMPDIR + "/tmp/spark-deepin-wine-runner/update.sh", f"""#!/bin/bash
@@ -1357,7 +1376,10 @@ apt install -f -y
 notify-send -i "{iconPath}" "更新完毕！"
 zenity --info --text=\"更新完毕！\" --ellipsize
 """)
-                OpenTerminal("pkexec bash $TMPDIR/tmp/spark-deepin-wine-runner/update.sh")
+                if isTermux:
+                    OpenTerminal("bash $TMPDIR/tmp/spark-deepin-wine-runner/update.sh")
+                else:
+                    OpenTerminal("pkexec bash $TMPDIR/tmp/spark-deepin-wine-runner/update.sh")
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(None, "出现错误，无法继续更新", traceback.format_exc())
@@ -2484,12 +2506,14 @@ updateThingsString = QtCore.QCoreApplication.translate("U", '''※1、优化运�
 ※5、跟进 dxvk 2.4
 ※6、修复 deepin 23 无法使用 Mono/Gecko 安装器的问题
 ※7、修复 debian testing 打包时会把 / 打入 .7z 包内导致系统死机的问题
-8、修复虚拟机启动器入口不会调用安装的 Qemu Extra 的问题
-9、优化高级打包器容器名称生成机制
+※8、支持 AOSC（安同）、小小电脑、proot 容器
+※9、支持在 Termux 直接运行
+10、修复虚拟机启动器入口不会调用安装的 Qemu Extra 的问题
+11、优化高级打包器容器名称生成机制
 ''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2024年06月29日"
+updateTime = "2024年07月21日"
 aboutProgram = QtCore.QCoreApplication.translate("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序。原版的 Wine 只能使用命令操作，且安装过程较为繁琐，对小白不友好。于是该运行器为了解决该痛点，内置了对Wine图形化的支持、Wine 安装器、微型应用商店、各种Wine工具、自制的Wine程序打包器、运行库安装工具等。</p>
 <p>它同时还内置了基于Qemu/VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作，也能在非 X86 架构安装 X86 架构的 Windows 操作系统（但是效率较低，可以运行些老系统）。</p>
 <p>而且对于部分 Wine 应用适配者来说，提供了图形化的打包工具，以及提供了一些常用工具以及运行库的安装方式，以及能安装多种不同的 Wine 以测试效果，能极大提升适配效率。</p>
