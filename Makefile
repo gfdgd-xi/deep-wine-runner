@@ -146,6 +146,8 @@ copy-files:
 	cp -rv RemoveQemuUser.sh deb/opt/apps/deepin-wine-runner
 	cp -rv InstallBox86.sh  deb/opt/apps/deepin-wine-runner
 	cp -rv InstallRuntime   deb/opt/apps/deepin-wine-runner
+	if [[ ! -d novnc/utils/websockify ]]; then ; git submodule update --init --recursive ; fi
+	cp -rv novnc   deb/opt/apps/deepin-wine-runner
 	mkdir -pv deb/opt/apps/deepin-wine-runner/entries/
 	cp -rv deb/usr/share/applications deb/opt/apps/deepin-wine-runner/entries/applications
 	python3 UpdateTime.py
