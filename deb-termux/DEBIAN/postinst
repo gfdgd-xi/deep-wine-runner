@@ -107,5 +107,21 @@ fi
 #fi
 # 设置目录权限，让用户可读可写，方便后续删除组件
 chmod 777 -R /opt/apps/deepin-wine-runner > /dev/null 2>&1 | true
+
+if [[ ! -f /data/data/com.termux/files/home/.vnc/passwd ]]; then
+	echo 开始配置 VNCServer
+	echo 接下来需要设置 VNCServer 的密码
+	set +e
+	while [[ 1 ]];
+	do
+    	vncpasswd
+    	if [[ $? == 0 ]]; then
+        	break
+    	fi
+    	echo 设置有误，需重新设置
+    	sleep 1
+	done
+fi
+
 # 向服务器返回安装数加1（不显示内容且忽略错误）
 python3 /opt/apps/deepin-wine-runner/Download.py $version > /dev/null 2>&1 | true
