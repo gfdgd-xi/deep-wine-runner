@@ -3,10 +3,10 @@ CURRENT_DIR=$(dirname $(readlink -f "$0"))
 if [[ ! -d $TMPDIR/tmp ]]; then
     mkdir -p $TMPDIR/tmp
 fi
-
 if [[ $DISPLAY == "" ]] && [[ $WAYLAND_DISPLAY == "" ]]; then
     # 自动配置 NoVNC
     export DISPLAY=:5
+    vncserver -kill :5
     vncserver $DISPLAY &
     sleep 3
     xfwm4 &

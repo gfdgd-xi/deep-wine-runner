@@ -63,6 +63,8 @@ if sys.version_info[1] < 6:
     PythonLower()
 
 TMPDIR = os.getenv("TMPDIR")
+if (TMPDIR == None):
+    TMPDIR = ""
 
 ###################
 # 程序所需事件

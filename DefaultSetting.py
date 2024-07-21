@@ -16,6 +16,8 @@ import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
 
 TMPDIR = os.getenv("TMPDIR")
+if (TMPDIR == None):
+    TMPDIR = ""
 
 # 获取用户主目录
 def get_home():
