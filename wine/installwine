@@ -210,6 +210,7 @@ class GetInfo():
     isLoongarch = (arch == "loong64") or (arch == "loongarch64")
     isProot = os.path.exists("/storage")
     isAndroid = os.path.exists("/data")
+    isTermux = os.path.exists("/data")
     glibcVersion = "2.28"
 
     def __init__(self):
@@ -321,6 +322,8 @@ class GetInfo():
             result = True
         if (data == "android" and self.isAndroid):
             result = True
+        if (data == "termux" and self.isTermux):
+            result = True
         if (self.compareVersion(self.glibcVersion, data) == 1):
             result = True
         if (os.path.exists(data)):
@@ -365,12 +368,15 @@ def ReadInternetInformation():
         QtWidgets.QMessageBox.critical(window, "错误", "无法连接服务器！")
         return
     nmodel = QtGui.QStandardItemModel(window)
+    newinternetJsonList = []
     for i in internetJsonList:
         if (ui.m_recommendWine.isChecked() and not systemInfo.check(i[2])):
             continue
         item = QtGui.QStandardItem(i[0])
         nmodel.appendRow(item)
+        newinternetJsonList.append(i)
     ui.internetWineList.setModel(nmodel)
+    internetJsonList = newinternetJsonList
     
 class DownloadThread(QtCore.QThread):
     MessageBoxInfo = QtCore.pyqtSignal(str)

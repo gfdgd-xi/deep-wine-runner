@@ -1284,7 +1284,7 @@ class UpdateWindow():
         isArch = False
         isFedora = False
         isTermux = False
-        if os.path.exists("/data/data/com.termux"):
+        if os.path.exists("/data/data/com.termux/files"):
             isTermux = True
             if UpdateWindow.data["Url-termux"][0] == None:
                 unPackageNew = True
@@ -1296,9 +1296,11 @@ class UpdateWindow():
             isFedora = True
             if UpdateWindow.data["Url-rpm"][0] == None:
                 unPackageNew = True
+        if programPath != "/opt/apps/deepin-wine-runner" and programPath != "/data/data/com.termux/files/usr/opt/apps/deepin-wine-runner":
+            unPackageNew = True
         try:            
             print(UpdateWindow.data["Url"])
-            if os.path.exists(f"{programPath}/off-line.lock") or programPath != "/opt/apps/deepin-wine-runner" or unPackageNew:
+            if os.path.exists(f"{programPath}/off-line.lock") or unPackageNew:
                 # 使用解压法更新
                 write_txt(TMPDIR + "/tmp/spark-deepin-wine-runner/update.sh", f"""#!/bin/bash
 echo 删除多余的安装包
