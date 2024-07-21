@@ -62,6 +62,8 @@ if sys.version_info[0] < 3:
 if sys.version_info[1] < 6:
     PythonLower()
 
+TMPDIR = os.getenv("TMPDIR")
+
 ###################
 # 程序所需事件
 ###################
@@ -1273,9 +1275,9 @@ class UpdateWindow():
         UpdateWindow.update.show()
 
     def Update():
-        if os.path.exists("/tmp/spark-deepin-wine-runner/update"):
-            shutil.rmtree("/tmp/spark-deepin-wine-runner/update")
-        os.makedirs("/tmp/spark-deepin-wine-runner/update")
+        if os.path.exists(TMPDIR + "/tmp/spark-deepin-wine-runner/update"):
+            shutil.rmtree(TMPDIR + "/tmp/spark-deepin-wine-runner/update")
+        os.makedirs(TMPDIR + "/tmp/spark-deepin-wine-runner/update")
         unPackageNew = False
         isArch = False
         isFedora = False
@@ -1291,69 +1293,69 @@ class UpdateWindow():
             print(UpdateWindow.data["Url"])
             if os.path.exists(f"{programPath}/off-line.lock") or programPath != "/opt/apps/deepin-wine-runner" or unPackageNew:
                 # 使用解压法更新
-                write_txt("/tmp/spark-deepin-wine-runner/update.sh", f"""#!/bin/bash
+                write_txt(TMPDIR + "/tmp/spark-deepin-wine-runner/update.sh", f"""#!/bin/bash
 echo 删除多余的安装包
-rm -rfv /tmp/spark-deepin-wine-runner/update/*
+rm -rfv $TMPDIR/tmp/spark-deepin-wine-runner/update/*
 echo 关闭“Wine 运行器”
 python3 "{programPath}/updatekiller.py"
 echo 下载安装包
-wget -P /tmp/spark-deepin-wine-runner/update {UpdateWindow.data["Url"][0]}
+wget -P $TMPDIR/tmp/spark-deepin-wine-runner/update {UpdateWindow.data["Url"][0]}
 echo 安装安装包
-cd /tmp/spark-deepin-wine-runner/update
+cd $TMPDIR/tmp/spark-deepin-wine-runner/update
 7z x *.deb
 7z x data.tar
 cp opt/apps/deepin-wine-runner/* "{programPath}" -rv
 notify-send -i "{iconPath}" "更新完毕！"
 zenity --info --text=\"更新完毕！\" --ellipsize
 """)
-                OpenTerminal("bash /tmp/spark-deepin-wine-runner/update.sh")
+                OpenTerminal("bash $TMPDIR/tmp/spark-deepin-wine-runner/update.sh")
                 return
             else:
                 if isArch:
                     # 使用 pacman 安装更新
-                    write_txt("/tmp/spark-deepin-wine-runner/update.sh", f"""#!/bin/bash
+                    write_txt(TMPDIR + "/tmp/spark-deepin-wine-runner/update.sh", f"""#!/bin/bash
 echo 删除多余的安装包
-rm -rfv /tmp/spark-deepin-wine-runner/update/*
+rm -rfv $TMPDIR/tmp/spark-deepin-wine-runner/update/*
 echo 关闭“Wine 运行器”
 python3 "{programPath}/updatekiller.py"
 echo 下载安装包
-wget -P /tmp/spark-deepin-wine-runner/update {UpdateWindow.data["Url-pkg"][0]}
+wget -P $TMPDIR/tmp/spark-deepin-wine-runner/update {UpdateWindow.data["Url-pkg"][0]}
 echo 安装安装包
-pacman -U /tmp/spark-deepin-wine-runner/update/*  --noconfirm
+pacman -U $TMPDIR/tmp/spark-deepin-wine-runner/update/*  --noconfirm
 notify-send -i "{iconPath}" "更新完毕！"
 zenity --info --text=\"更新完毕！\" --ellipsize
 """)
                 elif isFedora:
                     # 使用 yum 安装更新
-                    write_txt("/tmp/spark-deepin-wine-runner/update.sh", f"""#!/bin/bash
+                    write_txt(TMPDIR + "/tmp/spark-deepin-wine-runner/update.sh", f"""#!/bin/bash
 echo 删除多余的安装包
-rm -rfv /tmp/spark-deepin-wine-runner/update/*
+rm -rfv $TMPDIR/tmp/spark-deepin-wine-runner/update/*
 echo 关闭“Wine 运行器”
 python3 "{programPath}/updatekiller.py"
 echo 下载安装包
-wget -O /tmp/spark-deepin-wine-runner/update/spark-deepin-wine-runner.rpm {UpdateWindow.data["Url-rpm"][0]}
+wget -O $TMPDIR/tmp/spark-deepin-wine-runner/update/spark-deepin-wine-runner.rpm {UpdateWindow.data["Url-rpm"][0]}
 echo 安装安装包
-yum reinstall /tmp/spark-deepin-wine-runner/update/spark-deepin-wine-runner.rpm  -y
+yum reinstall $TMPDIR/tmp/spark-deepin-wine-runner/update/spark-deepin-wine-runner.rpm  -y
 notify-send -i "{iconPath}" "更新完毕！"
 zenity --info --text=\"更新完毕！\" --ellipsize
 """)
                 else:
                     # 使用 deb 安装更新
-                    write_txt("/tmp/spark-deepin-wine-runner/update.sh", f"""#!/bin/bash
+                    write_txt(TMPDIR + "/tmp/spark-deepin-wine-runner/update.sh", f"""#!/bin/bash
 echo 删除多余的安装包
-rm -rfv /tmp/spark-deepin-wine-runner/update/*
+rm -rfv $TMPDIR/tmp/spark-deepin-wine-runner/update/*
 echo 关闭“Wine 运行器”
 python3 "{programPath}/updatekiller.py"
 echo 下载安装包
-wget -P /tmp/spark-deepin-wine-runner/update {UpdateWindow.data["Url"][0]}
+wget -P $TMPDIR/tmp/spark-deepin-wine-runner/update {UpdateWindow.data["Url"][0]}
 echo 安装安装包
-dpkg -i /tmp/spark-deepin-wine-runner/update/*
+dpkg -i $TMPDIR/tmp/spark-deepin-wine-runner/update/*
 echo 修复依赖关系
 apt install -f -y
 notify-send -i "{iconPath}" "更新完毕！"
 zenity --info --text=\"更新完毕！\" --ellipsize
 """)
-                OpenTerminal("pkexec bash /tmp/spark-deepin-wine-runner/update.sh")
+                OpenTerminal("pkexec bash $TMPDIR/tmp/spark-deepin-wine-runner/update.sh")
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(None, "出现错误，无法继续更新", traceback.format_exc())
@@ -1472,29 +1474,29 @@ class GetDllFromWindowsISO:
                 # 显示所有内容
                 # 下面内容需要分类讨论
                 if GetDllFromWindowsISO.arch == 0:
-                    for i in os.listdir("/tmp/wine-runner-getdll/i386"):
+                    for i in os.listdir(TMPDIR + "/tmp/wine-runner-getdll/i386"):
                         if i[-3:] == "dl_":
                             findList.append(i[:-1] + "l")    
                 elif GetDllFromWindowsISO.arch == 32:
-                    for i in os.listdir("/tmp/wine-runner-getdll-wim/Windows/SysWOW64"):
+                    for i in os.listdir(TMPDIR + "/tmp/wine-runner-getdll-wim/Windows/SysWOW64"):
                         if i[-3:] == "dll":
                             findList.append(i[:-1] + "l")  
                 elif GetDllFromWindowsISO.arch == 64:
-                    for i in os.listdir("/tmp/wine-runner-getdll-wim/Windows/System32"):
+                    for i in os.listdir(TMPDIR + "/tmp/wine-runner-getdll-wim/Windows/System32"):
                         if i[-3:] == "dll":
                             findList.append(i[:-1] + "l")  
                 GetDllFromWindowsISO.dllListModel.setStringList(findList)
                 return
             if GetDllFromWindowsISO.arch == 0:
-                for i in os.listdir("/tmp/wine-runner-getdll/i386"):
+                for i in os.listdir(TMPDIR + "/tmp/wine-runner-getdll/i386"):
                     if found in i[:-1] + "l":
                         findList.append(i[:-1] + "l")  
             elif GetDllFromWindowsISO.arch == 32:
-                for i in os.listdir("/tmp/wine-runner-getdll-wim/Windows/SysWOW64"):
+                for i in os.listdir(TMPDIR + "/tmp/wine-runner-getdll-wim/Windows/SysWOW64"):
                     if found in i[:-1] + "l":
                         findList.append(i[:-1] + "l")  
             elif GetDllFromWindowsISO.arch == 64:
-                for i in os.listdir("/tmp/wine-runner-getdll-wim/Windows/System32"):
+                for i in os.listdir(TMPDIR + "/tmp/wine-runner-getdll-wim/Windows/System32"):
                     if found in i[:-1] + "l":
                         findList.append(i[:-1] + "l")  
             if len(isoPath) == 0:
@@ -1513,27 +1515,27 @@ class GetDllFromWindowsISO:
         if not os.path.exists(GetDllFromWindowsISO.isoPath.currentText()):
             QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, transla.trans("错误"), transla.trans("您选择的 ISO 镜像文件不存在"))
             return
-        if os.path.exists("/tmp/wine-runner-getdll"):
+        if os.path.exists(TMPDIR + "/tmp/wine-runner-getdll"):
             try:
-                os.rmdir("/tmp/wine-runner-getdll")
-                os.system("rm -rf /tmp/wine-runner-getdll-wim")
+                os.rmdir(TMPDIR + "/tmp/wine-runner-getdll")
+                os.system("rm -rf $TMPDIR/tmp/wine-runner-getdll-wim")
             except:
                 # 如果无法删除可能是挂载了文件
-                os.system("wimunmount /tmp/wine-runner-getdll-wim")
-                os.system("pkexec umount /tmp/wine-runner-getdll")
+                os.system("wimunmount $TMPDIR/tmp/wine-runner-getdll-wim")
+                os.system("pkexec umount $TMPDIR/tmp/wine-runner-getdll")
                 
                 try:
-                    os.rmdir("/tmp/wine-runner-getdll")
-                    os.rmdir("/tmp/wine-runner-getdll-wim")
+                    os.rmdir(TMPDIR + "/tmp/wine-runner-getdll")
+                    os.rmdir(TMPDIR + "/tmp/wine-runner-getdll-wim")
                 except:
                     traceback.print_exc()
                     QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", traceback.format_exc())
                     return
-        os.makedirs("/tmp/wine-runner-getdll")
-        os.system(f"pkexec mount '{GetDllFromWindowsISO.isoPath.currentText()}' /tmp/wine-runner-getdll")
+        os.makedirs(TMPDIR + "/tmp/wine-runner-getdll")
+        os.system(f"pkexec mount '{GetDllFromWindowsISO.isoPath.currentText()}' $TMPDIR/tmp/wine-runner-getdll")
         findList = []
         # 判断是新版的 Windows ISO（Windows Vista 及以上版本）
-        if os.path.exists("/tmp/wine-runner-getdll/sources/install.wim"):
+        if os.path.exists(TMPDIR + "/tmp/wine-runner-getdll/sources/install.wim"):
             # 如果没有安装 wimtools 的话
             if os.system("which wimmount") != 0:
                 QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", f"镜像内容读取/挂载失败，因为没有安装 wimtools 以至无法读取")
@@ -1544,14 +1546,14 @@ class GetDllFromWindowsISO:
             choose = QtWidgets.QInputDialog.getInt(GetDllFromWindowsISO.message, "提示", "请输入 Index")
             if not choose[1]:
                 return
-            os.makedirs("/tmp/wine-runner-getdll-wim")
-            os.system(f"wimmount /tmp/wine-runner-getdll/sources/install.wim {choose[0]} /tmp/wine-runner-getdll-wim")
-            if os.path.exists("/tmp/wine-runner-getdll-wim/Windows/SysWOW64"):
+            os.makedirs(TMPDIR + "/tmp/wine-runner-getdll-wim")
+            os.system(f"wimmount $TMPDIR/tmp/wine-runner-getdll/sources/install.wim {choose[0]} $TMPDIR/tmp/wine-runner-getdll-wim")
+            if os.path.exists(TMPDIR + "/tmp/wine-runner-getdll-wim/Windows/SysWOW64"):
                 # 如果是 64 位镜像
                 if QtWidgets.QInputDialog.getItem(GetDllFromWindowsISO.message, "选择位数", "选择位数（如果没有选择，默认为 64 位）", ["32", "64"], 1, False) == "32":
                     # 64 位镜像的 32 位是存在 SysWOW64 的                
                     try:
-                        for i in os.listdir("/tmp/wine-runner-getdll-wim/Windows/SysWOW64"):
+                        for i in os.listdir(TMPDIR + "/tmp/wine-runner-getdll-wim/Windows/SysWOW64"):
                             if i[-3:] == "dll":
                                 findList.append(i[:-1] + "l")     
                         GetDllFromWindowsISO.dllListModel.setStringList(findList)
@@ -1570,7 +1572,7 @@ class GetDllFromWindowsISO:
                         QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, "错误", f"镜像内容读取/挂载失败，报错如下：\n{traceback.format_exc()}")
                         return
             try:
-                for i in os.listdir("/tmp/wine-runner-getdll-wim/Windows/System32"):
+                for i in os.listdir(TMPDIR + "/tmp/wine-runner-getdll-wim/Windows/System32"):
                     if i[-3:] == "dll":
                         findList.append(i[:-1] + "l")    
                 GetDllFromWindowsISO.arch = 64 
@@ -1581,7 +1583,7 @@ class GetDllFromWindowsISO:
             GetDllFromWindowsISO.dllListModel.setStringList(findList)
         else:
             try:
-                for i in os.listdir("/tmp/wine-runner-getdll/i386"):
+                for i in os.listdir(TMPDIR + "/tmp/wine-runner-getdll/i386"):
                     if i[-3:] == "dl_":
                         findList.append(i[:-1] + "l")     
                 GetDllFromWindowsISO.arch = 0
@@ -1601,11 +1603,11 @@ class GetDllFromWindowsISO:
         #GetDllFromWindowsISO.isoPath['value'] = isoPath
 
     def UmountDisk():
-        os.system("wimunmount /tmp/wine-runner-getdll-wim")
-        os.system("pkexec umount /tmp/wine-runner-getdll")
+        os.system("wimunmount $TMPDIR/tmp/wine-runner-getdll-wim")
+        os.system("pkexec umount $TMPDIR/tmp/wine-runner-getdll")
         try:
-            shutil.rmtree("/tmp/wine-runner-getdll")
-            os.system("rm -rf /tmp/wine-runner-getdll-wim")
+            shutil.rmtree(TMPDIR + "/tmp/wine-runner-getdll")
+            os.system("rm -rf $TMPDIR/tmp/wine-runner-getdll-wim")
         except:
             traceback.print_exc()
             QtWidgets.QMessageBox.critical(GetDllFromWindowsISO.message, QtCore.QCoreApplication.translate("U", "错误"), f"关闭/卸载镜像失败，报错如下：\n{traceback.format_exc()}")
@@ -1623,11 +1625,11 @@ class GetDllFromWindowsISO:
         try:
             # 要分类讨论
             if GetDllFromWindowsISO.arch == 0:
-                shutil.copy(f"/tmp/wine-runner-getdll/i386/{choose[:-1]}_", f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}")
+                shutil.copy(TMPDIR + f"/tmp/wine-runner-getdll/i386/{choose[:-1]}_", f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}")
             elif GetDllFromWindowsISO.arch == 32:
-                shutil.copy(f"/tmp/wine-runner-getdll-wim/Windows/SysWOW64/{choose[:-1]}l", f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}")
+                shutil.copy(TMPDIR + f"/tmp/wine-runner-getdll-wim/Windows/SysWOW64/{choose[:-1]}l", f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}")
             elif GetDllFromWindowsISO.arch == 64:
-                shutil.copy(f"/tmp/wine-runner-getdll-wim/Windows/System32/{choose[:-1]}l", f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}")
+                shutil.copy(TMPDIR + f"/tmp/wine-runner-getdll-wim/Windows/System32/{choose[:-1]}l", f"{GetDllFromWindowsISO.wineBottonPath}/drive_c/windows/system32/{choose}")
             # 选择原装或优于内建
             if QtWidgets.QInputDialog.getItem(GetDllFromWindowsISO.message, "选择", "选择模式", ["原装先于内建", "原装"], 0, False) == "原装先于内建":
                 # 原装先于内建
@@ -2593,13 +2595,13 @@ for i in iconListUnBuild:
 print(iconList)
 # Qemu Lock
 try:
-    if os.path.exists("/tmp/deepin-wine-runner-lock.txt"):
+    if os.path.exists(TMPDIR + "/tmp/deepin-wine-runner-lock.txt"):
         print("lock")
-        with open(f"/tmp/deepin-wine-runner-lock.txt", "r") as file:
+        with open(TMPDIR + f"/tmp/deepin-wine-runner-lock.txt", "r") as file:
             setting["QemuUnMountHome"] = bool(int(file.read()))
     else:
         print("unlock")
-        with open(f"/tmp/deepin-wine-runner-lock.txt", "w") as file:
+        with open(TMPDIR + f"/tmp/deepin-wine-runner-lock.txt", "w") as file:
             # = bool(int(file.read()))
             file.write(str(int(setting["QemuUnMountHome"])))
 except:

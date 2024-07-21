@@ -15,6 +15,8 @@ import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
 
+TMPDIR = os.getenv("TMPDIR")
+
 # 获取用户主目录
 def get_home():
     return os.path.expanduser('~')
@@ -208,9 +210,9 @@ class SaveLogReport():
                 traceback.print_exc()
             os.system(f"'{programPath}/wrestool' '{binPath}' -x -t 14 > '/tmp/wine-runner-log-icon.png'")
             # 如果提取成功
-            if os.path.exists("/tmp/wine-runner-log-icon.png"):
+            if os.path.exists(TMPDIR + "/tmp/wine-runner-log-icon.png"):
                 # 转换成 base64 编码
-                self.binIcon = "data:image/jpg;base64," + FileToBase64("/tmp/wine-runner-log-icon.png")
+                self.binIcon = "data:image/jpg;base64," + FileToBase64(TMPDIR + "/tmp/wine-runner-log-icon.png")
                 self.binIconPath = "/tmp/wine-runner-log-icon.png"
             else:
                 self.binIcon = "Not Found"
@@ -317,9 +319,9 @@ class SaveLogReport():
         messagebox.exec_()
 
     def To7z(self, savePath):
-        os.system("rm -rfv /tmp/wine-runner-log")
-        os.system("mkdir -v /tmp/wine-runner-log")
-        self.ToHtml("/tmp/wine-runner-log/index.html", toZip=True)
+        os.system("rm -rfv $TMPDIR/tmp/wine-runner-log")
+        os.system("mkdir -v $TMPDIR/tmp/wine-runner-log")
+        self.ToHtml(TMPDIR + "/tmp/wine-runner-log/index.html", toZip=True)
         if os.path.exists(self.binIconPath):
             shutil.copy(self.binIconPath, f"/tmp/wine-runner-log/{os.path.basename(self.binIconPath)}")
         lists = ["wine-runner-log-icon.png", "index.html"]
@@ -332,7 +334,7 @@ class SaveLogReport():
             else:
                 lists.append(name)
             shutil.copy(i, f"/tmp/wine-runner-log/{name}")
-        os.system(f"7z a '{savePath}' /tmp/wine-runner-log")
+        os.system(f"7z a '{savePath}' $TMPDIR/tmp/wine-runner-log")
 
 
     def ToHtml(self, savePath, toZip=False):

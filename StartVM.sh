@@ -12,7 +12,7 @@ CURRENT_DIR=$(cd $(dirname $0); pwd)
 VBoxManage showvminfo Windows
 if [[ 0 == $? ]]; then
     # 检测到虚拟机存在，启动虚拟机
-    VBoxManage startvm Windows > /tmp/windows-virtual-machine-installer-for-wine-runner-run.log 2>&1
+    VBoxManage startvm Windows > $TMPDIR/tmp/windows-virtual-machine-installer-for-wine-runner-run.log 2>&1
     exit
 fi
 # 检查是否有 QEMU
@@ -73,7 +73,7 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
                 -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI \
                 -device AC97 -device ES1370 -device intel-hda -device hda-duplex  \
                 --boot 'splash=VM/boot.jpg,menu=on,splash-time=2000' \
-                > /tmp/windows-virtual-machine-installer-for-wine-runner-run.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
+                > $TMPDIR/tmp/windows-virtual-machine-installer-for-wine-runner-run.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
             exit
         fi
         # 判断系统版本以选择 Qemu
@@ -102,7 +102,7 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
             -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI \
             -device AC97 -device ES1370 -device intel-hda -device hda-duplex  \
             --boot 'splash=VM/boot.jpg,menu=on,splash-time=2000' \
-            > /tmp/windows-virtual-machine-installer-for-wine-runner-run.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
+            > $TMPDIR/tmp/windows-virtual-machine-installer-for-wine-runner-run.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
         exit
     fi
     cat ~/.config/deepin-wine-runner/QEMU-ARCH | grep armhf
@@ -128,7 +128,7 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
                 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 \
                 -device AC97 -device ES1370 -device intel-hda -device hda-duplex \
                 --boot 'splash=VM/boot.jpg,menu=on,splash-time=2000' \
-                > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
+                > $TMPDIR/tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
             exit
         fi
         $qemuMore qemu-system-arm --hda "$HOME/Qemu/Windows/Windows.qcow2" \
@@ -140,7 +140,7 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
             -device usb-kbd,id=keyboard,bus=xhci.0,port=2 \
             -device AC97 -device ES1370 -device intel-hda -device hda-duplex \
             --boot 'splash=VM/boot.jpg,menu=on,splash-time=2000' \
-            > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
+            > $TMPDIR/tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
         exit
     fi
     cat ~/.config/deepin-wine-runner/QEMU-ARCH | grep aarch64
@@ -167,7 +167,7 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
                 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 \
                 -device AC97 -device ES1370 -device intel-hda -device hda-duplex \
                 --boot 'splash=VM/boot.jpg,menu=on,splash-time=2000' \
-                > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
+                > $TMPDIR/tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
             exit
         fi
         $qemuMore qemu-system-aarch64 --hda "$HOME/Qemu/Windows/Windows.qcow2" \
@@ -180,7 +180,7 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
             -device usb-kbd,id=keyboard,bus=xhci.0,port=2 \
             -device AC97 -device ES1370 -device intel-hda -device hda-duplex \
             --boot 'splash=VM/boot.jpg,menu=on,splash-time=2000' \
-            > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
+            > $TMPDIR/tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
         exit
     fi
     

@@ -1,5 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
-CURRENT_DIR=$(cd $(dirname $0); pwd)
+CURRENT_DIR=$(dirname $(readlink -f "$0"))
+
 if [[ $DISPLAY == "" ]] && [[ $WAYLAND_DISPLAY == "" ]]; then
     # 自动配置 NoVNC
     export DISPLAY=:5

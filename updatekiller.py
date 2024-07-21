@@ -3,7 +3,7 @@ import sys
 import os
 import atexit
 
-PIDFILE = '/tmp/deepin-wine-runner.pid'
+PIDFILE = os.getenv() + '/tmp/deepin-wine-runner.pid'
 
 #程序结束时清理pid
 @atexit.register
