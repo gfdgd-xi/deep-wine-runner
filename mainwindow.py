@@ -3172,7 +3172,7 @@ if os.path.exists(f"{programPath}/WineLib/usr"):
                 libPathList.append(f"{libPath}/{i}/")
                 AddRunnerLib(len(libPathList) - 1, f"{i}/")
     print(libPathList)
-if os.path.exists(f"{programPath}/InstallRuntime"):
+if os.path.exists(f"{programPath}/InstallRuntime") and (not os.system("which bwrap")):
     installLib.addSeparator()
     systemalllibinfo = QtWidgets.QAction("全局运行库（与其他运行库以及部分兼容层冲突）")    
     systemalllibinfo.setDisabled(True)
@@ -3307,6 +3307,13 @@ for i in [
     if not os.path.exists(i[1]):
         for x in i[0]:
             x.setDisabled(True)
+# 有些功能是 Termux 不适用的，需要屏蔽
+if os.system("which bwrap"):
+    for i in [
+        installLib, howtouseQemuUser, runnerlibinfo, installRunnerLib,
+        statusRunnerLib, removeRunnerLib, diyRunnerLib, diyRunnerLibRemoveTips,
+    ]:
+        i.setDisabled(True)
 # 有些功能是 Arch Linux 不适用的，需要屏蔽
 if not os.path.exists("/etc/debian_version"):
     if os.path.exists(f"{programPath}/off-line.lock"):
