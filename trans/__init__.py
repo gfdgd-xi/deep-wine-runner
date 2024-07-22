@@ -37,24 +37,5 @@ class Trans():
         try:
             return self.word[text].replace("（", "(").replace("）", ")")
         except:
-            if self.unCloudTrans:
-                return text
-            # 机翻
-            data = { 'doctype': 'json', 'type': 'auto','i': text}
-            jsonReturn = requests.post("http://fanyi.youdao.com/translate", data=data).json()["translateResult"]
-            transText = ""
-            for i in jsonReturn:
-                print(i[0])
-                transText += f'{i[0]["tgt"]}\n'
-            if "\n" in text:
-                transText = transText.replace("\n\n", "\n")[:-1]
-            else:
-                transText = transText[:-1]
-            self.word[text] = transText.replace("（", "(").replace("）", ")")
-            try:
-                with open(self.fileName, "w") as file:
-                    file.write(json.dumps(self.word, ensure_ascii=False))
-            except:
-                traceback.print_exc()
-            print(f"{text}=>{transText}")
-            return transText
+            # 网络翻译接口已废弃
+            return text

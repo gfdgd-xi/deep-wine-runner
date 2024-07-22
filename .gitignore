@@ -5,4 +5,5 @@ VM-source/Makefile
 *.rpm
 *.pro.user
 .vscode
+package-script.zip
 build-*-Debug

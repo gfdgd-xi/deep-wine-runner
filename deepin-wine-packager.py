@@ -28,6 +28,10 @@ from trans import *
 from DefaultSetting import *
 from Model import *
 
+TMPDIR = os.getenv("TMPDIR")
+if (TMPDIR == None):
+    TMPDIR = ""
+
 #################
 # 程序所需事件
 #################
@@ -1473,7 +1477,7 @@ fi
                 debPackagePath = savePath
                 print("g")
             else:
-                debPackagePath = f"/tmp/{random.randint(0, 9999)}"
+                debPackagePath = f"{TMPDIR}/tmp/{random.randint(0, 9999)}"
             #self.run_command(f"rm -rfv /tmp/{debPackagePath}")
             print("f")
             # 为了避免删库，必须保证是 deb 文件构建目录才进行清空
@@ -1929,12 +1933,14 @@ def ChangeWine():
 
 # 获取用户桌面目录
 def get_desktop_path():
+    if (not os.path.exists(get_home() + "/.config/user-dirs.dirs")):
+        return f"{get_home()}/Desktop"
     for line in open(get_home() + "/.config/user-dirs.dirs"):  # 以行来读取配置文件
         desktop_index = line.find("XDG_DESKTOP_DIR=\"")  # 寻找是否有对应项，有返回 0，没有返回 -1
         if desktop_index != -1:  # 如果有对应项
             break  # 结束循环
     if desktop_index == -1:  # 如果是提前结束，值一定≠-1，如果是没有提前结束，值一定＝-1
-        return -1
+        return f"{get_home()}/Desktop"
     else:
         get = line[17:-2]  # 截取桌面目录路径
         get_index = get.find("$HOME")  # 寻找是否有对应的项，需要替换内容
@@ -1966,7 +1972,7 @@ def ReadDeb(unzip = False):
     if debPath == "":
         return
     # 分类讨论
-    path = f"/tmp/deb-unzip-{random.randint(0, 1000)}"
+    path = f"{TMPDIR}/tmp/deb-unzip-{random.randint(0, 1000)}"
     # 新建文件夹
     os.system(f"mkdir -p '{path}'")
     # 解包 control 文件
@@ -2312,9 +2318,12 @@ programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 wine = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5 stable": "deepin-wine5-stable", "deepin-wine6 stable": "deepin-wine6-stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine", "okylin-wine": "okylin-wine", "spark-wine8": "spark-wine8", "spark-wine8-wow": "spark-wine8-wow", "deepin-wine6-vannila": "deepin-wine6-vannila", "deepin-wine8-stable": "deepin-wine8-stable", "spark-wine9": "spark-wine9", "spark-wine9-wow": "spark-wine9-wow", "spark-wine": "spark-wine"}
 wineValue = {"deepin-wine": "deepin-wine", "deepin-wine5": "deepin-wine5", "wine": "wine", "wine64": "wine64", "deepin-wine5-stable": "deepin-wine5 stable", "deepin-wine6-stable": "deepin-wine6 stable", "spark-wine7-devel": "spark-wine7-devel", "ukylin-wine": "ukylin-wine", "okylin-wine": "okylin-wine", "spark-wine8": "spark-wine8", "spark-wine8-wow": "spark-wine8-wow", "deepin-wine6-vannila": "deepin-wine6-vannila", "deepin-wine8-stable": "deepin-wine8-stable", "spark-wine": "spark-wine"}
 # 读取 wine 本地列表
-for i in os.listdir("/opt"):
-    if os.path.exists(f"/opt/{i}/bin/wine"):
-        wine[f"/opt/{i}/bin/wine"] = f"/opt/{i}/bin/wine"
+try:
+    for i in os.listdir("/opt"):
+        if os.path.exists(f"/opt/{i}/bin/wine"):
+            wine[f"/opt/{i}/bin/wine"] = f"/opt/{i}/bin/wine"
+except:
+    pass
 try:
     for i in os.listdir(f"{get_home()}/.deepinwine"):
         if os.path.exists(f"{get_home()}/.deepinwine/{i}/bin/wine"):
