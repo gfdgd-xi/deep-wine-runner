@@ -1,5 +1,5 @@
 <p width=100px align="center"><img src="https://storage.deepin.org/thread/202208031419283599_deepin-wine-runner.png"></p>
-<h1 align="center">Wine 运行器 3.9.2</h1>
+<h1 align="center">Wine 运行器 4.0.0</h1>
 <hr>
 <a href='https://gitee.com/gfdgd-xi/deep-wine-runner/stargazers'><img src='https://gitee.com/gfdgd-xi/deep-wine-runner/badge/star.svg?theme=dark' alt='star'></img></a>
 <a href='https://gitee.com/gfdgd-xi/deep-wine-runner/members'><img src='https://gitee.com/gfdgd-xi/deep-wine-runner/badge/fork.svg?theme=dark' alt='fork'></img></a>  
@@ -28,6 +28,10 @@ Wine Runner is a program that allows Linux users to run Windows applications mor
 打包器视频教程：https://www.bilibili.com/video/BV1Bh4y1Q7nT/  
 Wine 运行器 QQ 交流群：762985460  
 Wine 运行器离线包下载地址：https://www.123pan.com/s/pDSKVv-pAJWv.html     
+
+### Wine 运行器 For Termux 安装方法以及注意事项
+见 https://gitee.com/gfdgd-xi/deep-wine-runner-termux  
+https://github.com/gfdgd-xi/deep-wine-runner-termux  
 
 ### 如何手动下载 Wine？
 下载链接: http://ctfile.gfdgdxi.top/d/31540479-61624693-080e74?p=2061 (访问密码: 2061)
@@ -159,6 +163,25 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志 
+### 4.0.0（2024/07/22）
+**※1、优化运行器窗口大小机制**  
+**※2、Wine 安装器支持根据机器实际情况自动推荐适合的 Wine**  
+**※3、Wine 安装器支持手动导入 Wine 7z 包并提供相应 7z 包的网盘下载地址**  
+**※4、兼容 Deepin 终端（deepin 15 经典版本，deepin-terminal-gtk）**  
+**※5、跟进 dxvk 2.4**  
+**※6、修复 deepin 23 无法使用 Mono/Gecko 安装器的问题**  
+**※7、修复 debian testing 打包时会把 / 打入 .7z 包内导致系统死机的问题**  
+**※8、支持 AOSC（安同）、小小电脑、proot 容器**  
+**※9、支持在 Termux 直接运行（单独提供安装包）**  
+10、修复虚拟机启动器入口不会调用安装的 Qemu Extra 的问题  
+11、优化高级打包器容器名称生成机制  
+12、修复部分机器无法正常打开高级打包器的问题  
+13、修复高级打包器选择Wine封装入deb模式时helper只能使用spark dwine helper的问题  
+
+![](https://t.tutu.to/img/8NAdd)  
+![](https://t.tutu.to/img/8NWtw)  
+![](https://t.tutu.to/img/8NZho)  
+
 ### 3.9.2（2024/06/29）
 **※1、移除冗余组件**  
 **※2、修复 Wine 安装器在文件下载失败后无法自动关闭进度条和解除控件禁用的问题**  
