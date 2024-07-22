@@ -30,6 +30,7 @@ Wine 运行器 QQ 交流群：762985460
 Wine 运行器离线包下载地址：https://www.123pan.com/s/pDSKVv-pAJWv.html     
 
 ### Wine 运行器 For Termux 安装方法以及注意事项
+Wine 运行器 For Termux 使用的是独立的安装包，详细见：  
 见 https://gitee.com/gfdgd-xi/deep-wine-runner-termux  
 https://github.com/gfdgd-xi/deep-wine-runner-termux  
 
