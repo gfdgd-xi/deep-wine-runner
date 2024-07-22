@@ -2509,13 +2509,15 @@ updateThingsString = QtCore.QCoreApplication.translate("U", '''※1、优化运�
 ※6、修复 deepin 23 无法使用 Mono/Gecko 安装器的问题
 ※7、修复 debian testing 打包时会把 / 打入 .7z 包内导致系统死机的问题
 ※8、支持 AOSC（安同）、小小电脑、proot 容器
-※9、支持在 Termux 直接运行
+※9、支持在 Termux 直接运行（单独提供安装包）
 10、修复虚拟机启动器入口不会调用安装的 Qemu Extra 的问题
 11、优化高级打包器容器名称生成机制
+12、修复部分机器无法正常打开高级打包器的问题
+13、修复高级打包器选择Wine封装入deb模式时helper只能使用spark dwine helper的问题
 ''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2024年07月21日"
+updateTime = "2024年07月22日"
 aboutProgram = QtCore.QCoreApplication.translate("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序。原版的 Wine 只能使用命令操作，且安装过程较为繁琐，对小白不友好。于是该运行器为了解决该痛点，内置了对Wine图形化的支持、Wine 安装器、微型应用商店、各种Wine工具、自制的Wine程序打包器、运行库安装工具等。</p>
 <p>它同时还内置了基于Qemu/VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作，也能在非 X86 架构安装 X86 架构的 Windows 操作系统（但是效率较低，可以运行些老系统）。</p>
 <p>而且对于部分 Wine 应用适配者来说，提供了图形化的打包工具，以及提供了一些常用工具以及运行库的安装方式，以及能安装多种不同的 Wine 以测试效果，能极大提升适配效率。</p>
@@ -2829,7 +2831,6 @@ installMoreWine = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/mo
 downloadChrootBottle = QtWidgets.QAction(QtGui.QIcon(f"{programPath}/Icon/Function/CHROOT.png"), QtCore.QCoreApplication.translate("U", "下载 Chroot 容器"))
 installBox86CN = QtWidgets.QAction(QtGui.QIcon.fromTheme("box"), QtCore.QCoreApplication.translate("U", "安装 Box86/Box64 日构建（国内源）"))
 installBox86 = QtWidgets.QAction(QtGui.QIcon.fromTheme("box"), QtCore.QCoreApplication.translate("U", "安装 Box86/Box64 日构建（国外 Github 源）"))
-installBox86Own = QtWidgets.QAction(QtGui.QIcon.fromTheme("box"), QtCore.QCoreApplication.translate("U", "安装 Box86/Box64（使用自建源，支持 riscv64）"))
 installLat = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "安装 lat（只限 Loongarch64 架构）"))
 p2 = QtWidgets.QAction(QtGui.QIcon.fromTheme("settings"), QtCore.QCoreApplication.translate("U", "设置程序(&S)"))
 enabledAll = QtWidgets.QAction(QtCore.QCoreApplication.translate("U", "强制启用所有被禁用的组件（不推荐）"))
@@ -2846,7 +2847,6 @@ programmenu.addAction(installMoreWine)
 programmenu.addAction(downloadChrootBottle)
 programmenu.addAction(installBox86CN)
 programmenu.addAction(installBox86)
-programmenu.addAction(installBox86Own)
 programmenu.addAction(installLat)
 programmenu.addSeparator()
 programmenu.addAction(p2)
@@ -2881,7 +2881,6 @@ p2.triggered.connect(ProgramSetting.ShowWindow)
 enabledAll.triggered.connect(lambda: DisableButton(False))
 installBox86CN.triggered.connect(lambda: OpenTerminal(f"sudo bash '{programPath}/InstallBox86-cn.sh'"))
 installBox86.triggered.connect(lambda: OpenTerminal(f"sudo bash '{programPath}/InstallBox86.sh'"))
-installBox86Own.triggered.connect(lambda: OpenTerminal(f"sudo bash '{programPath}/InstallBox86-own.sh'"))
 p3.triggered.connect(CleanProgramHistory)
 cleanCache.triggered.connect(CleanProgramCache)
 p4.triggered.connect(window.close)
@@ -3350,7 +3349,7 @@ if not os.path.exists("/etc/debian_version"):
         for i in [p1]:
             i.setDisabled(True)    
     for i in [installLat, installWineHQ, installWineHQOrg,
-              installBox86CN, installBox86, installBox86Own]:
+              installBox86CN, installBox86]:
         i.setDisabled(True)
     for i in actionList:
         i.setDisabled(True)
