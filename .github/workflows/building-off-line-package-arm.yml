@@ -16,24 +16,24 @@ jobs:
           cpu=$(cat /proc/cpuinfo | grep processor | wc -l)
           # 配置环境
           sudo apt update
-          sudo apt install python3-requests debootstrap xz-utils -y
+          sudo apt install python3-requests debootstrap xz-utils qemu-user-static -y
           sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools psmisc -y
           cd ~
           mkdir package
           # 部署 chroot 环境
-          sudo debootstrap bookworm debian
+          sudo debootstrap --arch=arm64 bookworm debian
           wget https://github.com/gfdgd-xi/deep-wine-runner/raw/main/pardus-chroot
           sudo cp pardus-chroot /usr/bin
           sudo chmod 777 /usr/bin/pardus-chroot
           sudo pardus-chroot debian
           ### 配置容器
           ## 加入 wine 源
-          sudo chroot debian dpkg --add-architecture i386
           sudo chroot debian apt update
           sudo chroot debian apt install wget -y
-          sudo chroot debian wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
-          sudo chroot debian wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources
+          sudo chroot debian wget https://ryanfortner.github.io/box64-debs/box64.list -O /etc/apt/sources.list.d/box64.list
+          sudo chroot debian bash -c "wget -qO- https://ryanfortner.github.io/box64-debs/KEY.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg"
           sudo chroot debian apt update
+          sudo chroot debian apt install box64
           ## 获取 Wine 运行器安装包
           git clone https://github.com/gfdgd-xi/deep-wine-runner --depth=1
           cd deep-wine-runner
