@@ -272,13 +272,15 @@ class GetInfo():
                 if (self.compareVersion(newestVersion, i) == -1):
                     newestVersion = i
             version = newestVersion
-        self.glibcVersion = version
         if (version == None):
             version = "2.28"  # 默认值
+        self.glibcVersion = version
         return version
     
     def compareVersion(self, version1: str, version2: str):
         # 判断是不是版本号
+        if (type(version1) != str or type(version2) != str):
+            return -2
         if ((not "." in version1) or (not "." in version2)):
             return -2
         if (version1 == version2):
