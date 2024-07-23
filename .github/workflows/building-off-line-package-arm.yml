@@ -29,7 +29,7 @@ jobs:
           ### 配置容器
           ## 加入 wine 源
           sudo chroot debian apt update
-          sudo chroot debian apt install wget -y
+          sudo chroot debian apt install sudo gpg wget -y
           sudo chroot debian wget https://ryanfortner.github.io/box64-debs/box64.list -O /etc/apt/sources.list.d/box64.list
           sudo chroot debian bash -c "wget -qO- https://ryanfortner.github.io/box64-debs/KEY.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg"
           sudo chroot debian apt update
