@@ -230,7 +230,29 @@ class GetInfo():
             "/usr/lib/mips64el-linux-gnuabi64/ld.so.1",
             "/usr/lib/powerpc64le-linux-gnu/ld64.so.2",
             "/usr/lib/loongarch64-linux-gnu/ld-linux-loongarch-lp64d.so.1",
-            "/usr/lib/loongarch64-linux-gnu/ld.so.1"
+            "/usr/lib/loongarch64-linux-gnu/ld.so.1",
+            "/usr/lib/ld-linux.so.2",
+            "/usr/lib/ld-linux-x86-64.so.2",
+            "/usr/lib/ld-linux-armhf.so.3",
+            "/usr/lib/ld-linux.so.3",
+            "/usr/lib/ld-linux-aarch64.so.1",
+            "/usr/lib/ld-linux-aarch64.so.1",
+            "/usr/lib/ld-linux-riscv64-lp64d.so.1",
+            "/usr/lib/ld.so.1",
+            "/usr/lib/ld64.so.2",
+            "/usr/lib/ld-linux-loongarch-lp64d.so.1",
+            "/usr/lib64/ld.so.1",
+            "/usr/lib64/ld-linux.so.2",
+            "/usr/lib64/ld-linux-x86-64.so.2",
+            "/usr/lib64/ld-linux-armhf.so.3",
+            "/usr/lib64/ld-linux.so.3",
+            "/usr/lib64/ld-linux-aarch64.so.1",
+            "/usr/lib64/ld-linux-aarch64.so.1",
+            "/usr/lib64/ld-linux-riscv64-lp64d.so.1",
+            "/usr/lib64/ld.so.1",
+            "/usr/lib64/ld64.so.2",
+            "/usr/lib64/ld-linux-loongarch-lp64d.so.1",
+            "/usr/lib64/ld.so.1"
         ]
         for i in glibcPathList:
             if (os.path.exists(i)):
@@ -251,6 +273,8 @@ class GetInfo():
                     newestVersion = i
             version = newestVersion
         self.glibcVersion = version
+        if (version == None):
+            version = "2.28"  # 默认值
         return version
     
     def compareVersion(self, version1: str, version2: str):

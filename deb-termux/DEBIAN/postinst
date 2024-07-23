@@ -108,7 +108,10 @@ fi
 # 设置目录权限，让用户可读可写，方便后续删除组件
 chmod 777 -R /opt/apps/deepin-wine-runner > /dev/null 2>&1 | true
 
-if [[ ! -f /data/data/com.termux/files/home/.vnc/passwd ]]; then
+# 向服务器返回安装数加1（不显示内容且忽略错误）
+python3 /opt/apps/deepin-wine-runner/Download.py $version > /dev/null 2>&1 | true
+
+if [[ ! -f /data/data/com.termux/files/home/.vnc/passwd ]] && [[ -f /data/data/com.termux/files/usr/bin/vncpasswd ]]; then
 	echo 开始配置 VNCServer
 	echo 接下来需要设置 VNCServer 的密码
 	set +e
@@ -121,11 +124,11 @@ if [[ ! -f /data/data/com.termux/files/home/.vnc/passwd ]]; then
     	echo 设置有误，需重新设置
     	sleep 1
 	done
+	echo 'Wine 运行器安装完成，如果没有设置 $DISPLAY 变量的情况下打开 Wine 运行器'
+	echo '可以在浏览器输入网址 http://localhost:6080/vnc.html 远程访问'
+	echo '或者用 VNC 远程工具输入 localhost:5 远程访问'
+
 fi
 
-# 向服务器返回安装数加1（不显示内容且忽略错误）
-python3 /opt/apps/deepin-wine-runner/Download.py $version > /dev/null 2>&1 | true
 
-echo 'Wine 运行器安装完成，如果没有设置 $DISPLAY 变量的情况下打开 Wine 运行器'
-echo '可以在浏览器输入网址 http://localhost:6080/vnc.html 远程访问'
-echo '或者用 VNC 远程工具输入 localhost:5 远程访问'
+

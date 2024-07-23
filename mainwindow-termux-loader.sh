@@ -9,7 +9,7 @@ if [[ -f $HOME/.config/deepin-wine-runner/vnc-public ]]; then
     unset noVNCOption
     unset VNCServerOption
 fi
-if [[ $DISPLAY == "" ]] && [[ $WAYLAND_DISPLAY == "" ]]; then
+if [[ $DISPLAY == "" ]] && [[ $WAYLAND_DISPLAY == "" ]] && [[ -f /data/data/com.termux/files/usr/bin/vncpasswd ]]; then
     # 自动配置 NoVNC
     export DISPLAY=:5
     vncserver -kill :5
