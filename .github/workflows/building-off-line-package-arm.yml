@@ -1,16 +1,13 @@
 name: Building Wine Runner Off-line Pages(arm64)
 run-name: ${{ github.actor }} Building Wine Runner Off-line Pages(arm64) 🚀
 on:
+  push:
   workflow_dispatch:
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
       - name: Building DEB
-        env: 
-          GUSER: ${{ secrets.GUSER }}
-          PASSWORD: ${{ secrets.PASSWORD }}
-          UPLOADURL: ${{ secrets.UPLOADURL }}
         run: |
           # 获取所需数据
           cpu=$(cat /proc/cpuinfo | grep processor | wc -l)
@@ -44,10 +41,12 @@ jobs:
           mv deep-wine-runner/spark-deepin-wine-runner.deb debian/tmp/wine-runner.deb
           ## 安装
           sudo chroot debian apt install locales /tmp/wine-runner.deb fcitx xfce4-terminal -y
+          sudo chroot debian apt install libxenmisc4.17 libxenstore4 libxenforeignmemory1 -y
           # 构建软件包
           mkdir package/runner -p
           sudo cp debian/usr/bin package -rv
           sudo cp debian/usr/lib package -rv
+          sudo cp debian/usr/share package -rv
           #sudo cp debian/usr/lib64 package -rv
           sudo cp debian/opt/apps/deepin-wine-runner/* package/runner -rv
           cp deep-wine-runner/off-line-shell/run.sh package -rv
