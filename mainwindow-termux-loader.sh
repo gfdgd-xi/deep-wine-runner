@@ -3,7 +3,7 @@ CURRENT_DIR=$(dirname $(readlink -f "$0"))
 if [[ ! -d $TMPDIR/tmp ]]; then
     mkdir -p $TMPDIR/tmp
 fi
-noVNCOption="--vnc localhost:5901"
+noVNCOption="--listen localhost:6080"
 VNCServerOption="-localhost yes"
 if [[ -f $HOME/.config/deepin-wine-runner/vnc-public ]]; then
     unset noVNCOption
