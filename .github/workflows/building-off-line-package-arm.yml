@@ -33,7 +33,7 @@ jobs:
           sudo chroot debian wget https://ryanfortner.github.io/box64-debs/box64.list -O /etc/apt/sources.list.d/box64.list
           sudo chroot debian bash -c "wget -qO- https://ryanfortner.github.io/box64-debs/KEY.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg"
           sudo chroot debian apt update
-          sudo chroot debian apt install box64
+          sudo chroot debian apt install box64 wine -y
           ## 获取 Wine 运行器安装包
           git clone https://github.com/gfdgd-xi/deep-wine-runner --depth=1
           cd deep-wine-runner
@@ -45,9 +45,7 @@ jobs:
           ## 安装
           sudo chroot debian apt install locales /tmp/wine-runner.deb fcitx xfce4-terminal -y
           # 构建软件包
-          mkdir package/opt -p
           mkdir package/runner -p
-          #sudo cp debian/opt/wine-devel package/opt -rv
           sudo cp debian/usr/bin package -rv
           sudo cp debian/usr/lib package -rv
           #sudo cp debian/usr/lib64 package -rv
@@ -61,17 +59,10 @@ jobs:
           tar -cvf ../spark-deepin-wine-runner-off-line.tar *
           cd ..
           xz -T $cpu spark-deepin-wine-runner-off-line.tar
-          cp deep-wine-runner/off-line-shell/compression-packager.sh spark-deepin-wine-runner-off-line.sh
-          cat spark-deepin-wine-runner-off-line.tar.xz >> spark-deepin-wine-runner-off-line.sh
       - name: upload result
         uses: actions/upload-artifact@v1
         with:
           name: spark-deepin-wine-runner-off-line.tar.xz
           path: /home/runner/spark-deepin-wine-runner-off-line.tar.xz
-      - name: upload result
-        uses: actions/upload-artifact@v1
-        with:
-          name: spark-deepin-wine-runner-off-line.sh
-          path: /home/runner/spark-deepin-wine-runner-off-line.sh
-      
+
     

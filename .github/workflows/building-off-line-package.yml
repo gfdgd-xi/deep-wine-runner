@@ -45,9 +45,7 @@ jobs:
           ## 安装
           sudo chroot debian apt install locales /tmp/wine-runner.deb winehq-devel fcitx xfce4-terminal -y
           # 构建软件包
-          mkdir package/opt -p
           mkdir package/runner -p
-          sudo cp debian/opt/wine-devel package/opt -rv
           sudo cp debian/usr/bin package -rv
           sudo cp debian/usr/lib package -rv
           sudo cp debian/usr/lib64 package -rv
@@ -61,17 +59,10 @@ jobs:
           tar -cvf ../spark-deepin-wine-runner-off-line.tar *
           cd ..
           xz -T $cpu spark-deepin-wine-runner-off-line.tar
-          cp deep-wine-runner/off-line-shell/compression-packager.sh spark-deepin-wine-runner-off-line.sh
-          cat spark-deepin-wine-runner-off-line.tar.xz >> spark-deepin-wine-runner-off-line.sh
       - name: upload result
         uses: actions/upload-artifact@v1
         with:
           name: spark-deepin-wine-runner-off-line.tar.xz
           path: /home/runner/spark-deepin-wine-runner-off-line.tar.xz
-      - name: upload result
-        uses: actions/upload-artifact@v1
-        with:
-          name: spark-deepin-wine-runner-off-line.sh
-          path: /home/runner/spark-deepin-wine-runner-off-line.sh
       
     
