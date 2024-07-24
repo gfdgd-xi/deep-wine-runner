@@ -1,5 +1,5 @@
-name: Building Wine Runner Off-line Pages(amd64)
-run-name: ${{ github.actor }} Building Wine Runner Off-line Pages(amd64) 🚀
+name: Building Wine Runner Off-line Pages(arm64)
+run-name: ${{ github.actor }} Building Wine Runner Off-line Pages(arm64) 🚀
 on:
   workflow_dispatch:
 jobs:
@@ -47,7 +47,7 @@ jobs:
           # 构建软件包
           mkdir package/opt -p
           mkdir package/runner -p
-          sudo cp debian/opt/wine-devel package/opt -rv
+          #sudo cp debian/opt/wine-devel package/opt -rv
           sudo cp debian/usr/bin package -rv
           sudo cp debian/usr/lib package -rv
           sudo cp debian/usr/lib64 package -rv
