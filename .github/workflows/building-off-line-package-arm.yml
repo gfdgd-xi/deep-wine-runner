@@ -50,7 +50,7 @@ jobs:
           #sudo cp debian/opt/wine-devel package/opt -rv
           sudo cp debian/usr/bin package -rv
           sudo cp debian/usr/lib package -rv
-          sudo cp debian/usr/lib64 package -rv
+          #sudo cp debian/usr/lib64 package -rv
           sudo cp debian/opt/apps/deepin-wine-runner/* package/runner -rv
           cp deep-wine-runner/off-line-shell/run.sh package -rv
           cp deep-wine-runner/off-line-shell/bwrap_amd64 package/bwrap -rv
