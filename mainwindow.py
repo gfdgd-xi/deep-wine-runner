@@ -448,7 +448,7 @@ def about_this_program()->"显示“关于这个程序”窗口":
                         if i[-4:] == ".svg" or i[-4:] == ".png":
                             iconPathList.append(f"{programPath}/Icon/{k}/{i}")
                 except:
-                    traceback.print_exec()
+                    traceback.print_exc()
         randomNumber = random.randint(0, len(iconPathList) - 1)
         iconShow.setText(f"<a href='https://www.gfdgdxi.top'><img width=256 src='{iconPathList[randomNumber]}'></a><p align='center'>{randomNumber + 1}/{len(iconPathList)}</p>")
     iconShow.linkActivated.connect(ChangeIcon)

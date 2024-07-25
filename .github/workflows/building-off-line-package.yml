@@ -56,6 +56,7 @@ jobs:
           sudo rm -rf package/runner/Icon
           sudo rm -rf package/runner/RegShot.exe
           sudo rm -rf package/runner/novnc
+          sudo rm -rf package/bin/wine*
           cp deep-wine-runner/off-line-shell/run.sh package -rv
           cp deep-wine-runner/off-line-shell/bwrap_amd64 package/bwrap -rv
           sudo chmod 777 -Rv package ; true
