@@ -14,7 +14,7 @@ jobs:
 
         - name: Configure System
           run: |
-            bash .github/workflows/configure-building-enviroment-without-x86.sh loong64 beige
+            bash .github/workflows/configure-building-enviroment-without-x86.sh loong64 beige https://community-packages.deepin.com/deepin/beige/
 
         - name: Get Resources
           run: |
