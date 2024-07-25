@@ -9,7 +9,7 @@ function getd23debootstrap() {
     dpkg-buildpackage -b
     sudo apt install ../*.deb -y --allow-downgrades
     cd ..
-    
+    sudo cp deepin-archive-camel-keyring.gpg /etc/apt/trusted.gpg.d/deepin-archive-camel-keyring.gpg -rv
 }
 
 sudo apt update
