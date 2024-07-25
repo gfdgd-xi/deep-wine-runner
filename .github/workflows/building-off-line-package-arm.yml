@@ -44,6 +44,7 @@ jobs:
           sudo chroot debian apt install libxenmisc4.17 libxenstore4 libxenforeignmemory1 -y
           # 构建软件包
           mkdir package/runner -p
+          sudo cp debian/usr/local/bin package -rv
           sudo cp debian/usr/bin package -rv
           sudo cp debian/usr/lib package -rv
           sudo cp debian/usr/share package -rv
