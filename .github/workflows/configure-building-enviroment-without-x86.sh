@@ -1,9 +1,21 @@
 #!/bin/bash
 # $1=arm64
 # $2=buster
+
+function getd23debootstrap() {
+    git clone https://github.com/deepin-community/debootstrap --depth=1
+    cd debootstrap
+    sudo apt build-dep . -y
+    dpkg-buildpackage -b
+    sudo apt install ../*.deb -y
+}
+
 sudo apt update
-sudo apt install debootstrap qemu-user-static -y
+sudo apt install debootstrap qemu-user-static git -y
 bottlePath=./system-bottle
+if [[ $2 == "beige" ]]; then
+    getd23debootstrap
+fi
 sudo debootstrap --arch=$1 $2 $bottlePath $3
 sudo bash .github/workflows/pardus-chroot $bottlePath
 # 配置 git

@@ -227,3 +227,40 @@ jobs:
           with:
             name: spark-deepin-wine-runner-qemu-system-extra~jammy
             path: ${{ steps.buildingQemuPackager.outputs.fileName }}
+
+  deepin23:
+    runs-on: ubuntu-latest
+    container: linuxdeepin/beige
+    steps:
+        - name: Clone Repository
+          uses: actions/checkout@v3
+
+        - name: Configure System
+          run: |
+            bash .github/workflows/configure-building-enviroment.sh
+
+        - name: Get Resources
+          run: |
+            CPU_CORES=$(($(grep -c processor < /proc/cpuinfo)*2))
+            make download-loong64-ed2k -j$CPU_CORES
+            make download-virtio-iso -j$CPU_CORES
+
+        - name: Building Qemu Packager
+          id: buildingQemuPackager
+          run: |
+            # 修改版本号
+            sed -i "s/) UNRELEASED; urgency=medium/~beige) UNRELEASED; urgency=medium/g" debian/changelog
+            # 构建 deb 包
+            dpkg-buildpackage -b
+            # 删除 dbg 包
+            rm -v ../*dbg*.deb -rfv
+            # 获取 deb 位置
+            echo $(readlink -f $(ls -1 ../*.deb))
+            mv ../*.deb .
+            echo "fileName=$(ls -1 *.deb)" >> $GITHUB_OUTPUT
+
+        - name: Upload Result
+          uses: actions/upload-artifact@v3
+          with:
+            name: spark-deepin-wine-runner-qemu-system-extra~beige
+            path: ${{ steps.buildingQemuPackager.outputs.fileName }}

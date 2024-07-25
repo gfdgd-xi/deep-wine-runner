@@ -1,0 +1,42 @@
+name: Wine Runner Qemu Extra Builder (loong64)
+run-name: ${{ github.action }} Building Wine Runner Qemu Extra (loong64)
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:  
+  deepin23:
+    runs-on: ubuntu-24.04
+    steps:
+        - name: Clone Repository
+          uses: actions/checkout@v3
+
+        - name: Configure System
+          run: |
+            bash .github/workflows/configure-building-enviroment-without-x86.sh loong64 beige
+
+        - name: Get Resources
+          run: |
+            CPU_CORES=$(($(grep -c processor < /proc/cpuinfo)*2))
+            bash .github/workflows/run-command-in-chroot.sh make download-loong64-ed2k -j$CPU_CORES
+            bash .github/workflows/run-command-in-chroot.sh make download-virtio-iso -j$CPU_CORES
+
+        - name: Building Qemu Packager
+          id: buildingQemuPackager
+          run: |
+            
+            # 构建 deb 包
+            bash .github/workflows/run-command-in-chroot.sh dpkg-buildpackage -b
+            # 删除 dbg 包
+            bash .github/workflows/run-command-in-chroot.sh rm -v ../*dbg*.deb -rfv
+            # 获取 deb 位置
+            cp system-bottle/*.deb . -rv | true
+            echo "fileName=$(ls -1 *.deb)" >> $GITHUB_OUTPUT
+
+        - name: Upload Result
+          uses: actions/upload-artifact@v3
+          with:
+            name: spark-deepin-wine-runner-qemu-system-extra~beige
+            path: ${{ steps.buildingQemuPackager.outputs.fileName }}
+
