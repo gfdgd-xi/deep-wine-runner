@@ -8,6 +8,8 @@ function getd23debootstrap() {
     sudo apt build-dep . -y
     dpkg-buildpackage -b
     sudo apt install ../*.deb -y --allow-downgrades
+    cd ..
+    
 }
 
 sudo apt update
