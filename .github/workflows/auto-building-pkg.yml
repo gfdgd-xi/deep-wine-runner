@@ -1,0 +1,32 @@
+name: Auto Building Wine Runner（pkg）
+run-name: ${{ github.actor }} Auto Building Wine Runner（pkg） 🚀
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    container: archlinux
+    steps:
+      - name: Building PKG
+        env: 
+          GUSER: ${{ secrets.GUSER }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          UPLOADURL: ${{ secrets.UPLOADURL }}
+        run: |
+          # 配置环境
+          pacman -S debtap git sudo
+          pacman -S dpkg-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools qt5-qmake -y
+          git clone https://github.com/gfdgd-xi/deep-wine-runner
+          cd deep-wine-runner
+          make package-deb -j4 
+          make package-pkg -j4
+          cd ..
+          mv spark-deepin-wine-runner*.pkg.tar.zst ../spark-deepin-wine-runner.pkg.tar.zst
+      - name: upload result
+        uses: actions/upload-artifact@v1
+        with:
+          name: spark-deepin-wine-runner.pkg.tar.zst
+          path: spark-deepin-wine-runner.pkg.tar.zst
+      
+    
