@@ -15,8 +15,9 @@ jobs:
           UPLOADURL: ${{ secrets.UPLOADURL }}
         run: |
           # 配置环境
+          pacman -Sy
           pacman -S debtap git sudo
-          pacman -S dpkg-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools qt5-qmake -y
+          pacman -S dpkg qt5-base -y
           git clone https://github.com/gfdgd-xi/deep-wine-runner
           cd deep-wine-runner
           make package-deb -j4 
