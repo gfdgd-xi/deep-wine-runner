@@ -8,4 +8,7 @@ import requests
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 with open(f"{programPath}/information.json") as file:
     version = json.loads(file.read())["Version"]
-print(requests.get(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9JbnN0YWxsLnBocD9WZXJzaW9uPQ==").decode("utf-8") + version).text)
+print(requests.get(base64.b64decode("aHR0cHM6Ly9zb3VyY2Vmb3JnZS5uZXQvcHJvamVjdHMvZGVlcC13aW5lLXJ1bm5lci13aW5lLWRvd25sb2FkL2ZpbGVzL2Rvd25sb2FkLXRpbWUv").decode("utf-8") 
+                   + version
+                   + base64.b64decode("L2Rvd25sb2Fk").decode("utf-8")
+                   ).text)
