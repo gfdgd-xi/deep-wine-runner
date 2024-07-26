@@ -1,7 +1,6 @@
 name: Auto Building Wine Runner（pkg）
 run-name: ${{ github.actor }} Auto Building Wine Runner（pkg） 🚀
 on:
-  push:
   workflow_dispatch:
 jobs:
   Explore-GitHub-Actions:
@@ -16,8 +15,9 @@ jobs:
         run: |
           # 配置环境
           pacman -Sy
-          pacman -S debtap git sudo
+          pacman -S yay git sudo
           pacman -S dpkg qt5-base -y
+          yay install
           git clone https://github.com/gfdgd-xi/deep-wine-runner
           cd deep-wine-runner
           make package-deb -j4 
@@ -25,7 +25,7 @@ jobs:
           cd ..
           mv spark-deepin-wine-runner*.pkg.tar.zst ../spark-deepin-wine-runner.pkg.tar.zst
       - name: upload result
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: spark-deepin-wine-runner.pkg.tar.zst
           path: spark-deepin-wine-runner.pkg.tar.zst

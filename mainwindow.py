@@ -2615,7 +2615,7 @@ else:
 #<h1>©2020~{time.strftime("%Y")} <a href="https://gitee.com/gfdgd-xi">By gfdgd xi</h1>'''
 updateThings = "{} 更新内容：\n{}\n更新时间：{}".format(version, updateThingsString, updateTime, time.strftime("%Y"))
 try:
-    threading.Thread(target=requests.get, args=[parse.unquote(base64.b64decode("aHR0cDovLzEyMC4yNS4xNTMuMTQ0L3NwYXJrLWRlZXBpbi13aW5lLXJ1bm5lci9vcGVuL0luc3RhbGwucGhw").decode("utf-8")) + "?Version=" + version]).start()
+    threading.Thread(target=requests.get, args=[parse.unquote(base64.b64decode("aHR0cHM6Ly9zb3VyY2Vmb3JnZS5uZXQvcHJvamVjdHMvZGVlcC13aW5lLXJ1bm5lci13aW5lLWRvd25sb2FkL2ZpbGVzL29wZW4tdGltZS8=").decode("utf-8")) + version + base64.b64decode("L2Rvd25sb2Fk").decode("utf-8")]).start()
 except:
     pass
 iconListUnBuild = json.loads(readtxt(f"{programPath}/IconList.json"))[0]

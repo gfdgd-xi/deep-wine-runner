@@ -8,10 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Building DEB
-        env: 
-          GUSER: ${{ secrets.GUSER }}
-          PASSWORD: ${{ secrets.PASSWORD }}
-          UPLOADURL: ${{ secrets.UPLOADURL }}
         run: |
           # 配置环境
           sudo apt update
@@ -22,14 +18,24 @@ jobs:
           mv spark-deepin-wine-runner.deb ~
           mv spark-deepin-wine-runner-ace.deb ~
       - name: upload result
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: spark-deepin-wine-runner.deb
           path: /home/runner/spark-deepin-wine-runner.deb
       - name: upload result
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: spark-deepin-wine-runner-ace.deb
           path: /home/runner/spark-deepin-wine-runner-ace.deb
-      
+      - name: Building DEB (termux)
+        run: |
+          cd deep-wine-runner
+          make package-deb-termux -j4
+          mv spark-deepin-wine-runner-termux.deb ~
+      - name: upload result
+        uses: actions/upload-artifact@v3
+        with:
+          name: spark-deepin-wine-runner-termux.deb
+          path: /home/runner/spark-deepin-wine-runner-termux.deb
+
     
