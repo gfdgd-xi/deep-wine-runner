@@ -350,8 +350,13 @@ class GetInfo():
             result = True
         if (data == "termux" and self.isTermux):
             result = True
-        if (self.compareVersion(self.glibcVersion, data) == 1):
-            result = True
+        try:
+            if (self.compareVersion(self.glibcVersion, data) == 1 or 
+                self.compareVersion(self.glibcVersion, data) == 0):
+                result = True
+        except:
+            # 如果检查 tag 出现问题，强制返回符合条件
+            return True
         if (os.path.exists(data)):
             result = True
         if (no):
