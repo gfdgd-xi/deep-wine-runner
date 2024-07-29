@@ -27,6 +27,7 @@ import PyQt5.QtWidgets as QtWidgets
 from trans import *
 from DefaultSetting import *
 from Model import *
+import globalenv
 
 TMPDIR = os.getenv("TMPDIR")
 if (TMPDIR == None):
@@ -2366,7 +2367,10 @@ tips = transla.transe("U", """提示：
 # 窗口创建
 ###############
 
-app = QtWidgets.QApplication(sys.argv)
+if (__name__ == "__main__"):
+    app = QtWidgets.QApplication(sys.argv)
+else:
+    app = globalenv.get_value("app")
 window = QtWidgets.QMainWindow()
 widget = QtWidgets.QWidget()
 
@@ -2703,7 +2707,8 @@ SetFont(app)
 window.setCentralWidget(widget)
 # 判断是否为小屏幕，是则设置滚动条并全屏
 if (window.frameGeometry().width() > app.primaryScreen().availableGeometry().size().width() * 0.8 or 
-   window.frameGeometry().height() > app.primaryScreen().availableGeometry().size().height() * 0.9):
+   window.frameGeometry().height() > app.primaryScreen().availableGeometry().size().height() * 0.9 or
+   __name__ != "__main__"):
     # 设置滚动条
     areaScroll = QtWidgets.QScrollArea(window)
     areaScroll.setWidgetResizable(True)
@@ -2711,8 +2716,8 @@ if (window.frameGeometry().width() > app.primaryScreen().availableGeometry().siz
     areaScroll.setFrameShape(QtWidgets.QFrame.NoFrame)
     window.setCentralWidget(areaScroll)
     window.showMaximized()  # 设置全屏
-window.show()
 
-window.show()
-sys.exit(app.exec_())
-# Flag：解包只读control和解包全部读取
+if (__name__ == "__main__"):
+    window.show()
+    sys.exit(app.exec_())
+    # Flag：解包只读control和解包全部读取

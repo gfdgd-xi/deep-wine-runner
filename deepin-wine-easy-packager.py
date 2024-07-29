@@ -19,6 +19,8 @@ import PyQt5.QtCore as QtCore
 import PyQt5.QtWidgets as QtWidgets
 from DefaultSetting import *
 
+import globalenv
+
 def ShowText(text: str):
     if text.replace(" ", "").replace("\n", "") == "":
         return
@@ -669,82 +671,94 @@ def BrowserExe():
         exePath.setText(filePath[0])
 
 chooseWine = ""
-if __name__ == "__main__":
-    programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
-    iconPath = "{}/deepin-wine-runner.svg".format(programPath)
-    information = json.loads(ReadTxt(f"{programPath}/information.json"))
-    iconListUnBuild = json.loads(ReadTxt(f"{programPath}/IconList.json"))[0]
-    iconList = json.loads(ReadTxt(f"{programPath}/IconList.json"))[1]
-    for i in iconListUnBuild:
-        iconList.append(i)
+
+programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
+iconPath = "{}/deepin-wine-runner.svg".format(programPath)
+information = json.loads(ReadTxt(f"{programPath}/information.json"))
+iconListUnBuild = json.loads(ReadTxt(f"{programPath}/IconList.json"))[0]
+iconList = json.loads(ReadTxt(f"{programPath}/IconList.json"))[1]
+for i in iconListUnBuild:
+    iconList.append(i)
+if (__name__ == "__main__"):
     app = QtWidgets.QApplication(sys.argv)
-    version = information["Version"]
-    window = QtWidgets.QMainWindow()
-    widget = QtWidgets.QWidget()
-    layout = QtWidgets.QGridLayout()
-    exePath = QtWidgets.QLineEdit()
-    wineChooser = QtWidgets.QComboBox()
-    browserExeButton = QtWidgets.QPushButton("浏览……")
-    logText = QtWidgets.QTextBrowser()
-    logText.setStyleSheet("""
-        background-color: black;
-        color: white;
-    """)
-    wineChooserList = [
-        "使用 Deepin Wine8 Stable 打包应用",
-        "使用 Spark Wine9 wow 打包应用",
-        "使用 Spark Wine9 打包应用",
-        "使用 Spark Wine8 打包应用",
-        "使用 Spark Wine7 Devel 打包应用",
-        "使用 Deepin Wine6 Stable 打包应用",
-        "使用 Deepin Wine5 Stable 打包应用",
-        "使用 Deepin Wine5 打包应用",
-        "使用 Deepin Wine2 打包应用",
-        "使用 Spark Wine 打包应用"
-    ]
-    wineChooserIndex = 2
-    wineList = ["deepin-wine8-stable", "spark-wine9-wow", "spark-wine9", "spark-wine8", "spark-wine7-devel", "deepin-wine6-stable", "deepin-wine6-vannila", "spark-wine8-wow", "deepin-wine5-stable", "deepin-wine5", "deepin-wine", "spark-wine"]
-    for i in range(len(wineList)):
-        if not os.system(f"which '{wineList[i]}'"):
-            wineChooserIndex = i
-            break
-    chooseWine = wineList[wineChooserIndex]
-    wineChooserList[wineChooserIndex] = f"{wineChooserList[wineChooserIndex]}（推荐，如无特殊需求不建议更换）"
-    wineChooser.addItems(wineChooserList)
-    wineChooser.setCurrentIndex(wineChooserIndex)
-    controlLayout = QtWidgets.QHBoxLayout()
-    buildButton = QtWidgets.QPushButton("现在打包……")
-    installCmpleteButton = QtWidgets.QPushButton("安装程序执行完成")
-    helpButton = QtWidgets.QPushButton("帮助")
-    installUosPackingTool = QtWidgets.QPushButton("安装维护工具箱（可以安装测试 deb）")
-    browserExeButton.clicked.connect(BrowserExe)
-    buildButton.clicked.connect(RunBuildThread)
-    installCmpleteButton.clicked.connect(PressCompleteDownload)
-    helpButton.clicked.connect(ReadMe)
-    def InstallUosPackingTool():
-        if os.system("which spark-store"):
-            QtWidgets.QMessageBox.critical(window, "提示", "未安装星火应用商店，无法继续\n星火应用商店官网：https://spark-app.store/")
-            return 0
-        threading.Thread(target=os.system, args=["spark-store spk://store/tools/uos-packaging-tools"]).start()
-    installUosPackingTool.clicked.connect(InstallUosPackingTool)
-    installCmpleteButton.setDisabled(True)
-    controlLayout.addWidget(buildButton)
-    controlLayout.addWidget(installCmpleteButton)
-    controlLayout.addWidget(helpButton)
-    controlLayout.addWidget(installUosPackingTool)
-    layout.addWidget(QtWidgets.QLabel("选择 EXE："), 0, 0)
-    layout.addWidget(exePath, 0, 1)
-    layout.addWidget(browserExeButton, 0, 2)
-    layout.addWidget(wineChooser, 1, 1)
-    layout.addLayout(controlLayout, 2, 1)
-    layout.addWidget(logText, 3, 0, 1, 3)
-    widget.setLayout(layout)
-    window.setCentralWidget(widget)
-    window.setWindowTitle(f"Wine 运行器 {version}——简易打包器")
-    try:
-        exePath.setText(sys.argv[1])
-    except:
-        pass
+else:
+    app = globalenv.get_value("app")
+version = information["Version"]
+window = QtWidgets.QMainWindow()
+widget = QtWidgets.QWidget()
+layout = QtWidgets.QGridLayout()
+exePath = QtWidgets.QLineEdit()
+wineChooser = QtWidgets.QComboBox()
+browserExeButton = QtWidgets.QPushButton("浏览……")
+logText = QtWidgets.QTextBrowser()
+logText.setStyleSheet("""
+    background-color: black;
+    color: white;
+""")
+wineChooserList = [
+    "使用 Deepin Wine8 Stable 打包应用",
+    "使用 Spark Wine9 wow 打包应用",
+    "使用 Spark Wine9 打包应用",
+    "使用 Spark Wine8 打包应用",
+    "使用 Spark Wine7 Devel 打包应用",
+    "使用 Deepin Wine6 Stable 打包应用",
+    "使用 Deepin Wine5 Stable 打包应用",
+    "使用 Deepin Wine5 打包应用",
+    "使用 Deepin Wine2 打包应用",
+    "使用 Spark Wine 打包应用"
+]
+wineChooserIndex = 2
+wineList = ["deepin-wine8-stable", "spark-wine9-wow", "spark-wine9", "spark-wine8", "spark-wine7-devel", "deepin-wine6-stable", "deepin-wine6-vannila", "spark-wine8-wow", "deepin-wine5-stable", "deepin-wine5", "deepin-wine", "spark-wine"]
+for i in range(len(wineList)):
+    if not os.system(f"which '{wineList[i]}'"):
+        wineChooserIndex = i
+        break
+chooseWine = wineList[wineChooserIndex]
+wineChooserList[wineChooserIndex] = f"{wineChooserList[wineChooserIndex]}（推荐，如无特殊需求不建议更换）"
+wineChooser.addItems(wineChooserList)
+wineChooser.setCurrentIndex(wineChooserIndex)
+controlLayout = QtWidgets.QHBoxLayout()
+buildButton = QtWidgets.QPushButton("现在打包……")
+installCmpleteButton = QtWidgets.QPushButton("安装程序执行完成")
+helpButton = QtWidgets.QPushButton("帮助")
+installUosPackingTool = QtWidgets.QPushButton("安装维护工具箱（可以安装测试 deb）")
+browserExeButton.clicked.connect(BrowserExe)
+buildButton.clicked.connect(RunBuildThread)
+installCmpleteButton.clicked.connect(PressCompleteDownload)
+helpButton.clicked.connect(ReadMe)
+def InstallUosPackingTool():
+    if os.system("which spark-store"):
+        QtWidgets.QMessageBox.critical(window, "提示", "未安装星火应用商店，无法继续\n星火应用商店官网：https://spark-app.store/")
+        return 0
+    threading.Thread(target=os.system, args=["spark-store spk://store/tools/uos-packaging-tools"]).start()
+installUosPackingTool.clicked.connect(InstallUosPackingTool)
+installCmpleteButton.setDisabled(True)
+controlLayout.addWidget(buildButton)
+controlLayout.addWidget(installCmpleteButton)
+controlLayout.addWidget(helpButton)
+controlLayout.addWidget(installUosPackingTool)
+layout.addWidget(QtWidgets.QLabel("选择 EXE："), 0, 0)
+layout.addWidget(exePath, 0, 1)
+layout.addWidget(browserExeButton, 0, 2)
+layout.addWidget(wineChooser, 1, 1)
+layout.addLayout(controlLayout, 2, 1)
+layout.addWidget(logText, 3, 0, 1, 3)
+widget.setLayout(layout)
+window.setCentralWidget(widget)
+window.setWindowTitle(f"Wine 运行器 {version}——简易打包器")
+try:
+    exePath.setText(sys.argv[1])
+except:
+    pass
+if (__name__ != "__main__"):
+    # 设置滚动条
+    areaScroll = QtWidgets.QScrollArea(window)
+    areaScroll.setWidgetResizable(True)
+    areaScroll.setWidget(widget)
+    areaScroll.setFrameShape(QtWidgets.QFrame.NoFrame)
+    window.setCentralWidget(areaScroll)
+
+if (__name__ == "__main__"):
     window.resize(int(window.frameGeometry().width() * 1.2), int(window.frameGeometry().height() * 1.1))
     window.show()
     # 设置字体
