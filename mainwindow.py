@@ -50,8 +50,13 @@ from trans import *
 from Model import *
 from DefaultSetting import *
 
+import globalenv
+
 def PythonLower():
-    app = QtWidgets.QApplication(sys.argv)
+    if (__name__ == "__main__"):
+        app = QtWidgets.QApplication(sys.argv)
+    else:
+        app = globalenv.get_value("app")
     QtWidgets.QMessageBox.critical(None, "错误", "Python 至少需要 3.6 及以上版本，目前版本：" + platform.python_version() + "")
     sys.exit(1)
 
@@ -2456,7 +2461,6 @@ def CheckWine():
             traceback.print_exc()
     except:
         traceback.print_exc()
-        app = QtWidgets.QApplication(sys.argv)
         QtWidgets.QMessageBox.critical(None, "错误", f"无法读取配置，无法继续\n{traceback.format_exc()}")
         sys.exit(1)
 CheckWine()
@@ -2468,7 +2472,10 @@ print(wine)
 ###########################
 # 程序信息
 ###########################
-app = QtWidgets.QApplication(sys.argv)
+if (__name__ == "__main__"):
+    app = QtWidgets.QApplication(sys.argv)
+else:
+    app = globalenv.get_value("app")
 trans = QtCore.QTranslator()
 transeObject = QtCore.QObject()
 transla = QtCore.QCoreApplication.translate
@@ -3381,8 +3388,10 @@ SetFont(setting["FontSize"])
 
 window.setCentralWidget(widget)
 # 判断是否为小屏幕，是则设置滚动条并全屏
+# 获取为 import 为控件，也默认开启滚动条
 if (window.frameGeometry().width() > app.primaryScreen().availableGeometry().size().width() * 0.8 or 
-   window.frameGeometry().height() > app.primaryScreen().availableGeometry().size().height() * 0.9):
+   window.frameGeometry().height() > app.primaryScreen().availableGeometry().size().height() * 0.9 or
+   __name__ != "__main__"):
     # 设置滚动条
     areaScroll = QtWidgets.QScrollArea(window)
     areaScroll.setWidgetResizable(True)
@@ -3390,9 +3399,13 @@ if (window.frameGeometry().width() > app.primaryScreen().availableGeometry().siz
     areaScroll.setFrameShape(QtWidgets.QFrame.NoFrame)
     window.setCentralWidget(areaScroll)
     window.showMaximized()  # 设置全屏
-window.show()
 
 
-# Mini 模式
-# MiniMode(True)
-sys.exit(app.exec_())
+if (__name__ == "__main__"):
+    window.show()
+    # Mini 模式
+    # MiniMode(True)
+    sys.exit(app.exec_())
+
+
+
