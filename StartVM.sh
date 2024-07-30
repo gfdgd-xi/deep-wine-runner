@@ -62,7 +62,7 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
                 fi
             fi
         else
-            qemuUEFI="-vga virtio -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 "
+            qemuUEFI="-vga virtio -machine usb=on -device usb-tablet "
         fi
         echo $qemuUEFI
         ./VM/kvm-ok
@@ -70,9 +70,10 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
             echo X86 架构，使用 kvm 加速
             $qemuMore qemu-system-x86_64 --enable-kvm -cpu host --hda "$HOME/Qemu/Windows/Windows.qcow2" \
                 -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) \
-                -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI \
+                -m ${use}G  -display vnc=:5 -display gtk -nic model=rtl8139 $qemuUEFI \
                 -device AC97 -device ES1370 -device intel-hda -device hda-duplex  \
                 --boot 'splash=VM/boot.jpg,menu=on,splash-time=2000' \
+                -usb \
                 > $TMPDIR/tmp/windows-virtual-machine-installer-for-wine-runner-run.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 
             exit
         fi
@@ -99,7 +100,7 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
         echo 不使用 kvm 加速
         $qemuPath --hda "$HOME/Qemu/Windows/Windows.qcow2" \
             -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) \
-            -m ${use}G  -display vnc=:5 -display gtk -usb -nic model=rtl8139 $qemuUEFI \
+            -m ${use}G  -display vnc=:5 -display gtk -nic model=rtl8139 $qemuUEFI \
             -device AC97 -device ES1370 -device intel-hda -device hda-duplex  \
             --boot 'splash=VM/boot.jpg,menu=on,splash-time=2000' \
             > $TMPDIR/tmp/windows-virtual-machine-installer-for-wine-runner-run.log 2>&1 # 最新的 qemu 已经移除参数 -soundhw all 

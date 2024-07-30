@@ -1,0 +1,1 @@
+from .qvncwidget import QVNCWidget
