@@ -12,6 +12,7 @@
 #################
 import os
 import sys
+import globalenv
 import traceback
 import updatekiller
 import PyQt5.QtGui as QtGui
@@ -101,7 +102,10 @@ homePath = os.getenv("HOME")
 iconPath = "{}/deepin-wine-runner.svg".format(programPath)
 #GetDesktopList(f"{homePath}/.local/share/applications")
 #print(desktopList)
-app = QtWidgets.QApplication(sys.argv)
+if (__name__ == "__main__"):
+    app = QtWidgets.QApplication(sys.argv)
+else:
+    app = globalenv.get_value("app")
 window = QtWidgets.QMainWindow()
 widget = QtWidgets.QWidget()
 layout = QtWidgets.QGridLayout()
@@ -118,6 +122,7 @@ window.setCentralWidget(widget)
 window.setWindowTitle("图标管理")
 window.resize(int(window.frameGeometry().width() * 1.5), int(window.frameGeometry().height() * 1.2))
 window.setWindowIcon(QtGui.QIcon(f"{programPath}/deepin-wine-runner.svg"))
-window.show()
 GetDesktopThread()
-app.exec_()
+if (__name__ == "__main__"):
+    window.show()
+    app.exec_()

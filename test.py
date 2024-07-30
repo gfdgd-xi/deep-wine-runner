@@ -1,3 +1,4 @@
+import os
 import sys
 import globalenv
 import PyQt5.QtWidgets as QtWidgets
@@ -8,8 +9,10 @@ globalenv._init()
 globalenv.set_value("app", app)  # 用于将该部分的 app 给子模块的 Qt 控件调用以解决 UI 异常以及其它问题
 #import deepin_wine_packager
 #modules = __import__("deepin-wine-packager")
-modules = __import__("deepin-wine-easy-packager")  # 使用该方法可以引入带 - 文件名的模块
+#modules = __import__("deepin-wine-easy-packager")  
 #import mainwindow
-window.setCentralWidget(modules.window)
+# 使用 __import__ 可以引入带 - 文件名的模块
+import wine.installwine
+window.setCentralWidget(wine.installwine.window)
 window.show()
 app.exec_()

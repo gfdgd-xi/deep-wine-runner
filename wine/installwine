@@ -21,6 +21,7 @@ import webbrowser
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 sys.path.append(f"{programPath}/../")
 from Model import *
+import globalenv
 from PyQt5 import QtCore, QtGui, QtWidgets
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 # UI 布局（自动生成）
@@ -584,65 +585,69 @@ def on_downloadWineFromCloudDisk_clicked():
 def get_now_lang()->"获取当前语言":
     return os.getenv('LANG')
 
-if __name__ == "__main__":
-    localJsonList = []
-    internetJsonList = []
-    internetWineSourceList = [
-        "http://wine.wine-runner.gfdgdxi.top/",
-        "http://wine.wine-runner.gfdgdxi.top/sourceforge",
-        "https://gitee.com/gfdgd-xi/wine-mirrors-websize/raw/master/",
-        "https://github.com/gfdgd-xi/wine-mirrors-websize/raw/master/",
-        "http://127.0.0.1/wine-mirrors/"  # 本地测试源
-        ]
 
+localJsonList = []
+internetJsonList = []
+internetWineSourceList = [
+    "http://wine.wine-runner.gfdgdxi.top/",
+    "http://wine.wine-runner.gfdgdxi.top/sourceforge",
+    "https://gitee.com/gfdgd-xi/wine-mirrors-websize/raw/master/",
+    "https://github.com/gfdgd-xi/wine-mirrors-websize/raw/master/",
+    "http://127.0.0.1/wine-mirrors/"  # 本地测试源
+    ]
+
+if (__name__ == "__main__"):
     app = QtWidgets.QApplication(sys.argv)
-    # 读取翻译
-    if not get_now_lang() == "zh_CN.UTF-8":
-        trans = QtCore.QTranslator()
-        trans.load(f"{programPath}/../LANG/installwine-en_US.qm")
-        app.installTranslator(trans)
-    # 获取信息
-    systemInfo = GetInfo()
-    # 窗口构建
-    window = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    window.setWindowIcon(QtGui.QIcon(f"{programPath}/../deepin-wine-runner.svg"))
-    ui.setupUi(window)
+else:
+    app = globalenv.get_value("app")
+# 读取翻译
+if not get_now_lang() == "zh_CN.UTF-8":
+    trans = QtCore.QTranslator()
+    trans.load(f"{programPath}/../LANG/installwine-en_US.qm")
+    app.installTranslator(trans)
+# 获取信息
+systemInfo = GetInfo()
+# 窗口构建
+window = QtWidgets.QMainWindow()
+ui = Ui_MainWindow()
+window.setWindowIcon(QtGui.QIcon(f"{programPath}/../deepin-wine-runner.svg"))
+ui.setupUi(window)
+if (__name__ == "__main__"):
     window.show()
-    # 隐藏选项
-    ui.unzip.setVisible(False)
-    ui.deleteZip.setVisible(False)
-    # 判断机器所在国家并自动分配源
-    try:
-        isChina = requests.get("https://ip.useragentinfo.com/json").json()["country"] == "中国"
-        print("IsChina", isChina)
-        if isChina:
-            internetWineSource = internetWineSourceList[0]
-            ui.ipv6Action.setChecked(True)
-        else:
-            internetWineSource = internetWineSourceList[1]
-            ui.kgithubAction.setChecked(True)
-    except:
-        traceback.print_exc()
-        print("IsChina", False)
-        # 请求失败，默认使用国际源
+# 隐藏选项
+ui.unzip.setVisible(False)
+ui.deleteZip.setVisible(False)
+# 判断机器所在国家并自动分配源
+try:
+    isChina = requests.get("https://ip.useragentinfo.com/json").json()["country"] == "中国"
+    print("IsChina", isChina)
+    if isChina:
+        internetWineSource = internetWineSourceList[0]
+        ui.ipv6Action.setChecked(True)
+    else:
         internetWineSource = internetWineSourceList[1]
         ui.kgithubAction.setChecked(True)
-    # 连接信号
-    ui.addButton.clicked.connect(on_addButton_clicked)
-    ui.delButton.clicked.connect(on_delButton_clicked)
-    ui.downloadWineFromCloudDisk.clicked.connect(on_downloadWineFromCloudDisk_clicked)
-    ui.addOtherWine.clicked.connect(InstallOtherWine)
-    ui.changeSourcesGroup.triggered.connect(ChangeSources)
-    ui.m_recommendWine.clicked.connect(ReadInternetInformation)
-    ## 加载内容
-    # 设置列表双击不会编辑
-    ui.localWineList.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-    ui.internetWineList.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-    # 读取信息
-    ReadLocalInformation()
-    ReadInternetInformation()
-    # 图标
-    ui.centralWidget.setWindowIcon(QtGui.QIcon(f"{programPath}/../deepin-wine-runner.svg"))
-
+except:
+    traceback.print_exc()
+    print("IsChina", False)
+    # 请求失败，默认使用国际源
+    internetWineSource = internetWineSourceList[1]
+    ui.kgithubAction.setChecked(True)
+# 连接信号
+ui.addButton.clicked.connect(on_addButton_clicked)
+ui.delButton.clicked.connect(on_delButton_clicked)
+ui.downloadWineFromCloudDisk.clicked.connect(on_downloadWineFromCloudDisk_clicked)
+ui.addOtherWine.clicked.connect(InstallOtherWine)
+ui.changeSourcesGroup.triggered.connect(ChangeSources)
+ui.m_recommendWine.clicked.connect(ReadInternetInformation)
+## 加载内容
+# 设置列表双击不会编辑
+ui.localWineList.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+ui.internetWineList.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+# 读取信息
+ReadLocalInformation()
+ReadInternetInformation()
+# 图标
+ui.centralWidget.setWindowIcon(QtGui.QIcon(f"{programPath}/../deepin-wine-runner.svg"))
+if (__name__ == "__main__"):
     app.exec_()
