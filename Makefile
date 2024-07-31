@@ -11,9 +11,6 @@ clean:
 	python3 RemovePycacheFile.py
 	rm *.deb -fv
 	rm *.pkg.tar* -fv
-	cd VM-source ; qmake . ; make clean
-	rm VM-source/VirtualMachine -rfv
-	rm -rfv VM-source/.qmake.stash
 
 #package-rpm:
 
@@ -35,18 +32,10 @@ package-pkg:
 	sudo debtap -Q spark-deepin-wine-runner-ace.deb
 
 copy-files:
-	#cd VM-source && qmake
-	#cd VM-source && make
 	#cd wine && make
 	make clean -j$(nproc)
 	mkdir deb/opt/apps/deepin-wine-runner/LANG -pv
 	cp -rv helperset deb/opt/apps/deepin-wine-runner/
-	#cp -rv VM-source/VirtualMachine VM
-	cp -rv VM-source/deepin-wine-runner.svg VM
-	cp -rv VM-source/Windows7X64Auto.iso VM
-	cp -rv VM-source/Windows7X86Auto.iso VM
-	cp -rv VM-source/test.qcow2 VM
-	cp -rv VM-source/*.fd VM
 	cp -rv wine/ deb/opt/apps/deepin-wine-runner/
 	cp -rv Test/ deb/opt/apps/deepin-wine-runner/
 	cp -rv dxvk/ deb/opt/apps/deepin-wine-runner
