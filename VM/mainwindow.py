@@ -3,6 +3,7 @@ import os
 import sys
 import json
 import subprocess
+import program_resources
 import ui_mainwindow
 from buildvbox import *
 from PyQt5.QtGui import *
