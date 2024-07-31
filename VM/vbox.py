@@ -84,7 +84,7 @@ class vbox:
         return os.system(("\"" + self.managerPath + "\" modifyvm \"" + self.name + "\" --draganddrop bidirectional"))
     
     def ShareFile(self, name: str, path: str):
-        return os.system(("\"" + self.managerPath + "\" sharedfolder add \"" + this->name + "\" -name \"" + self.name + "\" -hostpath \"" + path + "\""))
+        return os.system(("\"" + self.managerPath + "\" sharedfolder add \"" + self.name + "\" -name \"" + self.name + "\" -hostpath \"" + path + "\""))
 
     def SetVBoxSVGA(self):
         return os.system(("\"" + self.managerPath + "\" modifyvm \"" + self.name + "\" --graphicscontroller vboxsvga"))
