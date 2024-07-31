@@ -8,6 +8,8 @@ import psutil
 import subprocess
 from vbox import *
 from qemu import *
+from infoUtils import *
+from PyQt5.QtNetwork import *
 
 class buildvbox:
     def homePath(self):
@@ -43,21 +45,16 @@ class buildvbox:
         return value
 
     def GetNet(self) -> str:
-        # TODO
-        '''QList<QNetworkInterface> netList = QNetworkInterface::allInterfaces()
-        foreach(QNetworkInterface net, netList):
-        qDebug() << "Device:" << net.name()
-        QList<QNetworkAddressEntry> entryList = net.addressEntries()
-        foreach(QNetworkAddressEntry entry, entryList):
-            QString ip = entry.ip().toString()
-            qDebug() << "IP Address: " << ip
-            if(ip != "127.0.0.1" and ip != "192.168.250.1" and ip != "::1" and net.name() != "lo"):
-                # 返回网卡名称
-                return net.name()
-                }
-            }
-        }
-        return ""'''
+        netList = QNetworkInterface.allInterfaces()
+        for net in netList:
+            print("Device:", net.name())
+            entryList = net.addressEntries()
+            for entry in entryList:
+                ip = entry.ip().toString()
+                print("IP Address: ", ip)
+                if(ip != "127.0.0.1" and ip != "192.168.250.1" and ip != "::1" and net.name() != "lo"):
+                    # 返回网卡名称
+                    return net.name()
         return ""
 
     def Download(self, url: str, path: str, fileName: str) -> int:
@@ -142,7 +139,7 @@ class buildvbox:
             swap = 0
             swapAll = 0
             # TODO
-            #infoUtils::memoryRate(memory, memoryAll, swap, swapAll)
+            infoUtils.memoryRate(memory, memoryAll, swap, swapAll)
             vm.SetMemory(memoryAll / 3 / 1024)
             vm.SetNetBridge(net)
             vm.EnabledAudio()
@@ -225,7 +222,7 @@ class buildvbox:
             swap = 0
             swapAll = 0
             # TODO
-            #infoUtils::memoryRate(memory, memoryAll, swap, swapAll)
+            infoUtils.memoryRate(memory, memoryAll, swap, swapAll)
             #memoryRate(memory, memoryAll, swap, swapAll)
             vm.SetMemory(memoryAll / 3 / 1024)
             vm.SetNetBridge(net)
