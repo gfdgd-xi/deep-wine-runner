@@ -12,7 +12,8 @@ globalenv.set_value("app", app)  # 用于将该部分的 app 给子模块的 Qt 
 #modules = __import__("deepin-wine-easy-packager")  
 #import mainwindow
 # 使用 __import__ 可以引入带 - 文件名的模块
-import wine.installwine
-window.setCentralWidget(wine.installwine.window)
+#import wine.installwine
+import VM.mainwindow
+window.setCentralWidget(VM.mainwindow.window)
 window.show()
 app.exec_()

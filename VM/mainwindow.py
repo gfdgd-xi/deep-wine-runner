@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 import os
 import sys
+programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
+sys.path.append(f"{programPath}/../")
+sys.path.append(f"{programPath}/")
 import json
 import subprocess
 import program_resources
 import ui_mainwindow
+import globalenv
 from buildvbox import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
@@ -19,7 +23,10 @@ def ShowCPUMessage():
 
 def MainWindow():
     global cpuGet
-    ui.tabWidget.setTabPosition(QTabWidget.West)  # 标签靠左
+    if (__name__ == "__main__"):
+        ui.tabWidget.setTabPosition(QTabWidget.West)  # 标签靠左
+    else:
+        ui.tabWidget.setTabPosition(QTabWidget.East)  # 标签靠左
     #QApplication a(argc, argv)
     # 选择最优虚拟机
     if(not os.system("which qemu-system-x86_64")):
@@ -291,7 +298,10 @@ def on_getDCLC_triggered():
 
 
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
-app = QApplication(sys.argv)
+if (__name__ == "__main__"):
+    app = QApplication(sys.argv)
+else:
+    app = globalenv.get_value("app")
 this = window = QMainWindow()
 ui = ui_mainwindow.Ui_MainWindow()
 ui.setupUi(window)
