@@ -57,7 +57,10 @@ jobs:
           sudo rm -rf package/runner/RegShot.exe
           sudo rm -rf package/runner/novnc
           sudo rm -rf package/bin/wine*
+          # 修复 which 命令的问题导致无法正常识别终端的问题
+          sudo cp package/bin/which.debianutils package/bin/which -rv
           cp deep-wine-runner/off-line-shell/run.sh package -rv
+          cp deep-wine-runner/off-line-shell/run-system-bwrap.sh package -rv
           cp deep-wine-runner/off-line-shell/bwrap_amd64 package/bwrap -rv
           sudo chmod 777 -Rv package ; true
           cd package
