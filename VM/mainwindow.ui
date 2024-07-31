@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1058</width>
+    <height>512</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Wine 运行器虚拟机安装工具</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>:/icon.png</normaloff>:/icon.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>设置</string>
+       </attribute>
+       <attribute name="toolTip">
+        <string>设置</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>镜像路径：</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="isoPath">
+            <property name="placeholderText">
+             <string>请选择系统镜像</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="browser">
+            <property name="text">
+             <string>浏览……</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,1">
+          <item>
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>系统版本：</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="systemVersion">
+            <property name="currentText">
+             <string>Windows 7 32 位（支持自动安装）</string>
+            </property>
+            <item>
+             <property name="text">
+              <string>Windows 7 32 位（支持自动安装）</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Windows 7 64 位（支持自动安装）</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>其它 Windows 系统（不支持自动安装，传统启动，推荐 Windows 7 及以下）</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>其他 Windows 系统（不支持自动安装，UEFI 启动，推荐 Windows 8 及以上）</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>安装 WIndows 11（不支持自动安装）</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>安装其他 Windows XP（支持自动安装，只支持 VirtualBox）</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>安装其他 Windows （支持自动安装，传统启动，只支持 VirtualBox）</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>安装其他 Windows（支持自动安装，UEFI 启动，只支持 VirtualBox）</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>安装 arm32 系统（只支持 Qemu）</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>安装 arm64 系统（只支持 Qemu）</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="0,1">
+          <item>
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>虚拟机（建议默认）：</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="vmChooser">
+            <property name="currentText">
+             <string>qemu/kvm</string>
+            </property>
+            <property name="currentIndex">
+             <number>0</number>
+            </property>
+            <property name="duplicatesEnabled">
+             <bool>false</bool>
+            </property>
+            <item>
+             <property name="text">
+              <string>qemu/kvm</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>VirtualBox</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="getQemu">
+            <property name="text">
+             <string>安装 Qemu</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="kvmTest">
+            <property name="text">
+             <string>kvm 测试</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="qemuSetting">
+            <property name="text">
+             <string>Qemu虚拟机设置</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="addQemuDiskButton">
+            <property name="text">
+             <string>添加/覆盖Qemu磁盘</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="saveQemuDiskButton">
+            <property name="text">
+             <string>导出Qemu磁盘</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="delQemuDiskButton">
+            <property name="text">
+             <string>移除Qemu磁盘</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="getvbox">
+            <property name="text">
+             <string>获取VirtualBox</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="install">
+            <property name="text">
+             <string>安装</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QTextBrowser" name="textBrowser_3">
+          <property name="html">
+           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt;&quot;&gt;UOS 3a4000 用户在使用 Qemu 时可能会出现虚拟机无法正常开机的问题，如果出现上述问题需要安装/降级到以下链接的版本：&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt;&quot;&gt;蓝奏云：&lt;/span&gt;&lt;a href=&quot;https://gfdgdxi.lanzoue.com/b01rk9wza&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;https://gfdgdxi.lanzoue.com/b01rk9wza&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt;&quot;&gt; 密码:6wvf&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt;&quot;&gt;诚通网盘：&lt;/span&gt;&lt;a href=&quot;http://ctfile.gfdgdxi.top/d/31540479-58662214-c46520?p=2061&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;http://ctfile.gfdgdxi.top/d/31540479-58662214-c46520?p=2061&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt;&quot;&gt; (访问密码: 2061)&lt;/span&gt;&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt;&quot;&gt;注：Qemu 跨架构效率较低，如无特殊情况不建议跨架构/不开硬件加速（如 kvm）运行 Qemu&lt;/span&gt;&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10pt;&quot;&gt;如何安装系统？使用迅雷或者网盘下载以下任意一个链接的 ISO 镜像然后在上面选择即可：&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10pt;&quot;&gt;123 网盘链接：&lt;/span&gt;&lt;a href=&quot;https://www.123pan.com/s/pDSKVv-oypWv&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;https://www.123pan.com/s/pDSKVv-oypWv&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10pt;&quot;&gt;迅雷网盘：&lt;/span&gt;&lt;a href=&quot;https://pan.xunlei.com/s/VNKMz3wgbYHg6JIh50ZKIc7pA1?pwd=35e5&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;https://pan.xunlei.com/s/VNKMz3wgbYHg6JIh50ZKIc7pA1?pwd=35e5&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10pt;&quot;&gt;  提取码：35e5&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10pt;&quot;&gt;百度网盘：&lt;/span&gt;&lt;a href=&quot;https://pan.baidu.com/s/19WbvinITCQJFZpAdZutrjg?pwd=me4y&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;https://pan.baidu.com/s/19WbvinITCQJFZpAdZutrjg?pwd=me4y&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10pt;&quot;&gt; 提取码: me4y&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10pt;&quot;&gt;诚通网盘：&lt;/span&gt;&lt;a href=&quot;http://ctfile.gfdgdxi.top/d/31540479-58662220-3590cf?p=2061&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;http://ctfile.gfdgdxi.top/d/31540479-58662220-3590cf?p=2061&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10pt;&quot;&gt; (访问密码: 2061)&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10pt;&quot;&gt;（如果下载这个，系统版本选第一项，一般推荐这个）&lt;/span&gt;&lt;a href=&quot;ed2k://|file|cn_windows_7_ultimate_with_sp1_x86_dvd_u_677486.iso|2653276160|7503E4B9B8738DFCB95872445C72AEFB|/&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;ed2k://|file|cn_windows_7_ultimate_with_sp1_x86_dvd_u_677486.iso|2653276160|7503E4B9B8738DFCB95872445C72AEFB|/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10pt;&quot;&gt;（如果下载这个，系统版本选第二项）&lt;/span&gt;&lt;a href=&quot;ed2k://|file|cn_windows_7_ultimate_with_sp1_x64_dvd_u_677408.iso|3420557312|B58548681854236C7939003B583A8078|/&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;ed2k://|file|cn_windows_7_ultimate_with_sp1_x64_dvd_u_677408.iso|3420557312|B58548681854236C7939003B583A8078|/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt; font-weight:600;&quot;&gt;常用 Windows 软件：&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt;&quot;&gt;百度网盘：链接: &lt;/span&gt;&lt;a href=&quot;https://pan.baidu.com/s/1D1NSy7k7XBnOZL_tNTnG6g?pwd=7s2p&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;https://pan.baidu.com/s/1D1NSy7k7XBnOZL_tNTnG6g?pwd=7s2p&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt;&quot;&gt; 提取码: 7s2p &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt;&quot;&gt;诚通网盘：&lt;/span&gt;&lt;a href=&quot;http://ctfile.gfdgdxi.top/d/31540479-58659214-0732a8?p=2061&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;http://ctfile.gfdgdxi.top/d/31540479-58659214-0732a8?p=2061&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt;&quot;&gt; (访问密码: 2061)&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt;&quot;&gt;123网盘：&lt;/span&gt;&lt;a href=&quot;https://www.123pan.com/s/pDSKVv-uCBWv.html&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;https://www.123pan.com/s/pDSKVv-uCBWv.html&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;hr /&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="openLinks">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_3">
+       <attribute name="title">
+        <string>安装/使用帮助</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <item>
+         <widget class="QTextBrowser" name="textBrowser">
+          <property name="undoRedoEnabled">
+           <bool>false</bool>
+          </property>
+          <property name="html">
+           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:26pt; font-weight:600;&quot;&gt;给小白的一段话&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;其实本质上跑完安装程序就没有然后了，顶多如果想要运行舒服一点点，可以安装加强功能，直接拉到最底下看就可以了，&lt;/span&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt; font-weight:600; font-style:italic; text-decoration: underline;&quot;&gt;只限使用 VirtualBox&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt; font-weight:600; font-style:italic; text-decoration: underline;&quot;&gt;如果你是用非 X86 PC，那暂时只能使用 qemu（没 kvm），且跨架构的性能损失很大，推荐使用 Windows XP 而非 Windows 7&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;如果爱折腾的话，下面的都看看也无所谓的，想看往下翻就可以了&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt; font-weight:600; text-decoration: underline;&quot;&gt;（这里的帮助更新可能不会那么及时，更详细/新的帮助可以看：https://gitee.com/gfdgd-xi/deep-wine-runner/wikis 或 https://gitee.com/gfdgd-xi/wine-runner-wiki）&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;（如果鼠标被锁定到里面了按下键盘右边的“Ctrl”键就可以了，&lt;/span&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt; font-weight:600; font-style:italic; text-decoration: underline;&quot;&gt;qemu则是 Ctrl+Alt+G&lt;/span&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt; ）&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;VirtualBox 可以安装增强功能以优化体验，安装方法往下翻即可查询&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;Qemu 可以安装 Virtio 以优化体验，下载链接：&lt;/span&gt;&lt;a href=&quot;https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans CJK SC'; font-size:26pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans CJK SC'; font-size:26pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans CJK SC'; font-size:26pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans CJK SC'; font-size:26pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans CJK SC'; font-size:26pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans CJK SC'; font-size:26pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans CJK SC'; font-size:26pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans CJK SC'; font-size:26pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans CJK SC'; font-size:26pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans CJK SC'; font-size:26pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans CJK SC'; font-size:26pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans CJK SC'; font-size:26pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:26pt; font-weight:600;&quot;&gt;安装是否需要人工进行操作？&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;如果您下载的镜像本程序支持，则大部分不用，已经尽量省去了让新手头疼的虚拟机程序安装，创建、设置虚拟机，虚拟磁盘分区，寻找原版镜像文件等内容&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/picture/截图/截图_VirtualBox Machine_20220712191756.png&quot; /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;但有些设置依旧需要人工自行设置，例如安装界面密钥的输入、系统的激活（涉及版权问题，不会考虑省略）、增强功能的安装、需要使用的软件等等&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/picture/截图/截图_VirtualBox Machine_20220712192850.png&quot; /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/picture/截图/截图_VirtualBox Machine_20220712193527.png&quot; /&gt;&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:26pt; font-weight:600;&quot;&gt;什么样的镜像本程序（可能）不支持自动安装？&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;非 Windows 7 镜像可能不支持自动安装（纯的 Windows 7 企业版镜像可能不支持自动安装），不保证系统能自动安装成功，例如 Windows XP、Windows 10、Deepin、Ubuntu 等等&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:26pt; font-weight:600;&quot;&gt;默认的虚拟机设置不习惯怎么改？&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt;&quot;&gt;1、打开启动器，打开 Oracle VM VirtualBox 程序&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt;&quot;&gt;2、选择名字为“Windows”的虚拟机，然后在右边点击设置&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/picture/截图/截图_VirtualBox Manager_20220712223602.png&quot; /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt;&quot;&gt;3、在这里修改即可&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/picture/截图/截图_VirtualBox_20220712223705.png&quot; /&gt;&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:26pt; font-weight:600;&quot;&gt;安装加强功能有什么好处？（只限使用 VirtualBox）&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;1、支持鼠标自由从虚拟机和实体机切换&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;2、支持虚拟机根据窗口大小自动设置分辨率&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;3、支持文件共享、剪切板共享、文件拖放&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;4、支持无缝模式&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/picture/截图/截图_选择区域_20220712224639.png&quot; /&gt;&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:26pt; font-weight:600;&quot;&gt;如何安装加强功能？&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;1、点击“设备”=》“加强功能”&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/picture/截图_VirtualBox Machine_20220712142929.png&quot; /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;2、打开“计算机”，找到名为“VirtualBox Guest Additions”的光盘，双击进入，然后双击打开名为“VBoxWindowsAdditions”的程序&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/picture/截图/截图_VirtualBox Machine_20220712143006.png&quot; /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;3、在弹出的界面点击“是”&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/picture/截图/截图_VirtualBox Machine_20220712143018.png&quot; /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;4、一直点“Next”&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/picture/截图/截图_VirtualBox Machine_20220712143029.png&quot; /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/picture/截图/截图_VirtualBox Machine_20220712143037.png&quot; /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt;&quot;&gt;5、全部选择，然后点击“Install”进行安装&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/picture/截图/截图_VirtualBox Machine_20220712143044.png&quot; /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt;&quot;&gt;6、等待安装完毕后，选择“Reboot now”然后点击“Finish”重启此虚拟机即可安装成功（选择“Reboot now”并点“Finish”会自动重新启动）&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/picture/截图/截图_VirtualBox Machine_20220712143103.png&quot; /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="openLinks">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <attribute name="title">
+        <string>关于</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,0">
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QLabel" name="label_3">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>200</width>
+              <height>200</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>200</width>
+              <height>200</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">border-image: url(:/deepin-wine-runner.png);</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QTextBrowser" name="textBrowser_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="html">
+           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;此为 wine 运行器附属组件（虽然违背了“Wine Is Not An Emulator”&amp;lt;Wine 不是一个模拟器&amp;gt;的原意），旨在能更加完美、简单的运行 Windows 应用&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;本程序基于 C++ Qt、Python 和 Virtualbox 制作，通过运行安装 Windows 操作系统的虚拟机实现在 Linux 运行 Windows exe 程序的功能。&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;基于 GPL V3 协议开源&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;项目地址：&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;    Gitee：&lt;/span&gt;&lt;a href=&quot;https://gitee.com/gfdgd-xi/deep-wine-runner&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;https://gitee.com/gfdgd-xi/deep-wine-runner&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;    Github：&lt;/span&gt;&lt;a href=&quot;https://github.com/gfdgd-xi/deep-wine-runner&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:11pt; text-decoration: underline; color:#0082fa;&quot;&gt;https://github.com/gfdgd-xi/deep-wine-runner&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;此组件也有非常大的缺点，就是相比于 Wine，会需要占用大量的空间、安装需要大量的时间、某些情况下需要相比于 Wine 需要消耗更多的系统资源，但可以更加完美、流畅的运行 Windows 应用，会尽量减少因为缺少或未实现导致的 Windows exe 程序运行异常&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;该组件制作者：gfdgd xi&lt;/span&gt;&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans CJK SC'; font-size:10.5pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="openLinks">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="CPUValue">
+   <property name="statusTip">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1058</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuVM">
+    <property name="title">
+     <string>虚拟机</string>
+    </property>
+    <addaction name="actionVMInstallLog"/>
+    <addaction name="actionVMRunlLog"/>
+    <addaction name="separator"/>
+    <addaction name="actionVMTest"/>
+    <addaction name="separator"/>
+    <addaction name="action_StopVirtualBox"/>
+    <addaction name="action_StopQemu"/>
+    <addaction name="separator"/>
+    <addaction name="actionQemuDiskAddSpace"/>
+    <addaction name="separator"/>
+    <addaction name="getDCLC"/>
+   </widget>
+   <addaction name="menuVM"/>
+  </widget>
+  <action name="action">
+   <property name="text">
+    <string>退出</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>关于</string>
+   </property>
+  </action>
+  <action name="addQemuDisk">
+   <property name="text">
+    <string>导入/覆盖</string>
+   </property>
+  </action>
+  <action name="delQemuDisk">
+   <property name="text">
+    <string>导出</string>
+   </property>
+  </action>
+  <action name="actionVMInstallLog">
+   <property name="text">
+    <string>虚拟机安装日志</string>
+   </property>
+  </action>
+  <action name="actionVMRunlLog">
+   <property name="text">
+    <string>虚拟机运行日志</string>
+   </property>
+  </action>
+  <action name="actionVMTest">
+   <property name="text">
+    <string>虚拟机测试（X86、Qemu）</string>
+   </property>
+  </action>
+  <action name="action_StopVirtualBox">
+   <property name="text">
+    <string>强制停止 VirtualBox</string>
+   </property>
+  </action>
+  <action name="action_StopQemu">
+   <property name="text">
+    <string>强制停止 Qemu</string>
+   </property>
+  </action>
+  <action name="actionQemuDiskAddSpace">
+   <property name="text">
+    <string>Qemu 磁盘扩容</string>
+   </property>
+  </action>
+  <action name="getDCLC">
+   <property name="text">
+    <string>获取 Deepin Community Live CD</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
