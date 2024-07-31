@@ -295,8 +295,6 @@ def on_actionQemuDiskAddSpace_triggered():
 def on_getDCLC_triggered():
     QDesktopServices.openUrl(QUrl("https://github.com/gfdgd-xi/deepin-community-live-cd/"))
 
-
-
 programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
 if (__name__ == "__main__"):
     app = QApplication(sys.argv)
@@ -326,6 +324,10 @@ ui.action_StopQemu.triggered.connect(on_action_StopQemu_triggered)
 ui.action_StopVirtualBox.triggered.connect(on_action_StopVirtualBox_triggered)
 ui.actionQemuDiskAddSpace.triggered.connect(on_actionQemuDiskAddSpace_triggered)
 ui.getDCLC.triggered.connect(on_getDCLC_triggered)
+# 判断是否为 X86 架构，如果不是则屏蔽 VirtualBox 相关的选项
+if (subprocess.getoutput("arch") != "x86_64"):
+    for i in [ui.action_StopVirtualBox, ui.getvbox]:
+        i.setVisible(False)
 window.show()
 if (__name__ == "__main__"):
     sys.exit(app.exec_())

@@ -95,6 +95,7 @@ if (__name__ == "__main__"):
     app = QApplication(sys.argv)
 else:
     app = globalenv.get_value("app")
+    
 window = QMainWindow()
 LoadingLabelInit()
 RunService()
