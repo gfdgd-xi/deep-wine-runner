@@ -6,12 +6,13 @@ from qvncwidget import QVNCWidget
 class Window(QMainWindow):
     def __init__(self):
         super(Window, self).__init__()
-
+        self.setStyleSheet("background: black;")
         self.setWindowTitle("QVNCWidget")
 
         self.vnc = QVNCWidget(
             parent=self,
-            host="127.0.0.1", port=5905,
+            #host="127.0.0.1", port=5905,
+            host="10.0.0.8", port=5900,
             readOnly=False
         )
 
@@ -20,9 +21,16 @@ class Window(QMainWindow):
         # you can disable mouse tracking if desired
         self.vnc.setMouseTracking(True)
         self.setAutoFillBackground(True)
+        def a():
+            while True:
+                import time
+                time.sleep(1)
+                #self.vnc.reconnect()
+        import threading
+        threading.Thread(target=a).start()
         
-
         self.vnc.start()
+        
 
     def keyPressEvent(self, ev):
         self.vnc.keyPressEvent(ev)
@@ -35,6 +43,8 @@ class Window(QMainWindow):
     def closeEvent(self, ev):
         self.vnc.stop()
         return super().closeEvent(ev)
+    
+#logging.basicConfig(level=logging.DEBUG)
 
 app = QApplication(sys.argv)
 window = Window()

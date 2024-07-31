@@ -1590,7 +1590,7 @@ fi
 Version: {e2_text.text()}
 Architecture: {debInformation[debArch.currentIndex()]["Architecture"]}
 Maintainer: {e4_text.text()}
-Depends: {debInformation[debArch.currentIndex()]["Depends"]}
+Depends: {debDepends.text()}
 Section: non-free/otherosfs
 Priority: optional
 Multi-Arch: foreign
@@ -1602,7 +1602,7 @@ Description: {e3_text.text()}
 Version: {e2_text.text()}
 Architecture: {debInformation[debArch.currentIndex()]["Architecture"]}
 Maintainer: {e4_text.text()}
-Depends: {debInformation[debArch.currentIndex()]["Depends"]}
+Depends: {debDepends.text()}
 Recommends: {debRecommend.text()}
 Section: non-free/otherosfs
 Priority: optional

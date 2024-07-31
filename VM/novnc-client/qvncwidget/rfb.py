@@ -21,8 +21,6 @@ from socket import SHUT_RDWR
 import struct as s
 import time
 
-import threading
-
 class RFBUnexpectedResponse(Exception):
     pass
 class RFBNoResponse(Exception):
@@ -182,7 +180,6 @@ class RFBClient:
             self.__close()
             raise RFBHandshakeFailed(e)
 
-        threading.Thread(target=a).start()
         self.desktopname = self.__recv(namelen).decode()
         self.log.debug(f"Connecting to \"{self.desktopname}\"")
 
@@ -285,7 +282,6 @@ class RFBClient:
 
     def _handleConnection(self, data: bytes):
         msgid = es.return_uint8_val(data)
-
         if msgid == c.SMSG_FBUPDATE:
             # Framebuffer Update
             self._handleFramebufferUpdate(self.__recv(3))
@@ -309,12 +305,13 @@ class RFBClient:
         self.log.debug(f"Server clipboard: {data}")
         # TODO: create callback
 
+    zeroTime = 0
+
     def _handleFramebufferUpdate(self, data: bytes):
         numRectangles = s.unpack("!xH", data)[0]
         self.log.debug(f"numRectangles: {numRectangles}")
 
         self.onBeginUpdate()
-
         for _ in range(numRectangles):
             self._handleRectangle(self.__recv(12))
 
@@ -322,10 +319,9 @@ class RFBClient:
 
     def _handleRectangle(self, data: bytes):
         xPos, yPos, width, height, encoding = s.unpack("!HHHHI", data)
-
         rect = RFBRectangle(xPos, yPos, width, height)
         self.log.debug(f"RECT: {rect}")
-
+        #print(xPos, yPos)
         if encoding == c.ENC_RAW:
             size = (width*height*self.pixformat.bitspp) // 8
             self.log.debug(f"expected size: {size}")
@@ -333,7 +329,6 @@ class RFBClient:
             start = time.time()
             data = self.__recv(expectedSize=size)
             self.log.debug(f"fetching data took: {(time.time() - start)*1e3} ms")
-
             self._decodeRAW(data, rect)
             del data
         else:
