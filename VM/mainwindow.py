@@ -327,4 +327,5 @@ ui.action_StopVirtualBox.triggered.connect(on_action_StopVirtualBox_triggered)
 ui.actionQemuDiskAddSpace.triggered.connect(on_actionQemuDiskAddSpace_triggered)
 ui.getDCLC.triggered.connect(on_getDCLC_triggered)
 window.show()
-sys.exit(app.exec_())
+if (__name__ == "__main__"):
+    sys.exit(app.exec_())

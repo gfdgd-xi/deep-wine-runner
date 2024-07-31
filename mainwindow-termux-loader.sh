@@ -19,6 +19,6 @@ if [[ $DISPLAY == "" ]] && [[ $WAYLAND_DISPLAY == "" ]] && [[ -f /data/data/com.
     if [[ -f /data/data/com.termux/files/usr/bin/startxfce4 ]]; then
         startxfce4 &      
     fi
-    $CURRENT_DIR/novnc/utils/novnc_proxy --vnc localhost:5905 $noVNCOption &
+    $CURRENT_DIR/VM/novnc/utils/novnc_proxy --vnc localhost:5905 $noVNCOption &
 fi
 python3 $CURRENT_DIR/mainwindow.py
