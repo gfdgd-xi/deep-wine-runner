@@ -4,6 +4,7 @@ PROC_MEM =    "/proc/meminfo"
 PROC_NET =    "/proc/net/dev"
 
 import enum
+import psutil
 from PyQt5.QtCore import *
 
 class infoUtils:
@@ -161,8 +162,8 @@ class infoUtils:
 
     def memoryRate(self):
         memory = memoryAll = 0
-        swap = swapAll = 0
-        ok = False
+        swap = swapAll = None
+        '''ok = False
         file = QFile(PROC_MEM) # /proc/meminfo
         if (not file.open(QIODevice.ReadOnly or QIODevice.Text)):
             return
@@ -176,5 +177,8 @@ class infoUtils:
         memory = buff[0] - buff[2]
         swapAll = buff[14]
         swap = buff[14] - buff[15]
-        file.close()
+        file.close()'''
+        mem = psutil.virtual_memory()
+        memoryAll = int(mem.total / 1024) 
+        memory = int(mem.used/ 1024)
         return memory, memoryAll, swap, swapAll

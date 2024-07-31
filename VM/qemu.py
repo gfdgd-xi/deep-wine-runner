@@ -15,7 +15,7 @@ class qemu:
     def homePath(self):
         return os.getenv("HOME")
 
-    def __init__(self, name: str, managerPath: str) -> None:
+    def __init__(self, name: str, managerPath = "/usr/bin") -> None:
         if (not os.path.exists(name)):
             self.name = self.homePath() + "/Qemu/" + name
         else:
@@ -27,7 +27,7 @@ class qemu:
             qemuPath = "/opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh qemu-system-i386"
         self.vboxVersion = subprocess.getoutput(qemuPath + " --version")
 
-    def Create(self, type: str):
+    def Create(self, type = "Windows7"):
         if(not os.path.exists(self.name)):
             os.makedirs(self.name)
         return 0
@@ -37,14 +37,14 @@ class qemu:
             return 0
         return os.system(("qemu-img create -f qcow2 '" + self.path + "' " + str(size) + "M"))
 
-    def CreateDiskControl(self, controlName: str):
+    def CreateDiskControl(self, controlName = "storage_controller_1"):
         return 0
 
-    def MountDisk(self, diskPath: str, controlName: str, port: int, device: int):
+    def MountDisk(self, diskPath: str, controlName = "storage_controller_1", port = 0, device = 0):
         self.commandOption += "-drive 'file=" + diskPath + ",if=ide,index=" + str(device) + "' "
         return 0
 
-    def MountISO(self, isoPath, controlName: str, port: int, device: int):
+    def MountISO(self, isoPath, controlName = "storage_controller_1", port = 1, device = 0):
         self.commandOption += "-drive 'media=cdrom,file=" + isoPath + ",if=ide,index=" + str(device) + "' "
         return 0
 
@@ -62,7 +62,7 @@ class qemu:
         print("Socket: ", cpuNum)
         print("Core: ", coreNum)
         print("Threads: ", number)
-        self.commandOption += "-smp " + str(number) + ",sockets=" + str(cpuNum) + ",cores=" + str(coreNum / cpuNum) + ",threads=" + str(number / cpuNum / coreNum) + " "
+        self.commandOption += "-smp " + str(number) + ",sockets=" + str(cpuNum) + ",cores=" + str(int(coreNum / cpuNum)) + ",threads=" + str(int(number / cpuNum / coreNum)) + " "
         return 0
 
     def SetMemory(self, memory: str):
@@ -72,7 +72,7 @@ class qemu:
     def SetRemote(self, setting: bool):
         return 0
 
-    def SetRemoteConnectSetting(self, port: int):
+    def SetRemoteConnectSetting(self, port = 5540):
         return 0
 
     def MountMainDisk(self, diskPath: str):
@@ -85,7 +85,7 @@ class qemu:
         if(os.path.exists("/opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh")):
             # 如果存在拓展 Qemu，则调用此
             qemuPath = "/opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh qemu-system-arm"
-        if(subprocess.getoutput("arch").replace("\n", "").replace(" ", "") == "aarch64" and not os.system((self.applicationDirPath() + "/kvm-ok").toUtf8())):
+        if(subprocess.getoutput("arch").replace("\n", "").replace(" ", "") == "aarch64" and not os.system((self.applicationDirPath() + "/kvm-ok"))):
             return os.system((qemuPath + " --boot 'splash=" + self.GetBootLogoPath() + ",order=d,menu=on,splash-time=2000' -display vnc=:5 -display gtk --enable-kvm -cpu host -M virt " + self.commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &"))
     
         return os.system((qemuPath + " --boot 'splash=" + self.GetBootLogoPath() + ",order=d,menu=on,splash-time=2000'  -display vnc=:5 -display gtk -cpu max -M virt " + self.commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &"))
@@ -106,7 +106,7 @@ class qemu:
             qemuPath = "/opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh qemu-system-aarch64"
     
         print(self.commandOption)
-        if(subprocess.getoutput("arch").replace("\n", "").replace(" ", "") == "aarch64" and not os.system((self.applicationDirPath() + "/kvm-ok").toUtf8())):
+        if(subprocess.getoutput("arch").replace("\n", "").replace(" ", "") == "aarch64" and not os.system((self.applicationDirPath() + "/kvm-ok"))):
             return os.system((qemuPath + " --boot 'splash=" + self.GetBootLogoPath() + ",order=d,menu=on,splash-time=2000' -display vnc=:5 -display gtk --enable-kvm -cpu host -M virt " + self.commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &"))
     
         return os.system((qemuPath + " --boot 'splash=" + self.GetBootLogoPath() + ",order=d,menu=on,splash-time=2000'  -display vnc=:5 -display gtk -cpu max -M virt " + self.commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &"))
@@ -114,14 +114,14 @@ class qemu:
     def StartLoong64(self):
         return 1
 
-    def Start(self, unShown: bool):
+    def Start(self, unShown = False):
         newCommandOption = self.commandOption
         qemuPath = "qemu-system-x86_64"
         print(self.GetBootLogoPath())
         if (self.isUEFI):
-            newcommandOption += " -vga none -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 "
+            newCommandOption += " -vga none -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 "
         else:
-            newcommandOption += " -vga virtio -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 "
+            newCommandOption += " -vga virtio -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 "
         # UOS 3a4000 使用程序自带的 qemu
         info = self.SystemInfo().lower()
         if("uos" in info or "unio" in info):
@@ -133,7 +133,7 @@ class qemu:
             # 如果存在拓展 Qemu，则调用此
             qemuPath = "/opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh qemu-system-x86_64"
         print(self.commandOption)
-        if(subprocess.getoutput("arch").replace("\n", "").replace(" ", "") == "x86_64" and not os.system((self.applicationDirPath() + "/kvm-ok").toUtf8())):
+        if(subprocess.getoutput("arch").replace("\n", "").replace(" ", "") == "x86_64" and not os.system((self.applicationDirPath() + "/kvm-ok"))):
             return os.system((qemuPath + " --boot 'splash=" + self.GetBootLogoPath() + ",order=d,menu=on,splash-time=2000' -display vnc=:5 -display gtk --enable-kvm -cpu host " + newCommandOption + " > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &"))
         return os.system((qemuPath + " --boot 'splash=" + self.GetBootLogoPath() + ",order=d,menu=on,splash-time=2000' -display vnc=:5 -display gtk -nic model=rtl8139 " + newCommandOption + " > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &"))
 
@@ -150,7 +150,7 @@ class qemu:
     def SetDisplayMemory(self, memory: int):
         return 0
 
-    def InstallGuessAdditions(self, controlName: str, port: int, device: int):
+    def InstallGuessAdditions(self, controlName = "storage_controller_1", port = 1, device = 0):
         return 0
 
     def EnabledAudio(self):
@@ -222,7 +222,7 @@ class qemu:
         return 0
 
     def AddDiskSpace(self, path, data: float):
-        return os.system(("qemu-img resize '" + self.path + "' +" + str(data) + "G").toUtf8())
+        return os.system(("qemu-img resize '" + self.path + "' +" + str(data) + "G"))
 
     def GetBootLogoPath(self) -> str:
         bootScreenLogo = ""

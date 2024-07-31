@@ -30,7 +30,7 @@ class buildvbox:
     # 获取 CPU 个数
     def GetCPUSocket(self) -> int:
         # 获取命令返回值
-        value = subprocess.getoutput("bash -c 'cat /proc/cpuinfo | grep \"cpu cores\" | uniq | wc -l'")
+        value = int(subprocess.getoutput("bash -c 'cat /proc/cpuinfo | grep \"cpu cores\" | uniq | wc -l'"))
         # 判断异常值，例如没挂载 /proc
         if (value <= 0):
             value = 1
@@ -38,7 +38,7 @@ class buildvbox:
 
     # 获取 CPU 核心数
     def GetCPUCore(self) -> int:
-        value = subprocess.getoutput("bash -c \"grep 'core id' /proc/cpuinfo | sort -u | wc -l\"")
+        value = int(subprocess.getoutput("bash -c \"grep 'core id' /proc/cpuinfo | sort -u | wc -l\""))
         # 判断异常值，例如没挂载 /proc
         if(value <= 0):
             value = 1
@@ -60,7 +60,7 @@ class buildvbox:
     def Download(self, url: str, path: str, fileName: str) -> int:
         return os.system(("aria2c -x 16 -s 16 -c " + url + " -d " + path + " -o " + fileName))
 
-    def buildvbox(self, isoPath: str, id: int, vm: int):
+    def __init__(self, isoPath: str, id = 0, vm = 0):
         programPath = self.applicationDirPath()
 
         net = self.GetNet()
@@ -139,8 +139,8 @@ class buildvbox:
             swap = 0
             swapAll = 0
             # TODO
-            infoUtils.memoryRate(memory, memoryAll, swap, swapAll)
-            vm.SetMemory(memoryAll / 3 / 1024)
+            memory, memoryAll, swap, swapAll = infoUtils().memoryRate()
+            vm.SetMemory(int(memoryAll / 3 / 1024))
             vm.SetNetBridge(net)
             vm.EnabledAudio()
             vm.EnabledClipboardMode()
@@ -193,13 +193,14 @@ class buildvbox:
                 vm.SetDisplayMemory(32)
                 vm.EnabledUEFI(True)
                 setISOAlready = 1
-            os.makedirs("/home/gfdgd_xi/Qemu/Windows/")
+            if (not os.path.exists):
+                os.makedirs("/home/gfdgd_xi/Qemu/Windows/")
             vm.CreateDiskControl()
             #vm.CreateDiskControl("storage_controller_2")
             if(id == 0 or id == 1):
-                vm.CreateDisk(self.homePath() + "/Qemu/Windows/Windows.qcow2", 131072)
+                vm.CreateDisk(self.homePath() + "/VirtualBox VMs/Windows/Windows.vdi", 131072)
             else:
-                vm.CreateDisk(self.homePath() + "/Qemu/Windows/Windows.qcow2", 131072 * 5)
+                vm.CreateDisk(self.homePath() + "/VirtualBox VMs/Windows/Windows.vdi", 131072 * 5)
             vm.MountDisk(self.homePath() + "/VirtualBox VMs/Windows/Windows.vdi")
             if(not setISOAlready):
                 vm.MountISO(isoPath, "storage_controller_1", 0, 1)
@@ -222,9 +223,10 @@ class buildvbox:
             swap = 0
             swapAll = 0
             # TODO
-            infoUtils.memoryRate(memory, memoryAll, swap, swapAll)
+            memory, memoryAll, swap, swapAll = infoUtils().memoryRate()
             #memoryRate(memory, memoryAll, swap, swapAll)
-            vm.SetMemory(memoryAll / 3 / 1024)
+            vm.SetMemory(int(memoryAll / 3 / 1024))
+            print(memoryAll)
             vm.SetNetBridge(net)
             vm.EnabledAudio()
             vm.EnabledClipboardMode()

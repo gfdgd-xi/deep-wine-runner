@@ -6,12 +6,12 @@ class vbox:
     managerPath = ""
     vboxVersion = ""
 
-    def __init__(self, name: str, managerPath: str) -> None:
+    def __init__(self, name: str, managerPath = "VBoxManage") -> None:
         self.name = name
         self.managerPath = managerPath
         self.vboxVersion = subprocess.getoutput("'" + managerPath + "' -v")
     
-    def Create(self, type: str):
+    def Create(self, type = "Windows7"):
         os.system(("\"" + self.managerPath + "\" createvm --name \""
                    + self.name + "\" --ostype \"" + type +
                    "\" --register"))
@@ -23,15 +23,15 @@ class vbox:
     def CreateDisk(self, path: str, size: int):
         return os.system(("\"" + self.managerPath + "\" createvdi --filename \"" + path + "\" --size \"" + str(size) + "\""))
 
-    def CreateDiskControl(self, controlName: str):
+    def CreateDiskControl(self, controlName = "storage_controller_1"):
         return os.system(("\"" + self.managerPath + "\" storagectl \"" + self.name + "\" --name \"" + controlName + "\" --add ide"))
 
-    def MountDisk(self, diskPath: str, controlName: str, port: int, device: int):
+    def MountDisk(self, diskPath: str, controlName = "storage_controller_1", port = 0, device = 0):
         return os.system(("\"" + self.managerPath + "\" storageattach \"" + self.name +
                    "\" --storagectl \"" + controlName + "\" --type hdd --port "
                    + str(port) + " --device " + str(device) + " --medium \"" + diskPath + "\""))
 
-    def MountISO(self, isoPath: str, controlName: str, port: int, device: int):
+    def MountISO(self, isoPath: str, controlName = "storage_controller_1", port = 1, device = 0):
         return os.system(("\"" + self.managerPath + "\" storageattach \"" + self.name + "\" --storagectl \"" +
                    controlName + "\" --type dvddrive --port " + str(port) + " --device " + str(device)
                    + " --medium \"" + isoPath + "\""))
@@ -54,10 +54,10 @@ class vbox:
             return os.system(("\"" + self.managerPath + "\" modifyvm \"" + self.name + "\" --vrde on"))
         return os.system(("\"" + self.managerPath + "\" modifyvm \"" + self.name + "\" --vrde off"))
 
-    def SetRemoteConnectSetting(self, port: int):
+    def SetRemoteConnectSetting(self, port = 5540):
         return os.system(("\"" + self.managerPath + "\" modifyvm \"" + self.name + "\" --vrdeport " + str(port) + " --vrdeaddress """))
 
-    def Start(self, unShown: bool):
+    def Start(self, unShown = False):
         if (unShown):
             return os.system(("\"" + self.managerPath + "\" > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1"))
         return os.system(("\"" + self.managerPath + "\" startvm \"" + self.name + "\"  > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1"))
@@ -71,7 +71,7 @@ class vbox:
     def SetDisplayMemory(self, memory: int):
         return os.system(("\"" + self.managerPath + "\" modifyvm \"" + self.name + "\" --vram " + str(memory)))
 
-    def InstallGuessAdditions(self, controlName: str, port: int, device: int):
+    def InstallGuessAdditions(self, controlName = "storage_controller_1", port = 1, device = 0):
         return self.MountISO("/usr/share/virtualbox/VBoxGuestAdditions.iso", controlName, port, device);
     
     def EnabledAudio(self):
