@@ -3400,7 +3400,6 @@ if (window.frameGeometry().width() > app.primaryScreen().availableGeometry().siz
     window.setCentralWidget(areaScroll)
     window.showMaximized()  # 设置全屏
 
-
 if (__name__ == "__main__"):
     window.show()
     # Mini 模式

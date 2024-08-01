@@ -15,6 +15,7 @@ def set_value(key :str, value):
 """ 获得一个全局变量,不存在则返回默认值 """
 def get_value(key, defValue=None):
     try:
+        print(_global_dict[key])
         return _global_dict[key]
     except KeyError:
         return defValue
