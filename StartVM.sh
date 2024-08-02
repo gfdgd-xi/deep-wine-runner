@@ -94,7 +94,7 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
                 qemuPath="bwrap --dev-bind / / --bind ./VM/MipsQemu/usr/lib/mips64el-linux-gnuabi64/qemu/ui-gtk.so /usr/lib/mips64el-linux-gnuabi64/qemu/ui-gtk.so ./VM/MipsQemu/usr/bin/qemu-system-x86_64"
             fi
         fi
-        if [[ $qemuMore != "" ]]; then
+        if [[ $qemuMore == "" ]]; then
             qemuPath=$qemuMore 
         fi
         echo 不使用 kvm 加速
