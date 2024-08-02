@@ -317,32 +317,6 @@ class Runexebutton_threading(QtCore.QThread):
             option += "WINEDEBUG=FIXME,ERR,WARN,TRACE,Message "
         wineUsingOption = ""
         exePath = e2.currentText()
-        # 禁用没什么用还一堆坑的参数识别问题
-        if False:
-            fileName = [".exe"]
-            changePath = False
-            for i in fileName:
-                if i in exePath:
-                    print(i)
-                    print(exePath)
-                    l = exePath.index(i)
-                    exePath = f"{exePath[:l+4]}' {exePath[l+4:]} '"
-                    print(l)
-                    print(exePath)
-                    changePath = True
-                    break
-            #if not changePath and not os.path.exists(changePath):
-            if not changePath and not os.path.exists(exePath):
-                # 删除前后无用空格以防止出现问题
-                print(exePath)
-                exePath = exePath.strip()
-                # 有空格再说
-                if " " in exePath:
-                    l = exePath.index(" ")
-                    exePath = f"{exePath[:l]}' {exePath[l:]} '"
-                    print(l)
-                    #print(i)
-                print(exePath)
         if o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable":
             wineUsingOption = ""
         if o1.currentText() == "基于 UOS box86 的 deepin-wine6-stable" or o1.currentText() == "基于 UOS exagear 的 deepin-wine6-stable":
@@ -422,12 +396,8 @@ StartupNotify=true''')
 class Temp:
     webWindow = None
 
-
-        
-    #QtCore.QUrl().url()
-
 # 显示“关于这个程序”窗口
-def about_this_program()->"显示“关于这个程序”窗口":
+def about_this_program():
     global about
     global title
     global iconPath

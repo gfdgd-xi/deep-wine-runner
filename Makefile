@@ -137,6 +137,7 @@ copy-files:
 	cp -rv InstallRuntime   deb/opt/apps/deepin-wine-runner
 	cp -rv globalenv.py   deb/opt/apps/deepin-wine-runner
 	cp -rv local   deb/opt/apps/deepin-wine-runner
+	cp -rv WindowModule.py deb/opt/apps/deepin-wine-runner
 	mkdir -pv deb/opt/apps/deepin-wine-runner/entries/
 	cp -rv deb/usr/share/applications deb/opt/apps/deepin-wine-runner/entries/applications
 	python3 UpdateTime.py

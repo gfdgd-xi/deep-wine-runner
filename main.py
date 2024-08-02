@@ -10,7 +10,7 @@ class RunnerWindow:
     programPath = os.path.split(os.path.realpath(__file__))[0]  # 获取当前程序目录
     import globalenv
     recycleTime = 0
-    def __init__(self, app: QtWidgets.QApplication, moduleName: str):
+    def __init__(self, app: QtWidgets.QApplication, moduleName: str) -> None:
         self.globalenv._init()  # globalenv 的 init 是必须的，这样才能正确的 import Wine 运行器的窗口
         self.globalenv.set_value("app", app)   # 用于将该部分的 app 给子模块的 Qt 控件调用以解决 UI 异常以及其它问题
         # 因为 Python 有不允许重复 import 的特性从而导致多次返回的控件实际指向同一对象，所以要通过特殊的方式绕过这一限制
