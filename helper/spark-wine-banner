@@ -1,0 +1,57 @@
+#!/bin/bash
+
+##### 若有pybanner则尝试启动
+#if [ -e ${SHELL_DIR}/spark-dwine-helper/pybanner/pybanner.py ];then
+#echo "Protocol upgrade: Trying to activate python banner..."
+#python3 ${SHELL_DIR}/spark-dwine-helper/pybanner/pybanner.py
+#if [ "$?" = "0" ];then
+#exit
+#else
+#echo "Failed to activate. Fallback to normal zenity."
+#fi
+#fi
+
+
+if [ ! -z "$WAYLAND_DISPLAY" ]; then
+    echo "Wayland detected. Do not check wmclass"
+zenity --progress --title="星火Windows应用兼容助手" --text="正在为您启动以下应用：$WINE_APP_NAME" --pulsate --width=400 --auto-close --no-cancel --timeout=3
+    exit 
+fi
+
+if [  -z "$(which wmctrl)" ]; then
+    echo "No wmctrl installed. Do not check wmclass"
+zenity --progress --title="星火Windows应用兼容助手" --text="正在为您启动以下应用：$WINE_APP_NAME" --pulsate --width=400 --auto-close --no-cancel --timeout=3
+    exit 
+fi
+
+target_wmclass="$WINE_WMCLASS"
+
+
+function check_window() {
+    # 使用 wmctrl 命令列出所有窗口，并使用 grep 过滤出特定的 WMCLASS
+    windows=$(wmctrl -lx | grep "$target_wmclass")
+    
+    # 如果窗口存在，则关闭提示
+    if [ -n "$windows" ]; then
+        # 提取窗口ID
+        window_id=$(echo "$windows" | awk '{print $1}')
+
+        echo "Window with WMCLASS '$target_wmclass' found"
+        exit
+    else
+        echo "Window with WMCLASS '$target_wmclass' not found."
+    fi
+}
+
+function check_wmclass(){
+# 递归检测窗口是否存在的函数
+
+# 每隔一段时间检测一次窗口是否存在
+while true; do
+    check_window
+    # 等待一段时间后再次检测
+    sleep 1
+done
+}
+
+ check_wmclass | zenity --progress --title="星火Windows应用兼容助手" --text="正在为您启动以下应用：$WINE_APP_NAME" --pulsate --width=400 --auto-close --no-cancel --timeout=20

@@ -1,0 +1,36 @@
+#!/bin/bash
+source $(dirname $0)/log-function.bashimport
+Get_Dist_Name()
+{
+    if grep -Eqii "Deepin" /etc/issue || grep -Eq "Deepin" /etc/*-release; then
+        DISTRO='Deepin'
+    elif grep -Eqi "UnionTech" /etc/issue || grep -Eq "UnionTech" /etc/*-release; then
+        DISTRO='UniontechOS'
+    elif grep -Eqi "UOS" /etc/issue || grep -Eq "UOS" /etc/*-release; then
+        DISTRO='UniontechOS'
+    else
+         DISTRO='OtherOS'
+        fi
+}
+
+
+
+
+
+Get_Dist_Name
+## 1. If WINEPREFIX is not set, use ~/.wine
+if [ "$WINEPREFIX" = "" ];then
+export WINEPREFIX=$HOME/.wine
+fi
+
+
+if [ "$DISTRO" != "Deepin" ] && [ "$DISTRO" != "UniontechOS" ];then
+
+
+log.warn "WARNING:USING BOX64 INSTEAD OF DEEPIN-BOX64,SOME APP MAY FAIL TO LAUNCH"
+
+spark-box64 /opt/deepin-wine8-stable/bin/wine "$@"
+else
+deepin-wine8-stable "$@"
+fi
+

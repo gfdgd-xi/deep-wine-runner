@@ -1,0 +1,39 @@
+# ===== Log =====
+# log.info xxx
+# log.warn xxx
+# log.info xxx
+# log.debug xxx
+# 带颜色的echo
+function log.color_output() {
+    local color=$1
+    shift 1
+
+    echo >&2 -e "\033[${color}m$@\033[0m"
+    return 0
+}
+
+# Log is named without prefix "utils." for convenience
+# Usage: log.log <level> ...content
+function log.log() {
+    if [[ $# < 2 ]]; then
+        return -1
+    fi
+
+    local level=$1
+    shift 1
+
+    case $level in
+    error) log.color_output "0;31" "[ERROR] $@" ;;
+    warn) log.color_output "1;33" "[WARN] $@" ;;
+    info) log.color_output "1;37" "[INFO] $@" ;;
+    debug) log.color_output "1;30" "[DEBUG] $@" ;;
+    esac
+
+    return 0
+}
+
+function log.error() { log.log "error" "$@"; }
+function log.warn() { log.log "warn" $@; }
+function log.info() { log.log "info" $@; }
+function log.debug() { log.log "debug" $@; }
+
