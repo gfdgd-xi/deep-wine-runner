@@ -98,7 +98,7 @@ copy-files:
 	cp -rv InstallVisualCPlusPlus.py deb/opt/apps/deepin-wine-runner
 	cp -rv launch.sh deb/opt/apps/deepin-wine-runner
 	cp -rv LICENSE deb/opt/apps/deepin-wine-runner
-	cp -rv mainwindow.py deb/opt/apps/deepin-wine-runner/deepin-wine-runner
+	cp -rv mainwindow.py deb/opt/apps/deepin-wine-runner/
 	cp -rv package-script.zip deb/opt/apps/deepin-wine-runner
 	cp -rv Run.bat deb/opt/apps/deepin-wine-runner
 	cp -rv RunVM.sh deb/opt/apps/deepin-wine-runner
@@ -139,6 +139,7 @@ copy-files:
 	cp -rv globalenv.py   deb/opt/apps/deepin-wine-runner
 	cp -rv local   deb/opt/apps/deepin-wine-runner
 	cp -rv WindowModule.py deb/opt/apps/deepin-wine-runner
+	cp -rv main.py deb/opt/apps/deepin-wine-runner/deepin-wine-runner
 	mkdir -pv deb/opt/apps/deepin-wine-runner/entries/
 	cp -rv deb/usr/share/applications deb/opt/apps/deepin-wine-runner/entries/applications
 	python3 UpdateTime.py

@@ -1,11 +1,26 @@
+#!/usr/bin/env python3
 #   库的引用
 import PyQt5.QtWidgets as QtWidgets
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 
+import os
+import json
 import sys
 import WindowModule
 import welcome
+
+# 读取文本文档
+def readtxt(path):
+    f = open(path, "r") # 设置文件对象
+    str = f.read()  # 获取内容
+    f.close()  # 关闭文本对象
+    return str  # 返回结果
+
+def ProgramVersion():
+    programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
+    information = json.loads(readtxt(f"{programPath}/information.json"))
+    return information["Version"]
 
 #   创建界面
 class Window(QtWidgets.QWidget):
@@ -21,7 +36,7 @@ class Window(QtWidgets.QWidget):
 
     def initUI(self):
         self.setMinimumSize(800, 600)
-        self.setWindowTitle("增减测试")
+        self.setWindowTitle("Wine 运行器 {}".format(ProgramVersion()))
         self.mainLayout = QtWidgets.QHBoxLayout()
         self.setLayout(self.mainLayout)
 
@@ -29,11 +44,12 @@ class Window(QtWidgets.QWidget):
         self.leftWidget = LeftWidget()
         self.mainLayout.addWidget(self.leftWidget)
 
+        time = 0
         for i in WindowModule.moduleNameList.keys():
             self.moduleMapList[self.leftWidget.actionList[i].text()] = [i, WindowModule.moduleNameList[i]["Name"]]
             self.leftWidget.actionList[i].triggered.connect(lambda: self.add(self.sender().text()))
 
-        self.leftWidget.btn4.clicked.connect(self.delCurrent)
+        #self.leftWidget.btn4.clicked.connect(self.delCurrent)
         self.leftWidget.list1.itemClicked.connect(self.switchWidget)
 
         #   右侧区域
@@ -41,6 +57,13 @@ class Window(QtWidgets.QWidget):
         self.mainLayout.addWidget(self.rightWidget)
 
         self.addWelcome()
+
+        # 判断运行器是否为第一次打开，如果不是则默认切换至 Wine 运行器主窗口
+        # 默认为列表里的第一个控件
+        if (os.path.exists(get_home() + "/.config/deepin-wine-runner")):
+            self.add(self.leftWidget.actionList[list(WindowModule.moduleNameList.keys())[0]].text())
+        self.ConfigureConfigFile()
+
 
     #   新增欢迎界面
     def addWelcome(self):
@@ -52,7 +75,7 @@ class Window(QtWidgets.QWidget):
         self.rightWidget.addWidget(self.newWidget)
 
     #   新增界面
-    def add(self, actionName):
+    def add(self, actionName: str):
         self.newInfo = "{}#{}".format(self.moduleMapList[actionName][1], self.counter_a)
         self.newTab = ItemWidget(self.newInfo)
         self.newTab.btn.clicked.connect(self.delCurrent)
@@ -103,6 +126,13 @@ class Window(QtWidgets.QWidget):
                 self.leftWidget.list1.item(i).btnDisable()
         if self.row != 0:
             self.leftWidget.list1.currentItem().btnEnable()
+            
+
+    def ConfigureConfigFile(self):
+        if not os.path.exists(get_home() + "/.config/"):  # 如果没有配置文件夹
+            os.mkdir(get_home() + "/.config/")  # 创建配置文件夹
+        if not os.path.exists(get_home() + "/.config/deepin-wine-runner"):  # 如果没有配置文件夹
+            os.mkdir(get_home() + "/.config/deepin-wine-runner")  # 创建配置文件夹
         
 #   左侧区域
 class LeftWidget(QtWidgets.QWidget):
@@ -118,8 +148,7 @@ class LeftWidget(QtWidgets.QWidget):
         self.setLayout(self.mainLayout)
 
         #   左侧标题
-        self.lab1 = QtWidgets.QLabel("页面导航区")
-        self.lab1.setStyleSheet("font-size:20px")
+        self.lab1 = QtWidgets.QLabel("<h3>页面导航区</h3>")
         self.mainLayout.addWidget(self.lab1)
 
         #   新建页面面按钮
@@ -138,8 +167,8 @@ class LeftWidget(QtWidgets.QWidget):
         self.mainLayout.addWidget(self.list1)
 
         #   删_页面按钮
-        self.btn4 = QtWidgets.QPushButton("删除_本页面")
-        self.mainLayout.addWidget(self.btn4)
+        #self.btn4 = QtWidgets.QPushButton("删除本页面")
+        #self.mainLayout.addWidget(self.btn4)
 
 #   列表项目组件
 class ItemWidget(QtWidgets.QListWidgetItem):
@@ -161,7 +190,7 @@ class ItemWidget(QtWidgets.QListWidgetItem):
 
         #   关闭按钮
         self.btn = QtWidgets.QPushButton("x")
-        self.btn.setMaximumWidth(20)
+        #self.btn.setMaximumWidth(20)
         self.btn.setEnabled(False)
         self.mainLayout.addWidget(self.btn)
 
@@ -181,9 +210,14 @@ class RightWidget(QtWidgets.QStackedWidget):
 
     #def initUI(self):
 
+# 获取用户主目录
+def get_home():
+    return os.path.expanduser('~')
+
 #   运行程序
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     mainWindow = Window()
     mainWindow.show()
+    mainWindow.resize(int(mainWindow.geometry().width() * 1.2), int(mainWindow.geometry().height() * 1.2))
     sys.exit(app.exec())

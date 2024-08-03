@@ -17,8 +17,7 @@ class WinWelcome(QtWidgets.QWidget):
         self.setLayout(self.mainLayout)
 
         #   标签1
-        self.lab1 = QtWidgets.QLabel("欢迎使用Wine运行器！")
-        self.lab1.setStyleSheet("font-size:20px")
+        self.lab1 = QtWidgets.QLabel("<h3>欢迎使用Wine运行器！</h3>")
         self.mainLayout.addWidget(self.lab1)
 
         #   文本栏
@@ -28,7 +27,7 @@ class WinWelcome(QtWidgets.QWidget):
         self.mainLayout.addWidget(self.txt)
         
         #   标签2
-        self.lab2 = QtWidgets.QLabel("请根据您的需求，在左下角打开相应页面")
+        self.lab2 = QtWidgets.QLabel("请根据您的需求，在左侧打开相应页面")
         self.mainLayout.addWidget(self.lab2)
 
 #   测试界面

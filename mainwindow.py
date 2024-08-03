@@ -3360,8 +3360,7 @@ window.setCentralWidget(widget)
 # 判断是否为小屏幕，是则设置滚动条并全屏
 # 获取为 import 为控件，也默认开启滚动条
 if (window.frameGeometry().width() > app.primaryScreen().availableGeometry().size().width() * 0.8 or 
-   window.frameGeometry().height() > app.primaryScreen().availableGeometry().size().height() * 0.9 or
-   __name__ != "__main__"):
+   window.frameGeometry().height() > app.primaryScreen().availableGeometry().size().height() * 0.9):
     # 设置滚动条
     areaScroll = QtWidgets.QScrollArea(window)
     areaScroll.setWidgetResizable(True)

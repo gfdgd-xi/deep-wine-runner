@@ -750,13 +750,13 @@ try:
     exePath.setText(sys.argv[1])
 except:
     pass
-if (__name__ != "__main__"):
+'''if (__name__ != "__main__"):
     # 设置滚动条
     areaScroll = QtWidgets.QScrollArea(window)
     areaScroll.setWidgetResizable(True)
     areaScroll.setWidget(widget)
     areaScroll.setFrameShape(QtWidgets.QFrame.NoFrame)
-    window.setCentralWidget(areaScroll)
+    window.setCentralWidget(areaScroll)'''
 
 if (__name__ == "__main__"):
     window.resize(int(window.frameGeometry().width() * 1.2), int(window.frameGeometry().height() * 1.1))
