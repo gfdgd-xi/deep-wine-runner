@@ -88,6 +88,7 @@ def disabled_or_NORMAL_all(choose):
     debFirstArch.setDisabled(choose)
     helperConfigPathButton.setDisabled(choose)
     helperConfigPathText.setDisabled(choose)
+    debContainHelper.setDisabled(choose)
     #if not choose:
     #    ChangeArchCombobox()
     #    ChangeWine()
@@ -686,6 +687,9 @@ Description: {e3_text.text()}
                     shutil.copy(helperConfigPath, f"{debPackagePath}/opt/deepinwine/tools/spark_run_v4_app_configs/{os.path.splitext(os.path.basename(e6_text.text()))[0]}.sh")
                 else:
                     shutil.copy(helperConfigPath, f"{debPackagePath}/opt/deepinwine/tools/spark_run_v4_app_configs/{os.path.basename(e6_text.text())}.sh")
+            # 如果选择内置 helper,则拷贝 helper 至 /opt/apps/@@@packager@@@/files 下
+            if (debContainHelper.isChecked()):
+                os.system(f"cp -rv '{programPath}/packager-config/deepinwine/' '{debPackagePath}/opt/apps/{e1_text.text()}/files'")
             ################
             # 修改文件权限
             ################
@@ -902,13 +906,14 @@ def ChangeWine():
     debRecommend.setText("")
     helperConfigPathText.setEnabled(chooseWineHelperValue.isChecked())
     helperConfigPathButton.setEnabled(chooseWineHelperValue.isChecked())
-    if os.path.exists(wine[wineVersion.currentText()]):
+    if (debContainHelper.isChecked() and not os.path.exists(wine[wineVersion.currentText()])):
+        debDepends.setText(f"{wine[wineVersion.currentText()]} | {wine[wineVersion.currentText()]}-bcm | {wine[wineVersion.currentText()]}-dcm | com.{wine[wineVersion.currentText()]}.deepin, fonts-wqy-microhei, fonts-wqy-zenhei")
+    if os.path.exists(wine[wineVersion.currentText()]) and not debContainHelper.isChecked():
         debDepends.setText(["deepin-wine-helper | com.wine-helper.deepin",
                         "spark-dwine-helper | store.spark-app.spark-dwine-helper | deepin-wine-helper | com.wine-helper.deepin"
                         ][int(chooseWineHelperValue.isChecked())])
-        #if "deepin-wine5-stable" in wine[wineVersion.currentText()]:
-        #    debDepends.setText("libasound2 (>= 1.0.16), libc6 (>= 2.28), libglib2.0-0 (>= 2.12.0), libgphoto2-6 (>= 2.5.10), libgphoto2-port12 (>= 2.5.10), libgstreamer-plugins-base1.0-0 (>= 1.0.0), libgstreamer1.0-0 (>= 1.4.0), liblcms2-2 (>= 2.2+git20110628), libldap-2.4-2 (>= 2.4.7), libmpg123-0 (>= 1.13.7), libopenal1 (>= 1.14), libpcap0.8 (>= 0.9.8), libpulse0 (>= 0.99.1), libudev1 (>= 183), libvkd3d1 (>= 1.0), libx11-6, libxext6, libxml2 (>= 2.9.0), ocl-icd-libopencl1 | libopencl1, udis86, zlib1g (>= 1:1.1.4), libasound2-plugins, libncurses6 | libncurses5 | libncurses, deepin-wine-plugin-virtual")
-        #    debRecommend.setText("libcapi20-3, libcups2, libdbus-1-3, libfontconfig1, libfreetype6, libglu1-mesa | libglu1, libgnutls30 | libgnutls28 | libgnutls26, libgsm1, libgssapi-krb5-2, libjpeg62-turbo | libjpeg8, libkrb5-3, libodbc1, libosmesa6, libpng16-16 | libpng12-0, libsane | libsane1, libsdl2-2.0-0, libtiff5, libv4l-0, libxcomposite1, libxcursor1, libxfixes3, libxi6, libxinerama1, libxrandr2, libxrender1, libxslt1.1, libxxf86vm1")
+    if (debContainHelper.isChecked() and os.path.exists(wine[wineVersion.currentText()])):
+        debDepends.setText("fonts-wqy-microhei, fonts-wqy-zenhei")
 
 # 获取用户桌面目录
 def get_desktop_path():
@@ -1390,6 +1395,7 @@ rmBash = QtWidgets.QCheckBox(transla.transe("U", "设置卸载该 deb 后自动�
 cleanBottonByUOS = QtWidgets.QCheckBox(transla.transe("U", "使用统信 Wine 生态适配活动容器清理脚本"))
 disabledMono = QtWidgets.QCheckBox(transla.transe("U", "禁用 Mono 和 Gecko 安装器"))
 enableCopyIconToDesktop = QtWidgets.QCheckBox(transla.transe("U", "安装时自动拷贝快捷方式至桌面"))
+debContainHelper = QtWidgets.QCheckBox(transla.transe("U", "deb 包内置 helper"))
 debArch = QtWidgets.QComboBox()
 debArch.addItems(["默认选项", "arm64(box86+exagear)"])
 #debArch.addItems(["i386", "arm64(box86+exagear)", "all(crossover)"])
@@ -1505,6 +1511,7 @@ moreSettingLayout.addWidget(chooseWineHelperValue)
 moreSettingLayout.addLayout(helperConfigPathLayout)
 moreSettingLayout.addWidget(disabledMono)
 moreSettingLayout.addWidget(enableCopyIconToDesktop)
+moreSettingLayout.addWidget(debContainHelper)
 moreSettingLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "deb 的依赖(强制，如无特殊需求默认即可)：")))
 moreSettingLayout.addWidget(debDepends)
 moreSettingLayout.addWidget(QtWidgets.QLabel(transla.transe("U", "deb 的推荐依赖(非强制，一般默认即可)：")))
@@ -1518,6 +1525,7 @@ widgetLayout.addWidget(moreSetting, 0, 3, 16, 2)
 widgetLayout.addWidget(build7z, 16, 3)
 widgetLayout.addWidget(buildDebDir, 16, 4)
 useInstallWineArch.setDisabled(True)
+debContainHelper.clicked.connect(ChangeWine)
 wineVersion.currentTextChanged.connect(ChangeWine)
 chooseWineHelperValue.stateChanged.connect(ChangeWine)
 e1_text.textChanged.connect(AutoPathSet)
@@ -1672,6 +1680,7 @@ allInfoList = {
     "ChooseWineHelperValue": ["Ch", chooseWineHelperValue],
     "DisabledMono": ["Ch", disabledMono],
     "EnableCopyIconToDesktop": ["Ch", enableCopyIconToDesktop],
+    "ContainHelper": ["Ch", debContainHelper],
     "DebDepends": ["L", debDepends],
     "DebRecommend": ["L", debRecommend],
     "DebFirstArch": ["Co", debFirstArch],
@@ -1698,4 +1707,4 @@ if (window.frameGeometry().width() > app.primaryScreen().availableGeometry().siz
 if (__name__ == "__main__"):
     window.show()
     sys.exit(app.exec_())
-    # Flag：解包只读control和解包全部读取
+    # TODO：解包只读control和解包全部读取
