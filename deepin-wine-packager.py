@@ -417,238 +417,13 @@ class make_deb_threading(QtCore.QThread):
                         f"{wine[wineVersion.currentText()]}, deepin-wine-helper | com.wine-helper.deepin, fonts-wqy-microhei, fonts-wqy-zenhei",
                         f"{wine[wineVersion.currentText()]}, spark-dwine-helper | store.spark-app.spark-dwine-helper | deepin-wine-helper | com.wine-helper.deepin, fonts-wqy-microhei, fonts-wqy-zenhei"
                         ][int(chooseWineHelperValue.isChecked())],
-                    "postinst": ['', f'''#!/bin/bash
-PACKAGE_NAME="{e1_text.text()}"
-for username in $(ls /home)  
-do
-    echo /home/$username
-    if [ -d /home/$username/桌面 ]; then
-        cp /opt/apps/$PACKAGE_NAME/entries/applications/* /home/$username/桌面
-    fi
-    if [ -d /home/$username/Desktop ]; then
-        cp /opt/apps/$PACKAGE_NAME/entries/applications/* /home/$username/Desktop
-    fi
-done'''][enableCopyIconToDesktop.isChecked()],
-                    "postrm": ["", f"""#!/bin/bash
-if [ "$1" = "remove" ] || [ "$1" = "purge" ];then
-
-echo "清理卸载残留"
-CONTAINER_NAME="{e5_text.text()}"
-
-if [ -z $CONTAINER_NAME ];then
-echo "W: 没有指定容器，跳过清理容器。请手动前往 ~/.deepinwine/ 下删除"
-exit
-fi
-
-/opt/deepinwine/tools/kill.sh $CONTAINER_NAME
-/opt/deepinwine/tools/spark_kill.sh $CONTAINER_NAME
-###这里注意，如果没写CONTAINER_NAME,会把QQ杀了
-
-for username in $(ls /home)  
-    do
-      echo /home/$username
-        if [ -d /home/$username/.deepinwine/$CONTAINER_NAME ]  
-        then
-        rm -rf /home/$username/.deepinwine/$CONTAINER_NAME
-        fi
-    done
-else
-echo "非卸载，跳过清理"
-fi"""][int(rmBash.isChecked())],
+                    "postinst": ['', readtxt(f"{programPath}/packager-config/postinst")][enableCopyIconToDesktop.isChecked()],
+                    "postrm": ["", readtxt(f"{programPath}/packager-config/postrm")][int(rmBash.isChecked())],
                     "run.sh": [
-                        f"""#!/bin/sh
-
-#   Copyright (C) 2016 Deepin, Inc.
-#
-#   Author:     Li LongYu <lilongyu@linuxdeepin.com>
-#               Peng Hao <penghao@linuxdeepin.com>
-
-version_gt() {{ test "$(echo "$@" | tr " " "\\n" | sort -V | head -n 1)" != "$1"; }}
-
-BOTTLENAME="@@@BOTTLENAME@@@"
-APPVER="@@@APPVER@@@"
-EXEC_PATH="@@@EXEC_PATH@@@"
-START_SHELL_PATH="/opt/deepinwine/tools/run_v4.sh"
-export MIME_TYPE=""
-export DEB_PACKAGE_NAME="@@@DEB_PACKAGE_NAME@@@"
-export APPRUN_CMD="@@@APPRUN_CMD@@@"
-DISABLE_ATTACH_FILE_DIALOG=""
-EXPORT_ENVS=""
-
-export SPECIFY_SHELL_DIR=`dirname $START_SHELL_PATH`
-
-ARCHIVE_FILE_DIR="/opt/apps/$DEB_PACKAGE_NAME/files"
-
-export WINEDLLPATH=/opt/$APPRUN_CMD/lib:/opt/$APPRUN_CMD/lib64
-
-export WINEPREDLL="$ARCHIVE_FILE_DIR/dlls"
-
-if [ -z "$DISABLE_ATTACH_FILE_DIALOG" ];then
-    export ATTACH_FILE_DIALOG=1
-fi
-
-if [ -n "$EXPORT_ENVS" ];then
-    export $EXPORT_ENVS
-fi
-
-if [ -n "$EXEC_PATH" ];then
-    if [ -z "${{EXEC_PATH##*.lnk*}}" ];then
-        $START_SHELL_PATH $BOTTLENAME $APPVER "C:/windows/command/start.exe" "/Unix" "$EXEC_PATH" "$@"
-    else
-        $START_SHELL_PATH $BOTTLENAME $APPVER "$EXEC_PATH" "$@"
-    fi
-else
-    $START_SHELL_PATH $BOTTLENAME $APPVER "uninstaller.exe" "$@"
-fi""", 
-                        f"""#!/bin/sh
-
-#   Copyright (C) 2016 Deepin, Inc.
-#
-#   Author:     Li LongYu <lilongyu@linuxdeepin.com>
-#               Peng Hao <penghao@linuxdeepin.com>
-#
-#
-#   Copyright (C) 2022 The Spark Project
-#
-#
-#   Modifier    shenmo <shenmo@spark-app.store>
-#
-#
-#
-
-#######################函数段。下文调用的额外功能会在此处声明
-
-Get_Dist_Name()
-{{
-    if grep -Eqii "Deepin" /etc/issue || grep -Eq "Deepin" /etc/*-release; then
-        DISTRO='Deepin'
-    elif grep -Eqi "UnionTech" /etc/issue || grep -Eq "UnionTech" /etc/*-release; then
-        DISTRO='UniontechOS'
-    elif grep -Eqi "UOS" /etc/issue || grep -Eq "UOS" /etc/*-release; then
-        DISTRO='UniontechOS'
-    else
-	 DISTRO='OtherOS'
-	fi
-}}
-
-
-####获得发行版名称
-
-#########################预设值段
-
-version_gt() {{ test "$(echo "$@" | tr " " "\n" | sort -V | head -n 1)" != "$1"; }}
-####用于比较版本？未实装
-BOTTLENAME="@@@BOTTLENAME@@@"
-APPVER="@@@APPVER@@@"
-EXEC_PATH="@@@EXEC_PATH@@@"
-##### 软件在wine中的启动路径
-SHELL_DIR=$(dirname $(realpath $0))
-START_SHELL_PATH="/opt/deepinwine/tools/run_v4.sh"
-if [ -e "$SHELL_DIR/deepinwine/tools/spark_run_v4.sh" ] ;then
-    # 如果 helper 在 run.sh 相同目录的 deepinwine/tools/spark_run_v4.sh 则可以调用
-    START_SHELL_PATH="$SHELL_DIR/deepinwine/tools/spark_run_v4.sh"
-fi
-if [ -e "/opt/deepinwine/tools/run_v4.sh" ] ;then
-    START_SHELL_PATH="/opt/deepinwine/tools/run_v4.sh"
-fi
-if [ -e "/opt/deepinwine/tools/spark_run_v4.sh" ] ;then
-    START_SHELL_PATH="/opt/deepinwine/tools/spark_run_v4.sh"
-fi
-ENABLE_DOT_NET=""
-####若使用spark-wine时需要用到.net，则请把ENABLE_DOT_NET设为true，同时在依赖中写spark-wine7-mono
-#export BOX86_EMU_CMD="/opt/spark-box86/box86"
-####仅在Arm且不可使用exagear时可用，作用是强制使用box86而不是deepin-box86.如果你想要这样做，请取消注释
-export MIME_TYPE=""
-
-export DEB_PACKAGE_NAME="@@@DEB_PACKAGE_NAME@@@"
-####这里写包名才能在启动的时候正确找到files.7z,似乎也和杀残留进程有关
-export APPRUN_CMD="@@@APPRUN_CMD@@@"
-#####wine启动指令，建议
-#EXPORT_ENVS="wine的动态链接库路径"
-##例如我的wine应用是使用的dwine6的32位容器，那么我要填LD_LIBRARY_PATH=$LD_LIBRARY;/opt/deepin-wine6-stable/lib
-## 如果用不到就不填，不要删除前面的注释用的#
-
-export SPECIFY_SHELL_DIR=`dirname $START_SHELL_PATH`
-
-ARCHIVE_FILE_DIR="/opt/apps/$DEB_PACKAGE_NAME/files"
-
-export WINEDLLPATH=/opt/$APPRUN_CMD/lib:/opt/$APPRUN_CMD/lib64
-
-export WINEPREDLL="$ARCHIVE_FILE_DIR/dlls"
-
-DISABLE_ATTACH_FILE_DIALOG=""
-##默认为空。若为1，则不使用系统自带的文件选择，而是使用wine的
-##对于deepin/UOS，大部分的应用都不需要使用wine的，如果有需求（比如wine应用选择的限定种类文件系统的文管不支持）
-##请填1。
-##注意：因为非DDE的环境不确定，所以默认会在非Deepin/UOS发行版上禁用这个功能。如果你确认在适配的发行版上可以正常启动，请注释或者删除下面这段
-
-##############<<<<<<<<<禁用文件选择工具开始
-Get_Dist_Name
-#此功能实现参见开头函数段
-if [ "$DISTRO" != "Deepin" ] && [ "$DISTRO" != "UniontechOS" ];then
-DISABLE_ATTACH_FILE_DIALOG="1"
-echo "非deepin/UOS，默认关闭系统自带的文件选择工具，使用Wine的"
-echo "如果你想改变这个行为，请到/opt/apps/$DEB_PACKAGE_NAME/files/$0处修改"
-echo "To打包者：如果你要打开自带请注意在适配的发行版上进行测试"
-echo "To用户：打包者没有打开这个功能，这证明启用这个功能可能造成运行问题。如果你要修改这个行为，请确保你有一定的动手能力"
-fi
-##############>>>>>>>>>禁用文件选择工具结束
-
-##############<<<<<<<<<屏蔽mono和gecko安装器开始
-##默认屏蔽mono和gecko安装器
-if [ "$APPRUN_CMD" = "spark-wine7-devel" ] || [ "$APPRUN_CMD" = "spark-wine" ]|| [ "$APPRUN_CMD" = "spark-wine8" ] && [ -z "$ENABLE_DOT_NET" ];then
-
-#export WINEDLLOVERRIDES="mscoree=d,mshtml=d,control.exe=d"
-export WINEDLLOVERRIDES="control.exe=d"
-#### "为了降低打包体积，默认关闭gecko和momo，如有需要，注释此行（仅对spark-wine7-devel有效）"
-
-fi
-##############>>>>>>>>>屏蔽mono和gecko安装器结束
-
-#########################执行段
-
-
-
-
-if [ -z "$DISABLE_ATTACH_FILE_DIALOG" ];then
-    export ATTACH_FILE_DIALOG=1
-fi
-
-if [ -n "$EXPORT_ENVS" ];then
-    export $EXPORT_ENVS
-fi
-
-if [ -n "$EXEC_PATH" ];then
-    if [ -z "${{EXEC_PATH##*.lnk*}}" ];then
-        $START_SHELL_PATH $BOTTLENAME $APPVER "C:/windows/command/start.exe" "/Unix" "$EXEC_PATH" "$@"
-    else
-        $START_SHELL_PATH $BOTTLENAME $APPVER "C:/windows/command/start.exe" "/Unix" "$EXEC_PATH" "$@"
-    fi
-else
-    $START_SHELL_PATH $BOTTLENAME $APPVER "uninstaller.exe" "$@"
-fi
-
-
-
-"""
+                        readtxt(f"{programPath}/packager-config/run-old.sh"), 
+                        readtxt(f"{programPath}/packager-config/run.sh")
                         ][chooseWineHelperValue.isChecked()],
-                        "info": f'''{{
-    "appid": "{e1_text.text()}",
-    "name": "{e8_text.text()}",
-    "version": "{e2_text.text()}",
-    "arch": ["{debFirstArch.currentText()}"],
-    "permissions": {{
-        "autostart": false,
-        "notification": false,
-        "trayicon": true,
-        "clipboard": true,
-        "account": false,
-        "bluetooth": false,
-        "camera": true,
-        "audio_record": true,
-        "installed_apps": false
-    }}
-}}'''
+                        "info": readtxt(f"{programPath}/packager-config/uos-info.sh")
                 },
                 {
                     # ARM64 通用 wine 打包配置文件
@@ -685,285 +460,7 @@ fi
 true
 """,
                     # 因为 arm 不依赖 helper，所以要自带 kill.sh
-                    "kill.sh": """#!/bin/bash
-
-APP_NAME="QQ"
-LOG_FILE=$0
-SHELL_DIR=$(dirname $0)
-SHELL_DIR=$(realpath "$SHELL_DIR")
-if [ $SPECIFY_SHELL_DIR ]; then
-    SHELL_DIR=$SPECIFY_SHELL_DIR
-fi
-
-PUBLIC_DIR="/var/public"
-
-UsePublicDir()
-{
-    if [ -z "$USE_PUBLIC_DIR" ]; then
-        echo "Don't use public dir"
-        return 1
-    fi
-    if [ ! -d "$PUBLIC_DIR" ];then
-        echo "Not found $PUBLIC_DIR"
-        return 1
-    fi
-    if [ ! -r "$PUBLIC_DIR" ];then
-        echo "Can't read for $PUBLIC_DIR"
-        return 1
-    fi
-    if [ ! -w "$PUBLIC_DIR" ];then
-        echo "Can't write for $PUBLIC_DIR"
-        return 1
-    fi
-    if [ ! -x "$PUBLIC_DIR" ];then
-        echo "Can't excute for $PUBLIC_DIR"
-        return 1
-    fi
-
-    return 0
-}
-
-WINE_BOTTLE="$HOME/.deepinwine"
-
-if UsePublicDir;then
-    WINE_BOTTLE="$PUBLIC_DIR"
-fi
-
-get_wine_by_pid()
-{
-    wine_path=$(cat /proc/$1/maps | grep -E "\/wine$|\/wine64$|\/wine |\/wine64 " | head -1 | awk '{print $6}')
-    if [ -z "$wine_path" ];then
-        cat /proc/$1/cmdline| xargs -0 -L1 -I{} echo {} | grep -E "\/wine$|\/wine64$|\/wine |\/wine64 " | head -1
-    else
-        echo $wine_path
-    fi
-}
-
-is_wine_process()
-{
-    wine_module=$(get_wine_by_pid $1)
-    if [ -z "$wine_module" ];then
-        wine_module=$(cat /proc/$1/maps | grep -E "\/wineserver$" | head -1)
-    fi
-    echo $wine_module
-}
-
-get_prefix_by_pid()
-{
-    WINE_PREFIX=$(xargs -0 printf '%s\n' < /proc/$1/environ | grep WINEPREFIX)
-    WINE_PREFIX=${WINE_PREFIX##*=}
-    if [ -z "$WINE_PREFIX" ] && [ -n "$(is_wine_process $1)" ]; then
-        #不指定容器的情况用默认容器目录
-        WINE_PREFIX="$HOME/.wine"
-    fi
-    if [ -n "$WINE_PREFIX" ];then
-        WINE_PREFIX=$(realpath $WINE_PREFIX)
-        echo $WINE_PREFIX
-    fi
-}
-
-get_wineserver()
-{
-    if [ -z "$1" ];then
-        return
-    fi
-    targ_prefix=$(realpath $1)
-    ps -ef | grep wineserver | while read server_info ;do
-        debug_log_to_file "get server info: $server_info"
-        server_pid=$(echo $server_info | awk '{print $2}')
-        server_prefix=$(get_prefix_by_pid $server_pid)
-        debug_log_to_file "get server pid $server_pid, prefix: $server_prefix"
-
-        if [ "$targ_prefix" = "$server_prefix" ];then
-            server=$(echo $server_info | awk '{print $NF}')
-            if [ "-p0" = "$server" ];then
-                server=$(echo $server_info | awk '{print $(NF-1)}')
-            fi
-            debug_log_to_file "get server $server"
-            echo $server
-            return
-        fi
-    done
-}
-
-init_log_file()
-{
-    if [ -d "$DEBUG_LOG" ];then
-        LOG_DIR=$(realpath $DEBUG_LOG)
-        if [ -d "$LOG_DIR" ];then
-            LOG_FILE="${LOG_DIR}/${LOG_FILE##*/}.log"
-            echo "" > "$LOG_FILE"
-            debug_log "LOG_FILE=$LOG_FILE"
-        fi
-    fi
-}
-
-debug_log_to_file()
-{
-    if [ -d "$DEBUG_LOG" ];then
-        strDate=$(date)
-        echo -e "${strDate}:${1}" >> "$LOG_FILE"
-    fi
-}
-
-debug_log()
-{
-    strDate=$(date)
-    echo "${strDate}:${1}"
-}
-
-init_log_file
-
-get_bottle_path_by_process_id()
-{
-    PID_LIST="$1"
-    PREFIX_LIST=""
-
-    for pid_var in $PID_LIST ; do
-        WINE_PREFIX=$(get_prefix_by_pid $pid_var)
-        #去掉重复项
-        for path in $(echo -e $PREFIX_LIST) ; do
-            if [[ $path == "$WINE_PREFIX" ]]; then
-                WINE_PREFIX=""
-            fi
-        done
-        if [ -d "$WINE_PREFIX" ]; then
-            debug_log_to_file "found $pid_var : $WINE_PREFIX"
-            PREFIX_LIST+="\n$WINE_PREFIX"
-        fi
-    done
-    echo -e $PREFIX_LIST
-}
-
-get_pid_by_process_name()
-{
-    PID_LIST=""
-    for pid_var in $(ps -ef | grep -E -i "$1" | grep -v grep | awk '{print $2}');do
-        #通过判断是否加载wine来判断是不是wine进程
-        if [ -n "$(is_wine_process $pid_var)" ];then
-            PID_LIST+=" $pid_var"
-        fi
-    done
-    echo "$PID_LIST"
-}
-
-get_bottle_path_by_process_name()
-{
-    PID_LIST=$(get_pid_by_process_name $1)
-    debug_log_to_file "get pid list: $PID_LIST"
-    get_bottle_path_by_process_id "$PID_LIST"
-}
-
-get_bottle_path()
-{
-    if [ -z "$1" ];then
-        return 0
-    fi
-
-    if [ -f "$1/user.reg" ]; then
-        realpath "$1"
-        return 0
-    fi
-
-    if [ -f "$WINE_BOTTLE/$1/user.reg" ]; then
-        realpath "$WINE_BOTTLE/$1"
-        return 0
-    fi
-    get_bottle_path_by_process_name "$1"
-}
-
-kill_app()
-{
-    debug_log "try to kill $1"
-    for path in $(get_bottle_path $1); do
-        if [ -n "$path" ];then
-            WINESERVER=$(get_wineserver "$path")
-
-            if [ -f "$WINESERVER" ];then
-                debug_log "kill $path by $WINESERVER"
-                env WINEPREFIX="$path" "$WINESERVER" -k
-            fi
-
-            PID_LIST=$(get_pid_by_process_name "exe|wine")
-            for tag_pid in $PID_LIST; do
-                bottle=$(get_bottle_path_by_process_id "$tag_pid")
-                bottle=${bottle:1}
-                if [ "$path" = "$bottle" ];then
-                    echo "kill $tag_pid for $bottle"
-                    kill -9 $tag_pid
-                fi
-            done
-        fi
-    done
-
-    #Kill defunct process
-    ps -ef | grep -E "$USER.*exe.*<defunct>"
-    ps -ef | grep -E "$USER.*exe.*<defunct>" | grep -v grep | awk '{print $2}' | xargs -i kill -9 {}
-}
-
-get_tray_window()
-{
-    $SHELL_DIR/get_tray_window | grep window_id: | awk -F: '{print $2}'
-}
-
-get_stacking_window()
-{
-    xprop -root _NET_CLIENT_LIST_STACKING | awk -F# '{print $2}' | sed -e 's/, / /g'
-}
-
-get_window_pid()
-{
-    for winid in $(echo "$1" | sed -e 's/ /\n/g') ;
-    do
-        xprop -id $winid _NET_WM_PID | awk -F= '{print $2}'
-    done
-}
-
-get_window_bottle()
-{
-    debug_log_to_file "get_window_bottle $1"
-    PID_LIST=$(get_window_pid "$1")
-    debug_log_to_file "get_window_bottle pid list: $PID_LIST"
-    get_bottle_path_by_process_id "$PID_LIST"
-}
-
-get_active_bottles()
-{
-    TRAYWINDOWS=$(get_tray_window)
-    STACKINGWINDOWS=$(get_stacking_window)
-    debug_log_to_file "tray window id: $TRAYWINDOWS"
-    debug_log_to_file "stacking window id: $STACKINGWINDOWS"
-    PID_LIST="$TRAYWINDOWS $STACKINGWINDOWS"
-    get_window_bottle "$PID_LIST"
-}
-
-kill_exit_block_app()
-{
-    TAGBOTTLE=$(get_bottle_path $1)
-    debug_log "tag bottle: $TAGBOTTLE"
-    ACTIVEBOTTLES=$(get_active_bottles)
-    debug_log "active bottles: $ACTIVEBOTTLES"
-
-    if [[ "$ACTIVEBOTTLES" != *"$TAGBOTTLE"* ]]; then
-         kill_app "$TAGBOTTLE"
-    fi
-}
-
-#get_active_bottles
-#exit
-
-debug_log "kill $1 $2"
-
-if [ -n "$1" ]; then
-    APP_NAME="$1"
-fi
-
-if [ "$2" = "block" ]; then
-    kill_exit_block_app $APP_NAME $3
-else
-    kill_app $APP_NAME
-fi
-""",
+                    "kill.sh": readtxt(f"{programPath}/packager-config/arm-kill.sh"),
                     "postrm": [f"""#!/bin/sh
 
 ACTIVEX_NAME=""
@@ -979,200 +476,11 @@ fi
 
 # Make sure the script returns 0
 true
-""", f"""#!/bin/sh
-
-ACTIVEX_NAME=""
-
-if [ -f "/opt/apps/{e1_text.text()}/files/install.sh" ];then
-    /opt/apps/{e1_text.text()}/files/install.sh -r
-fi
-
-if [ -n "$ACTIVEX_NAME" ]; then
-    rm /usr/lib/mozilla/plugins/libpipelight-${{ACTIVEX_NAME}}.so
-    glib-compile-schemas /usr/share/glib-2.0/schemas/
-fi
-
-# Make sure the script returns 0
-true
-# Clean Botton
-if [ "$1" = "remove" ] || [ "$1" = "purge" ];then
-
-echo "清理卸载残留"
-CONTAINER_NAME="{e5_text.text()}"
-
-if [ -z $CONTAINER_NAME ];then
-echo "W: 没有指定容器，跳过清理容器。请手动前往 ~/.deepinwine/ 下删除"
-exit
-fi
-
-/opt/apps/{e1_text.text()}/kill.sh $CONTAINER_NAME
-/opt/deepinwine/tools/spark_kill.sh $CONTAINER_NAME
-###这里注意，如果没写CONTAINER_NAME,会把QQ杀了
-
-for username in $(ls /home)  
-    do
-      echo /home/$username
-        if [ -d /home/$username/.deepinwine/$CONTAINER_NAME ]  
-        then
-        rm -rf /home/$username/.deepinwine/$CONTAINER_NAME
-        fi
-    done
-else
-echo "非卸载，跳过清理"
-fi
-"""][int(rmBash.isChecked())],
+""", readtxt(f"{programPath}/packager-config/postrm")][int(rmBash.isChecked())],
 
 
-                "run.sh": f"""
-#!/bin/sh
-
-#   Copyright (C) 2016 Deepin, Inc.
-#
-#   Author:     Li LongYu <lilongyu@linuxdeepin.com>
-#               Peng Hao <penghao@linuxdeepin.com>
-#
-#
-#   Copyright (C) 2022 The Spark Project
-#
-#
-#   Modifier    shenmo <shenmo@spark-app.store>
-#
-#
-#
-
-#######################函数段。下文调用的额外功能会在此处声明
-
-Get_Dist_Name()
-{{
-    if grep -Eqii "Deepin" /etc/issue || grep -Eq "Deepin" /etc/*-release; then
-        DISTRO='Deepin'
-    elif grep -Eqi "UnionTech" /etc/issue || grep -Eq "UnionTech" /etc/*-release; then
-        DISTRO='UniontechOS'
-    elif grep -Eqi "UOS" /etc/issue || grep -Eq "UOS" /etc/*-release; then
-        DISTRO='UniontechOS'
-    else
-	 DISTRO='OtherOS'
-	fi
-}}
-
-
-####获得发行版名称
-
-#########################预设值段
-
-version_gt() {{ test "$(echo "$@" | tr " " "\n" | sort -V | head -n 1)" != "$1"; }}
-####用于比较版本？未实装
-BOTTLENAME="@@@BOTTLENAME@@@"
-APPVER="@@@APPVER@@@"
-EXEC_PATH="@@@EXEC_PATH@@@"
-##### 软件在wine中的启动路径
-##### 软件在wine中的启动路径
-SHELL_DIR=$(dirname $(realpath $0))
-START_SHELL_PATH="/opt/deepinwine/tools/run_v4.sh"
-if [ -e "$SHELL_DIR/deepinwine/tools/spark_run_v4.sh" ] ;then
-    # 如果 helper 在 run.sh 相同目录的 deepinwine/tools/spark_run_v4.sh 则可以调用
-    START_SHELL_PATH="$SHELL_DIR/deepinwine/tools/spark_run_v4.sh"
-fi
-if [ -e "/opt/deepinwine/tools/run_v4.sh" ] ;then
-    START_SHELL_PATH="/opt/deepinwine/tools/run_v4.sh"
-fi
-if [ -e "/opt/deepinwine/tools/spark_run_v4.sh" ] ;then
-    START_SHELL_PATH="/opt/deepinwine/tools/spark_run_v4.sh"
-fi
-ENABLE_DOT_NET=""
-####若使用spark-wine时需要用到.net，则请把ENABLE_DOT_NET设为true，同时在依赖中写spark-wine7-mono
-#export BOX86_EMU_CMD="/opt/spark-box86/box86"
-####仅在Arm且不可使用exagear时可用，作用是强制使用box86而不是deepin-box86.如果你想要这样做，请取消注释
-export MIME_TYPE=""
-
-export DEB_PACKAGE_NAME="{e1_text.text()}"
-####这里写包名才能在启动的时候正确找到files.7z,似乎也和杀残留进程有关
-export APPRUN_CMD="@@@APPRUN_CMD@@@"
-#####wine启动指令，建议
-#EXPORT_ENVS="wine的动态链接库路径"
-##例如我的wine应用是使用的dwine6的32位容器，那么我要填LD_LIBRARY_PATH=$LD_LIBRARY;/opt/deepin-wine6-stable/lib
-## 如果用不到就不填，不要删除前面的注释用的#
-
-export SPECIFY_SHELL_DIR=`dirname $START_SHELL_PATH`
-
-ARCHIVE_FILE_DIR="/opt/apps/$DEB_PACKAGE_NAME/files"
-
-export WINEDLLPATH=/opt/$APPRUN_CMD/lib:/opt/$APPRUN_CMD/lib64
-
-export WINEPREDLL="$ARCHIVE_FILE_DIR/dlls"
-
-DISABLE_ATTACH_FILE_DIALOG=""
-##默认为空。若为1，则不使用系统自带的文件选择，而是使用wine的
-##对于deepin/UOS，大部分的应用都不需要使用wine的，如果有需求（比如wine应用选择的限定种类文件系统的文管不支持）
-##请填1。
-##注意：因为非DDE的环境不确定，所以默认会在非Deepin/UOS发行版上禁用这个功能。如果你确认在适配的发行版上可以正常启动，请注释或者删除下面这段
-
-##############<<<<<<<<<禁用文件选择工具开始
-Get_Dist_Name
-#此功能实现参见开头函数段
-if [ "$DISTRO" != "Deepin" ] && [ "$DISTRO" != "UniontechOS" ];then
-DISABLE_ATTACH_FILE_DIALOG="1"
-echo "非deepin/UOS，默认关闭系统自带的文件选择工具，使用Wine的"
-echo "如果你想改变这个行为，请到/opt/apps/$DEB_PACKAGE_NAME/files/$0处修改"
-echo "To打包者：如果你要打开自带请注意在适配的发行版上进行测试"
-echo "To用户：打包者没有打开这个功能，这证明启用这个功能可能造成运行问题。如果你要修改这个行为，请确保你有一定的动手能力"
-fi
-##############>>>>>>>>>禁用文件选择工具结束
-
-##############<<<<<<<<<屏蔽mono和gecko安装器开始
-##默认屏蔽mono和gecko安装器
-if [ "$APPRUN_CMD" = "spark-wine7-devel" ] || [ "$APPRUN_CMD" = "spark-wine" ]|| [ "$APPRUN_CMD" = "spark-wine8" ] && [ -z "$ENABLE_DOT_NET" ];then
-
-#export WINEDLLOVERRIDES="mscoree=d,mshtml=d,control.exe=d"
-export WINEDLLOVERRIDES="control.exe=d"
-#### "为了降低打包体积，默认关闭gecko和momo，如有需要，注释此行（仅对spark-wine7-devel有效）"
-
-fi
-##############>>>>>>>>>屏蔽mono和gecko安装器结束
-
-#########################执行段
-
-
-
-
-if [ -z "$DISABLE_ATTACH_FILE_DIALOG" ];then
-    export ATTACH_FILE_DIALOG=1
-fi
-
-if [ -n "$EXPORT_ENVS" ];then
-    export $EXPORT_ENVS
-fi
-
-if [ -n "$EXEC_PATH" ];then
-    if [ -z "${{EXEC_PATH##*.lnk*}}" ];then
-        $START_SHELL_PATH $BOTTLENAME $APPVER "C:/windows/command/start.exe" "/Unix" "$EXEC_PATH" "$@"
-    else
-        $START_SHELL_PATH $BOTTLENAME $APPVER "C:/windows/command/start.exe" "/Unix" "$EXEC_PATH" "$@"
-    fi
-else
-    $START_SHELL_PATH $BOTTLENAME $APPVER "uninstaller.exe" "$@"
-fi
-
-
-
-""",
-                "info": f'''{{
-    "appid": "{e1_text.text()}",
-    "name": "{e8_text.text()}",
-    "version": "{e2_text.text()}",
-    "arch": ["arm64"],
-    "permissions": {{
-        "autostart": false,
-        "notification": false,
-        "trayicon": true,
-        "clipboard": true,
-        "account": false,
-        "bluetooth": false,
-        "camera": true,
-        "audio_record": true,
-        "installed_apps": false
-    }}
-}}'''
+                "run.sh": readtxt(f"{programPath}/packager-config/run.sh"),
+                "info": readtxt(f"{programPath}/packager-config/uos-info.sh")
                 },
                 {
                     "Wine": None,
@@ -1364,97 +672,7 @@ true
                         "spark-dwine-helper | store.spark-app.spark-dwine-helper | deepin-wine-helper | com.wine-helper.deepin"
                         ][int(chooseWineHelperValue.isChecked())] #+ ["", "libasound2 (>= 1.0.16), libc6 (>= 2.28), libglib2.0-0 (>= 2.12.0), libgphoto2-6 (>= 2.5.10), libgphoto2-port12 (>= 2.5.10), libgstreamer-plugins-base1.0-0 (>= 1.0.0), libgstreamer1.0-0 (>= 1.4.0), liblcms2-2 (>= 2.2+git20110628), libldap-2.4-2 (>= 2.4.7), libmpg123-0 (>= 1.13.7), libopenal1 (>= 1.14), libpcap0.8 (>= 0.9.8), libpulse0 (>= 0.99.1), libudev1 (>= 183), libvkd3d1 (>= 1.0), libx11-6, libxext6, libxml2 (>= 2.9.0), ocl-icd-libopencl1 | libopencl1, udis86, zlib1g (>= 1:1.1.4), libasound2-plugins, libncurses6 | libncurses5 | libncurses, deepin-wine-plugin-virtual\nRecommends: libcapi20-3, libcups2, libdbus-1-3, libfontconfig1, libfreetype6, libglu1-mesa | libglu1, libgnutls30 | libgnutls28 | libgnutls26, libgsm1, libgssapi-krb5-2, libjpeg62-turbo | libjpeg8, libkrb5-3, libodbc1, libosmesa6, libpng16-16 | libpng12-0, libsane | libsane1, libsdl2-2.0-0, libtiff5, libv4l-0, libxcomposite1, libxcursor1, libxfixes3, libxi6, libxinerama1, libxrandr2, libxrender1, libxslt1.1, libxxf86vm1"][]
                 print("d")
-                debInformation[0]["run.sh"] = f'''#!/bin/sh
-
-#   Copyright (C) 2016 Deepin, Inc.
-#
-#   Author:     Li LongYu <lilongyu@linuxdeepin.com>
-#               Peng Hao <penghao@linuxdeepin.com>
-
-version_gt() {{ test "$(echo "$@" | tr " " "\n" | sort -V | head -n 1)" != "$1"; }}
-
-extract_archive()
-{{
-    archive=$1
-    version_file=$2
-    dest_dir=$3
-    if [ -f "$archive" ] && [ -n "$dest_dir" ] && [ "$dest_dir" != "." ];then
-        archive_version=`cat $version_file`
-        if [ -d "$dest_dir" ];then
-            if [ -f "$dest_dir/VERSION" ];then
-                dest_version=`cat $dest_dir/VERSION`
-                if version_gt "$archive_version" "$dest_version";then
-                    7z x "$archive" -o/"$dest_dir" -aoa
-                    echo "$archive_version" > "$dest_dir/VERSION"
-                fi
-            fi
-        else
-            mkdir -p $dest_dir
-            7z x "$archive" -o/"$dest_dir" -aoa
-            echo "$archive_version" > "$dest_dir/VERSION"
-        fi
-    fi
-}}
-
-ACTIVEX_NAME=""
-BOTTLENAME="{e5_text.text()}"
-APPVER="{e2_text.text()}"
-EXEC_PATH="@@@EXEC_PATH@@@"
-START_SHELL_PATH="{["/opt/deepinwine/tools/run_v4.sh", "/opt/deepinwine/tools/spark_run_v4.sh"][int(chooseWineHelperValue.isChecked())]}"
-export MIME_TYPE=""
-export MIME_EXEC=""
-export DEB_PACKAGE_NAME="{e1_text.text()}"
-export APPRUN_CMD="$HOME/.deepinwine/{os.path.basename(wine[wineVersion.currentText()]).replace('.7z', '')}/bin/{useInstallWineArch.currentText()}"
-EXPORT_ENVS=""
-EXEC_NAME="@@@EXEC_NAME@@@"
-export PATCH_LOADER_ENV=""
-export FILEDLG_PLUGIN="/opt/apps/$DEB_PACKAGE_NAME/files/gtkGetFileNameDlg"
-DISABLE_ATTACH_FILE_DIALOG=""
-export SPECIFY_SHELL_DIR=`dirname $START_SHELL_PATH`
-
-DEEPIN_WINE_BIN_DIR=`dirname $APPRUN_CMD`
-DEEPIN_WINE_DIR=`dirname $DEEPIN_WINE_BIN_DIR`
-ARCHIVE_FILE_DIR="/opt/apps/$DEB_PACKAGE_NAME/files"
-
-export SPECIFY_SHELL_DIR=`dirname $START_SHELL_PATH`
-
-ARCHIVE_FILE_DIR="/opt/apps/$DEB_PACKAGE_NAME/files"
-
-export WINEDLLPATH=/opt/$APPRUN_CMD/lib:/opt/$APPRUN_CMD/lib64
-
-export WINEPREDLL="$ARCHIVE_FILE_DIR/dlls"
-
-##### 软件在wine中的启动路径
-if [ -e "/opt/deepinwine/tools/spark_run_v4.sh"] ;then
-    START_SHELL_PATH="/opt/deepinwine/tools/spark_run_v4.sh"
-else
-    START_SHELL_PATH="/opt/deepinwine/tools/run_v4.sh"
-fi
-
-if [ -n "$PATCH_LOADER_ENV" ] && [ -n "$EXEC_PATH" ];then
-    export $PATCH_LOADER_ENV
-fi
-
-extract_archive "$ARCHIVE_FILE_DIR/wine_archive.7z" "$ARCHIVE_FILE_DIR/wine_archive.md5sum" "$DEEPIN_WINE_DIR"
-
-if [ -z "$DISABLE_ATTACH_FILE_DIALOG" ];then
-    export ATTACH_FILE_DIALOG=1
-fi
-
-if [ -n "$EXPORT_ENVS" ];then
-    export $EXPORT_ENVS
-fi
-
-if [ -n "$EXEC_PATH" ];then
-    if [ -z "${{EXEC_PATH##*.lnk*}}" ];then
-        $START_SHELL_PATH $BOTTLENAME $APPVER "C:/windows/command/start.exe" "/Unix" "$EXEC_PATH" "$@"
-    else
-        $START_SHELL_PATH $BOTTLENAME $APPVER "$EXEC_PATH" "$@"
-    fi
-else
-    $START_SHELL_PATH $BOTTLENAME $APPVER "uninstaller.exe" "$@"
-fi
-'''
+                debInformation[0]["run.sh"] = readtxt(f"{programPath}/packager-config/run.sh")
 
             #############
             # 删除文件
@@ -1508,8 +726,6 @@ fi
             ###############
             self.label.emit("正在创建文件……")
             os.mknod("{}/DEBIAN/control".format(debPackagePath))
-            #os.mknod("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()))
-            #os.mknod("{}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()))
             if debArch.currentIndex() != 2:
                 os.mknod("{}/opt/apps/{}/info".format(debPackagePath, e1_text.text()))
             #########!!!!!!!
@@ -1533,42 +749,17 @@ fi
             self.label.emit("正在复制文件……")
             if os.path.exists(wine[wineVersion.currentText()]) and debArch.currentIndex() != 2:
                 shutil.copy(f"{programPath}/gtkGetFileNameDlg", f"{debPackagePath}/opt/apps/{e1_text.text()}/files")
-            # arm64 box86 需要复制 dlls-arm 目录
-            '''if debArch.currentIndex() == 1:
-                if not os.path.exists(f"{programPath}/dlls-arm"):
-                    self.run_command(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\"")
-                    os.remove(f"{programPath}/dlls-arm.7z")
-                if not os.path.exists(f"{programPath}/wined3d.dll.so"):
-                    self.run_command(f"7z x \"{programPath}/wined3d.dll.so.7z\" -o\"{programPath}\"")
-                    os.remove(f"{programPath}/wined3d.dll.so.7z")
-                self.run_command(f"cp -rv '{programPath}/dlls-arm' {debPackagePath}/opt/apps/{e1_text.text()}/files/dlls")
-                self.run_command(f"cp -rv '{programPath}/wined3d.dll.so' {debPackagePath}/opt/apps/{e1_text.text()}/files/")
-            elif debArch.currentIndex() == 2:
-                if not os.path.exists(f"{programPath}/exagear"):
-                    self.run_command(f"aria2c -x 16 -s 16 -d \"{programPath}\" -o \"exagear.7z\" https://code.gitlink.org.cn/gfdgd_xi/wine-runner-list/raw/branch/master/other/exagear.7z")
-                    self.run_command(f"7z x \"{programPath}/exagear.7z\" -o\"{programPath}\"")
-                    os.remove(f"{programPath}/exagear.7z")
-                self.run_command(f"cp -rv '{programPath}/exagear/*' {debPackagePath}/opt/apps/{e1_text.text()}/files/")'''
             if debArch.currentIndex() == 1:
                 # 解包文件
                 if not os.path.exists(f"{programPath}/dlls-arm"):
                     self.run_command(f"7z x \"{programPath}/dlls-arm.7z\" -o\"{programPath}\"")
                     os.remove(f"{programPath}/dlls-arm.7z")
-                # 已废弃
-                #if not os.path.exists(f"{programPath}/exa"):
-                #    self.run_command(f"7z x \"{programPath}/exa.7z\" -o\"{programPath}\"")
-                #    os.remove(f"{programPath}/exa.7z")
                 if not os.path.exists(f"{programPath}/arm-package"):
                     self.run_command(f"7z x \"{programPath}/arm-package.7z\" -o\"{programPath}\"")
                     os.remove(f"{programPath}/arm-package.7z")
-                #if not os.path.exists(f"{programPath}/wined3d.dll.so"):
-                #    self.run_command(f"7z x \"{programPath}/wined3d.dll.so.7z\" -o\"{programPath}\"")
-                #    os.remove(f"{programPath}/wined3d.dll.so.7z")
                 self.run_command(f"cp -rv '{programPath}/dlls-arm' {debPackagePath}/opt/apps/{e1_text.text()}/files/dlls")
                 self.run_command(f"cp -rv '{programPath}/exa' {debPackagePath}/opt/apps/{e1_text.text()}/files/exa")
-                self.run_command(f"cp -rv '{programPath}/arm-package/'* {debPackagePath}/opt/apps/{e1_text.text()}/files/")
-                #self.run_command(f"cp -rv '{programPath}/wined3d.dll.so' {debPackagePath}/opt/apps/{e1_text.text()}/files/")
-                pass    
+                self.run_command(f"cp -rv '{programPath}/arm-package/'* {debPackagePath}/opt/apps/{e1_text.text()}/files/") 
             if debArch.currentIndex() != 2:
                 if desktopIconTab.count() <= 1:
                     if e9_text.text() != "":
@@ -1610,10 +801,6 @@ Multi-Arch: foreign
 Installed-Size: {size}
 Description: {e3_text.text()}
 ''')
-            if debInformation[debArch.currentIndex()]["postinst"] != "":
-                write_txt(f"{debPackagePath}/DEBIAN/postinst", debInformation[debArch.currentIndex()]["postinst"])
-            if debInformation[debArch.currentIndex()]["postrm"] != "":
-                write_txt(f"{debPackagePath}/DEBIAN/postrm", debInformation[debArch.currentIndex()]["postrm"])
             try:
                 # 因为不一定含有此项，所以需要 try except
                 if debInformation[debArch.currentIndex()]["preinst"] != "":
@@ -1628,42 +815,35 @@ Description: {e3_text.text()}
                 ["@@@EXEC_PATH@@@", e7_text.text()],
                 ["@@@DEB_PACKAGE_NAME@@@", e1_text.text()],
                 ["@@@APPRUN_CMD@@@", wine[wineVersion.currentText()]],
-                ["@@@EXEC_NAME@@@", os.path.basename(e7_text.text().replace("\\", "/"))]
+                ["@@@EXEC_NAME@@@", os.path.basename(e7_text.text().replace("\\", "/"))],
+                ["@@@ARCH@@@", debFirstArch.currentText()],
+                ["@@@APP_NAME@@@", e8_text.text()],
+                ["@@@MAINTAINER@@@", e4_text.text()],
+                ["@@@DESCRIPTION@@@", e3_text.text()],
+                ["@@@ICON@@@", [a, a[0]][type(a) == list]],  # a 是图标（为什么当初要取这个变量名）
+                                                             # 如果只有一个图标则为 str,两个及以上则为 list
+                ["@@@DESKTOP_EXEC@@@", 
+                 f'''"/opt/apps/{e1_text.text()}/files/{os.path.splitext(os.path.basename(iconUiList[0][0].text().replace(line, "/")))[0]}.sh" {command}'''],
+                ["@@@DESKTOP_NAME@@@", iconUiList[0][3].text()],
+                ["@@@DESKTOP_MIMETYPE@@@", iconUiList[0][5].text()],
+                ["@@@DESKTOP_CATEGORIES@@@", iconUiList[0][1].currentText()]
             ]
+            # 配置 postinst 和 postrm
+            if debInformation[debArch.currentIndex()]["postinst"] != "":
+                write_txt(f"{debPackagePath}/DEBIAN/postinst", ReplaceText(debInformation[debArch.currentIndex()]["postinst"], replaceMap))
+            if debInformation[debArch.currentIndex()]["postrm"] != "":
+                write_txt(f"{debPackagePath}/DEBIAN/postrm", ReplaceText(debInformation[debArch.currentIndex()]["postrm"], replaceMap))
+            # 配置 UOS deb 包的 info 权限文件
+            if debArch.currentIndex() != 2:                    
+                write_txt("{}/opt/apps/{}/info".format(debPackagePath, e1_text.text()), ReplaceText(debInformation[debArch.currentIndex()]["info"], replaceMap))
             line = "\\"
-            if desktopIconTab.count() <= 1 and debArch.currentIndex() != 2:
-                write_txt("{}/usr/share/applications/{}.desktop".format(debPackagePath, e1_text.text()), '#!/usr/bin/env xdg-open\n[Desktop Entry]\nEncoding=UTF-8\nType=Application\nX-Created-By={}\nCategories={};\nIcon={}\nExec="/opt/apps/{}/files/run.sh" --uri {}\nName={}\nComment={}\nMimeType={}\nGenericName={}\nTerminal=false\nStartupNotify=false\n'.format(e4_text.text(), option1_text.currentText(), a, e1_text.text(), e15_text.text(), e8_text.text(), e3_text.text(), e10_text.text(), e1_text.text()))
-                write_txt("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()), '#!/usr/bin/env xdg-open\n[Desktop Entry]\nEncoding=UTF-8\nType=Application\nX-Created-By={}\nCategories={};\nIcon={}\nExec="/opt/apps/{}/files/run.sh" --uri {}\nName={}\nComment={}\nMimeType={}\nGenericName={}\nTerminal=false\nStartupNotify=false\n'.format(e4_text.text(), option1_text.currentText(), a, e1_text.text(), e15_text.text(), e8_text.text(), e3_text.text(), e10_text.text(), e1_text.text()))
-            elif debArch.currentIndex() == 2:
-                # 直接跳过 .desktop 文件生成
-                pass
-            else:
-                for i in range(len(iconUiList)):
-                    if iconUiList[i][2].text().replace(" ", "") == "":
-                        command = f"--uri {iconUiList[i][2].text()}"
-                    else:
-                        command = iconUiList[i][2].text()
-                    desktopFile = f'''#!/usr/bin/env xdg-open
-[Desktop Entry]
-Encoding=UTF-8
-Type=Application
-X-Created-By={e4_text.text()}
-Categories={iconUiList[i][1].currentText()};
-Icon={a[i]}
-Exec="/opt/apps/{e1_text.text()}/files/{os.path.splitext(os.path.basename(iconUiList[i][0].text().replace(line, "/")))[0]}.sh" {command}
-Name={iconUiList[i][3].text()}
-Comment={e3_text.text()}
-MimeType={iconUiList[i][5].text()}
-GenericName={e1_text.text()}
-Terminal=false
-StartupNotify=false
-''' 
-                    write_txt("{}/opt/apps/{}/entries/applications/{}-{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text(), os.path.splitext(os.path.basename(iconUiList[i][0].text().replace("\\", "/")))[0]), desktopFile)
-                    write_txt("{}/usr/share/applications/{}-{}.desktop".format(debPackagePath, e1_text.text(), os.path.splitext(os.path.basename(iconUiList[i][0].text().replace("\\", "/")))[0]), desktopFile)
             # 要开始分类讨论了
             if debArch.currentIndex() == 0 or debArch.currentIndex() == 1 and debArch.currentIndex() != 2:
                 if desktopIconTab.count() <= 1:
+                    desktopFile = ReplaceText(readtxt(f"{programPath}/packager-config/app.desktop"), replaceMap)
                     write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/run.sh", ReplaceText(debInformation[debArch.currentIndex()]["run.sh"], replaceMap))
+                    write_txt("{}/usr/share/applications/{}.desktop".format(debPackagePath, e1_text.text()), desktopFile)
+                    write_txt("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()), desktopFile)
                 else:
                     for i in iconUiList:
                         replaceMap = [
@@ -1672,31 +852,28 @@ StartupNotify=false
                             ["@@@EXEC_PATH@@@", i[0].text()],
                             ["@@@DEB_PACKAGE_NAME@@@", e1_text.text()],
                             ["@@@APPRUN_CMD@@@", wine[wineVersion.currentText()]],
-                            ["@@@EXEC_NAME@@@", os.path.basename(i[0].text().replace("\\", "/"))]
+                            ["@@@EXEC_NAME@@@", os.path.basename(i[0].text().replace("\\", "/"))],
+                            ["@@@ARCH@@@", debFirstArch.currentText()],
+                            ["@@@APP_NAME@@@", i[3].text()],
+                            ["@@@MAINTAINER@@@", e4_text.text()],
+                            ["@@@DESCRIPTION@@@", e3_text.text()],
+                            ["@@@ICON@@@", [a, a[0]][type(a) == list]],  # a 是图标（为什么当初要取这个变量名）
+                                                                         # 如果只有一个图标则为 str,两个及以上则为 list
+                            ["@@@DESKTOP_EXEC@@@", 
+                                f'''"/opt/apps/{e1_text.text()}/files/{os.path.splitext(os.path.basename(i[0].text().replace(line, "/")))[0]}.sh" {command}'''],
+                            ["@@@DESKTOP_NAME@@@", i[3].text()],
+                            ["@@@DESKTOP_MIMETYPE@@@", i[5].text()],
+                            ["@@@DESKTOP_CATEGORIES@@@", i[1].currentText()]
                         ]
                         line = "\\"
+                        desktopFile = ReplaceText(readtxt(f"{programPath}/packager-config/app.desktop"), replaceMap)
                         write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/{os.path.splitext(os.path.basename(i[0].text().replace(line, '/')))[0]}.sh", ReplaceText(debInformation[debArch.currentIndex()]["run.sh"], replaceMap))
-            if debArch.currentIndex() == 1 and False:
-                # 废弃内容
-                '''write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/kill.sh", debInformation[debArch.currentIndex()]["kill.sh"])
-                if desktopIconTab.count() <= 1:
-                    write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/run_with_box86.sh", ReplaceText(debInformation[debArch.currentIndex()]["run_with_box86.sh"], replaceMap))
-                    write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/run_with_exagear.sh", ReplaceText(debInformation[debArch.currentIndex()]["run_with_exagear.sh"], replaceMap))
-                else:
-                    # Flag：postrm和postinst均需要改，所以先写一下防止自己忘了
-                    for i in iconUiList:
-                        replaceMap = [
-                            ["@@@BOTTLENAME@@@", e5_text.text()],
-                            ["@@@APPVER@@@", e2_text.text()],
-                            ["@@@EXEC_PATH@@@", i[0].text()],
-                            ["@@@DEB_PACKAGE_NAME@@@", e1_text.text()],
-                            ["@@@APPRUN_CMD@@@", wine[wineVersion.currentText()]],
-                            ["@@@EXEC_NAME@@@", os.path.basename(i[0].text().replace("\\", "/"))]
-                        ]'''
-                        #write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/{os.path.splitext(os.path.basename(i[0].text().replace(line, '/')))[0]}_with_box86.sh", ReplaceText(debInformation[debArch.currentIndex()]["run_with_box86.sh"], replaceMap))
-                        #write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/{os.path.splitext(os.path.basename(i[0].text().replace(line, '/')))[0]}_with_exagear.sh", ReplaceText(debInformation[debArch.currentIndex()]["run_with_exagear.sh"], replaceMap))
-            if debArch.currentIndex() != 2:                    
-                write_txt("{}/opt/apps/{}/info".format(debPackagePath, e1_text.text()), debInformation[debArch.currentIndex()]["info"])
+                        if i[2].text().replace(" ", "") == "":
+                            command = f"--uri {i[2].text()}"
+                        else:
+                            command = i[2].text()
+                        write_txt("{}/opt/apps/{}/entries/applications/{}-{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text(), os.path.splitext(os.path.basename(i[0].text().replace("\\", "/")))[0]), desktopFile)
+                        write_txt("{}/usr/share/applications/{}-{}.desktop".format(debPackagePath, e1_text.text(), os.path.splitext(os.path.basename(i[0].text().replace("\\", "/")))[0]), desktopFile)
             if helperConfigPath != None and helperConfigPath != "":
                 os.makedirs(f"{debPackagePath}/opt/deepinwine/tools/spark_run_v4_app_configs")
                 if e6_text.text()[-3: ] == ".7z":
@@ -1711,11 +888,7 @@ StartupNotify=false
             if debArch.currentIndex() != 2:
                 self.run_command("chmod -Rv 644 {}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()))
                 self.run_command("chmod -Rv 644 {}/opt/apps/{}/info".format(debPackagePath, e1_text.text()))
-            
                 self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/*.sh".format(debPackagePath, e1_text.text()))
-                #self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/kill.sh".format(debPackagePath, e1_text.text()))
-                #self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/*_with_box86.sh".format(debPackagePath, e1_text.text()))
-                #self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/*_with_exagear.sh".format(debPackagePath, e1_text.text()))
                 self.run_command("chmod -Rv 755 {}/opt/apps/{}/entries/applications/*.desktop".format(debPackagePath, e1_text.text(), e1_text.text()))
                 self.run_command("chmod -Rv 755 {}/usr/share/applications/*.desktop".format(debPackagePath, e1_text.text()))
             ################

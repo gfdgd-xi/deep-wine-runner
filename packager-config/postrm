@@ -1,0 +1,26 @@
+#!/bin/bash
+if [ "$1" = "remove" ] || [ "$1" = "purge" ];then
+
+echo "清理卸载残留"
+CONTAINER_NAME="@@@BOTTLENAME@@@"
+
+if [ -z $CONTAINER_NAME ];then
+echo "W: 没有指定容器，跳过清理容器。请手动前往 ~/.deepinwine/ 下删除"
+exit
+fi
+
+/opt/deepinwine/tools/kill.sh $CONTAINER_NAME
+/opt/deepinwine/tools/spark_kill.sh $CONTAINER_NAME
+###这里注意，如果没写CONTAINER_NAME,会把QQ杀了
+
+for username in $(ls /home)  
+    do
+      echo /home/$username
+        if [ -d /home/$username/.deepinwine/$CONTAINER_NAME ]  
+        then
+        rm -rf /home/$username/.deepinwine/$CONTAINER_NAME
+        fi
+    done
+else
+echo "非卸载，跳过清理"
+fi

@@ -1,0 +1,17 @@
+{
+    "appid": "@@@DEB_PACKAGE_NAME@@@",
+    "name": "@@@APP_NAME@@@",
+    "version": "@@@APPVER@@@",
+    "arch": ["@@@ARCH@@@"],
+    "permissions": {
+        "autostart": false,
+        "notification": false,
+        "trayicon": true,
+        "clipboard": true,
+        "account": false,
+        "bluetooth": false,
+        "camera": true,
+        "audio_record": true,
+        "installed_apps": false
+    }
+}

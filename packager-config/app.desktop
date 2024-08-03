@@ -1,0 +1,14 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+X-Created-By=@@@MAINTAINER@@@
+Categories=@@@DESKTOP_CATEGORIES@@@;
+Icon=@@@ICON@@@
+Exec=@@@DESKTOP_EXEC@@@
+Name=@@@DESKTOP_NAME@@@
+Comment=@@@DESCRIPTION@@@
+MimeType=@@@DESKTOP_MIMETYPE@@@
+GenericName=@@@DEB_PACKAGE_NAME@@@
+Terminal=false
+StartupNotify=false

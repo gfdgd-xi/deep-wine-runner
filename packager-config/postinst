@@ -1,0 +1,12 @@
+#!/bin/bash
+PACKAGE_NAME="@@@DEB_PACKAGE_NAME@@@"
+for username in $(ls /home)  
+do
+    echo /home/$username
+    if [ -d /home/$username/桌面 ]; then
+        cp /opt/apps/$PACKAGE_NAME/entries/applications/* /home/$username/桌面
+    fi
+    if [ -d /home/$username/Desktop ]; then
+        cp /opt/apps/$PACKAGE_NAME/entries/applications/* /home/$username/Desktop
+    fi
+done
