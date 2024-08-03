@@ -1,41 +1,16 @@
 #   库的引用
-import os
 import PyQt5.QtWidgets as QtWidgets
 import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
-import importlib
-import sys
 
-class RunnerWindow:
-    programPath = os.path.split(os.path.realpath(__file__))[0]  # 获取当前程序目录
-    import globalenv
-    recycleTime = 0
-    def __init__(self, app: QtWidgets.QApplication, moduleName: str) -> None:
-        self.globalenv._init()  # globalenv 的 init 是必须的，这样才能正确的 import Wine 运行器的窗口
-        self.globalenv.set_value("app", app)   # 用于将该部分的 app 给子模块的 Qt 控件调用以解决 UI 异常以及其它问题
-        # 因为 Python 有不允许重复 import 的特性从而导致多次返回的控件实际指向同一对象，所以要通过特殊的方式绕过这一限制
-        # 将使用指向程序所在文件夹的超链接以改变库名称从而实现每次引入时命名控件不同
-        # 通过嵌套多个 local.local.local 以解决问题
-        # 同理可以利用该特性使用 globalenv 传值
-        if (not os.path.exists(f"{self.programPath}/local")):
-            # 没有存在该超链接，不启用该机制
-            self.globalenv.set_value("app", app)
-            self.mainwindow = __import__(moduleName, fromlist=["mainwindow"])
-            return
-        while True:
-            self.recycleTime += 1
-            testModuleName = "local." * self.recycleTime + moduleName
-            if (not testModuleName in sys.modules):
-                self.mainwindow = __import__(testModuleName, fromlist=["mainwindow"])  # 设置 fromlist 就不会返回最上层节点，及 local
-                break
-    
-    def Win(self) -> QtWidgets.QMainWindow:
-        # 输出窗口
-        return self.mainwindow.window
-           
+import sys
+import WindowModule
+import welcome
 
 #   创建界面
 class Window(QtWidgets.QWidget):
+    moduleMapList = {}
+
     def __init__(self):
         super().__init__()
         self.counter_a = 1
@@ -54,9 +29,10 @@ class Window(QtWidgets.QWidget):
         self.leftWidget = LeftWidget()
         self.mainLayout.addWidget(self.leftWidget)
 
-        self.leftWidget.btn1.clicked.connect(self.addA)
-        self.leftWidget.btn2.clicked.connect(self.addB)
-        self.leftWidget.btn3.clicked.connect(self.addC)
+        for i in WindowModule.moduleNameList.keys():
+            self.moduleMapList[self.leftWidget.actionList[i].text()] = [i, WindowModule.moduleNameList[i]["Name"]]
+            self.leftWidget.actionList[i].triggered.connect(lambda: self.add(self.sender().text()))
+
         self.leftWidget.btn4.clicked.connect(self.delCurrent)
         self.leftWidget.list1.itemClicked.connect(self.switchWidget)
 
@@ -64,81 +40,138 @@ class Window(QtWidgets.QWidget):
         self.rightWidget = RightWidget()
         self.mainLayout.addWidget(self.rightWidget)
 
-    #   新增a类界面
-    def addA(self):
-        self.newTab = "a类页面#{0}".format(self.counter_a)
+        self.addWelcome()
+
+    #   新增欢迎界面
+    def addWelcome(self):
+        self.newTab = "欢迎页面"
+        self.leftWidget.list1.addItem(self.newTab)
+
+        self.newWidget = welcome.WinWelcome()
+        self.widgetList.append(self.newWidget)
+        self.rightWidget.addWidget(self.newWidget)
+
+    #   新增界面
+    def add(self, actionName):
+        self.newInfo = "{}#{}".format(self.moduleMapList[actionName][1], self.counter_a)
+        self.newTab = ItemWidget(self.newInfo)
+        self.newTab.btn.clicked.connect(self.delCurrent)
         self.counter_a += 1
         self.leftWidget.list1.addItem(self.newTab)
+        self.leftWidget.list1.setItemWidget(self.newTab, self.newTab.widget)
 
-        self.newWidget = RunnerWindow(app, "mainwindow").Win()
-        print(self.newWidget)
+        self.newWidget = WindowModule.RunnerWindow(app, self.moduleMapList[actionName][0]).Win()
         self.widgetList.append(self.newWidget)
         self.rightWidget.addWidget(self.newWidget)
 
-    #   新增b类界面
-    def addB(self):
-        self.newTab = "b类页面#{0}".format(self.counter_b)
-        self.counter_b += 1
-        self.leftWidget.list1.addItem(self.newTab)
+        # 自动切换新打开的页面
+        self.leftWidget.list1.setCurrentRow(self.leftWidget.list1.model().rowCount() - 1)  # 设置选择最后一项
+        self.switchWidget()
 
-        self.newWidget = RunnerWindow(app, "deepin-wine-packager").Win()
-        self.widgetList.append(self.newWidget)
-        self.rightWidget.addWidget(self.newWidget)
-
-    #   新增c类界面
-    def addC(self):
-        self.newTab = "c类页面#{0}".format(self.counter_c)
-        self.counter_c += 1
-        self.leftWidget.list1.addItem(self.newTab)
-        self.newWidget = RunnerWindow(app, "VM.mainwindow").Win()
-        self.widgetList.append(self.newWidget)
-        self.rightWidget.addWidget(self.newWidget)
 
     #   删除_本页面
     def delCurrent(self):
+        self.length = self.leftWidget.list1.count()
+        print(self.length)
         self.row = self.leftWidget.list1.currentRow()
+        print(self.row)
+        if self.row == 0:
+            return 0
         self.leftWidget.list1.takeItem(self.row)
         self.rightWidget.removeWidget(self.widgetList[self.row])
+        self.widgetList.pop(self.row)
+
+        #   将新界面的关闭按钮设为可用
+        if self.row == self.length - 1:
+            if self.row == 1:
+                return 0
+            else:
+                self.leftWidget.list1.item(self.row - 1).btnEnable()
+        else:
+            self.leftWidget.list1.item(self.row).btnEnable()
 
     #   切换页面
     def switchWidget(self):
         self.row = self.leftWidget.list1.currentRow()
         self.rightWidget.setCurrentIndex(self.row)
-
+        
+        #   将当前页的关闭按钮设为可用
+        for i in range(self.leftWidget.list1.count()):
+            if i == 0:
+                continue
+            else:
+                self.leftWidget.list1.item(i).btnDisable()
+        if self.row != 0:
+            self.leftWidget.list1.currentItem().btnEnable()
+        
 #   左侧区域
 class LeftWidget(QtWidgets.QWidget):
+    actionList = {}
     def __init__(self):
         super().__init__()
         self.initUI()
 
     def initUI(self):
-        self.setFixedWidth(100)
+        self.setFixedWidth(120)
         self.mainLayout = QtWidgets.QVBoxLayout()
+        self.mainLayout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(self.mainLayout)
 
         #   左侧标题
         self.lab1 = QtWidgets.QLabel("页面导航区")
+        self.lab1.setStyleSheet("font-size:20px")
         self.mainLayout.addWidget(self.lab1)
+
+        #   新建页面面按钮
+        self.btnAdd = QtWidgets.QPushButton("新建界面")
+        self.mainLayout.addWidget(self.btnAdd)
+        self.menuAdd = QtWidgets.QMenu()
+        self.btnAdd.setMenu(self.menuAdd)
+
+        for i in WindowModule.moduleNameList.keys():
+            action = QtWidgets.QAction("新建{}".format(WindowModule.moduleNameList[i]["Name"]))
+            self.actionList[i] = action
+            self.menuAdd.addAction(action)
 
         #   左侧页面列表
         self.list1 = QtWidgets.QListWidget()
         self.mainLayout.addWidget(self.list1)
 
-        #   新增a类按钮
-        self.btn1 = QtWidgets.QPushButton("新增a类界面")
-        self.mainLayout.addWidget(self.btn1)
-
-        #   新增b类按钮
-        self.btn2 = QtWidgets.QPushButton("新增b类界面")
-        self.mainLayout.addWidget(self.btn2)
-
-        #   新增c类按钮
-        self.btn3 = QtWidgets.QPushButton("新增c类界面")
-        self.mainLayout.addWidget(self.btn3)
-
         #   删_页面按钮
         self.btn4 = QtWidgets.QPushButton("删除_本页面")
         self.mainLayout.addWidget(self.btn4)
+
+#   列表项目组件
+class ItemWidget(QtWidgets.QListWidgetItem):
+    def __init__(self, info):
+        super().__init__()
+        self.info = info
+        self.initUI()
+
+    def initUI(self):
+        self.widget = QtWidgets.QWidget()
+        self.mainLayout = QtWidgets.QHBoxLayout()
+        self.mainLayout.setContentsMargins(2, 0, 0, 0)
+        self.widget.setLayout(self.mainLayout)
+
+        #   文字标签
+        self.lab = QtWidgets.QLabel(self.info)
+        self.mainLayout.addWidget(self.lab)
+        self.mainLayout.addStretch()
+
+        #   关闭按钮
+        self.btn = QtWidgets.QPushButton("x")
+        self.btn.setMaximumWidth(20)
+        self.btn.setEnabled(False)
+        self.mainLayout.addWidget(self.btn)
+
+    #   将按钮设为可用
+    def btnEnable(self):
+        self.btn.setEnabled(True)
+
+    #   将按钮设为不可用
+    def btnDisable(self):
+        self.btn.setEnabled(False)
 
 #   右侧区域
 class RightWidget(QtWidgets.QStackedWidget):

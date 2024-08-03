@@ -39,6 +39,7 @@ copy-files:
 	cp -rv wine/ deb/opt/apps/deepin-wine-runner/
 	cp -rv Test/ deb/opt/apps/deepin-wine-runner/
 	cp -rv dxvk/ deb/opt/apps/deepin-wine-runner/
+	cp -rv packager-config/ deb/opt/apps/deepin-wine-runner/
 	cp -rv information.json package-script
 	zip -v -q -r package-script.zip package-script
 	cp -rv InstallBox86-cn.sh deb/opt/apps/deepin-wine-runner/
