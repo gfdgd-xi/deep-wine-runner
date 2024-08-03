@@ -166,7 +166,7 @@ def Build7z(b, self, debInformation, debPackagePath):
     # 设置容器
     ###############
     self.label.emit("正在设置 wine 容器")
-    if e6_text.text()[-3: ] != ".7z" and debArch.currentIndex() != 2:
+    if e6_text.text()[-3: ] != ".7z":
         os.chdir(programPath)
         if cleanBottonByUOS.isChecked():
             self.run_command(f"WINE='{debInformation[debArch.currentIndex()]['Wine']}' '{programPath}/cleanbottle.sh' '{b}'")
@@ -477,193 +477,8 @@ fi
 # Make sure the script returns 0
 true
 """, readtxt(f"{programPath}/packager-config/postrm")][int(rmBash.isChecked())],
-
-
                 "run.sh": readtxt(f"{programPath}/packager-config/run.sh"),
                 "info": readtxt(f"{programPath}/packager-config/uos-info.sh")
-                },
-                {
-                    "Wine": None,
-                    "Architecture": "all",
-                    "Depends": "cxoffice20 | cxoffice5 | cxoffice5:i386",
-                    "run.sh": None,
-                    "info": None,
-                    "postinst": f'''#!/bin/bash
-{["", f"""PACKAGE_NAME="{e1_text.text()}"
-for username in $(ls /home)  
-do
-    echo /home/$username
-    if [ -d /home/$username/桌面 ]; then
-        cp /opt/apps/$PACKAGE_NAME/entries/applications/* /home/$username/桌面
-    fi
-    if [ -d /home/$username/Desktop ]; then
-        cp /opt/apps/$PACKAGE_NAME/entries/applications/* /home/$username/Desktop
-    fi
-done"""][enableCopyIconToDesktop.isChecked()]}
-
-# (c) Copyright 2008. CodeWeavers, Inc.
-
-# Setup logging
-if [ -n "$CX_LOG" ]
-then
-    [ "$CX_LOG" = "-" ] || exec 2>>"$CX_LOG"
-    echo >&2
-    echo "***** `date`" >&2
-    echo "Starting: $0 $@" >&2
-    set -x
-fi
-
-action="$1"
-oldver="$2"
-
-CX_ROOT="/opt/cxoffice"
-CX_BOTTLE="{e5_text.text()}"
-export CX_ROOT CX_BOTTLE
-
-if [ "$action" = "configure" ]
-then
-    uuid=""
-    uuid_file="$CX_ROOT/support/$CX_BOTTLE/.uuid"
-    if [ -f "$uuid_file" ]
-    then
-        uuid=`cat "$uuid_file"`
-        rm -f "$uuid_file"
-    fi
-
-    set_uuid=""
-    if [ -n "$uuid" ]
-    then
-        set_uuid="--set-uuid $uuid"
-    fi
-
-    "$CX_ROOT/bin/cxbottle" $set_uuid --restored --removeall --install
-fi
-
-# Make sure the script returns 0
-true
-
-
-''',
-                    "postrm": f'''#!/bin/sh
-# (c) Copyright 2008. CodeWeavers, Inc.
-
-# Setup logging
-if [ -n "$CX_LOG" ]
-then
-    [ "$CX_LOG" = "-" ] || exec 2>>"$CX_LOG"
-    echo >&2
-    echo "***** `date`" >&2
-    echo "Starting: $0 $@" >&2
-    set -x
-fi
-
-action="$1"
-
-CX_ROOT="/opt/cxoffice"
-CX_BOTTLE="{e5_text.text()}"
-export CX_ROOT CX_BOTTLE
-
-if [ "$action" = "purge" ]
-then
-    # Delete any leftover file
-    rm -rf "$CX_ROOT/support/$CX_BOTTLE"
-fi
-
-# Make sure the script returns 0
-true
-
-
-''',
-                    "preinst": f'''#!/bin/sh
-# (c) Copyright 2008. CodeWeavers, Inc.
-
-# Setup logging
-if [ -n "$CX_LOG" ]
-then
-    [ "$CX_LOG" = "-" ] || exec 2>>"$CX_LOG"
-    echo >&2
-    echo "***** `date`" >&2
-    echo "Starting: $0 $@" >&2
-    set -x
-fi
-
-action="$1"
-oldver="$2"
-
-CX_ROOT="/opt/cxoffice"
-CX_BOTTLE="{e5_text.text()}"
-export CX_ROOT CX_BOTTLE
-
-case "$action" in
-install|upgrade)
-    if [ ! -f "$CX_ROOT/bin/cxbottle" ]
-    then
-        echo "error: could not find CrossOver in '$CX_ROOT'" >&2
-        exit 1
-    fi
-    if [ ! -x "$CX_ROOT/bin/cxbottle" ]
-    then
-        echo "error: the '$CX_ROOT/bin/cxbottle' tool is not executable!" >&2
-        exit 1
-    fi
-    if [ ! -x "$CX_ROOT/bin/wineprefixcreate" -o ! -f "$CX_ROOT/bin/wineprefixcreate" ]
-    then
-        echo "error: managed bottles are not supported in this version of CrossOver" >&2
-        exit 1
-    fi
-
-    if [ -d "$CX_ROOT/support/$CX_BOTTLE" ]
-    then
-        # Save the bottle's uuid
-        "$CX_ROOT/bin/cxbottle" --get-uuid >"$CX_ROOT/support/$CX_BOTTLE/.uuid" 2>/dev/null
-    fi
-    ;;
-
-abort-upgrade)
-    rm -f "$CX_ROOT/support/$CX_BOTTLE/.uuid"
-    ;;
-esac
-
-# Make sure the script returns 0
-true
-
-
-''',
-                    "prerm": f'''#!/bin/sh
-# (c) Copyright 2008. CodeWeavers, Inc.
-
-# Setup logging
-if [ -n "$CX_LOG" ]
-then
-    [ "$CX_LOG" = "-" ] || exec 2>>"$CX_LOG"
-    echo >&2
-    echo "***** `date`" >&2
-    echo "Starting: $0 $@" >&2
-    set -x
-fi
-
-action="$1"
-if [ "$2" = "in-favour" ]
-then
-    # Treating this as an upgrade is less work and safer
-    action="upgrade"
-fi
-
-CX_ROOT="/opt/cxoffice"
-CX_BOTTLE="{e5_text.text()}"
-export CX_ROOT CX_BOTTLE
-
-if [ "$action" = "remove" ]
-then
-    # Uninstall the bottle before cxbottle.conf gets deleted
-    "$CX_ROOT/bin/cxbottle" --removeall
-fi
-
-# Make sure the script returns 0
-true
-
-
-'''
                 }
             ]
             print("c")
@@ -710,24 +525,17 @@ true
             ###############
             self.label.emit("正在创建目录……")
             os.makedirs("{}/DEBIAN".format(debPackagePath))
-            
-            if debArch.currentIndex() != 2:
-                # Deepin Wine 包目录结构
-                os.makedirs("{}/opt/apps/{}/entries/applications".format(debPackagePath, e1_text.text()))
-                os.makedirs("{}/usr/share/applications".format(debPackagePath))
-                os.makedirs("{}/opt/apps/{}/entries/icons/hicolor/scalable/apps".format(debPackagePath, e1_text.text()))
-                os.makedirs("{}/opt/apps/{}/files".format(debPackagePath, e1_text.text()))
-            else:
-                # Crossover包目录结构
-                os.makedirs(f"{debPackagePath}/opt/cxoffice/support/{e5_text.text()}")
-                # 为啥就没了
+        
+            os.makedirs("{}/opt/apps/{}/entries/applications".format(debPackagePath, e1_text.text()))
+            os.makedirs("{}/usr/share/applications".format(debPackagePath))
+            os.makedirs("{}/opt/apps/{}/entries/icons/hicolor/scalable/apps".format(debPackagePath, e1_text.text()))
+            os.makedirs("{}/opt/apps/{}/files".format(debPackagePath, e1_text.text()))
             ###############
             # 创建文件
             ###############
             self.label.emit("正在创建文件……")
             os.mknod("{}/DEBIAN/control".format(debPackagePath))
-            if debArch.currentIndex() != 2:
-                os.mknod("{}/opt/apps/{}/info".format(debPackagePath, e1_text.text()))
+            os.mknod("{}/opt/apps/{}/info".format(debPackagePath, e1_text.text()))
             #########!!!!!!!
             Build7z(b, self, debInformation, debPackagePath)
             ###############
@@ -747,7 +555,7 @@ true
             # 复制文件
             ###############
             self.label.emit("正在复制文件……")
-            if os.path.exists(wine[wineVersion.currentText()]) and debArch.currentIndex() != 2:
+            if os.path.exists(wine[wineVersion.currentText()]):
                 shutil.copy(f"{programPath}/gtkGetFileNameDlg", f"{debPackagePath}/opt/apps/{e1_text.text()}/files")
             if debArch.currentIndex() == 1:
                 # 解包文件
@@ -760,13 +568,12 @@ true
                 self.run_command(f"cp -rv '{programPath}/dlls-arm' {debPackagePath}/opt/apps/{e1_text.text()}/files/dlls")
                 self.run_command(f"cp -rv '{programPath}/exa' {debPackagePath}/opt/apps/{e1_text.text()}/files/exa")
                 self.run_command(f"cp -rv '{programPath}/arm-package/'* {debPackagePath}/opt/apps/{e1_text.text()}/files/") 
-            if debArch.currentIndex() != 2:
-                if desktopIconTab.count() <= 1:
-                    if e9_text.text() != "":
-                        shutil.copy(e9_text.text(), "{}/opt/apps/{}/entries/icons/hicolor/scalable/apps/{}.{}".format(debPackagePath, e1_text.text(), e1_text.text(), imms))
-                else:
-                    for i in range(len(a)):
-                        shutil.copy(iconUiList[i][4].text(), "{}/{}".format(debPackagePath, a[i]))
+            if desktopIconTab.count() <= 1:
+                if e9_text.text() != "":
+                    shutil.copy(e9_text.text(), "{}/opt/apps/{}/entries/icons/hicolor/scalable/apps/{}.{}".format(debPackagePath, e1_text.text(), e1_text.text(), imms))
+            else:
+                for i in range(len(a)):
+                    shutil.copy(iconUiList[i][4].text(), "{}/{}".format(debPackagePath, a[i]))
             ################
             # 获取文件大小
             ################
@@ -833,12 +640,11 @@ Description: {e3_text.text()}
                 write_txt(f"{debPackagePath}/DEBIAN/postinst", ReplaceText(debInformation[debArch.currentIndex()]["postinst"], replaceMap))
             if debInformation[debArch.currentIndex()]["postrm"] != "":
                 write_txt(f"{debPackagePath}/DEBIAN/postrm", ReplaceText(debInformation[debArch.currentIndex()]["postrm"], replaceMap))
-            # 配置 UOS deb 包的 info 权限文件
-            if debArch.currentIndex() != 2:                    
-                write_txt("{}/opt/apps/{}/info".format(debPackagePath, e1_text.text()), ReplaceText(debInformation[debArch.currentIndex()]["info"], replaceMap))
+            # 配置 UOS deb 包的 info 权限文件                  
+            write_txt("{}/opt/apps/{}/info".format(debPackagePath, e1_text.text()), ReplaceText(debInformation[debArch.currentIndex()]["info"], replaceMap))
             line = "\\"
             # 要开始分类讨论了
-            if debArch.currentIndex() == 0 or debArch.currentIndex() == 1 and debArch.currentIndex() != 2:
+            if debArch.currentIndex() == 0 or debArch.currentIndex() == 1:
                 if desktopIconTab.count() <= 1:
                     desktopFile = ReplaceText(readtxt(f"{programPath}/packager-config/app.desktop"), replaceMap)
                     write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/run.sh", ReplaceText(debInformation[debArch.currentIndex()]["run.sh"], replaceMap))
@@ -885,12 +691,11 @@ Description: {e3_text.text()}
             ################
             self.label.emit("正在修改文件权限……")
             self.run_command("chmod -Rv 0755 {}/DEBIAN".format(debPackagePath))
-            if debArch.currentIndex() != 2:
-                self.run_command("chmod -Rv 644 {}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()))
-                self.run_command("chmod -Rv 644 {}/opt/apps/{}/info".format(debPackagePath, e1_text.text()))
-                self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/*.sh".format(debPackagePath, e1_text.text()))
-                self.run_command("chmod -Rv 755 {}/opt/apps/{}/entries/applications/*.desktop".format(debPackagePath, e1_text.text(), e1_text.text()))
-                self.run_command("chmod -Rv 755 {}/usr/share/applications/*.desktop".format(debPackagePath, e1_text.text()))
+            self.run_command("chmod -Rv 644 {}/opt/apps/{}/files/run.sh".format(debPackagePath, e1_text.text()))
+            self.run_command("chmod -Rv 644 {}/opt/apps/{}/info".format(debPackagePath, e1_text.text()))
+            self.run_command("chmod -Rv 755 {}/opt/apps/{}/files/*.sh".format(debPackagePath, e1_text.text()))
+            self.run_command("chmod -Rv 755 {}/opt/apps/{}/entries/applications/*.desktop".format(debPackagePath, e1_text.text(), e1_text.text()))
+            self.run_command("chmod -Rv 755 {}/usr/share/applications/*.desktop".format(debPackagePath, e1_text.text()))
             ################
             # 构建 deb 包
             ################

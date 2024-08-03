@@ -27,7 +27,7 @@ Wine Runner is a program that allows Linux users to run Windows applications mor
 
 打包器视频教程：https://www.bilibili.com/video/BV1Bh4y1Q7nT/  
 Wine 运行器 QQ 交流群：762985460  
-Wine 运行器离线包下载地址：https://www.123pan.com/s/pDSKVv-pAJWv.html     
+  
 
 ### Wine 运行器 For Termux 安装方法以及注意事项
 Wine 运行器 For Termux 使用的是独立的安装包，详细见：  
@@ -58,7 +58,8 @@ https://gfdgdxi.lanzouw.com/b0plly5cj
 spark-deepin-wine-runner 是普通包，spark-deepin-wine-runner-ace 是使用 ace 兼容环境运行的运行器
 
 ## Wine 运行器离线包
-需要私聊作者定制（有偿服务）  
+见小黄鱼：  
+https://m.tb.cn/h.g93KHpR?tk=KPeR3dH09WM
 
 ## 软件架构
 理论上支持全架构，如果 Python 能运行的话  
