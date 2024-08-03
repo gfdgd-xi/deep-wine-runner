@@ -20,14 +20,10 @@ moduleNameList = {
         "Name": "虚拟机管理工具",
         "RepeatShow": True
     },
-    "VM.show-vm": {
-        "Name": "虚拟机连接工具（VNC）",
-        "RepeatShow": True
-    },
     "wine.installwine": {
         "Name": "Wine 安装工具",
         "RepeatShow": True
-    },
+    }
 }
 
 class RunnerWindow:

@@ -5,10 +5,11 @@ import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
 
 import os
-import json
 import sys
-import WindowModule
+import json
 import welcome
+import subprocess
+import WindowModule
 
 # 读取文本文档
 def readtxt(path):
@@ -18,7 +19,6 @@ def readtxt(path):
     return str  # 返回结果
 
 def ProgramVersion():
-    programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
     information = json.loads(readtxt(f"{programPath}/information.json"))
     return information["Version"]
 
@@ -167,8 +167,8 @@ class LeftWidget(QtWidgets.QWidget):
         self.mainLayout.addWidget(self.list1)
 
         #   删_页面按钮
-        #self.btn4 = QtWidgets.QPushButton("删除本页面")
-        #self.mainLayout.addWidget(self.btn4)
+        self.archLabel = QtWidgets.QLabel("系统架构：{}".format(subprocess.getoutput("dpkg --print-architecture")))
+        self.mainLayout.addWidget(self.archLabel)
 
 #   列表项目组件
 class ItemWidget(QtWidgets.QListWidgetItem):
@@ -214,10 +214,14 @@ class RightWidget(QtWidgets.QStackedWidget):
 def get_home():
     return os.path.expanduser('~')
 
+programPath = os.path.split(os.path.realpath(__file__))[0]  # 返回 string
+iconPath = "{}/deepin-wine-runner.svg".format(programPath)
+
 #   运行程序
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     mainWindow = Window()
+    mainWindow.setWindowIcon(QtGui.QIcon(iconPath))
     mainWindow.show()
     mainWindow.resize(int(mainWindow.geometry().width() * 1.2), int(mainWindow.geometry().height() * 1.2))
     sys.exit(app.exec())

@@ -206,7 +206,7 @@ package-termux-deb:
 	sudo cp -rv deb-termux/usr/share/applications /tmp/spark-deepin-wine-runner-builder/data/data/com.termux/files/usr/share/applications
 	# 加入 termux loader
 	sudo cp -rv mainwindow-termux-loader.sh /tmp/spark-deepin-wine-runner-builder/data/data/com.termux/files/usr/opt/apps/deepin-wine-runner/deepin-wine-runner
-	sudo cp -rv mainwindow.py /tmp/spark-deepin-wine-runner-builder/data/data/com.termux/files/usr/opt/apps/deepin-wine-runner/mainwindow.py
+	sudo cp -rv main.py /tmp/spark-deepin-wine-runner-builder/data/data/com.termux/files/usr/opt/apps/deepin-wine-runner/mainwindow.py
 	sudo bash builddeb/ChangeDebVersion.sh
 	dpkg-deb -Z xz -z 9 -b /tmp/spark-deepin-wine-runner-builder spark-deepin-wine-runner-termux.deb
 	make remove-copy-files -j$(nproc)

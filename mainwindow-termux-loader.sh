@@ -21,4 +21,4 @@ if [[ $DISPLAY == "" ]] && [[ $WAYLAND_DISPLAY == "" ]] && [[ -f /data/data/com.
     fi
     $CURRENT_DIR/VM/novnc/utils/novnc_proxy --vnc localhost:5905 $noVNCOption &
 fi
-python3 $CURRENT_DIR/mainwindow.py
+python3 $CURRENT_DIR/main.py
