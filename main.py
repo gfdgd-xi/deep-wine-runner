@@ -148,7 +148,7 @@ class LeftWidget(QtWidgets.QWidget):
         self.setLayout(self.mainLayout)
 
         #   左侧标题
-        self.lab1 = QtWidgets.QLabel("<h3>页面导航区</h3>")
+        self.lab1 = QtWidgets.QLabel("<h2>页面导航区</h2>")
         self.mainLayout.addWidget(self.lab1)
 
         #   新建页面面按钮

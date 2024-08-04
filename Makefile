@@ -139,6 +139,7 @@ copy-files:
 	cp -rv globalenv.py   deb/opt/apps/deepin-wine-runner
 	cp -rv local   deb/opt/apps/deepin-wine-runner
 	cp -rv WindowModule.py deb/opt/apps/deepin-wine-runner
+	cp -rv welcome.py deb/opt/apps/deepin-wine-runner
 	cp -rv main.py deb/opt/apps/deepin-wine-runner/deepin-wine-runner
 	mkdir -pv deb/opt/apps/deepin-wine-runner/entries/
 	cp -rv deb/usr/share/applications deb/opt/apps/deepin-wine-runner/entries/applications

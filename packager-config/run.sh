@@ -130,7 +130,7 @@ fi
 ##############>>>>>>>>>屏蔽mono和gecko安装器结束
 
 ##############<<<<<<<<<解压自行封装的 Wine（如果存在的话）
-if [[ -e "$ARCHIVE_FILE_DIR/wine_archive.7z" ]]; then
+if [ -e "$ARCHIVE_FILE_DIR/wine_archive.7z" ]; then
     WINE_BIN_DIR=`dirname $APPRUN_CMD`
     WINE_DIR=`dirname $WINE_BIN_DIR`
     extract_archive "$ARCHIVE_FILE_DIR/wine_archive.7z" "$ARCHIVE_FILE_DIR/wine_archive.md5sum" "$WINE_DIR"

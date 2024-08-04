@@ -424,7 +424,7 @@ class make_deb_threading(QtCore.QThread):
                         readtxt(f"{programPath}/packager-config/run-old.sh"), 
                         readtxt(f"{programPath}/packager-config/run.sh")
                         ][chooseWineHelperValue.isChecked()],
-                        "info": readtxt(f"{programPath}/packager-config/uos-info.sh")
+                        "info": readtxt(f"{programPath}/packager-config/uos-info.json")
                 },
                 {
                     # ARM64 通用 wine 打包配置文件
@@ -547,11 +547,10 @@ true
             self.label.emit("正在处理 Wine")
             if os.path.exists(wine[wineVersion.currentText()]):
                 shutil.copy(f"{programPath}/gtkGetFileNameDlg", f"{debPackagePath}/opt/apps/{e1_text.text()}/files/gtkGetFileNameDlg")
-                if wine[wineVersion.currentText()][-3:] == ".7z":
-                    # 都有了为什么要打包呢？
-                    shutil.copy(wine[wineVersion.currentText()], f"{debPackagePath}/opt/apps/{e1_text.text()}/files/wine_archive.7z")
-                else:
-                    self.run_command(f"7z a -snh -snl '{debPackagePath}/opt/apps/{e1_text.text()}/files/wine_archive.7z' '{wine[wineVersion.currentText()]}/*'")
+                #self.run_command(f"7z a -snh -snl '{debPackagePath}/opt/apps/{e1_text.text()}/files/wine_archive.7z' '{wine[wineVersion.currentText()]}/*'")
+                # 不打包为 7z 资源包以让 UOS 可以签名到这些文件
+                self.run_command(f"mkdir -pv '{debPackagePath}/opt/apps/{e1_text.text()}/files/wine'")
+                self.run_command(f"cp -r '{wine[wineVersion.currentText()]}/'* '{debPackagePath}/opt/apps/{e1_text.text()}/files/wine'")
             ###############
             # 复制文件
             ###############
@@ -617,25 +616,37 @@ Description: {e3_text.text()}
                     write_txt(f"{debPackagePath}/DEBIAN/prerm", debInformation[debArch.currentIndex()]["prerm"])
             except:
                 pass
+            line = "\\"
+            if iconUiList[0][2].text().replace(" ", "") == "":
+                command = f"--uri {iconUiList[0][2].text()}"
+            else:
+                command = iconUiList[0][2].text()
             replaceMap = [
                 ["@@@BOTTLENAME@@@", e5_text.text()],
                 ["@@@APPVER@@@", e2_text.text()],
                 ["@@@EXEC_PATH@@@", e7_text.text()],
                 ["@@@DEB_PACKAGE_NAME@@@", e1_text.text()],
-                ["@@@APPRUN_CMD@@@", wine[wineVersion.currentText()]],
+                ["@@@APPRUN_CMD@@@", [
+                    wine[wineVersion.currentText()], 
+                    f"/opt/apps/{e1_text.text()}/files/wine/bin/wine"
+                ][os.path.exists(f'{debPackagePath}/opt/apps/{e1_text.text()}/files/')]],
                 ["@@@EXEC_NAME@@@", os.path.basename(e7_text.text().replace("\\", "/"))],
                 ["@@@ARCH@@@", debFirstArch.currentText()],
                 ["@@@APP_NAME@@@", e8_text.text()],
                 ["@@@MAINTAINER@@@", e4_text.text()],
                 ["@@@DESCRIPTION@@@", e3_text.text()],
-                ["@@@ICON@@@", [a, a[0]][type(a) == list]],  # a 是图标（为什么当初要取这个变量名）
-                                                             # 如果只有一个图标则为 str,两个及以上则为 list
                 ["@@@DESKTOP_EXEC@@@", 
-                 f'''"/opt/apps/{e1_text.text()}/files/{os.path.splitext(os.path.basename(iconUiList[0][0].text().replace(line, "/")))[0]}.sh" {command}'''],
+                 f'''"/opt/apps/{e1_text.text()}/files/run.sh" {command}'''],
                 ["@@@DESKTOP_NAME@@@", iconUiList[0][3].text()],
                 ["@@@DESKTOP_MIMETYPE@@@", iconUiList[0][5].text()],
                 ["@@@DESKTOP_CATEGORIES@@@", iconUiList[0][1].currentText()]
             ]
+            # a 是图标（为什么当初要取这个变量名）
+            # 如果只有一个图标则为 str,两个及以上则为 list
+            if (type(a) == list):
+                replaceMap.append(["@@@ICON@@@", a[0]])
+            else:
+                replaceMap.append(["@@@ICON@@@", a])
             # 配置 postinst 和 postrm
             if debInformation[debArch.currentIndex()]["postinst"] != "":
                 write_txt(f"{debPackagePath}/DEBIAN/postinst", ReplaceText(debInformation[debArch.currentIndex()]["postinst"], replaceMap))
@@ -653,25 +664,36 @@ Description: {e3_text.text()}
                     write_txt("{}/opt/apps/{}/entries/applications/{}.desktop".format(debPackagePath, e1_text.text(), e1_text.text()), desktopFile)
                 else:
                     for i in iconUiList:
+                        if i[2].text().replace(" ", "") == "":
+                            command = f"--uri {i[2].text()}"
+                        else:
+                            command = i[2].text()
                         replaceMap = [
                             ["@@@BOTTLENAME@@@", e5_text.text()],
                             ["@@@APPVER@@@", e2_text.text()],
                             ["@@@EXEC_PATH@@@", i[0].text()],
                             ["@@@DEB_PACKAGE_NAME@@@", e1_text.text()],
-                            ["@@@APPRUN_CMD@@@", wine[wineVersion.currentText()]],
+                            ["@@@APPRUN_CMD@@@", [
+                                wine[wineVersion.currentText()], 
+                                f"/opt/apps/{e1_text.text()}/files/wine/bin/wine"
+                            ][os.path.exists(f'{debPackagePath}/opt/apps/{e1_text.text()}/files/')]],
                             ["@@@EXEC_NAME@@@", os.path.basename(i[0].text().replace("\\", "/"))],
                             ["@@@ARCH@@@", debFirstArch.currentText()],
                             ["@@@APP_NAME@@@", i[3].text()],
                             ["@@@MAINTAINER@@@", e4_text.text()],
                             ["@@@DESCRIPTION@@@", e3_text.text()],
-                            ["@@@ICON@@@", [a, a[0]][type(a) == list]],  # a 是图标（为什么当初要取这个变量名）
-                                                                         # 如果只有一个图标则为 str,两个及以上则为 list
                             ["@@@DESKTOP_EXEC@@@", 
                                 f'''"/opt/apps/{e1_text.text()}/files/{os.path.splitext(os.path.basename(i[0].text().replace(line, "/")))[0]}.sh" {command}'''],
                             ["@@@DESKTOP_NAME@@@", i[3].text()],
                             ["@@@DESKTOP_MIMETYPE@@@", i[5].text()],
                             ["@@@DESKTOP_CATEGORIES@@@", i[1].currentText()]
                         ]
+                        # a 是图标（为什么当初要取这个变量名）
+                        # 如果只有一个图标则为 str,两个及以上则为 list
+                        if (type(a) == list):
+                            replaceMap.append(["@@@ICON@@@", a[0]])
+                        else:
+                            replaceMap.append(["@@@ICON@@@", a])
                         line = "\\"
                         desktopFile = ReplaceText(readtxt(f"{programPath}/packager-config/app.desktop"), replaceMap)
                         write_txt(f"{debPackagePath}/opt/apps/{e1_text.text()}/files/{os.path.splitext(os.path.basename(i[0].text().replace(line, '/')))[0]}.sh", ReplaceText(debInformation[debArch.currentIndex()]["run.sh"], replaceMap))
@@ -705,7 +727,10 @@ Description: {e3_text.text()}
             ################
             if not self.build:
                 self.label.emit("正在构建 deb 包……")
-                self.run_command("bash -c 'dpkg-deb -Z xz -z 0 -b \"{}\" \"{}\"'".format(debPackagePath, e12_text.text()))
+                if (os.path.exists(wine[wineVersion.currentText()])):
+                    self.run_command("bash -c 'dpkg-deb -Z xz -z 9 -b \"{}\" \"{}\"'".format(debPackagePath, e12_text.text()))
+                else:
+                    self.run_command("bash -c 'dpkg-deb -Z xz -z 0 -b \"{}\" \"{}\"'".format(debPackagePath, e12_text.text()))
             ################
             # 删除临时文件
             ################
