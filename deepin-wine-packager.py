@@ -479,7 +479,7 @@ fi
 true
 """, readtxt(f"{programPath}/packager-config/postrm")][int(rmBash.isChecked())],
                 "run.sh": readtxt(f"{programPath}/packager-config/run.sh"),
-                "info": readtxt(f"{programPath}/packager-config/uos-info.sh")
+                "info": readtxt(f"{programPath}/packager-config/uos-info.json")
                 }
             ]
             print("c")
