@@ -8,6 +8,9 @@ if (TMPDIR == None):
     TMPDIR = ""
 PIDFILE = TMPDIR + '/tmp/deepin-wine-runner.pid'
 
+if (not os.path.exists(TMPDIR + "/tmp")):
+    os.makedirs(TMPDIR + "/tmp")
+
 #程序结束时清理pid
 @atexit.register
 def remove_pid():

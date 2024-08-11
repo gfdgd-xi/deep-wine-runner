@@ -727,7 +727,9 @@ Description: {e3_text.text()}
             ################
             if not self.build:
                 self.label.emit("正在构建 deb 包……")
+                print(os.path.exists(wine[wineVersion.currentText()]))
                 if (os.path.exists(wine[wineVersion.currentText()])):
+                    print("bash -c 'dpkg-deb -Z xz -z 9 -b \"{}\" \"{}\"'".format(debPackagePath, e12_text.text()))
                     self.run_command("bash -c 'dpkg-deb -Z xz -z 9 -b \"{}\" \"{}\"'".format(debPackagePath, e12_text.text()))
                 else:
                     self.run_command("bash -c 'dpkg-deb -Z xz -z 0 -b \"{}\" \"{}\"'".format(debPackagePath, e12_text.text()))
@@ -736,7 +738,7 @@ Description: {e3_text.text()}
             ################
             if not self.build:
                 self.label.emit("正在删除临时文件……")
-                self.run_command(f"rm -rfv '{debPackagePath}'")
+                self.run_command(f"rm -rf '{debPackagePath}'")
             ################
             # 完成构建
             ################
@@ -772,20 +774,26 @@ def getFileFolderSize(fileOrFolderPath):
     totalSize = 0
     if not os.path.exists(fileOrFolderPath):
         return totalSize
+    # 排除链接导致层数过多的问题
+    if (os.path.islink(fileOrFolderPath)):
+        return totalSize
     if os.path.isfile(fileOrFolderPath):
         totalSize = os.path.getsize(fileOrFolderPath)  # 5041481
         return totalSize
-    if os.path.isdir(fileOrFolderPath):
-        with os.scandir(fileOrFolderPath) as dirEntryList:
-            for curSubEntry in dirEntryList:
-                curSubEntryFullPath = os.path.join(fileOrFolderPath, curSubEntry.name)
-                if curSubEntry.is_dir():
-                    curSubFolderSize = getFileFolderSize(curSubEntryFullPath)  # 5800007
-                    totalSize += curSubFolderSize
-                elif curSubEntry.is_file():
-                    curSubFileSize = os.path.getsize(curSubEntryFullPath)  # 1891
-                    totalSize += curSubFileSize
-            return totalSize
+    try:
+        if os.path.isdir(fileOrFolderPath):
+            with os.scandir(fileOrFolderPath) as dirEntryList:
+                for curSubEntry in dirEntryList:
+                    curSubEntryFullPath = os.path.join(fileOrFolderPath, curSubEntry.name)
+                    if curSubEntry.is_dir():
+                        curSubFolderSize = getFileFolderSize(curSubEntryFullPath)  # 5800007
+                        totalSize += curSubFolderSize
+                    elif curSubEntry.is_file():
+                        curSubFileSize = os.path.getsize(curSubEntryFullPath)  # 1891
+                        totalSize += curSubFileSize
+                return totalSize
+    except:
+        return totalSize
 
 # 显示“提示”窗口
 def helps():
