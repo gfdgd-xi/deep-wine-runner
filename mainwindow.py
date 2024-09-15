@@ -2478,23 +2478,23 @@ exe路径\' 参数 \'
 5、wine 容器如果没有指定，则会默认为 ~/.wine；
 6、如果可执行文件比较大的话，会出现点击“获取该程序运行情况”出现假死的情况，因为正在后台读取 SHA1，只需要等一下即可（读取速度依照您电脑处理速度、读写速度、可执行文件大小等有关）；
 7、如果非 X86 的用户的 UOS 专业版用户想要使用的话，只需要在应用商店安装一个 Wine 版本微信即可在本程序选择正确的 Wine 运行程序；''')
-updateThingsString = QtCore.QCoreApplication.translate("U", '''※1、优化运行器窗口大小机制
-※2、Wine 安装器支持根据机器实际情况自动推荐适合的 Wine
-※3、Wine 安装器支持手动导入 Wine 7z 包并提供相应 7z 包的网盘下载地址
-※4、兼容 Deepin 终端（deepin 15 经典版本，deepin-terminal-gtk）
-※5、跟进 dxvk 2.4
-※6、修复 deepin 23 无法使用 Mono/Gecko 安装器的问题
-※7、修复 debian testing 打包时会把 / 打入 .7z 包内导致系统死机的问题
-※8、支持 AOSC（安同）、小小电脑、proot 容器
-※9、支持在 Termux 直接运行（单独提供安装包）
-10、修复虚拟机启动器入口不会调用安装的 Qemu Extra 的问题
-11、优化高级打包器容器名称生成机制
-12、修复部分机器无法正常打开高级打包器的问题
-13、修复高级打包器选择Wine封装入deb模式时helper只能使用spark dwine helper的问题
+updateThingsString = QtCore.QCoreApplication.translate("U", '''※1、修复在 GXDE OS 下无法正常调用 gxde-terminal 的问题
+※2、修复部分机器无法打开应用的问题
+※3、修改打包器 wine 集成封装 机制以便可以被 uos 商店正确签名
+※4、打包器支持内置 spark dwine helper
+※5、重构虚拟机安装模块以支持更多机器
+6、修复打包器设置依赖无法生效的问题
+※7、补充图标
+※8、修复 deb 安装过程中可能出现 dpkg 卡死的问题
+※9、优化 Wine 安装器检测机制
+※10、删除部分废弃组件
+※11、修复 AOSC、Termux 无法正常打开 Wine 运行器的问题
+12、修改文案
+13、修复其它 bug 若干
 ''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
-updateTime = "2024年07月22日"
+updateTime = "2024年09月15日"
 aboutProgram = QtCore.QCoreApplication.translate("U", """<p>Wine运行器是一个能让Linux用户更加方便地运行Windows应用的程序。原版的 Wine 只能使用命令操作，且安装过程较为繁琐，对小白不友好。于是该运行器为了解决该痛点，内置了对Wine图形化的支持、Wine 安装器、微型应用商店、各种Wine工具、自制的Wine程序打包器、运行库安装工具等。</p>
 <p>它同时还内置了基于Qemu/VirtualBox制作的、专供小白使用的Windows虚拟机安装工具，可以做到只需下载系统镜像并点击安装即可，无需考虑虚拟机的安装、创建、分区等操作，也能在非 X86 架构安装 X86 架构的 Windows 操作系统（但是效率较低，可以运行些老系统）。</p>
 <p>而且对于部分 Wine 应用适配者来说，提供了图形化的打包工具，以及提供了一些常用工具以及运行库的安装方式，以及能安装多种不同的 Wine 以测试效果，能极大提升适配效率。</p>
