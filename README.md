@@ -157,6 +157,21 @@ desktop文件中StartupWMClass字段。用于让桌面组件将窗口类名与de
 ![image.png](https://storage.deepin.org/thread/202207190822204627_image.png)
 
 ## 更新日志 
+### 4.1.0（2024/09/15）
+**※1、修复在 GXDE OS 下无法正常调用 gxde-terminal 的问题**  
+**※2、修复部分机器无法打开应用的问题**  
+**※3、修改打包器 wine 集成封装 机制以便可以被 uos 商店正确签名**  
+**※4、打包器支持内置 spark dwine helper**  
+**※5、重构虚拟机安装模块以支持更多机器**  
+**6、修复打包器设置依赖无法生效的问题**  
+**※7、补充图标**  
+**※8、修复 deb 安装过程中可能出现 dpkg 卡死的问题**  
+**※9、优化 Wine 安装器检测机制**  
+**※10、删除部分废弃组件**  
+**※11、修复 AOSC、Termux 无法正常打开 Wine 运行器的问题**  
+12、修改文案  
+13、修复其它 bug 若干  
+
 ### 4.0.0（2024/07/22）
 **※1、优化运行器窗口大小机制**  
 **※2、Wine 安装器支持根据机器实际情况自动推荐适合的 Wine**  
@@ -830,8 +845,6 @@ make install -j4
 ## 请作者喝杯茶
 如果您觉得 Wine 运行器对你有帮助，可以请作者喝杯茶  
 <img src="Icon/QR/Wechat.png" width="250"  /> 
-<img src="Icon/QR/Alipay.jpg" width="250"  />
-<img src="Icon/QR/QQ.png" width="250" >
 
 ### 广告
 支付宝官方活动，扫描获得支付红包！  
