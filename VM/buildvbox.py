@@ -119,7 +119,7 @@ class buildvbox:
 
             #vm.MountDisk(self.homePath() + "/Qemu/Windows/Windows.qcow2")
             vm.MountMainDisk(self.homePath() + "/Qemu/Windows/Windows.qcow2")
-            if(os.system("/opt/apps/deepin-wine-runner-qemu-system-extra/files/resources/virtio-win.iso")):
+            if(os.path.exists("/opt/apps/deepin-wine-runner-qemu-system-extra/files/resources/virtio-win.iso")):
                 vm.MountISO("/opt/apps/deepin-wine-runner-qemu-system-extra/files/resources/virtio-win.iso", "storage_controller_2", 1, 3)
             if(not setISOAlready):
                 vm.MountISO(isoPath, "storage_controller_1", 0, 1)

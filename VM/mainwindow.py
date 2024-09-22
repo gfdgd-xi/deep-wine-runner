@@ -148,7 +148,7 @@ def on_install_clicked():
             QMessageBox.warning(this, ("提示"), ("VirtualBox 不支持该选项！"))
             return
         archFile.open(QIODevice.WriteOnly)
-        archFile.write("aarch64")
+        #archFile.write("aarch64")
         archFile.close()
     else:
         if(ui.vmChooser.currentIndex() == 0 and QFile.exists(QDir.homePath() + "/.config/deepin-wine-runner/QEMU-EFI")):

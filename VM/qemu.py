@@ -24,8 +24,8 @@ class qemu:
         self.qemuPath = "qemu-system-i386"
         if (os.path.exists("/opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh")):
             # 如果存在拓展 Qemu，则调用此
-            qemuPath = "/opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh qemu-system-i386"
-        self.vboxVersion = subprocess.getoutput(qemuPath + " --version")
+            self.qemuPath = "/opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh qemu-system-i386"
+        self.vboxVersion = subprocess.getoutput(self.qemuPath + " --version")
 
     def Create(self, type = "Windows7"):
         if(not os.path.exists(self.name)):
