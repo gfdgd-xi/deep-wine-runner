@@ -48,6 +48,8 @@ Get_Dist_Name()
         DISTRO='Deepin'
     elif grep -Eqi "UnionTech" /etc/issue || grep -Eq "UnionTech" /etc/*-release; then
         DISTRO='UniontechOS'
+    elif grep -Eqi "GXDE" /etc/issue || grep -Eq "GXDE" /etc/*-release; then
+        DISTRO='GXDE'
     elif grep -Eqi "UOS" /etc/issue || grep -Eq "UOS" /etc/*-release; then
         DISTRO='UniontechOS'
     else
@@ -109,7 +111,7 @@ DISABLE_ATTACH_FILE_DIALOG=""
 ##############<<<<<<<<<禁用文件选择工具开始
 Get_Dist_Name
 #此功能实现参见开头函数段
-if [ "$DISTRO" != "Deepin" ] && [ "$DISTRO" != "UniontechOS" ];then
+if [ "$DISTRO" != "Deepin" ] && [ "$DISTRO" != "UniontechOS" ] && [ "$DISTRO" != "GXDE" ];then
 DISABLE_ATTACH_FILE_DIALOG="1"
 echo "非deepin/UOS，默认关闭系统自带的文件选择工具，使用Wine的"
 echo "如果你想改变这个行为，请到/opt/apps/$DEB_PACKAGE_NAME/files/$0处修改"
