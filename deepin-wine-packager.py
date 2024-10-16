@@ -676,7 +676,7 @@ Description: {e3_text.text()}
                             ["@@@APPRUN_CMD@@@", [
                                 wine[wineVersion.currentText()], 
                                 f"/opt/apps/{e1_text.text()}/files/wine/bin/wine"
-                            ][os.path.exists(f'{debPackagePath}/opt/apps/{e1_text.text()}/files/')]],
+                            ][os.path.exists(f'{debPackagePath}/opt/apps/{e1_text.text()}/files/wine/')]],
                             ["@@@EXEC_NAME@@@", os.path.basename(i[0].text().replace("\\", "/"))],
                             ["@@@ARCH@@@", debFirstArch.currentText()],
                             ["@@@APP_NAME@@@", i[3].text()],
