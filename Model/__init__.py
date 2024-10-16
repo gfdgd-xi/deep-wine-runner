@@ -21,7 +21,7 @@ terminalList = [
 ]
 terminalEnd = {
     f"{programPath}/../launch.sh\" \"deepin-terminal": ["-e", 0],
-    f"{programPath}/../launch.sh\" \"gxde-terminal": ["-e", 0],
+    "gxde-terminal": ["-e", 0],
     "mate-terminal": ["-e", 1],
     "gnome-terminal": ["--", 0],
     "xfce4-terminal": ["-e", 1]
