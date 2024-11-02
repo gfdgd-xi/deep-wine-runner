@@ -35,7 +35,7 @@ class qemu:
     def CreateDisk(self, path: str, size: int):
         if(os.path.exists(path)):
             return 0
-        return os.system(("qemu-img create -f qcow2 '" + self.path + "' " + str(size) + "M"))
+        return os.system(("qemu-img create -f qcow2 '" + path + "' " + str(size) + "M"))
 
     def CreateDiskControl(self, controlName = "storage_controller_1"):
         return 0
