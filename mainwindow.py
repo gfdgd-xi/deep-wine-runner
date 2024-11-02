@@ -2482,6 +2482,8 @@ updateThingsString = QtCore.QCoreApplication.translate("U", '''※1、修复没�
 ※2、修复虚拟机功能异常的问题（https://gitee.com/gfdgd-xi/deep-wine-runner/issues/IASRHG）
 ※3、修复打包器生成的 deb 不可用的问题（https://gitee.com/gfdgd-xi/deep-wine-runner/issues/IAXE1T）
 ※4、打包器针对 GXDE OS 进行优化
+※5、修复虚拟机因无法创建磁盘导致崩溃的问题
+※6、修复中文问题                                                  
 ''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
