@@ -305,7 +305,7 @@ if [ -n "$EXEC_PATH" ];then
     if [ -z "${{EXEC_PATH##*.lnk*}}" ];then
         $START_SHELL_PATH $BOTTLENAME $APPVER "C:/windows/command/start.exe" "/Unix" "$EXEC_PATH" "$@"
     else
-        $START_SHELL_PATH $BOTTLENAME $APPVER "C:/windows/command/start.exe" "/Unix" "$EXEC_PATH" "$@"
+        $START_SHELL_PATH $BOTTLENAME $APPVER "$EXEC_PATH" "$@"
     fi
 else
     $START_SHELL_PATH $BOTTLENAME $APPVER "uninstaller.exe" "$@"
