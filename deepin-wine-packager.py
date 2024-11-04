@@ -620,7 +620,7 @@ Description: {e3_text.text()}
             if iconUiList[0][2].text().replace(" ", "") == "":
                 command = f"--uri {iconUiList[0][2].text()}"
             else:
-                command = iconUiList[0][2].text()
+                command = f"--uri {iconUiList[0][2].text()}" # 若要传参进入wine容器，必须--uri，否则是传给run.sh的
             replaceMap = [
                 ["@@@BOTTLENAME@@@", e5_text.text()],
                 ["@@@APPVER@@@", e2_text.text()],
