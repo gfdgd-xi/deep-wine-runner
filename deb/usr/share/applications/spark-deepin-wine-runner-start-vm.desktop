@@ -4,6 +4,6 @@ X-Categories=System;
 Exec=/opt/apps/deepin-wine-runner/StartVM.sh %F
 Icon=/opt/apps/deepin-wine-runner/deepin-wine-runner.svg
 Name=Start Windows VirtualMachine
-Name[zh]=开启 Windows 虚拟机
+Name[zh_CN]=开启 Windows 虚拟机
 Terminal=false
 StartupNotify=true

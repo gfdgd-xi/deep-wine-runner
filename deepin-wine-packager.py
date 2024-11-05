@@ -620,7 +620,7 @@ Description: {e3_text.text()}
             if iconUiList[0][2].text().replace(" ", "") == "":
                 command = f"--uri {iconUiList[0][2].text()}"
             else:
-                command = iconUiList[0][2].text()
+                command = f"--uri {iconUiList[0][2].text()}" # 若要传参进入wine容器，必须--uri，否则是传给run.sh的
             replaceMap = [
                 ["@@@BOTTLENAME@@@", e5_text.text()],
                 ["@@@APPVER@@@", e2_text.text()],
@@ -636,7 +636,7 @@ Description: {e3_text.text()}
                 ["@@@MAINTAINER@@@", e4_text.text()],
                 ["@@@DESCRIPTION@@@", e3_text.text()],
                 ["@@@DESKTOP_EXEC@@@", 
-                 f'''"/opt/apps/{e1_text.text()}/files/run.sh" {command}'''],
+                 f'''"/opt/apps/{e1_text.text()}/files/run.sh" {command} %u'''],
                 ["@@@DESKTOP_NAME@@@", iconUiList[0][3].text()],
                 ["@@@DESKTOP_MIMETYPE@@@", iconUiList[0][5].text()],
                 ["@@@DESKTOP_CATEGORIES@@@", iconUiList[0][1].currentText()]

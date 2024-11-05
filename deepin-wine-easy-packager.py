@@ -305,7 +305,7 @@ if [ -n "$EXEC_PATH" ];then
     if [ -z "${{EXEC_PATH##*.lnk*}}" ];then
         $START_SHELL_PATH $BOTTLENAME $APPVER "C:/windows/command/start.exe" "/Unix" "$EXEC_PATH" "$@"
     else
-        $START_SHELL_PATH $BOTTLENAME $APPVER "C:/windows/command/start.exe" "/Unix" "$EXEC_PATH" "$@"
+        $START_SHELL_PATH $BOTTLENAME $APPVER "$EXEC_PATH" "$@"
     fi
 else
     $START_SHELL_PATH $BOTTLENAME $APPVER "uninstaller.exe" "$@"
@@ -321,7 +321,7 @@ Encoding=UTF-8
 Type=Application
 X-Created-By=@@@Maintainer@@@
 Icon=@@@Icon@@@
-Exec="/opt/apps/@@@Package@@@/files/run.sh"
+Exec="/opt/apps/@@@Package@@@/files/run.sh --uri %u"
 Name=@@@Name@@@
 Comment=@@@Description@@@
 MimeType=

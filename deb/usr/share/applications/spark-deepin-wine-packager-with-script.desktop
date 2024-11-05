@@ -5,6 +5,6 @@ Exec=/usr/bin/deepin-wine-packager-with-script
 Icon=/opt/apps/deepin-wine-runner/deepin-wine-runner.svg
 Name=Wine Package Builder For UOS
 NoDisplay=true
-Name[zh]=Wine 打包器(基于活动脚本)
+Name[zh_CN]=Wine 打包器(基于活动脚本)
 Terminal=false
 StartupNotify=true
