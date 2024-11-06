@@ -21,7 +21,7 @@ jobs:
           make package-rpm
           mv spark-deepin-wine-runner*.rpm /home/runner/spark-deepin-wine-runner.rpm
       - name: upload result
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: spark-deepin-wine-runner.rpm
           path: /home/runner/spark-deepin-wine-runner.rpm

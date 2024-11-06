@@ -30,7 +30,7 @@ jobs:
       - name: Building DEB (termux)
         run: |
           cd deep-wine-runner
-          make package-deb-termux -j4
+          make package-termux-deb -j4
           mv spark-deepin-wine-runner-termux.deb ~
       - name: upload result
         uses: actions/upload-artifact@v3
