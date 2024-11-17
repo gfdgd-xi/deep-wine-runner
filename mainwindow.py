@@ -2497,12 +2497,9 @@ exe路径\' 参数 \'
 5、wine 容器如果没有指定，则会默认为 ~/.wine；
 6、如果可执行文件比较大的话，会出现点击“获取该程序运行情况”出现假死的情况，因为正在后台读取 SHA1，只需要等一下即可（读取速度依照您电脑处理速度、读写速度、可执行文件大小等有关）；
 7、如果非 X86 的用户的 UOS 专业版用户想要使用的话，只需要在应用商店安装一个 Wine 版本微信即可在本程序选择正确的 Wine 运行程序；''')
-updateThingsString = QtCore.QCoreApplication.translate("U", '''※1、修复没有 dxvk 的问题
-※2、修复虚拟机功能异常的问题（https://gitee.com/gfdgd-xi/deep-wine-runner/issues/IASRHG）
-※3、修复打包器生成的 deb 不可用的问题（https://gitee.com/gfdgd-xi/deep-wine-runner/issues/IAXE1T）
-※4、打包器针对 GXDE OS 进行优化
-※5、修复虚拟机因无法创建磁盘导致崩溃的问题
-※6、修复中文问题                                                  
+updateThingsString = QtCore.QCoreApplication.translate("U", '''※1、修复安全问题
+※2、更新 dxvk 版本至 2.5
+※3、修复打包器生成的 deb 包参数问题                                                                                          
 ''')
 for i in information["Thank"]:
     thankText += f"{i}\n"
