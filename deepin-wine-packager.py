@@ -1356,6 +1356,15 @@ try:
             wine[f"{programPath}/wine/{i}"] = f"{programPath}/wine/{i}"
 except:
     pass
+try:
+    for i in json.loads(readtxt(f"{get_home()}/.deepwinerunner/wine/winelist.json")):
+        if os.path.exists(f"{get_home()}/.deepwinerunner/wine/{i}.7z"):
+            wine[f"{get_home()}/.deepwinerunner/wine/{i}.7z"] = f"{get_home()}/.deepwinerunner/wine/{i}.7z"
+            continue
+        if os.path.exists(f"{get_home()}/.deepwinerunner/wine/{i}"):
+            wine[f"{get_home()}/.deepwinerunner/wine/{i}"] = f"{get_home()}/.deepwinerunner/wine/{i}"
+except:
+    pass
 os.chdir("/")
 iconUiList = []
 helperConfigPath = None

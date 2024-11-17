@@ -2162,6 +2162,20 @@ def TransLog():
 # 加载配置
 ###########################
 
+if not os.path.exists(get_home() + "/.deepwinerunner/wine/"):  # 如果没有配置文件夹
+    os.makedirs(get_home() + "/.deepwinerunner/wine/")  # 创建配置文件夹
+try:
+    shutil.copy(f"{programPath}/wine/installwine.py", get_home() + "/.deepwinerunner/wine/installwine.py")
+    shutil.copy(f"{programPath}/globalenv.py", get_home() + "/.deepwinerunner/globalenv.py")
+    shutil.copy(f"{programPath}/launch.sh", get_home() + "/.deepwinerunner/launch.sh")
+    if os.path.exists(get_home() + "/.deepwinerunner/Model"):
+        shutil.rmtree(get_home() + "/.deepwinerunner/Model")
+    shutil.copytree(f"{programPath}/Model", get_home() + "/.deepwinerunner/Model")
+    os.system(f"chmod 777 -Rv '{get_home()}/.deepwinerunner/launch.sh'")
+except:
+    traceback.print_exc()
+    exit()
+
 if not os.path.exists(get_home() + "/.config/"):  # 如果没有配置文件夹
     os.mkdir(get_home() + "/.config/")  # 创建配置文件夹
 if not os.path.exists(get_home() + "/.config/deepin-wine-runner"):  # 如果没有配置文件夹
@@ -2304,9 +2318,10 @@ def CheckWine():
                 traceback.print_exc()    
 
             # 不再从列表读取，直接读目录
-            for i in os.listdir(f"{programPath}/wine/"):
+            for i in os.listdir(f"{programPath}/wine/") + os.listdir(f"{get_home()}/.deepwinerunner/wine/"):
             #for i in json.loads(readtxt(f"{programPath}/wine/winelist.json")):
-                if os.path.exists(f"{programPath}/wine/{i}") and os.path.isdir(f"{programPath}/wine/{i}"):
+                if ((os.path.exists(f"{programPath}/wine/{i}") and os.path.isdir(f"{programPath}/wine/{i}")) or
+                    (os.path.exists(f"{get_home()}/.deepwinerunner/wine/{i}") and os.path.isdir(f"{get_home()}/.deepwinerunner/wine/{i}"))):
                     name = ""
                     qemuInstall = False
                     nameValue = [["", ""]]
@@ -2394,6 +2409,10 @@ def CheckWine():
                                 wine[f"{k[0]}{chrootProgramPath}/wine/{i}/bin/{j}"] = f"{k[1]}{chrootProgramPath}/wine/{i}/bin/{j}"
                                 canUseWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/{j}")
                                 untipsWine.append(f"{k[0]}{chrootProgramPath}/wine/{i}/bin/{j}")
+                            if os.path.exists(f"{get_home()}/.deepwinerunner/wine/{i}/bin/{j}"):        
+                                wine[f"{k[0]}{get_home()}/.deepwinerunner/wine/{i}/bin/{j}"] = f"{k[1]}{get_home()}/.deepwinerunner/wine/{i}/bin/{j}"
+                                canUseWine.append(f"{k[0]}{get_home()}/.deepwinerunner/wine/{i}/bin/{j}")
+                                untipsWine.append(f"{k[0]}{get_home()}/.deepwinerunner/wine/{i}/bin/{j}")
             
         except:
             traceback.print_exc()
@@ -2836,7 +2855,7 @@ installWineHQ.triggered.connect(InstallWineHQ)
 installWineHQOrg.triggered.connect(lambda: threading.Thread(target=OpenTerminal, args=[f"{programPath}/InstallNewWineHQOrg.sh"]).start())
 installLat.triggered.connect(lambda: threading.Thread(target=OpenTerminal, args=[f"{programPath}/InstallLat.sh"]).start())
 def InstallMoreWine():
-    os.system(f"'{programPath}/wine/installwine'")
+    os.system(get_home() + "/.deepwinerunner/wine/installwine.py")
     # 更新 Wine 列表
     CheckWine()
     o1.clear()

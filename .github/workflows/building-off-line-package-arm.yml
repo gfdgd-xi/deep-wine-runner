@@ -71,7 +71,7 @@ jobs:
           cd ..
           xz -T $cpu spark-deepin-wine-runner-off-line.tar
       - name: upload result
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: spark-deepin-wine-runner-off-line.tar.xz
           path: /home/runner/spark-deepin-wine-runner-off-line.tar.xz
