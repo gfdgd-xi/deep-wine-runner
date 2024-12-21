@@ -177,8 +177,63 @@ copy-files:
 remove-copy-files:
 	sudo rm -rfv /tmp/spark-deepin-wine-runner-builder
 
+package-deb-to-amd64:
+	rm -rfv /tmp/wine-runner-package
+	dpkg -x spark-deepin-wine-runner.deb /tmp/wine-runner-package
+	dpkg -e spark-deepin-wine-runner.deb /tmp/wine-runner-package/DEBIAN
+	sudo chown -R root:root /tmp/wine-runner-package/opt
+	sudo chown -R root:root /tmp/wine-runner-package/usr
+	sed -i "s/Architecture: all/Architecture: amd64/g" /tmp/wine-runner-package/DEBIAN/control
+	dpkg-deb -Z xz -z 0 -b /tmp/wine-runner-package spark-deepin-wine-runner-amd64.deb
+
+package-deb-to-arm64:
+	rm -rfv /tmp/wine-runner-package
+	dpkg -x spark-deepin-wine-runner.deb /tmp/wine-runner-package
+	dpkg -e spark-deepin-wine-runner.deb /tmp/wine-runner-package/DEBIAN
+	sudo chown -R root:root /tmp/wine-runner-package/opt
+	sudo chown -R root:root /tmp/wine-runner-package/usr
+	sed -i "s/Architecture: all/Architecture: arm64/g" /tmp/wine-runner-package/DEBIAN/control
+	dpkg-deb -Z xz -z 0 -b /tmp/wine-runner-package spark-deepin-wine-runner-arm64.deb
+
+package-deb-to-mips64el:
+	rm -rfv /tmp/wine-runner-package
+	dpkg -x spark-deepin-wine-runner.deb /tmp/wine-runner-package
+	dpkg -e spark-deepin-wine-runner.deb /tmp/wine-runner-package/DEBIAN
+	sudo chown -R root:root /tmp/wine-runner-package/opt
+	sudo chown -R root:root /tmp/wine-runner-package/usr
+	sed -i "s/Architecture: all/Architecture: mips64el/g" /tmp/wine-runner-package/DEBIAN/control
+	dpkg-deb -Z xz -z 0 -b /tmp/wine-runner-package spark-deepin-wine-runner-mips64el.deb
+
+package-deb-to-loongarch64:
+	rm -rfv /tmp/wine-runner-package
+	dpkg -x spark-deepin-wine-runner.deb /tmp/wine-runner-package
+	dpkg -e spark-deepin-wine-runner.deb /tmp/wine-runner-package/DEBIAN
+	sudo chown -R root:root /tmp/wine-runner-package/opt
+	sudo chown -R root:root /tmp/wine-runner-package/usr
+	sed -i "s/Architecture: all/Architecture: loongarch64/g" /tmp/wine-runner-package/DEBIAN/control
+	dpkg-deb -Z xz -z 0 -b /tmp/wine-runner-package spark-deepin-wine-runner-loongarch64.deb
+
+package-deb-to-loong64:
+	rm -rfv /tmp/wine-runner-package
+	dpkg -x spark-deepin-wine-runner.deb /tmp/wine-runner-package
+	dpkg -e spark-deepin-wine-runner.deb /tmp/wine-runner-package/DEBIAN
+	sudo chown -R root:root /tmp/wine-runner-package/opt
+	sudo chown -R root:root /tmp/wine-runner-package/usr
+	sed -i "s/Architecture: all/Architecture: loong64/g" /tmp/wine-runner-package/DEBIAN/control
+	dpkg-deb -Z xz -z 0 -b /tmp/wine-runner-package spark-deepin-wine-runner-loong64.deb
+
+package-deb-to-riscv64:
+	rm -rfv /tmp/wine-runner-package
+	dpkg -x spark-deepin-wine-runner.deb /tmp/wine-runner-package
+	dpkg -e spark-deepin-wine-runner.deb /tmp/wine-runner-package/DEBIAN
+	sudo chown -R root:root /tmp/wine-runner-package/opt
+	sudo chown -R root:root /tmp/wine-runner-package/usr
+	sed -i "s/Architecture: all/Architecture: riscv64/g" /tmp/wine-runner-package/DEBIAN/control
+	dpkg-deb -Z xz -z 0 -b /tmp/wine-runner-package spark-deepin-wine-runner-riscv64.deb
+
 package-deb:
 	make copy-files -j$(nproc)
+	sudo chown -R root:root /tmp/spark-deepin-wine-runner-builder
 	dpkg-deb -Z xz -z 9 -b /tmp/spark-deepin-wine-runner-builder spark-deepin-wine-runner.deb
 	make remove-copy-files -j$(nproc)
 	# 构建 ace 包
