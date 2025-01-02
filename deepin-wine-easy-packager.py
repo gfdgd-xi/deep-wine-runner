@@ -698,6 +698,7 @@ logText.setStyleSheet("""
     color: white;
 """)
 wineChooserList = [
+    "使用 Deepin Wine Staging 打包应用",
     "使用 Deepin Wine8 Stable 打包应用",
     "使用 Spark Wine9 wow 打包应用",
     "使用 Spark Wine9 打包应用",
@@ -710,7 +711,7 @@ wineChooserList = [
     "使用 Spark Wine 打包应用"
 ]
 wineChooserIndex = 2
-wineList = ["deepin-wine8-stable", "spark-wine9-wow", "spark-wine9", "spark-wine8", "spark-wine7-devel", "deepin-wine6-stable", "deepin-wine6-vannila", "spark-wine8-wow", "deepin-wine5-stable", "deepin-wine5", "deepin-wine", "spark-wine"]
+wineList = ["deepin-wine-staging", "deepin-wine8-stable", "spark-wine9-wow", "spark-wine9", "spark-wine8", "spark-wine7-devel", "deepin-wine6-stable", "deepin-wine6-vannila", "spark-wine8-wow", "deepin-wine5-stable", "deepin-wine5", "deepin-wine", "spark-wine"]
 for i in range(len(wineList)):
     if not os.system(f"which '{wineList[i]}'"):
         wineChooserIndex = i
