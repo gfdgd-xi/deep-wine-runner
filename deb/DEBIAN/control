@@ -36,13 +36,12 @@ Recommends: winbind,
  binfmt-support, 
  libc6:i386, 
  libc6:armhf, 
- libwine, 
  qemu-system, 
  qemu-full, 
  qemu,
  alien, 
  spark-deepin-wine-runner-qemu-system-extra, 
- deepin-wine-staging | deepin-wine8-stable | spark-wine | spark-wine9 | spark-wine9-wow | spark-wine8 | spark-wine8-wow | spark-wine7-devel | deepin-wine6-stable | deepin-wine5-stable | deepin-wine5 | deepin-wine | wine, 
+ deepin-wine-staging | deepin-wine8-stable | hangover-wine | spark-wine | spark-wine9 | spark-wine9-wow | spark-wine8 | spark-wine8-wow | spark-wine7-devel | deepin-wine6-stable | deepin-wine5-stable | deepin-wine5 | deepin-wine | wine | libwine, 
  spark-dwine-helper | store.spark-app.spark-dwine-helper | deepin-wine-helper | com.wine-helper.deepin
 Section: utils
 Conflicts: spark.deepin-venturi-setter, spark-deepin-wine5-application-packer, spark-deepin-wine-runner-52, spark-deepin-wine-runner-termux, termux-exec
