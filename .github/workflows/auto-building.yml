@@ -18,12 +18,12 @@ jobs:
           mv spark-deepin-wine-runner.deb ~
           mv spark-deepin-wine-runner-ace.deb ~
       - name: upload result
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: spark-deepin-wine-runner.deb
           path: /home/runner/spark-deepin-wine-runner.deb
       - name: upload result
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: spark-deepin-wine-runner-ace.deb
           path: /home/runner/spark-deepin-wine-runner-ace.deb
@@ -33,7 +33,7 @@ jobs:
           make package-termux-deb -j4
           mv spark-deepin-wine-runner-termux.deb ~
       - name: upload result
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: spark-deepin-wine-runner-termux.deb
           path: /home/runner/spark-deepin-wine-runner-termux.deb

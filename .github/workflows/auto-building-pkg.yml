@@ -25,7 +25,7 @@ jobs:
           cd ..
           mv spark-deepin-wine-runner*.pkg.tar.zst ../spark-deepin-wine-runner.pkg.tar.zst
       - name: upload result
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: spark-deepin-wine-runner.pkg.tar.zst
           path: spark-deepin-wine-runner.pkg.tar.zst
