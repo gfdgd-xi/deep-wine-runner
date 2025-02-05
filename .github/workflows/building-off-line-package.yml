@@ -174,7 +174,7 @@ jobs:
           cd ~
           mkdir package
           # 部署 chroot 环境
-          sudo debootstrap --no-check-gpg --arch=loongarch64 bookworm DaoXiangHu-stable https://pkg.loongnix.cn/loongnix/20
+          sudo debootstrap --no-check-gpg --arch=loongarch64 DaoXiangHu-stable debian https://pkg.loongnix.cn/loongnix/20
           wget https://github.com/gfdgd-xi/deep-wine-runner/raw/main/pardus-chroot
           sudo cp pardus-chroot /usr/bin
           sudo chmod 777 /usr/bin/pardus-chroot
