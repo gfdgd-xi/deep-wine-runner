@@ -1,10 +1,10 @@
-name: Auto Building Wine Runner（deb）
-run-name: ${{ github.actor }} Auto Building Wine Runner（deb） 🚀
+name: Auto Building Wine Runner
+run-name: ${{ github.actor }} Auto Building Wine Runner 🚀
 on:
   push:
   workflow_dispatch:
 jobs:
-  Explore-GitHub-Actions:
+  deb:
     runs-on: ubuntu-latest
     steps:
       - name: Building DEB
@@ -38,4 +38,53 @@ jobs:
           name: spark-deepin-wine-runner-termux.deb
           path: /home/runner/spark-deepin-wine-runner-termux.deb
 
-    
+  rpm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Building RPM
+        env: 
+          GUSER: ${{ secrets.GUSER }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          UPLOADURL: ${{ secrets.UPLOADURL }}
+        run: |
+          # 配置环境
+          sudo apt update
+          sudo apt install git dpkg-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools qt5-qmake rpm -y
+          git clone https://github.com/gfdgd-xi/deep-wine-runner
+          cd deep-wine-runner
+          make package-rpm
+          mv spark-deepin-wine-runner*.rpm /home/runner/spark-deepin-wine-runner.rpm
+      - name: upload result
+        uses: actions/upload-artifact@v4
+        with:
+          name: spark-deepin-wine-runner.rpm
+          path: /home/runner/spark-deepin-wine-runner.rpm
+      
+  pkg:
+    runs-on: ubuntu-latest
+    container: archlinux
+    steps:
+      - name: Building PKG
+        env: 
+          GUSER: ${{ secrets.GUSER }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          UPLOADURL: ${{ secrets.UPLOADURL }}
+        run: |
+          # 配置环境
+          pacman -Sy
+          pacman -S yay git sudo
+          pacman -S dpkg qt5-base -y
+          yay install
+          git clone https://github.com/gfdgd-xi/deep-wine-runner
+          cd deep-wine-runner
+          make package-deb -j4 
+          make package-pkg -j4
+          cd ..
+          mv spark-deepin-wine-runner*.pkg.tar.zst ../spark-deepin-wine-runner.pkg.tar.zst
+      - name: upload result
+        uses: actions/upload-artifact@v4
+        with:
+          name: spark-deepin-wine-runner.pkg.tar.zst
+          path: spark-deepin-wine-runner.pkg.tar.zst
+      
+     
