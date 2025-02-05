@@ -116,6 +116,7 @@ jobs:
           #wget $url
           mv deep-wine-runner/spark-deepin-wine-runner.deb debian/tmp/wine-runner.deb
           ## 安装
+          sudo chroot debian apt-mark hold libwine
           sudo chroot debian apt install locales /tmp/wine-runner.deb fcitx xfce4-terminal qtwayland5 xwayland thunar -y
           sudo chroot debian apt install libxenmisc4.17 libxenstore4 libxenforeignmemory1 -y
           # 构建软件包
