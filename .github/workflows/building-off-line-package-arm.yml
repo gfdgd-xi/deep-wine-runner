@@ -29,8 +29,10 @@ jobs:
           sudo chroot debian apt install sudo gpg wget -y
           sudo chroot debian wget https://ryanfortner.github.io/box64-debs/box64.list -O /etc/apt/sources.list.d/box64.list
           sudo chroot debian bash -c "wget -qO- https://ryanfortner.github.io/box64-debs/KEY.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg"
+          sudo chroot debian bash -c "echo 'deb [trusted=true] https://repo.gxde.top/gxde-os/bixie ./' | sudo tee /etc/apt/sources.list.d/gxde-stable.list"
+          sudo chroot debian bash -c "echo 'deb [trusted=true] https://repo.gxde.top/gxde-os/tianlu ./' | sudo tee /etc/apt/sources.list.d/gxde-testing.list"
           sudo chroot debian apt update
-          sudo chroot debian apt install box64 wine -y
+          sudo chroot debian apt install box64 hangover-wine -y
           ## 获取 Wine 运行器安装包
           git clone https://github.com/gfdgd-xi/deep-wine-runner --depth=1
           cd deep-wine-runner
@@ -40,7 +42,7 @@ jobs:
           #wget $url
           mv deep-wine-runner/spark-deepin-wine-runner.deb debian/tmp/wine-runner.deb
           ## 安装
-          sudo chroot debian apt install locales /tmp/wine-runner.deb fcitx xfce4-terminal -y
+          sudo chroot debian apt install locales /tmp/wine-runner.deb fcitx xfce4-terminal qtwayland5 xwayland thunar -y
           sudo chroot debian apt install libxenmisc4.17 libxenstore4 libxenforeignmemory1 -y
           # 构建软件包
           mkdir package/runner -p

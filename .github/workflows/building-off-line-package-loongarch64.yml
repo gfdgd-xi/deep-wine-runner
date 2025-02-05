@@ -1,11 +1,11 @@
-name: Building Wine Runner Off-line Pages(amd64)
-run-name: ${{ github.actor }} Building Wine Runner Off-line Pages(amd64) 🚀
+name: Building Wine Runner Off-line Pages(loongarch64)
+run-name: ${{ github.actor }} Building Wine Runner Off-line Pages(loongarch64) 🚀
 on:
   push:
   workflow_dispatch:
 jobs:
   Explore-GitHub-Actions:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Building DEB
         run: |
@@ -13,26 +13,29 @@ jobs:
           cpu=$(cat /proc/cpuinfo | grep processor | wc -l)
           # 配置环境
           sudo apt update
-          sudo apt install python3-requests debootstrap xz-utils -y
-          sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools psmisc -y
+          sudo apt install python3-requests debootstrap xz-utils qemu-user-static git -y
+          sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools psmisc wget -y
+          git clone https://github.com/gfdgd-xi/deep-wine-runner --depth=1
+          sudo cp deep-wine-runner/.github/workflows/DaoXiangHu-stable /usr/share/debootstrap/scripts/
+          wget https://github.com/sunhaiyong1978/CLFS-for-LoongArch/releases/download/20210903/qemu-x86_64-to-loongarch64
+          sudo cp qemu-x86_64-to-loongarch64 /usr/bin/qemu-loongarch64
+          sudo chmod 777 /usr/bin/qemu-loongarch64
+          echo ":qemu-loongarch64:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x02\x01:\xff\xff\xff\xff\xff\xfe\xfe\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/bin/qemu-loongarch64:" > /proc/sys/fs/binfmt_misc/register
           cd ~
           mkdir package
           # 部署 chroot 环境
-          sudo debootstrap bookworm debian
+          sudo debootstrap --no-check-gpg --arch=loongarch64 bookworm DaoXiangHu-stable https://pkg.loongnix.cn/loongnix/20
           wget https://github.com/gfdgd-xi/deep-wine-runner/raw/main/pardus-chroot
           sudo cp pardus-chroot /usr/bin
           sudo chmod 777 /usr/bin/pardus-chroot
           sudo pardus-chroot debian
           ### 配置容器
           ## 加入 wine 源
-          sudo chroot debian dpkg --add-architecture i386
           sudo chroot debian apt update
           sudo chroot debian apt install sudo gpg wget -y
-          sudo chroot debian wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
-          sudo chroot debian wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources
-          sudo chroot debian bash -c "echo 'deb [trusted=true] https://repo.gxde.top/gxde-os/bixie ./' | sudo tee /etc/apt/sources.list.d/gxde-stable.list"
-          sudo chroot debian bash -c "echo 'deb [trusted=true] https://repo.gxde.top/gxde-os/tianlu ./' | sudo tee /etc/apt/sources.list.d/gxde-testing.list"
           sudo chroot debian apt update
+          sudo chroot debian apt install -y lat i386-runtime-base i386-runtime-extra
+          sudo chroot debian apt install -y wine
           ## 获取 Wine 运行器安装包
           git clone https://github.com/gfdgd-xi/deep-wine-runner --depth=1
           cd deep-wine-runner
@@ -42,15 +45,15 @@ jobs:
           #wget $url
           mv deep-wine-runner/spark-deepin-wine-runner.deb debian/tmp/wine-runner.deb
           ## 安装
-          sudo chroot debian apt install locales /tmp/wine-runner.deb winehq-devel fcitx xfce4-terminal -y
-          sudo chroot debian apt install locales qtwayland5 xwayland thunar -y
+          sudo chroot debian apt install locales /tmp/wine-runner.deb fcitx xfce4-terminal qtwayland5 xwayland thunar -y
           sudo chroot debian apt install libxenmisc4.17 libxenstore4 libxenforeignmemory1 -y
           # 构建软件包
           mkdir package/runner -p
+          sudo cp debian/usr/local/bin package -rv
           sudo cp debian/usr/bin package -rv
           sudo cp debian/usr/lib package -rv
           sudo cp debian/usr/share package -rv
-          sudo cp debian/usr/lib64 package -rv
+          #sudo cp debian/usr/lib64 package -rv
           sudo cp debian/opt/apps/deepin-wine-runner/* package/runner -rv
           # 精简运行器体积
           sudo rm -rf package/runner/2048
@@ -64,7 +67,7 @@ jobs:
           sudo cp package/bin/which.debianutils package/bin/which -rv
           cp deep-wine-runner/off-line-shell/run.sh package -rv
           cp deep-wine-runner/off-line-shell/run-system-bwrap.sh package -rv
-          cp deep-wine-runner/off-line-shell/bwrap_amd64 package/bwrap -rv
+          cp deep-wine-runner/off-line-shell/bwrap_loongarch64 package/bwrap -rv
           sudo chmod 777 -Rv package ; true
           cd package
           # 添加 Wine 运行器离线模式标识
@@ -77,5 +80,5 @@ jobs:
         with:
           name: spark-deepin-wine-runner-off-line.tar.xz
           path: /home/runner/spark-deepin-wine-runner-off-line.tar.xz
-      
+
     
