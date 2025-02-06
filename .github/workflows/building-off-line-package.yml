@@ -211,6 +211,7 @@ jobs:
           sudo cp debian/usr/bin package -rv
           sudo cp debian/usr/lib package -rv
           sudo cp debian/usr/share package -rv
+          sudo cp debian/usr/gnemul package -rv
           #sudo cp debian/usr/lib64 package -rv
           sudo cp debian/opt/apps/deepin-wine-runner/* package/runner -rv
           # 精简运行器体积

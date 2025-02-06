@@ -15,6 +15,13 @@ if [[ -d /usr/share/fonts ]]; then
     option="$option --dev-bind /usr/share/fonts /usr/share/fonts "
 fi
 
+if [[ -d $SHELL_FOLDER/gnemul ]]; then
+    if [[ ! -d /usr/gnemul ]]; then
+        pkexec mkdir -p /usr/gnemul
+    fi
+    option="$option --dev-bind $SHELL_FOLDER/gnemul /usr/gnemul "
+fi
+
 "$SHELL_FOLDER/bwrap" --dev-bind / / \
     --dev-bind "$SHELL_FOLDER/bin" /usr/bin \
     --dev-bind "$SHELL_FOLDER/bin" /bin \
