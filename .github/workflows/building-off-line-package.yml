@@ -182,6 +182,8 @@ jobs:
           sudo unsquashfs filesystem.squashfs
           sudo mv squashfs-root debian
           sudo cp /usr/local/bin/qemu-loongarch64 debian/usr/local/bin/qemu-loongarch64 -rv
+          # 写入 DNS
+          echo "nameserver 8.8.8.8" | sudo tee debian/etc/resolv.conf
           wget https://github.com/gfdgd-xi/deep-wine-runner/raw/main/pardus-chroot
           sudo cp pardus-chroot /usr/bin
           sudo chmod 777 /usr/bin/pardus-chroot
@@ -203,7 +205,6 @@ jobs:
           mv deep-wine-runner/spark-deepin-wine-runner.deb debian/tmp/wine-runner.deb
           ## 安装
           sudo chroot debian apt install locales /tmp/wine-runner.deb fcitx xfce4-terminal qtwayland5 xwayland thunar -y
-          sudo chroot debian apt install libxenmisc4.17 libxenstore4 libxenforeignmemory1 -y
           # 构建软件包
           mkdir package/runner -p
           sudo cp debian/usr/local/bin package -rv
@@ -221,7 +222,6 @@ jobs:
           sudo rm -rf package/runner/novnc
           sudo rm -rf package/bin/wine*
           # 修复 which 命令的问题导致无法正常识别终端的问题
-          sudo cp package/bin/which.debianutils package/bin/which -rv
           cp deep-wine-runner/off-line-shell/run.sh package -rv
           cp deep-wine-runner/off-line-shell/run-system-bwrap.sh package -rv
           cp deep-wine-runner/off-line-shell/bwrap_loongarch64 package/bwrap -rv
