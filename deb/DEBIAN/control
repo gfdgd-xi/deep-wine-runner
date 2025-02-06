@@ -28,7 +28,8 @@ Depends: python3,
  tree, 
  dpkg, 
  fakeroot,
- bash
+ bash,
+ xdg-utils
 Recommends: winbind, 
  wimtools | wimlib, 
  python3-pyquery, 
