@@ -214,6 +214,7 @@ jobs:
           sudo cp debian/usr/gnemul package -rv
           #sudo cp debian/usr/lib64 package -rv
           sudo cp debian/opt/apps/deepin-wine-runner/* package/runner -rv
+          sudo cp debian/opt/wine-6.0 package/runner/wine -rv
           # 精简运行器体积
           sudo rm -rf package/runner/2048
           sudo rm -rf package/runner/geek.exe
@@ -221,7 +222,6 @@ jobs:
           sudo rm -rf package/runner/Icon
           sudo rm -rf package/runner/RegShot.exe
           sudo rm -rf package/runner/novnc
-          sudo rm -rf package/bin/wine*
           # 修复 which 命令的问题导致无法正常识别终端的问题
           cp deep-wine-runner/off-line-shell/run.sh package -rv
           cp deep-wine-runner/off-line-shell/run-system-bwrap.sh package -rv
