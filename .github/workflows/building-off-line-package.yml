@@ -62,6 +62,8 @@ jobs:
           sudo rm -rf package/bin/wine*
           # 修复 which 命令的问题导致无法正常识别终端的问题
           sudo cp package/bin/which.debianutils package/bin/which -rv
+          # 内置 winehq
+          sudo cp debian/opt/wine-devel package/runner/wine -rv
           cp deep-wine-runner/off-line-shell/run.sh package -rv
           cp deep-wine-runner/off-line-shell/run-system-bwrap.sh package -rv
           cp deep-wine-runner/off-line-shell/bwrap_amd64 package/bwrap -rv
@@ -133,7 +135,6 @@ jobs:
           sudo rm -rf package/runner/Icon
           sudo rm -rf package/runner/RegShot.exe
           sudo rm -rf package/runner/novnc
-          sudo rm -rf package/bin/wine*
           # 修复 which 命令的问题导致无法正常识别终端的问题
           sudo cp package/bin/which.debianutils package/bin/which -rv
           cp deep-wine-runner/off-line-shell/run.sh package -rv
@@ -163,21 +164,24 @@ jobs:
           cpu=$(cat /proc/cpuinfo | grep processor | wc -l)
           # 配置环境
           sudo apt update
-          sudo apt install python3-requests debootstrap xz-utils qemu-user-static git -y
+          sudo apt install python3-requests debootstrap xz-utils qemu-user-static git aria2 squashfs-tools -y
           sudo apt install binfmt-support qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools psmisc wget -y
           git clone https://github.com/gfdgd-xi/deep-wine-runner --depth=1
           sudo cp deep-wine-runner/.github/workflows/DaoXiangHu-stable /usr/share/debootstrap/scripts/
-          git clone https://gitee.com/michael0066/qemu-loongarch64-static
+          git clone https://gitee.com/loongarch-kvm/qemu-loongarch64-static
           cd qemu-loongarch64-static
-          sudo cp qemu-loongarch64 /var/lib/binfmts
-          sudo cp qemu-loongarch64-static /usr/bin
-          #sudo /etc/init.d/binfmt-support restart
-          sudo bash -c 'echo ":qemu-loongarch64:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x02\x01:\xff\xff\xff\xff\xff\xfe\xfe\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/usr/bin/qemu-loongarch64-static:" > /proc/sys/fs/binfmt_misc/register'
-          #cat /proc/sys/fs/binfmt_misc/qemu-loongarch64-static 
+          tar -xvf qemu-loongarch64-static.tar.gz
+          cd qemu-loongarch64-static
+          sudo bash qemu-binfmt-conf.sh
+          sudo cp qemu-loongarch64  /usr/local/bin/
           cd ~
           mkdir package
           # 部署 chroot 环境
-          sudo debootstrap --no-check-gpg --arch=loongarch64 DaoXiangHu-stable debian https://pkg.loongnix.cn/loongnix/20
+          #sudo debootstrap --no-check-gpg --arch=loongarch64 DaoXiangHu-stable debian https://pkg.loongnix.cn/loongnix/20
+          aria2c -x 16 -s 16 https://sourceforge.net/projects/deep-wine-runner-wine-download/files/loongnix/filesystem.squashfs/download
+          sudo unsquashfs filesystem.squashfs
+          sudo mv squashfs-root debian
+          sudo cp /usr/local/bin/qemu-loongarch64 debian/usr/local/bin/qemu-loongarch64 -rv
           wget https://github.com/gfdgd-xi/deep-wine-runner/raw/main/pardus-chroot
           sudo cp pardus-chroot /usr/bin
           sudo chmod 777 /usr/bin/pardus-chroot
