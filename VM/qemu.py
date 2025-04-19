@@ -28,8 +28,11 @@ class qemu:
         self.vboxVersion = subprocess.getoutput(self.qemuPath + " --version")
 
     def Create(self, type = "Windows7"):
-        if(not os.path.exists(self.name)):
-            os.makedirs(self.name)
+        try:
+            if(not os.path.exists(self.name)):
+                os.makedirs(self.name)
+        except:
+            pass
         return 0
 
     def CreateDisk(self, path: str, size: int):
