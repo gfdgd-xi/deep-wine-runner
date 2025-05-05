@@ -12,6 +12,7 @@
 #################
 import os
 import sys
+import requests
 import updatekiller
 import traceback
 try:
@@ -56,10 +57,16 @@ try:
     exitInputShow = int(os.getenv("ENTERNOTSHOW"))
 except:
     exitInputShow = True
+
+headers = {
+    'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/130.0.0.0"
+}
 try:
     # 获取最新版本的版本号
-    programVersionList = pyquery.PyQuery(url=f"http://mirrors.ustc.edu.cn/wine/wine/wine-{sys.argv[3]}/")
+    data = requests.get(f"http://mirrors.ustc.edu.cn/wine/wine/wine-{sys.argv[3]}/", headers=headers)
+    programVersionList = pyquery.PyQuery(data.text)
 except:
+    traceback.print_exc()
     print("无法连接下载服务器，将使用本地缓存")
     if not os.path.exists(f"{homePath}/.cache/deepin-wine-runner/{sys.argv[3]}/install.msi") or not os.path.exists(f"{homePath}/.cache/deepin-wine-runner/{sys.argv[3]}/information.txt"):
         print("无本地缓存数据，无法进行、结束")
@@ -75,7 +82,8 @@ except:
     exit()
 programVersion = programVersionList("a:last-child").attr.href
 # 获取最新版本安装包的URL
-programUrl = pyquery.PyQuery(url=f"http://mirrors.ustc.edu.cn/wine/wine/wine-{sys.argv[3]}/{programVersion}")
+data = requests.get(f"http://mirrors.ustc.edu.cn/wine/wine/wine-{sys.argv[3]}/{programVersion}", headers=headers)
+programUrl = pyquery.PyQuery(data.text)
 programDownloadUrl = ""
 programFileName = ""
 for i in programUrl("a").items():
