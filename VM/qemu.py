@@ -89,9 +89,9 @@ class qemu:
             # 如果存在拓展 Qemu，则调用此
             qemuPath = "/opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh qemu-system-arm"
         if(subprocess.getoutput("arch").replace("\n", "").replace(" ", "") == "aarch64" and not os.system((self.applicationDirPath() + "/kvm-ok"))):
-            return os.system((qemuPath + " --boot 'splash=" + self.GetBootLogoPath() + ",order=d,menu=on,splash-time=2000' -display gtk --enable-kvm -cpu host -M virt " + self.commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &"))
+            return os.system((qemuPath + " -name Wine运行器虚拟机工具 --boot 'splash=" + self.GetBootLogoPath() + ",order=d,menu=on,splash-time=2000' -display gtk --enable-kvm -cpu host -M virt " + self.commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &"))
     
-        return os.system((qemuPath + " --boot 'splash=" + self.GetBootLogoPath() + ",order=d,menu=on,splash-time=2000' -display gtk -cpu max -M virt " + self.commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &"))
+        return os.system((qemuPath + " -name Wine运行器虚拟机工具 --boot 'splash=" + self.GetBootLogoPath() + ",order=d,menu=on,splash-time=2000' -display gtk -cpu max -M virt " + self.commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &"))
 
     def StartAarch64(self):
         bootScreenLogo = ""
@@ -112,7 +112,7 @@ class qemu:
         if(subprocess.getoutput("arch").replace("\n", "").replace(" ", "") == "aarch64" and not os.system((self.applicationDirPath() + "/kvm-ok"))):
             return os.system((qemuPath + " --boot 'splash=" + self.GetBootLogoPath() + ",order=d,menu=on,splash-time=2000' -display gtk --enable-kvm -cpu host -M virt " + self.commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &"))
     
-        return os.system((qemuPath + " --boot 'splash=" + self.GetBootLogoPath() + ",order=d,menu=on,splash-time=2000' -display gtk -cpu max -M virt " + self.commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &"))
+        return os.system((qemuPath + " -name Wine运行器虚拟机工具 --boot 'splash=" + self.GetBootLogoPath() + ",order=d,menu=on,splash-time=2000' -display gtk -cpu max -M virt " + self.commandOption + " -device virtio-gpu-pci -device nec-usb-xhci,id=xhci,addr=0x1b -device usb-tablet,id=tablet,bus=xhci.0,port=1 -device usb-kbd,id=keyboard,bus=xhci.0,port=2 > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &"))
 
     def StartLoong64(self):
         return 1
@@ -137,8 +137,8 @@ class qemu:
             qemuPath = "/opt/apps/deepin-wine-runner-qemu-system-extra/files/run.sh qemu-system-x86_64"
         print(self.commandOption)
         if(subprocess.getoutput("arch").replace("\n", "").replace(" ", "") == "x86_64" and not os.system((self.applicationDirPath() + "/kvm-ok"))):
-            return os.system((qemuPath + " --boot 'splash=" + self.GetBootLogoPath() + ",order=d,menu=on,splash-time=2000' -display gtk --enable-kvm -cpu host " + newCommandOption + " > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &"))
-        return os.system((qemuPath + " --boot 'splash=" + self.GetBootLogoPath() + ",order=d,menu=on,splash-time=2000' -display gtk -nic model=rtl8139 " + newCommandOption + " > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &"))
+            return os.system((qemuPath + " -name Wine运行器虚拟机工具 --boot 'splash=" + self.GetBootLogoPath() + ",order=d,menu=on,splash-time=2000' -display gtk --enable-kvm -cpu host " + newCommandOption + " > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &"))
+        return os.system((qemuPath + " -name Wine运行器虚拟机工具 --boot 'splash=" + self.GetBootLogoPath() + ",order=d,menu=on,splash-time=2000' -display gtk -nic model=rtl8139 " + newCommandOption + " > /tmp/windows-virtual-machine-installer-for-wine-runner-install.log 2>&1 &"))
 
     def Stop(self):
         os.system("killall qemu-system-x86_64 -9")
