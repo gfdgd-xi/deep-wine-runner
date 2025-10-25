@@ -1984,7 +1984,7 @@ def getFileFolderSize(fileOrFolderPath):
 
 # 获取当前语言
 def get_now_lang()->"获取当前语言":
-    return os.getenv('LANG')
+    return os.getenv('LANG') or 'C'
 
 # 又需要修复多线程导致的控件问题
 def AddDockerMenu():
