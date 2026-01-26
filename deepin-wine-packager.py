@@ -1346,10 +1346,13 @@ wine = {
     "spark-wine8-wow": "spark-wine8-wow", 
     "deepin-wine6-vannila": "deepin-wine6-vannila", 
     "deepin-wine8-stable": "deepin-wine8-stable", 
+    "deepin-wine10-stable": "deepin-wine10-stable", 
     "spark-wine9": "spark-wine9", 
     "spark-wine9-wow": "spark-wine9-wow", 
     "spark-wine10": "spark-wine10", 
     "spark-wine10-wow": "spark-wine10-wow", 
+    "spark-wine11": "spark-wine11", 
+    "spark-wine11-wow": "spark-wine11-wow", 
     "spark-wine": "spark-wine", 
     "deepin-wine-staging": "deepin-wine-staging"
 }

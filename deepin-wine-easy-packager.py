@@ -713,7 +713,10 @@ wineChooserList = [
 wineChooserIndex = 2
 wineList = [
     "deepin-wine-staging", 
+    "deepin-wine10-stable", 
     "deepin-wine8-stable", 
+    "spark-wine11-wow", 
+    "spark-wine11", 
     "spark-wine10-wow", 
     "spark-wine10", 
     "spark-wine9-wow", 
