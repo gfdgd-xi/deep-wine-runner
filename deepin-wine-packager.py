@@ -1678,7 +1678,7 @@ except:
     pass
 rmBash.setChecked(True)
 disabledMono.setChecked(True)
-cleanBottonByUOS.setChecked(True)
+#cleanBottonByUOS.setChecked(True)
 chooseWineHelperValue.setChecked(True)
 e12_text.setText(f"{get_desktop_path()}/demo_1.0.0_all.deb")
 widget.setLayout(widgetLayout)
