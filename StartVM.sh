@@ -161,7 +161,7 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
             $qemuMore qemu-system-aarch64 --enable-kvm -name Wine运行器虚拟机工具 --hda "$HOME/Qemu/Windows/Windows.qcow2" \
                 -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) \
                 -m ${use}G -display gtk -usb -nic model=rtl8139 $qemuUEFI \
-                -cpu max -M virt \
+                -cpu cortex-a76 -M virt \
                 -device virtio-gpu-pci \
                 -device nec-usb-xhci,id=xhci,addr=0x1b \
                 -device usb-tablet,id=tablet,bus=xhci.0,port=1 \
@@ -174,7 +174,7 @@ if [[ $? == 0 ]] && [[ -f "$HOME/Qemu/Windows/Windows.qcow2" ]]; then
         $qemuMore qemu-system-aarch64 -name Wine运行器虚拟机工具 --hda "$HOME/Qemu/Windows/Windows.qcow2" \
             -smp $CpuCount,sockets=$CpuSocketNum,cores=$(($CpuCoreNum / $CpuSocketNum)),threads=$(($CpuCount / $CpuCoreNum / $CpuSocketNum)) \
             -m ${use}G -display gtk -usb -nic model=rtl8139 $qemuUEFI \
-            -cpu max -M virt \
+            -cpu cortex-a76 -M virt \
             -device virtio-gpu-pci \
             -device nec-usb-xhci,id=xhci,addr=0x1b \
             -device usb-tablet,id=tablet,bus=xhci.0,port=1 \
