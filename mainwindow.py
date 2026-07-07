@@ -128,7 +128,10 @@ def liulanbutton():
 
 # 第二个浏览按钮事件
 def liulanexebutton():
-    path = QtWidgets.QFileDialog.getOpenFileName(widget, "选择 exe 可执行文件", json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindExe.json"))["path"], "exe 可执行文件(*.exe);;MSI 文件(*.msi);;所有文件(*.*)")
+    # 文件对话框新增显示.EXE文件
+    # path = QtWidgets.QFileDialog.getOpenFileName(widget, "选择 exe 可执行文件", json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindExe.json"))["path"], "exe 可执行文件(*.exe);;MSI 文件(*.msi);;所有文件(*.*)")
+    path = QtWidgets.QFileDialog.getOpenFileName(widget, "选择 Windows 可执行文件", json.loads(readtxt(get_home() + "/.config/deepin-wine-runner/FindExe.json"))["path"], "exe/EXE 可执行文件(*.exe *.EXE);;MSI 文件(*.msi);;所有文件(*.*)")
+
     if path != "" and path != "()":
         e2.setEditText(path[0])  # 显示路径
         write_txt(get_home() + "/.config/deepin-wine-runner/FindExe.json", json.dumps({"path": os.path.dirname(path[0])}))  # 写入配置文件
