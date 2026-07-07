@@ -1347,6 +1347,7 @@ wine = {
     "deepin-wine6-vannila": "deepin-wine6-vannila", 
     "deepin-wine8-stable": "deepin-wine8-stable", 
     "deepin-wine10-stable": "deepin-wine10-stable", 
+    "deepin-wine11-stable": "deepin-wine11-stable", 
     "spark-wine9": "spark-wine9", 
     "spark-wine9-wow": "spark-wine9-wow", 
     "spark-wine10": "spark-wine10", 
@@ -1431,7 +1432,7 @@ widgetLayout = QtWidgets.QGridLayout()
 # 设置变量以修改和获取值项
 wineVersion = QtWidgets.QComboBox()
 wineVersion.addItems(wine.keys())
-wineVersion.setCurrentText("deepin-wine8-stable")
+wineVersion.setCurrentText("deepin-wine11-stable")
 e1_text = QtWidgets.QLineEdit()
 e2_text = QtWidgets.QLineEdit()
 e3_text = QtWidgets.QLineEdit()
