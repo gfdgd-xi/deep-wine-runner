@@ -35,7 +35,7 @@ mkdir ../program
 make install -j$cpu DESTDIR=../program
 cd ../program/usr/local/
 # 打7z包
-7z a /wine/wine-$type-$version-debian10-amd64.7z *
+7z a /wine/wine-$type-$version-debian11-amd64.7z *
 cd /wine
 rm -rfv program
 ## 构建 32 + 64 位（混合）
@@ -50,7 +50,7 @@ cd ../build64
 make install -j$cpu DESTDIR=../program
 cd ../program/usr/local/
 # 打7z包
-7z a /wine/wine-$type-$version-debian10-x86_64.7z *
+7z a /wine/wine-$type-$version-debian11-x86_64.7z *
 cd /wine
 rm -rfv program
 ## 构建纯 32 位
@@ -62,7 +62,7 @@ mkdir ../program
 make install -j$cpu DESTDIR=../program
 cd ../program/usr/local/
 # 打7z包
-7z a /wine/wine-$type-$version-debian10-i386.7z *
+7z a /wine/wine-$type-$version-debian11-i386.7z *
 cd /wine
 rm -rfv program
 ## 移除临时文件（不写了，反正 Github Action 会自动销毁）

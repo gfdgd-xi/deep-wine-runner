@@ -37,4 +37,4 @@ mkdir ../program
 make install -j$cpu DESTDIR=../program
 cd ../program/usr/local/
 echo Building Time: `date`, source from https://gitlab.winehq.org/wine/wine > info.txt
-7z a /wine/wine-wow64-daily-debian10-amd64.7z *
+7z a /wine/wine-wow64-daily-debian11-amd64.7z *
