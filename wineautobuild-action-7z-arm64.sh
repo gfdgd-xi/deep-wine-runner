@@ -39,7 +39,7 @@ mkdir ../program
 make install -j$cpu DESTDIR=../program
 cd ../program/usr/local/
 # 打7z包
-7z a /wine/wine-$type-$version-ubuntu22.04-aarch64.7z *
+7z a /wine/wine-$type-$version-debian11-arm64.7z *
 cd /wine
 rm -rfv program
 
